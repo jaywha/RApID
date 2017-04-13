@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="utf-8"?>
+<csLog xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <Tech>estabile</Tech>
+  <IsCR>false</IsCR>
+  <LogCreationTime>2016-07-19T11:26:53.741449-05:00</LogCreationTime>
+  <lActions>
+    <csLogAction>
+      <EventType>NOTE</EventType>
+      <EventTiming>2016-07-19T11:26:53.7304264-05:00</EventTiming>
+      <LogNote>Serial Port Data Received - Begin</LogNote>
+      <LogError>false</LogError>
+    </csLogAction>
+    <csLogAction>
+      <EventType>NOTE</EventType>
+      <EventTiming>2016-07-19T11:26:53.7404488-05:00</EventTiming>
+      <LogNote>Serial Port Data Received - End</LogNote>
+      <LogError>false</LogError>
+    </csLogAction>
+    <csLogAction>
+      <EventType>NOTE</EventType>
+      <EventTiming>2016-07-19T11:26:53.741449-05:00</EventTiming>
+      <LogNote>Searching Database(s) for Serial Number '0072785028777'.</LogNote>
+      <LogError>false</LogError>
+    </csLogAction>
+    <csLogAction>
+      <EventType>NOTE</EventType>
+      <EventTiming>2016-07-19T11:26:53.7424517-05:00</EventTiming>
+      <LogNote>Attempting to Query the EOL Table.
+SQL CMD: SELECT PartNumber, ModelDesc FROM tblEOL WHERE PCBSerial = '0072785028777'</LogNote>
+      <LogError>false</LogError>
+    </csLogAction>
+    <csLogAction>
+      <EventType>NOTE</EventType>
+      <EventTiming>2016-07-19T11:26:53.7734654-05:00</EventTiming>
+      <LogNote>Found PartNumber = '409617-1' and PartName = 'ASSY, PCB, MAIN-H5 SNR GPS(rd)'</LogNote>
+      <LogError>false</LogError>
+    </csLogAction>
+    <csLogAction>
+      <EventType>NOTE</EventType>
+      <EventTiming>2016-07-19T11:26:53.8562045-05:00</EventTiming>
+      <LogNote>QueryEOL() was successful.</LogNote>
+      <LogError>false</LogError>
+    </csLogAction>
+    <csLogAction>
+      <EventType>NOTE</EventType>
+      <EventTiming>2016-07-19T11:26:53.8571958-05:00</EventTiming>
+      <LogNote>Attempting to fill the Commodity Sub-Class.
+SQL CMD: SELECT CommodityClass FROM ItemMaster WHERE PartNumber = '409617-1'</LogNote>
+      <LogError>false</LogError>
+    </csLogAction>
+    <csLogAction>
+      <EventType>NOTE</EventType>
+      <EventTiming>2016-07-19T11:26:54.1906731-05:00</EventTiming>
+      <LogNote>Querying the Tech Report From the Old 'Repair' Database for previous repair information.</LogNote>
+      <LogError>false</LogError>
+    </csLogAction>
+    <csLogAction>
+      <EventType>NOTE</EventType>
+      <EventTiming>2016-07-19T11:26:54.3101167-05:00</EventTiming>
+      <LogNote>Querying the Tech Report from the New 'RApID' database for previous repair information.</LogNote>
+      <LogError>false</LogError>
+    </csLogAction>
+    <csLogAction>
+      <ControlType>Button</ControlType>
+      <ControlName>btnSendToQC</ControlName>
+      <ControlContent>Send To QC</ControlContent>
+      <EventType>CLICK</EventType>
+      <EventTiming>2016-07-19T11:26:59.3780235-05:00</EventTiming>
+      <LogError>false</LogError>
+    </csLogAction>
+    <csLogAction>
+      <EventType>WARNING</EventType>
+      <EventTiming>2016-07-19T11:27:00.3269162-05:00</EventTiming>
+      <LogNote>The submission criteria has not been met.
+The following items are missing:
+Type of Return
+Type of Failure
+</LogNote>
+      <LogError>false</LogError>
+    </csLogAction>
+    <csLogAction>
+      <ControlType>ComboBox</ControlType>
+      <ControlName>cbTOR</ControlName>
+      <ControlContent>Warranty</ControlContent>
+      <EventType>DROPDOWNCLOSED</EventType>
+      <EventTiming>2016-07-19T11:27:03.2466323-05:00</EventTiming>
+      <LogError>false</LogError>
+    </csLogAction>
+    <csLogAction>
+      <ControlType>ComboBox</ControlType>
+      <ControlName>cbTOF</ControlName>
+      <ControlContent>Out of Box</ControlContent>
+      <EventType>DROPDOWNCLOSED</EventType>
+      <EventTiming>2016-07-19T11:27:05.1754083-05:00</EventTiming>
+      <LogError>false</LogError>
+    </csLogAction>
+    <csLogAction>
+      <ControlType>Button</ControlType>
+      <ControlName>btnSendToQC</ControlName>
+      <ControlContent>Send To QC</ControlContent>
+      <EventType>CLICK</EventType>
+      <EventTiming>2016-07-19T11:27:05.8026647-05:00</EventTiming>
+      <LogError>false</LogError>
+    </csLogAction>
+    <csLogAction>
+      <EventType>NOTE</EventType>
+      <EventTiming>2016-07-19T11:27:05.8026647-05:00</EventTiming>
+      <LogNote>The save criteria has been met. Attempting to save...</LogNote>
+      <LogError>false</LogError>
+    </csLogAction>
+    <csLogAction>
+      <EventType>WARNING</EventType>
+      <EventTiming>2016-07-19T11:27:07.6369897-05:00</EventTiming>
+      <LogNote>The criteria for saving this unit issue was not met. Alerting the operator.</LogNote>
+      <LogError>false</LogError>
+    </csLogAction>
+    <csLogAction>
+      <EventType>SUBMISSIONDETAILS</EventType>
+      <EventTiming>2016-07-19T11:27:07.6394937-05:00</EventTiming>
+      <LogNote>Attemping to submit the data with the following parameters:
+@Technician: estabile
+@DateReceived: 07/19/2016
+@PartName: ASSY, PCB, MAIN-H5 SNR GPS(rd)
+@PartNumber: 409617-1
+@CommoditySubClass: H37       
+@Quantity: 1
+@SoftwareVersion: N/A
+@Scrap: False
+@TypeOfReturn: Warranty
+@TypeOfFailure: Out of Box
+@HoursOnUnit: -1
+@Issue: N/A
+@TestResult: N/A
+@TestResultAbort: N/A
+@Cause: N/A
+@Replacement: N/A
+@PartsReplaced: N/A
+@RefDesignator: N/A
+@AdditionalComments: N/A
+@CustomerNumber: -1
+@SerialNumber: 0072785028777
+@DateSubmitted: 07/19/2016 11:27:07 AM
+@SubmissionStatus: SENDTOQC
+@SaveID: 1271916112705
+@RP: N/A
+@TechAct1: N/A
+@TechAct2: N/A
+@TechAct3: N/A
+</LogNote>
+      <LogError>false</LogError>
+    </csLogAction>
+    <csLogAction>
+      <EventType>NOTE</EventType>
+      <EventTiming>2016-07-19T11:27:07.6878052-05:00</EventTiming>
+      <LogNote>Attempting to print the label.</LogNote>
+      <LogError>false</LogError>
+    </csLogAction>
+  </lActions>
+  <LogSubmitTime>2016-07-19T11:27:08.1266505-05:00</LogSubmitTime>
+</csLog>

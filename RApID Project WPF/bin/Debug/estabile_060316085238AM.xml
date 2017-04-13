@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="utf-8"?>
+<csLog xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <Tech>estabile</Tech>
+  <IsCR>false</IsCR>
+  <LogCreationTime>2016-06-03T08:49:57.0009652-05:00</LogCreationTime>
+  <lActions>
+    <csLogAction>
+      <ControlType>ComboBox</ControlType>
+      <ControlName>cbIssue</ControlName>
+      <ControlContent />
+      <EventType>DROPDOWNCLOSED</EventType>
+      <EventTiming>2016-06-03T08:50:07.5934047-05:00</EventTiming>
+      <LogError>false</LogError>
+    </csLogAction>
+    <csLogAction>
+      <ControlType>ComboBox</ControlType>
+      <ControlName>cbTestResult</ControlName>
+      <ControlContent />
+      <EventType>DROPDOWNCLOSED</EventType>
+      <EventTiming>2016-06-03T08:50:12.5443577-05:00</EventTiming>
+      <LogError>false</LogError>
+    </csLogAction>
+    <csLogAction>
+      <ControlType>ComboBox</ControlType>
+      <ControlName>cbTestResultAbort</ControlName>
+      <ControlContent />
+      <EventType>DROPDOWNCLOSED</EventType>
+      <EventTiming>2016-06-03T08:50:15.6403248-05:00</EventTiming>
+      <LogError>false</LogError>
+    </csLogAction>
+    <csLogAction>
+      <ControlType>ComboBox</ControlType>
+      <ControlName>cbCause</ControlName>
+      <ControlContent />
+      <EventType>DROPDOWNCLOSED</EventType>
+      <EventTiming>2016-06-03T08:50:24.4643475-05:00</EventTiming>
+      <LogError>false</LogError>
+    </csLogAction>
+    <csLogAction>
+      <ControlType>ComboBox</ControlType>
+      <ControlName>cbReplacement</ControlName>
+      <ControlContent />
+      <EventType>DROPDOWNCLOSED</EventType>
+      <EventTiming>2016-06-03T08:50:34.4803094-05:00</EventTiming>
+      <LogError>false</LogError>
+    </csLogAction>
+    <csLogAction>
+      <ControlType>ComboBox</ControlType>
+      <ControlName>cbIssue</ControlName>
+      <ControlContent />
+      <EventType>DROPDOWNCLOSED</EventType>
+      <EventTiming>2016-06-03T08:51:08.5159676-05:00</EventTiming>
+      <LogError>false</LogError>
+    </csLogAction>
+    <csLogAction>
+      <ControlType>ComboBox</ControlType>
+      <ControlName>cbReplacement</ControlName>
+      <ControlContent />
+      <EventType>DROPDOWNCLOSED</EventType>
+      <EventTiming>2016-06-03T08:51:18.0264852-05:00</EventTiming>
+      <LogError>false</LogError>
+    </csLogAction>
+    <csLogAction>
+      <EventType>NOTE</EventType>
+      <EventTiming>2016-06-03T08:51:43.7050361-05:00</EventTiming>
+      <LogNote>Searching Database(s) for Serial Number '150502030113'.</LogNote>
+      <LogError>false</LogError>
+    </csLogAction>
+    <csLogAction>
+      <EventType>NOTE</EventType>
+      <EventTiming>2016-06-03T08:51:43.7050361-05:00</EventTiming>
+      <LogNote>Attempting to Query the EOL Table.
+SQL CMD: SELECT PartNumber, ModelDesc FROM tblEOL WHERE PCBSerial = '150502030113'</LogNote>
+      <LogError>false</LogError>
+    </csLogAction>
+    <csLogAction>
+      <EventType>NOTE</EventType>
+      <EventTiming>2016-06-03T08:51:43.7719863-05:00</EventTiming>
+      <LogNote>QueryEOL() was unsuccessful. Attempting QueryProduction() then QueryItemMaster()</LogNote>
+      <LogError>false</LogError>
+    </csLogAction>
+    <csLogAction>
+      <EventType>NOTE</EventType>
+      <EventTiming>2016-06-03T08:51:43.7730032-05:00</EventTiming>
+      <LogNote>Attempting to Query the Production Table.
+SQL CMD: SELECT Model FROM Production WHERE SerialNum = '150502030113'</LogNote>
+      <LogError>false</LogError>
+    </csLogAction>
+    <csLogAction>
+      <EventType>NOTE</EventType>
+      <EventTiming>2016-06-03T08:51:43.8289975-05:00</EventTiming>
+      <LogNote>Attempting to Query the Item Master Table.
+SQL CMD: SELECT PartName FROM ItemMaster WHERE PartNumber = ''</LogNote>
+      <LogError>false</LogError>
+    </csLogAction>
+    <csLogAction>
+      <EventType>NOTE</EventType>
+      <EventTiming>2016-06-03T08:51:43.911552-05:00</EventTiming>
+      <LogNote>Unable to find the Part Name.</LogNote>
+      <LogError>false</LogError>
+    </csLogAction>
+    <csLogAction>
+      <EventType>NOTE</EventType>
+      <EventTiming>2016-06-03T08:52:37.0253585-05:00</EventTiming>
+      <LogNote>The operator selected Part Number '' and Part Name ''</LogNote>
+      <LogError>false</LogError>
+    </csLogAction>
+    <csLogAction>
+      <EventType>NOTE</EventType>
+      <EventTiming>2016-06-03T08:52:37.0593981-05:00</EventTiming>
+      <LogNote>Querying the Tech Report From the Old 'Repair' Database for previous repair information.</LogNote>
+      <LogError>false</LogError>
+    </csLogAction>
+    <csLogAction>
+      <EventType>NOTE</EventType>
+      <EventTiming>2016-06-03T08:52:37.1357814-05:00</EventTiming>
+      <LogNote>Querying the Tech Report from the New 'RApID' database for previous repair information.</LogNote>
+      <LogError>false</LogError>
+    </csLogAction>
+    <csLogAction>
+      <ControlType>Button</ControlType>
+      <ControlName>btnStartOver</ControlName>
+      <ControlContent>Start Over</ControlContent>
+      <EventType>CLICK</EventType>
+      <EventTiming>2016-06-03T08:52:38.6236893-05:00</EventTiming>
+      <LogError>false</LogError>
+    </csLogAction>
+  </lActions>
+  <LogSubmitTime>2016-06-03T08:52:38.6246921-05:00</LogSubmitTime>
+</csLog>

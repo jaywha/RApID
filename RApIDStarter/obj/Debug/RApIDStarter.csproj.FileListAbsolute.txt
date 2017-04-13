@@ -1,0 +1,18 @@
+C:\Users\esdog\Dropbox\HumminbirdWork\RApID\Solutions\RApID Solution WPF\RApIDStarter\obj\Debug\RApIDStarter.csprojResolveAssemblyReference.cache
+C:\Users\esdog\Dropbox\HumminbirdWork\RApID\Solutions\RApID Solution WPF\RApIDStarter\bin\Debug\RApIDStarter.exe.config
+C:\Users\esdog\Dropbox\HumminbirdWork\RApID\Solutions\RApID Solution WPF\RApIDStarter\bin\Debug\RApIDStarter.exe
+C:\Users\esdog\Dropbox\HumminbirdWork\RApID\Solutions\RApID Solution WPF\RApIDStarter\bin\Debug\RApIDStarter.pdb
+C:\Users\esdog\Dropbox\HumminbirdWork\RApID\Solutions\RApID Solution WPF\RApIDStarter\obj\Debug\RApIDStarter.exe
+C:\Users\esdog\Dropbox\HumminbirdWork\RApID\Solutions\RApID Solution WPF\RApIDStarter\obj\Debug\RApIDStarter.pdb
+C:\Users\dglanton\Dropbox\RApID\Solutions\RApID Solution WPF\RApIDStarter\bin\Debug\RApIDStarter.exe.config
+C:\Users\dglanton\Dropbox\RApID\Solutions\RApID Solution WPF\RApIDStarter\bin\Debug\RApIDStarter.exe
+C:\Users\dglanton\Dropbox\RApID\Solutions\RApID Solution WPF\RApIDStarter\bin\Debug\RApIDStarter.pdb
+C:\Users\dglanton\Dropbox\RApID\Solutions\RApID Solution WPF\RApIDStarter\obj\Debug\RApIDStarter.csprojResolveAssemblyReference.cache
+C:\Users\dglanton\Dropbox\RApID\Solutions\RApID Solution WPF\RApIDStarter\obj\Debug\RApIDStarter.exe
+C:\Users\dglanton\Dropbox\RApID\Solutions\RApID Solution WPF\RApIDStarter\obj\Debug\RApIDStarter.pdb
+C:\Users\dglanton\Dropbox\RApID\Solutions\RApID Solution WPF\RApID Solution WPF\RApIDStarter\bin\Debug\RApIDStarter.exe.config
+C:\Users\dglanton\Dropbox\RApID\Solutions\RApID Solution WPF\RApID Solution WPF\RApIDStarter\bin\Debug\RApIDStarter.exe
+C:\Users\dglanton\Dropbox\RApID\Solutions\RApID Solution WPF\RApID Solution WPF\RApIDStarter\bin\Debug\RApIDStarter.pdb
+C:\Users\dglanton\Dropbox\RApID\Solutions\RApID Solution WPF\RApID Solution WPF\RApIDStarter\obj\Debug\RApIDStarter.exe
+C:\Users\dglanton\Dropbox\RApID\Solutions\RApID Solution WPF\RApID Solution WPF\RApIDStarter\obj\Debug\RApIDStarter.pdb
+C:\Users\dglanton\Dropbox\RApID\Solutions\RApID Solution WPF\RApID Solution WPF\RApIDStarter\obj\Debug\RApIDStarter.csprojResolveAssemblyReference.cache

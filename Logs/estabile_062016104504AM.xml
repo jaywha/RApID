@@ -1,0 +1,229 @@
+<?xml version="1.0" encoding="utf-8"?>
+<csLog xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <Tech>estabile</Tech>
+  <IsCR>false</IsCR>
+  <LogCreationTime>2016-06-20T10:42:59.1451174-05:00</LogCreationTime>
+  <lActions>
+    <csLogAction>
+      <ControlType>Button</ControlType>
+      <ControlName>btnLookupPartName</ControlName>
+      <ControlContent>?</ControlContent>
+      <EventType>CLICK</EventType>
+      <EventTiming>2016-06-20T10:43:27.9396134-05:00</EventTiming>
+      <LogError>false</LogError>
+    </csLogAction>
+    <csLogAction>
+      <EventType>NOTE</EventType>
+      <EventTiming>2016-06-20T10:43:34.3036413-05:00</EventTiming>
+      <LogNote>The operator selected Part Number '408806-1' and Part Name 'MAIN- ONIX10'</LogNote>
+      <LogError>false</LogError>
+    </csLogAction>
+    <csLogAction>
+      <EventType>NOTE</EventType>
+      <EventTiming>2016-06-20T10:43:34.3046556-05:00</EventTiming>
+      <LogNote>Attempting to fill the Commodity Sub-Class.
+SQL CMD: SELECT CommodityClass FROM ItemMaster WHERE PartNumber = '408806-1'</LogNote>
+      <LogError>false</LogError>
+    </csLogAction>
+    <csLogAction>
+      <ControlType>Textbox</ControlType>
+      <ControlName>txtSWVersion</ControlName>
+      <ControlContent />
+      <EventType>ENTER</EventType>
+      <EventTiming>2016-06-20T10:43:35.540692-05:00</EventTiming>
+      <LogError>false</LogError>
+    </csLogAction>
+    <csLogAction>
+      <ControlType>Textbox</ControlType>
+      <ControlName>txtSWVersion</ControlName>
+      <ControlContent>7.88</ControlContent>
+      <EventType>LEAVE</EventType>
+      <EventTiming>2016-06-20T10:43:42.7203531-05:00</EventTiming>
+      <LogError>false</LogError>
+    </csLogAction>
+    <csLogAction>
+      <ControlType>ComboBox</ControlType>
+      <ControlName>cbTOR</ControlName>
+      <ControlContent>Warranty</ControlContent>
+      <EventType>DROPDOWNCLOSED</EventType>
+      <EventTiming>2016-06-20T10:43:47.8105382-05:00</EventTiming>
+      <LogError>false</LogError>
+    </csLogAction>
+    <csLogAction>
+      <ControlType>ComboBox</ControlType>
+      <ControlName>cbTOF</ControlName>
+      <ControlContent>Out of Box</ControlContent>
+      <EventType>DROPDOWNCLOSED</EventType>
+      <EventTiming>2016-06-20T10:43:49.3732639-05:00</EventTiming>
+      <LogError>false</LogError>
+    </csLogAction>
+    <csLogAction>
+      <ControlType>Textbox</ControlType>
+      <ControlName>txtHOU</ControlName>
+      <ControlContent />
+      <EventType>ENTER</EventType>
+      <EventTiming>2016-06-20T10:43:49.7329289-05:00</EventTiming>
+      <LogError>false</LogError>
+    </csLogAction>
+    <csLogAction>
+      <ControlType>Textbox</ControlType>
+      <ControlName>txtHOU</ControlName>
+      <ControlContent>125</ControlContent>
+      <EventType>LEAVE</EventType>
+      <EventTiming>2016-06-20T10:43:53.3627108-05:00</EventTiming>
+      <LogError>false</LogError>
+    </csLogAction>
+    <csLogAction>
+      <ControlType>ComboBox</ControlType>
+      <ControlName>cbReportedIssue</ControlName>
+      <ControlContent>Power-Off/On Problem</ControlContent>
+      <EventType>DROPDOWNCLOSED</EventType>
+      <EventTiming>2016-06-20T10:44:02.0512846-05:00</EventTiming>
+      <LogError>false</LogError>
+    </csLogAction>
+    <csLogAction>
+      <ControlType>ComboBox</ControlType>
+      <ControlName>cbTestResult</ControlName>
+      <ControlContent>Voltage Fail</ControlContent>
+      <EventType>DROPDOWNCLOSED</EventType>
+      <EventTiming>2016-06-20T10:44:07.3456144-05:00</EventTiming>
+      <LogError>false</LogError>
+    </csLogAction>
+    <csLogAction>
+      <ControlType>ComboBox</ControlType>
+      <ControlName>cbTestResultAbort</ControlName>
+      <ControlContent>N/A</ControlContent>
+      <EventType>DROPDOWNCLOSED</EventType>
+      <EventTiming>2016-06-20T10:44:13.466551-05:00</EventTiming>
+      <LogError>false</LogError>
+    </csLogAction>
+    <csLogAction>
+      <ControlType>ComboBox</ControlType>
+      <ControlName>cbCause</ControlName>
+      <ControlContent>Unplugged/Plugged Incorrectly</ControlContent>
+      <EventType>DROPDOWNCLOSED</EventType>
+      <EventTiming>2016-06-20T10:44:17.0312879-05:00</EventTiming>
+      <LogError>false</LogError>
+    </csLogAction>
+    <csLogAction>
+      <ControlType>ComboBox</ControlType>
+      <ControlName>cbReplacement</ControlName>
+      <ControlContent>CH</ControlContent>
+      <EventType>DROPDOWNCLOSED</EventType>
+      <EventTiming>2016-06-20T10:44:19.2956262-05:00</EventTiming>
+      <LogError>false</LogError>
+    </csLogAction>
+    <csLogAction>
+      <ControlType>Textbox</ControlType>
+      <ControlName>txtRefDesignator</ControlName>
+      <ControlContent />
+      <EventType>ENTER</EventType>
+      <EventTiming>2016-06-20T10:44:20.0336577-05:00</EventTiming>
+      <LogError>false</LogError>
+    </csLogAction>
+    <csLogAction>
+      <ControlType>Textbox</ControlType>
+      <ControlName>txtRefDesignator</ControlName>
+      <ControlContent>ref4889</ControlContent>
+      <EventType>LEAVE</EventType>
+      <EventTiming>2016-06-20T10:44:23.9172512-05:00</EventTiming>
+      <LogError>false</LogError>
+    </csLogAction>
+    <csLogAction>
+      <ControlType>Textbox</ControlType>
+      <ControlName>txtPartsReplaced</ControlName>
+      <ControlContent />
+      <EventType>ENTER</EventType>
+      <EventTiming>2016-06-20T10:44:23.9182524-05:00</EventTiming>
+      <LogError>false</LogError>
+    </csLogAction>
+    <csLogAction>
+      <ControlType>Textbox</ControlType>
+      <ControlName>txtPartsReplaced</ControlName>
+      <ControlContent>pr255998</ControlContent>
+      <EventType>LEAVE</EventType>
+      <EventTiming>2016-06-20T10:44:30.5997457-05:00</EventTiming>
+      <LogError>false</LogError>
+    </csLogAction>
+    <csLogAction>
+      <ControlType>RichTextBox</ControlType>
+      <ControlName>rtbAdditionalComments</ControlName>
+      <ControlContent />
+      <EventType>ENTER</EventType>
+      <EventTiming>2016-06-20T10:44:50.8297659-05:00</EventTiming>
+      <LogError>false</LogError>
+    </csLogAction>
+    <csLogAction>
+      <ControlType>RichTextBox</ControlType>
+      <ControlName>rtbAdditionalComments</ControlName>
+      <ControlContent>This unit had many issues.</ControlContent>
+      <EventType>LEAVE</EventType>
+      <EventTiming>2016-06-20T10:45:03.9883653-05:00</EventTiming>
+      <LogError>false</LogError>
+    </csLogAction>
+    <csLogAction>
+      <ControlType>Button</ControlType>
+      <ControlName>btnComplete</ControlName>
+      <ControlContent>Complete</ControlContent>
+      <EventType>CLICK</EventType>
+      <EventTiming>2016-06-20T10:45:04.0523948-05:00</EventTiming>
+      <LogError>false</LogError>
+    </csLogAction>
+    <csLogAction>
+      <EventType>NOTE</EventType>
+      <EventTiming>2016-06-20T10:45:04.0523948-05:00</EventTiming>
+      <LogNote>The submission criteria has been met. Attempting to submit...</LogNote>
+      <LogError>false</LogError>
+    </csLogAction>
+    <csLogAction>
+      <EventType>NOTE</EventType>
+      <EventTiming>2016-06-20T10:45:04.054408-05:00</EventTiming>
+      <LogNote>Adding Part Replaced 'pr255998' and Ref Designator 'ref4889' to dgMultipleParts.</LogNote>
+      <LogError>false</LogError>
+    </csLogAction>
+    <csLogAction>
+      <EventType>NOTE</EventType>
+      <EventTiming>2016-06-20T10:45:04.0554087-05:00</EventTiming>
+      <LogNote>The criteria for saving this unit issue to the Multiple Unit Issues list has been met.
+Attempting to save the unit issue.</LogNote>
+      <LogError>false</LogError>
+    </csLogAction>
+    <csLogAction>
+      <EventType>SUBMISSIONDETAILS</EventType>
+      <EventTiming>2016-06-20T10:45:04.0604018-05:00</EventTiming>
+      <LogNote>Attemping to submit the data with the following parameters:
+@Technician: estabile
+@DateReceived: 06/20/2016
+@PartName: MAIN- ONIX10
+@PartNumber: 408806-1
+@CommoditySubClass: H32       
+@Quantity: 1
+@SoftwareVersion: 7.88
+@Scrap: False
+@TypeOfReturn: Warranty
+@TypeOfFailure: Out of Box
+@HoursOnUnit: 125
+@Issue: Power-Off/On Problem
+@TestResult: Voltage Fail
+@TestResultAbort: N/A
+@Cause: Unplugged/Plugged Incorrectly
+@Replacement: CH
+@PartsReplaced: {pr255998}
+@RefDesignator: {ref4889}
+@AdditionalComments: This unit had many issues.
+
+@CustomerNumber: 1123456
+@Barcode: N/A
+@DateSubmitted: 06/20/2016 10:45:04 AM
+@SubmissionStatus: COMPLETE
+@SaveID: -1
+@RP: 54321
+@TechAct1: Repair/Replace Front Housing
+@TechAct2: Updated Software
+@TechAct3: Re-Tested - No Problem Found
+</LogNote>
+      <LogError>false</LogError>
+    </csLogAction>
+  </lActions>
+  <LogSubmitTime>2016-06-20T10:45:04.1139873-05:00</LogSubmitTime>
+</csLog>

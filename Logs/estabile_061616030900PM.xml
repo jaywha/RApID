@@ -1,0 +1,234 @@
+<?xml version="1.0" encoding="utf-8"?>
+<csLog xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <Tech>estabile</Tech>
+  <IsCR>false</IsCR>
+  <LogCreationTime>2016-06-16T15:08:27.8406196-05:00</LogCreationTime>
+  <lActions>
+    <csLogAction>
+      <EventType>NOTE</EventType>
+      <EventTiming>2016-06-16T15:08:29.3932904-05:00</EventTiming>
+      <LogNote>Serial Port Data Received - Begin</LogNote>
+      <LogError>false</LogError>
+    </csLogAction>
+    <csLogAction>
+      <EventType>NOTE</EventType>
+      <EventTiming>2016-06-16T15:08:29.3952782-05:00</EventTiming>
+      <LogNote>Serial Port Data Received - End</LogNote>
+      <LogError>false</LogError>
+    </csLogAction>
+    <csLogAction>
+      <EventType>NOTE</EventType>
+      <EventTiming>2016-06-16T15:08:29.3962925-05:00</EventTiming>
+      <LogNote>Searching Database(s) for Serial Number '0072785028777'.</LogNote>
+      <LogError>false</LogError>
+    </csLogAction>
+    <csLogAction>
+      <EventType>NOTE</EventType>
+      <EventTiming>2016-06-16T15:08:29.3967932-05:00</EventTiming>
+      <LogNote>Attempting to Query the EOL Table.
+SQL CMD: SELECT PartNumber, ModelDesc FROM tblEOL WHERE PCBSerial = '0072785028777'</LogNote>
+      <LogError>false</LogError>
+    </csLogAction>
+    <csLogAction>
+      <EventType>NOTE</EventType>
+      <EventTiming>2016-06-16T15:08:29.4112944-05:00</EventTiming>
+      <LogNote>Found PartNumber = '409617-1' and PartName = 'ASSY, PCB, MAIN-H5 SNR GPS(rd)'</LogNote>
+      <LogError>false</LogError>
+    </csLogAction>
+    <csLogAction>
+      <EventType>NOTE</EventType>
+      <EventTiming>2016-06-16T15:08:29.451832-05:00</EventTiming>
+      <LogNote>QueryEOL() was successful.</LogNote>
+      <LogError>false</LogError>
+    </csLogAction>
+    <csLogAction>
+      <EventType>NOTE</EventType>
+      <EventTiming>2016-06-16T15:08:29.4523325-05:00</EventTiming>
+      <LogNote>Attempting to fill the Commodity Sub-Class.
+SQL CMD: SELECT CommodityClass FROM ItemMaster WHERE PartNumber = '409617-1'</LogNote>
+      <LogError>false</LogError>
+    </csLogAction>
+    <csLogAction>
+      <EventType>NOTE</EventType>
+      <EventTiming>2016-06-16T15:08:29.5273775-05:00</EventTiming>
+      <LogNote>Querying the Tech Report From the Old 'Repair' Database for previous repair information.</LogNote>
+      <LogError>false</LogError>
+    </csLogAction>
+    <csLogAction>
+      <EventType>NOTE</EventType>
+      <EventTiming>2016-06-16T15:08:29.5890721-05:00</EventTiming>
+      <LogNote>Querying the Tech Report from the New 'RApID' database for previous repair information.</LogNote>
+      <LogError>false</LogError>
+    </csLogAction>
+    <csLogAction>
+      <ControlType>Textbox</ControlType>
+      <ControlName>txtSWVersion</ControlName>
+      <ControlContent />
+      <EventType>ENTER</EventType>
+      <EventTiming>2016-06-16T15:08:32.447159-05:00</EventTiming>
+      <LogError>false</LogError>
+    </csLogAction>
+    <csLogAction>
+      <ControlType>Textbox</ControlType>
+      <ControlName>txtSWVersion</ControlName>
+      <ControlContent>20.58</ControlContent>
+      <EventType>LEAVE</EventType>
+      <EventTiming>2016-06-16T15:08:35.6146995-05:00</EventTiming>
+      <LogError>false</LogError>
+    </csLogAction>
+    <csLogAction>
+      <ControlType>ComboBox</ControlType>
+      <ControlName>cbTOR</ControlName>
+      <ControlContent>Production</ControlContent>
+      <EventType>DROPDOWNCLOSED</EventType>
+      <EventTiming>2016-06-16T15:08:36.5939161-05:00</EventTiming>
+      <LogError>false</LogError>
+    </csLogAction>
+    <csLogAction>
+      <ControlType>ComboBox</ControlType>
+      <ControlName>cbTOF</ControlName>
+      <ControlContent>In Use</ControlContent>
+      <EventType>DROPDOWNCLOSED</EventType>
+      <EventTiming>2016-06-16T15:08:37.5775723-05:00</EventTiming>
+      <LogError>false</LogError>
+    </csLogAction>
+    <csLogAction>
+      <ControlType>Textbox</ControlType>
+      <ControlName>txtHOU</ControlName>
+      <ControlContent />
+      <EventType>ENTER</EventType>
+      <EventTiming>2016-06-16T15:08:37.7501938-05:00</EventTiming>
+      <LogError>false</LogError>
+    </csLogAction>
+    <csLogAction>
+      <ControlType>Textbox</ControlType>
+      <ControlName>txtHOU</ControlName>
+      <ControlContent>50</ControlContent>
+      <EventType>LEAVE</EventType>
+      <EventTiming>2016-06-16T15:08:39.9127684-05:00</EventTiming>
+      <LogError>false</LogError>
+    </csLogAction>
+    <csLogAction>
+      <ControlType>ComboBox</ControlType>
+      <ControlName>cbReportedIssue</ControlName>
+      <ControlContent>Unstated</ControlContent>
+      <EventType>DROPDOWNCLOSED</EventType>
+      <EventTiming>2016-06-16T15:08:41.1920277-05:00</EventTiming>
+      <LogError>false</LogError>
+    </csLogAction>
+    <csLogAction>
+      <ControlType>ComboBox</ControlType>
+      <ControlName>cbTestResult</ControlName>
+      <ControlContent />
+      <EventType>DROPDOWNCLOSED</EventType>
+      <EventTiming>2016-06-16T15:08:42.5316437-05:00</EventTiming>
+      <LogError>false</LogError>
+    </csLogAction>
+    <csLogAction>
+      <ControlType>ComboBox</ControlType>
+      <ControlName>cbTestResult</ControlName>
+      <ControlContent>Keypad Fail</ControlContent>
+      <EventType>DROPDOWNCLOSED</EventType>
+      <EventTiming>2016-06-16T15:08:44.0137334-05:00</EventTiming>
+      <LogError>false</LogError>
+    </csLogAction>
+    <csLogAction>
+      <ControlType>ComboBox</ControlType>
+      <ControlName>cbTestResultAbort</ControlName>
+      <ControlContent>Assembly Error</ControlContent>
+      <EventType>DROPDOWNCLOSED</EventType>
+      <EventTiming>2016-06-16T15:08:45.232954-05:00</EventTiming>
+      <LogError>false</LogError>
+    </csLogAction>
+    <csLogAction>
+      <ControlType>ComboBox</ControlType>
+      <ControlName>cbCause</ControlName>
+      <ControlContent>Backlight (component) defective</ControlContent>
+      <EventType>DROPDOWNCLOSED</EventType>
+      <EventTiming>2016-06-16T15:08:46.7513553-05:00</EventTiming>
+      <LogError>false</LogError>
+    </csLogAction>
+    <csLogAction>
+      <ControlType>ComboBox</ControlType>
+      <ControlName>cbReplacement</ControlName>
+      <ControlContent>N/A</ControlContent>
+      <EventType>DROPDOWNCLOSED</EventType>
+      <EventTiming>2016-06-16T15:08:48.7685972-05:00</EventTiming>
+      <LogError>false</LogError>
+    </csLogAction>
+    <csLogAction>
+      <ControlType>RichTextBox</ControlType>
+      <ControlName>rtbAdditionalComments</ControlName>
+      <ControlContent />
+      <EventType>ENTER</EventType>
+      <EventTiming>2016-06-16T15:08:55.8863072-05:00</EventTiming>
+      <LogError>false</LogError>
+    </csLogAction>
+    <csLogAction>
+      <ControlType>RichTextBox</ControlType>
+      <ControlName>rtbAdditionalComments</ControlName>
+      <ControlContent>Comments go here.</ControlContent>
+      <EventType>LEAVE</EventType>
+      <EventTiming>2016-06-16T15:09:00.4249269-05:00</EventTiming>
+      <LogError>false</LogError>
+    </csLogAction>
+    <csLogAction>
+      <ControlType>Button</ControlType>
+      <ControlName>btnSendToQC</ControlName>
+      <ControlContent>Send To QC</ControlContent>
+      <EventType>CLICK</EventType>
+      <EventTiming>2016-06-16T15:09:00.4920978-05:00</EventTiming>
+      <LogError>false</LogError>
+    </csLogAction>
+    <csLogAction>
+      <EventType>NOTE</EventType>
+      <EventTiming>2016-06-16T15:09:00.4925981-05:00</EventTiming>
+      <LogNote>The save criteria has been met. Attempting to save...</LogNote>
+      <LogError>false</LogError>
+    </csLogAction>
+    <csLogAction>
+      <EventType>NOTE</EventType>
+      <EventTiming>2016-06-16T15:09:00.4951005-05:00</EventTiming>
+      <LogNote>The criteria for saving this unit issue to the Multiple Unit Issues list has been met.
+Attempting to save the unit issue.</LogNote>
+      <LogError>false</LogError>
+    </csLogAction>
+    <csLogAction>
+      <EventType>SUBMISSIONDETAILS</EventType>
+      <EventTiming>2016-06-16T15:09:00.5000981-05:00</EventTiming>
+      <LogNote>Attemping to submit the data with the following parameters:
+@Technician: estabile
+@DateReceived: 06/16/2016
+@PartName: ASSY, PCB, MAIN-H5 SNR GPS(rd)
+@PartNumber: 409617-1
+@CommoditySubClass: H37       
+@Quantity: 1
+@SoftwareVersion: 20.58
+@Scrap: False
+@TypeOfReturn: Production
+@TypeOfFailure: In Use
+@HoursOnUnit: 50
+@Issue: Unstated
+@TestResult: Keypad Fail
+@TestResultAbort: Assembly Error
+@Cause: Backlight (component) defective
+@Replacement: N/A
+@PartsReplaced: {N/F}
+@RefDesignator: {N/F}
+@AdditionalComments: Comments go here.
+
+@CustomerNumber: -1
+@Barcode: 0072785028777
+@DateSubmitted: 06/16/2016 03:09:00 PM
+@SubmissionStatus: SENDTOQC
+@SaveID: 23091616030900
+@RP: N/A
+@TechAct1: Returning Unserviced
+@TechAct2: N/A
+@TechAct3: N/A
+</LogNote>
+      <LogError>false</LogError>
+    </csLogAction>
+  </lActions>
+  <LogSubmitTime>2016-06-16T15:09:00.5507258-05:00</LogSubmitTime>
+</csLog>

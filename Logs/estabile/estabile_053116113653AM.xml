@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<csLog xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <Tech>estabile</Tech>
+  <IsCR>true</IsCR>
+  <LogCreationTime>2016-05-31T11:36:47.7046329-05:00</LogCreationTime>
+  <lActions>
+    <csLogAction>
+      <ControlType>Textbox</ControlType>
+      <ControlName>txtQTY</ControlName>
+      <ControlContent />
+      <EventType>ENTER</EventType>
+      <EventTiming>2016-05-31T11:36:49.0348844-05:00</EventTiming>
+      <LogError>false</LogError>
+    </csLogAction>
+    <csLogAction>
+      <ControlType>Textbox</ControlType>
+      <ControlName>txtQTY</ControlName>
+      <ControlContent>23</ControlContent>
+      <EventType>LEAVE</EventType>
+      <EventTiming>2016-05-31T11:36:50.5495638-05:00</EventTiming>
+      <LogError>false</LogError>
+    </csLogAction>
+    <csLogAction>
+      <ControlType>ComboBox</ControlType>
+      <ControlName>cbCause</ControlName>
+      <ControlContent>No Problem Found</ControlContent>
+      <EventType>DROPDOWNCLOSED</EventType>
+      <EventTiming>2016-05-31T11:36:51.9131858-05:00</EventTiming>
+      <LogError>false</LogError>
+    </csLogAction>
+    <csLogAction>
+      <ControlType>Button</ControlType>
+      <ControlName>btnComplete</ControlName>
+      <ControlContent>Complete</ControlContent>
+      <EventType>CLICK</EventType>
+      <EventTiming>2016-05-31T11:36:53.3065966-05:00</EventTiming>
+      <LogError>false</LogError>
+    </csLogAction>
+    <csLogAction>
+      <EventType>NOTE</EventType>
+      <EventTiming>2016-05-31T11:36:53.3070974-05:00</EventTiming>
+      <LogNote>The submission criteria has been met. Attempting to submit...</LogNote>
+      <LogError>false</LogError>
+    </csLogAction>
+    <csLogAction>
+      <EventType>NOTE</EventType>
+      <EventTiming>2016-05-31T11:36:53.3095995-05:00</EventTiming>
+      <LogNote>The criteria for saving this unit issue to the Multiple Unit Issues list has been met.
+Attempting to save the unit issue.</LogNote>
+      <LogError>false</LogError>
+    </csLogAction>
+    <csLogAction>
+      <EventType>SUBMISSIONDETAILS</EventType>
+      <EventTiming>2016-05-31T11:36:53.3151048-05:00</EventTiming>
+      <LogNote>Attemping to submit the data with the following parameters:
+@Technician: estabile
+@DateReceived: 05/31/2016
+@PartName: N/A
+@PartNumber: N/A
+@CommoditySubClass: N/A
+@Quantity: 23
+@SoftwareVersion: N/A
+@Scrap: False
+@TypeOfReturn: Credit Return
+@TypeOfFailure: N/A
+@HoursOnUnit: -1
+@Issue: N/F
+@TestResult: N/F
+@TestResultAbort: N/F
+@Cause: No Problem Found
+@Replacement: N/F
+@PartsReplaced: {N/F}
+@RefDesignator: {N/F}
+@AdditionalComments: 
+
+@CustomerNumber: -1
+@Barcode: N/A
+@DateSubmitted: 05/31/2016 11:36:53 AM
+</LogNote>
+      <LogError>false</LogError>
+    </csLogAction>
+  </lActions>
+  <LogSubmitTime>2016-05-31T11:36:53.379938-05:00</LogSubmitTime>
+</csLog>

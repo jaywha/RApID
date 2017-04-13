@@ -1,0 +1,218 @@
+<?xml version="1.0" encoding="utf-8"?>
+<csLog xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <Tech>estabile</Tech>
+  <IsCR>false</IsCR>
+  <LogCreationTime>2016-06-03T09:17:16.5050334-05:00</LogCreationTime>
+  <lActions>
+    <csLogAction>
+      <EventType>NOTE</EventType>
+      <EventTiming>2016-06-03T09:17:19.1330011-05:00</EventTiming>
+      <LogNote>Searching Database(s) for Serial Number '123456789'.</LogNote>
+      <LogError>false</LogError>
+    </csLogAction>
+    <csLogAction>
+      <EventType>NOTE</EventType>
+      <EventTiming>2016-06-03T09:17:19.1340016-05:00</EventTiming>
+      <LogNote>Attempting to Query the EOL Table.
+SQL CMD: SELECT PartNumber, ModelDesc FROM tblEOL WHERE PCBSerial = '123456789'</LogNote>
+      <LogError>false</LogError>
+    </csLogAction>
+    <csLogAction>
+      <EventType>NOTE</EventType>
+      <EventTiming>2016-06-03T09:17:19.1970482-05:00</EventTiming>
+      <LogNote>QueryEOL() was unsuccessful. Attempting QueryProduction() then QueryItemMaster()</LogNote>
+      <LogError>false</LogError>
+    </csLogAction>
+    <csLogAction>
+      <EventType>NOTE</EventType>
+      <EventTiming>2016-06-03T09:17:19.1980491-05:00</EventTiming>
+      <LogNote>Attempting to Query the Production Table.
+SQL CMD: SELECT Model FROM Production WHERE SerialNum = '123456789'</LogNote>
+      <LogError>false</LogError>
+    </csLogAction>
+    <csLogAction>
+      <EventType>NOTE</EventType>
+      <EventTiming>2016-06-03T09:17:19.2490854-05:00</EventTiming>
+      <LogNote>Attempting to Query the Item Master Table.
+SQL CMD: SELECT PartName FROM ItemMaster WHERE PartNumber = ''</LogNote>
+      <LogError>false</LogError>
+    </csLogAction>
+    <csLogAction>
+      <EventType>NOTE</EventType>
+      <EventTiming>2016-06-03T09:17:19.2921156-05:00</EventTiming>
+      <LogNote>Unable to find the Part Name.</LogNote>
+      <LogError>false</LogError>
+    </csLogAction>
+    <csLogAction>
+      <EventType>NOTE</EventType>
+      <EventTiming>2016-06-03T09:17:21.3750863-05:00</EventTiming>
+      <LogNote>The operator selected Part Number '407155-1V' and Part Name '1157C NVB'</LogNote>
+      <LogError>false</LogError>
+    </csLogAction>
+    <csLogAction>
+      <EventType>NOTE</EventType>
+      <EventTiming>2016-06-03T09:17:21.4121191-05:00</EventTiming>
+      <LogNote>Attempting to fill the Commodity Sub-Class.
+SQL CMD: SELECT CommodityClass FROM ItemMaster WHERE PartNumber = '407155-1V'</LogNote>
+      <LogError>false</LogError>
+    </csLogAction>
+    <csLogAction>
+      <EventType>NOTE</EventType>
+      <EventTiming>2016-06-03T09:17:21.5205779-05:00</EventTiming>
+      <LogNote>Querying the Tech Report From the Old 'Repair' Database for previous repair information.</LogNote>
+      <LogError>false</LogError>
+    </csLogAction>
+    <csLogAction>
+      <EventType>NOTE</EventType>
+      <EventTiming>2016-06-03T09:17:21.5963385-05:00</EventTiming>
+      <LogNote>Querying the Tech Report from the New 'RApID' database for previous repair information.</LogNote>
+      <LogError>false</LogError>
+    </csLogAction>
+    <csLogAction>
+      <ControlType>RichTextBox</ControlType>
+      <ControlName>rtbAdditionalComments</ControlName>
+      <ControlContent />
+      <EventType>ENTER</EventType>
+      <EventTiming>2016-06-03T09:17:23.5682533-05:00</EventTiming>
+      <LogError>false</LogError>
+    </csLogAction>
+    <csLogAction>
+      <ControlType>RichTextBox</ControlType>
+      <ControlName>rtbAdditionalComments</ControlName>
+      <ControlContent>delete me</ControlContent>
+      <EventType>LEAVE</EventType>
+      <EventTiming>2016-06-03T09:17:39.5424239-05:00</EventTiming>
+      <LogError>false</LogError>
+    </csLogAction>
+    <csLogAction>
+      <ControlType>Textbox</ControlType>
+      <ControlName>txtCommSubClass</ControlName>
+      <ControlContent />
+      <EventType>ENTER</EventType>
+      <EventTiming>2016-06-03T09:17:39.5434233-05:00</EventTiming>
+      <LogError>false</LogError>
+    </csLogAction>
+    <csLogAction>
+      <ControlType>Textbox</ControlType>
+      <ControlName>txtCommSubClass</ControlName>
+      <ControlContent />
+      <EventType>LEAVE</EventType>
+      <EventTiming>2016-06-03T09:17:45.9133329-05:00</EventTiming>
+      <LogError>false</LogError>
+    </csLogAction>
+    <csLogAction>
+      <ControlType>Textbox</ControlType>
+      <ControlName>txtHOU</ControlName>
+      <ControlContent />
+      <EventType>ENTER</EventType>
+      <EventTiming>2016-06-03T09:17:47.4544362-05:00</EventTiming>
+      <LogError>false</LogError>
+    </csLogAction>
+    <csLogAction>
+      <ControlType>Textbox</ControlType>
+      <ControlName>txtHOU</ControlName>
+      <ControlContent>0</ControlContent>
+      <EventType>LEAVE</EventType>
+      <EventTiming>2016-06-03T09:17:49.2787804-05:00</EventTiming>
+      <LogError>false</LogError>
+    </csLogAction>
+    <csLogAction>
+      <ControlType>Textbox</ControlType>
+      <ControlName>txtSWVersion</ControlName>
+      <ControlContent />
+      <EventType>ENTER</EventType>
+      <EventTiming>2016-06-03T09:17:49.2787804-05:00</EventTiming>
+      <LogError>false</LogError>
+    </csLogAction>
+    <csLogAction>
+      <ControlType>Textbox</ControlType>
+      <ControlName>txtSWVersion</ControlName>
+      <ControlContent>00</ControlContent>
+      <EventType>LEAVE</EventType>
+      <EventTiming>2016-06-03T09:17:50.9577547-05:00</EventTiming>
+      <LogError>false</LogError>
+    </csLogAction>
+    <csLogAction>
+      <ControlType>Textbox</ControlType>
+      <ControlName>txtCommSubClass</ControlName>
+      <ControlContent />
+      <EventType>ENTER</EventType>
+      <EventTiming>2016-06-03T09:17:50.9577547-05:00</EventTiming>
+      <LogError>false</LogError>
+    </csLogAction>
+    <csLogAction>
+      <ControlType>Textbox</ControlType>
+      <ControlName>txtCommSubClass</ControlName>
+      <ControlContent />
+      <EventType>LEAVE</EventType>
+      <EventTiming>2016-06-03T09:17:53.5613527-05:00</EventTiming>
+      <LogError>false</LogError>
+    </csLogAction>
+    <csLogAction>
+      <ControlType>ComboBox</ControlType>
+      <ControlName>cbTOR</ControlName>
+      <ControlContent>Production</ControlContent>
+      <EventType>DROPDOWNCLOSED</EventType>
+      <EventTiming>2016-06-03T09:17:54.5713754-05:00</EventTiming>
+      <LogError>false</LogError>
+    </csLogAction>
+    <csLogAction>
+      <ControlType>ComboBox</ControlType>
+      <ControlName>cbTOF</ControlName>
+      <ControlContent>Out of Box</ControlContent>
+      <EventType>DROPDOWNCLOSED</EventType>
+      <EventTiming>2016-06-03T09:17:56.3259112-05:00</EventTiming>
+      <LogError>false</LogError>
+    </csLogAction>
+    <csLogAction>
+      <ControlType>ComboBox</ControlType>
+      <ControlName>cbIssue</ControlName>
+      <ControlContent>Display-Blank or No Backlight</ControlContent>
+      <EventType>DROPDOWNCLOSED</EventType>
+      <EventTiming>2016-06-03T09:17:58.1194983-05:00</EventTiming>
+      <LogError>false</LogError>
+    </csLogAction>
+    <csLogAction>
+      <ControlType>ComboBox</ControlType>
+      <ControlName>cbTestResult</ControlName>
+      <ControlContent>LCDTemp Fail</ControlContent>
+      <EventType>DROPDOWNCLOSED</EventType>
+      <EventTiming>2016-06-03T09:17:59.1873331-05:00</EventTiming>
+      <LogError>false</LogError>
+    </csLogAction>
+    <csLogAction>
+      <ControlType>ComboBox</ControlType>
+      <ControlName>cbTestResultAbort</ControlName>
+      <ControlContent />
+      <EventType>DROPDOWNCLOSED</EventType>
+      <EventTiming>2016-06-03T09:18:00.6670932-05:00</EventTiming>
+      <LogError>false</LogError>
+    </csLogAction>
+    <csLogAction>
+      <ControlType>Button</ControlType>
+      <ControlName>btnComplete</ControlName>
+      <ControlContent>Complete</ControlContent>
+      <EventType>CLICK</EventType>
+      <EventTiming>2016-06-03T09:18:02.4747567-05:00</EventTiming>
+      <LogError>false</LogError>
+    </csLogAction>
+    <csLogAction>
+      <EventType>WARNING</EventType>
+      <EventTiming>2016-06-03T09:18:03.7029571-05:00</EventTiming>
+      <LogNote>The submission criteria has not been met.
+The following items are missing:
+Commodity Sub-Class
+</LogNote>
+      <LogError>false</LogError>
+    </csLogAction>
+    <csLogAction>
+      <ControlType>Button</ControlType>
+      <ControlName>btnStartOver</ControlName>
+      <ControlContent>Start Over</ControlContent>
+      <EventType>CLICK</EventType>
+      <EventTiming>2016-06-03T09:18:05.3900412-05:00</EventTiming>
+      <LogError>false</LogError>
+    </csLogAction>
+  </lActions>
+  <LogSubmitTime>2016-06-03T09:18:05.3910383-05:00</LogSubmitTime>
+</csLog>

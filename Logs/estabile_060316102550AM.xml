@@ -1,0 +1,246 @@
+<?xml version="1.0" encoding="utf-8"?>
+<csLog xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <Tech>estabile</Tech>
+  <IsCR>false</IsCR>
+  <LogCreationTime>2016-06-03T10:17:02.5912615-05:00</LogCreationTime>
+  <lActions>
+    <csLogAction>
+      <EventType>NOTE</EventType>
+      <EventTiming>2016-06-03T10:17:09.3539413-05:00</EventTiming>
+      <LogNote>Searching Database(s) for Serial Number '160105000030148'.</LogNote>
+      <LogError>false</LogError>
+    </csLogAction>
+    <csLogAction>
+      <EventType>NOTE</EventType>
+      <EventTiming>2016-06-03T10:17:09.3549414-05:00</EventTiming>
+      <LogNote>Attempting to Query the EOL Table.
+SQL CMD: SELECT PartNumber, ModelDesc FROM tblEOL WHERE PCBSerial = '160105000030148'</LogNote>
+      <LogError>false</LogError>
+    </csLogAction>
+    <csLogAction>
+      <EventType>NOTE</EventType>
+      <EventTiming>2016-06-03T10:17:09.4200784-05:00</EventTiming>
+      <LogNote>QueryEOL() was unsuccessful. Attempting QueryProduction() then QueryItemMaster()</LogNote>
+      <LogError>false</LogError>
+    </csLogAction>
+    <csLogAction>
+      <EventType>NOTE</EventType>
+      <EventTiming>2016-06-03T10:17:09.4210824-05:00</EventTiming>
+      <LogNote>Attempting to Query the Production Table.
+SQL CMD: SELECT Model FROM Production WHERE SerialNum = '160105000030148'</LogNote>
+      <LogError>false</LogError>
+    </csLogAction>
+    <csLogAction>
+      <EventType>NOTE</EventType>
+      <EventTiming>2016-06-03T10:17:09.475682-05:00</EventTiming>
+      <LogNote>Attempting to Query the Item Master Table.
+SQL CMD: SELECT PartName FROM ItemMaster WHERE PartNumber = ''</LogNote>
+      <LogError>false</LogError>
+    </csLogAction>
+    <csLogAction>
+      <EventType>NOTE</EventType>
+      <EventTiming>2016-06-03T10:17:09.6049722-05:00</EventTiming>
+      <LogNote>Unable to find the Part Name.</LogNote>
+      <LogError>false</LogError>
+    </csLogAction>
+    <csLogAction>
+      <EventType>NOTE</EventType>
+      <EventTiming>2016-06-03T10:17:29.3796141-05:00</EventTiming>
+      <LogNote>The operator selected Part Number '409976-1' and Part Name 'H10/10x DI GPS'</LogNote>
+      <LogError>false</LogError>
+    </csLogAction>
+    <csLogAction>
+      <EventType>NOTE</EventType>
+      <EventTiming>2016-06-03T10:17:29.4156384-05:00</EventTiming>
+      <LogNote>Attempting to fill the Commodity Sub-Class.
+SQL CMD: SELECT CommodityClass FROM ItemMaster WHERE PartNumber = '409976-1'</LogNote>
+      <LogError>false</LogError>
+    </csLogAction>
+    <csLogAction>
+      <EventType>NOTE</EventType>
+      <EventTiming>2016-06-03T10:17:29.4940631-05:00</EventTiming>
+      <LogNote>Querying the Tech Report From the Old 'Repair' Database for previous repair information.</LogNote>
+      <LogError>false</LogError>
+    </csLogAction>
+    <csLogAction>
+      <EventType>NOTE</EventType>
+      <EventTiming>2016-06-03T10:17:29.5705125-05:00</EventTiming>
+      <LogNote>Querying the Tech Report from the New 'RApID' database for previous repair information.</LogNote>
+      <LogError>false</LogError>
+    </csLogAction>
+    <csLogAction>
+      <ControlType>Textbox</ControlType>
+      <ControlName>txtSWVersion</ControlName>
+      <ControlContent />
+      <EventType>ENTER</EventType>
+      <EventTiming>2016-06-03T10:17:31.2626677-05:00</EventTiming>
+      <LogError>false</LogError>
+    </csLogAction>
+    <csLogAction>
+      <ControlType>Textbox</ControlType>
+      <ControlName>txtSWVersion</ControlName>
+      <ControlContent>1.1150</ControlContent>
+      <EventType>LEAVE</EventType>
+      <EventTiming>2016-06-03T10:17:37.0962013-05:00</EventTiming>
+      <LogError>false</LogError>
+    </csLogAction>
+    <csLogAction>
+      <ControlType>ComboBox</ControlType>
+      <ControlName>cbTOR</ControlName>
+      <ControlContent>Warranty</ControlContent>
+      <EventType>DROPDOWNCLOSED</EventType>
+      <EventTiming>2016-06-03T10:17:41.2195173-05:00</EventTiming>
+      <LogError>false</LogError>
+    </csLogAction>
+    <csLogAction>
+      <ControlType>ComboBox</ControlType>
+      <ControlName>cbTOF</ControlName>
+      <ControlContent>In Use</ControlContent>
+      <EventType>DROPDOWNCLOSED</EventType>
+      <EventTiming>2016-06-03T10:17:42.9051121-05:00</EventTiming>
+      <LogError>false</LogError>
+    </csLogAction>
+    <csLogAction>
+      <ControlType>Textbox</ControlType>
+      <ControlName>txtHOU</ControlName>
+      <ControlContent />
+      <EventType>ENTER</EventType>
+      <EventTiming>2016-06-03T10:17:43.2564141-05:00</EventTiming>
+      <LogError>false</LogError>
+    </csLogAction>
+    <csLogAction>
+      <ControlType>Textbox</ControlType>
+      <ControlName>txtHOU</ControlName>
+      <ControlContent>76</ControlContent>
+      <EventType>LEAVE</EventType>
+      <EventTiming>2016-06-03T10:17:48.4802227-05:00</EventTiming>
+      <LogError>false</LogError>
+    </csLogAction>
+    <csLogAction>
+      <ControlType>ComboBox</ControlType>
+      <ControlName>cbIssue</ControlName>
+      <ControlContent />
+      <EventType>DROPDOWNCLOSED</EventType>
+      <EventTiming>2016-06-03T10:17:55.0486517-05:00</EventTiming>
+      <LogError>false</LogError>
+    </csLogAction>
+    <csLogAction>
+      <ControlType>ComboBox</ControlType>
+      <ControlName>cbIssue</ControlName>
+      <ControlContent />
+      <EventType>DROPDOWNCLOSED</EventType>
+      <EventTiming>2016-06-03T10:20:17.4336166-05:00</EventTiming>
+      <LogError>false</LogError>
+    </csLogAction>
+    <csLogAction>
+      <ControlType>Textbox</ControlType>
+      <ControlName>txtSWVersion</ControlName>
+      <ControlContent>1.1150</ControlContent>
+      <EventType>ENTER</EventType>
+      <EventTiming>2016-06-03T10:22:51.6046236-05:00</EventTiming>
+      <LogError>false</LogError>
+    </csLogAction>
+    <csLogAction>
+      <ControlType>Textbox</ControlType>
+      <ControlName>txtSWVersion</ControlName>
+      <ControlContent>1.150</ControlContent>
+      <EventType>LEAVE</EventType>
+      <EventTiming>2016-06-03T10:23:18.8861992-05:00</EventTiming>
+      <LogError>false</LogError>
+    </csLogAction>
+    <csLogAction>
+      <ControlType>ComboBox</ControlType>
+      <ControlName>cbIssue</ControlName>
+      <ControlContent>Network Connectivity</ControlContent>
+      <EventType>DROPDOWNCLOSED</EventType>
+      <EventTiming>2016-06-03T10:24:13.3939232-05:00</EventTiming>
+      <LogError>false</LogError>
+    </csLogAction>
+    <csLogAction>
+      <ControlType>ComboBox</ControlType>
+      <ControlName>cbIssue</ControlName>
+      <ControlContent>Leaking/Water Ingress</ControlContent>
+      <EventType>DROPDOWNCLOSED</EventType>
+      <EventTiming>2016-06-03T10:24:14.843467-05:00</EventTiming>
+      <LogError>false</LogError>
+    </csLogAction>
+    <csLogAction>
+      <ControlType>ComboBox</ControlType>
+      <ControlName>cbReplacement</ControlName>
+      <ControlContent>CH</ControlContent>
+      <EventType>DROPDOWNCLOSED</EventType>
+      <EventTiming>2016-06-03T10:24:36.9543967-05:00</EventTiming>
+      <LogError>false</LogError>
+    </csLogAction>
+    <csLogAction>
+      <ControlType>RichTextBox</ControlType>
+      <ControlName>rtbAdditionalComments</ControlName>
+      <ControlContent />
+      <EventType>ENTER</EventType>
+      <EventTiming>2016-06-03T10:24:39.1241463-05:00</EventTiming>
+      <LogError>false</LogError>
+    </csLogAction>
+    <csLogAction>
+      <ControlType>RichTextBox</ControlType>
+      <ControlName>rtbAdditionalComments</ControlName>
+      <ControlContent>Unit turns itself on.
+Water Damage.</ControlContent>
+      <EventType>LEAVE</EventType>
+      <EventTiming>2016-06-03T10:25:50.0874122-05:00</EventTiming>
+      <LogError>false</LogError>
+    </csLogAction>
+    <csLogAction>
+      <ControlType>Button</ControlType>
+      <ControlName>btnComplete</ControlName>
+      <ControlContent>Complete</ControlContent>
+      <EventType>CLICK</EventType>
+      <EventTiming>2016-06-03T10:25:50.1893391-05:00</EventTiming>
+      <LogError>false</LogError>
+    </csLogAction>
+    <csLogAction>
+      <EventType>NOTE</EventType>
+      <EventTiming>2016-06-03T10:25:50.19034-05:00</EventTiming>
+      <LogNote>The submission criteria has been met. Attempting to submit...</LogNote>
+      <LogError>false</LogError>
+    </csLogAction>
+    <csLogAction>
+      <EventType>NOTE</EventType>
+      <EventTiming>2016-06-03T10:25:50.193342-05:00</EventTiming>
+      <LogNote>The criteria for saving this unit issue to the Multiple Unit Issues list has been met.
+Attempting to save the unit issue.</LogNote>
+      <LogError>false</LogError>
+    </csLogAction>
+    <csLogAction>
+      <EventType>SUBMISSIONDETAILS</EventType>
+      <EventTiming>2016-06-03T10:25:50.1989782-05:00</EventTiming>
+      <LogNote>Attemping to submit the data with the following parameters:
+@Technician: estabile
+@DateReceived: 06/03/2016
+@PartName: H10/10x DI GPS
+@PartNumber: 409976-1
+@CommoditySubClass: H40       
+@Quantity: 1
+@SoftwareVersion: 1.150
+@Scrap: False
+@TypeOfReturn: Warranty
+@TypeOfFailure: In Use
+@HoursOnUnit: 76
+@Issue: Leaking/Water Ingress
+@TestResult: N/F
+@TestResultAbort: N/F
+@Cause: N/F
+@Replacement: CH
+@PartsReplaced: {N/F}
+@RefDesignator: {N/F}
+@AdditionalComments: Unit turns itself on.
+Water Damage.
+
+@CustomerNumber: -1
+@Barcode: 160105000030148
+@DateSubmitted: 06/03/2016 10:25:50 AM
+</LogNote>
+      <LogError>false</LogError>
+    </csLogAction>
+  </lActions>
+  <LogSubmitTime>2016-06-03T10:25:50.287305-05:00</LogSubmitTime>
+</csLog>

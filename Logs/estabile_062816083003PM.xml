@@ -1,0 +1,337 @@
+<?xml version="1.0" encoding="utf-8"?>
+<csLog xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <Tech>estabile</Tech>
+  <IsCR>false</IsCR>
+  <LogCreationTime>2016-06-28T20:28:26.7539875-05:00</LogCreationTime>
+  <lActions>
+    <csLogAction>
+      <ControlType>Button</ControlType>
+      <ControlName>btnLookupPartName</ControlName>
+      <ControlContent>?</ControlContent>
+      <EventType>CLICK</EventType>
+      <EventTiming>2016-06-28T20:28:33.0235892-05:00</EventTiming>
+      <LogError>false</LogError>
+    </csLogAction>
+    <csLogAction>
+      <EventType>NOTE</EventType>
+      <EventTiming>2016-06-28T20:28:39.2018374-05:00</EventTiming>
+      <LogNote>The operator selected Part Number '408806-1' and Part Name 'MAIN- ONIX10'</LogNote>
+      <LogError>false</LogError>
+    </csLogAction>
+    <csLogAction>
+      <EventType>NOTE</EventType>
+      <EventTiming>2016-06-28T20:28:39.2018374-05:00</EventTiming>
+      <LogNote>Attempting to fill the Commodity Sub-Class.
+SQL CMD: SELECT CommodityClass FROM ItemMaster WHERE PartNumber = '408806-1'</LogNote>
+      <LogError>false</LogError>
+    </csLogAction>
+    <csLogAction>
+      <ControlType>Textbox</ControlType>
+      <ControlName>txtSWVersion</ControlName>
+      <ControlContent />
+      <EventType>ENTER</EventType>
+      <EventTiming>2016-06-28T20:28:42.1863775-05:00</EventTiming>
+      <LogError>false</LogError>
+    </csLogAction>
+    <csLogAction>
+      <ControlType>Textbox</ControlType>
+      <ControlName>txtSWVersion</ControlName>
+      <ControlContent>1.23</ControlContent>
+      <EventType>LEAVE</EventType>
+      <EventTiming>2016-06-28T20:28:45.2388837-05:00</EventTiming>
+      <LogError>false</LogError>
+    </csLogAction>
+    <csLogAction>
+      <ControlType>ComboBox</ControlType>
+      <ControlName>cbTOR</ControlName>
+      <ControlContent>Production</ControlContent>
+      <EventType>DROPDOWNCLOSED</EventType>
+      <EventTiming>2016-06-28T20:28:48.3434394-05:00</EventTiming>
+      <LogError>false</LogError>
+    </csLogAction>
+    <csLogAction>
+      <ControlType>ComboBox</ControlType>
+      <ControlName>cbTOF</ControlName>
+      <ControlContent />
+      <EventType>DROPDOWNCLOSED</EventType>
+      <EventTiming>2016-06-28T20:28:51.4548905-05:00</EventTiming>
+      <LogError>false</LogError>
+    </csLogAction>
+    <csLogAction>
+      <ControlType>ComboBox</ControlType>
+      <ControlName>cbReportedIssue</ControlName>
+      <ControlContent>Unstated</ControlContent>
+      <EventType>DROPDOWNCLOSED</EventType>
+      <EventTiming>2016-06-28T20:28:59.2803855-05:00</EventTiming>
+      <LogError>false</LogError>
+    </csLogAction>
+    <csLogAction>
+      <ControlType>ComboBox</ControlType>
+      <ControlName>cbTestResult</ControlName>
+      <ControlContent>SW Fail</ControlContent>
+      <EventType>DROPDOWNCLOSED</EventType>
+      <EventTiming>2016-06-28T20:29:04.4359861-05:00</EventTiming>
+      <LogError>false</LogError>
+    </csLogAction>
+    <csLogAction>
+      <ControlType>ComboBox</ControlType>
+      <ControlName>cbTestResultAbort</ControlName>
+      <ControlContent>N/A</ControlContent>
+      <EventType>DROPDOWNCLOSED</EventType>
+      <EventTiming>2016-06-28T20:29:06.9858696-05:00</EventTiming>
+      <LogError>false</LogError>
+    </csLogAction>
+    <csLogAction>
+      <ControlType>ComboBox</ControlType>
+      <ControlName>cbCause</ControlName>
+      <ControlContent>Unplugged/Plugged Incorrectly</ControlContent>
+      <EventType>DROPDOWNCLOSED</EventType>
+      <EventTiming>2016-06-28T20:29:09.5910189-05:00</EventTiming>
+      <LogError>false</LogError>
+    </csLogAction>
+    <csLogAction>
+      <ControlType>ComboBox</ControlType>
+      <ControlName>cbCause</ControlName>
+      <ControlContent>SW</ControlContent>
+      <EventType>DROPDOWNCLOSED</EventType>
+      <EventTiming>2016-06-28T20:29:11.2471346-05:00</EventTiming>
+      <LogError>false</LogError>
+    </csLogAction>
+    <csLogAction>
+      <ControlType>ComboBox</ControlType>
+      <ControlName>cbReplacement</ControlName>
+      <ControlContent>Re-Flash</ControlContent>
+      <EventType>DROPDOWNCLOSED</EventType>
+      <EventTiming>2016-06-28T20:29:14.0671118-05:00</EventTiming>
+      <LogError>false</LogError>
+    </csLogAction>
+    <csLogAction>
+      <ControlType>Textbox</ControlType>
+      <ControlName>txtRefDesignator</ControlName>
+      <ControlContent />
+      <EventType>ENTER</EventType>
+      <EventTiming>2016-06-28T20:29:14.6562307-05:00</EventTiming>
+      <LogError>false</LogError>
+    </csLogAction>
+    <csLogAction>
+      <ControlType>Textbox</ControlType>
+      <ControlName>txtRefDesignator</ControlName>
+      <ControlContent>ref-123</ControlContent>
+      <EventType>LEAVE</EventType>
+      <EventTiming>2016-06-28T20:29:16.9403975-05:00</EventTiming>
+      <LogError>false</LogError>
+    </csLogAction>
+    <csLogAction>
+      <ControlType>Textbox</ControlType>
+      <ControlName>txtPartsReplaced</ControlName>
+      <ControlContent />
+      <EventType>ENTER</EventType>
+      <EventTiming>2016-06-28T20:29:16.940898-05:00</EventTiming>
+      <LogError>false</LogError>
+    </csLogAction>
+    <csLogAction>
+      <ControlType>Textbox</ControlType>
+      <ControlName>txtPartsReplaced</ControlName>
+      <ControlContent>123-456</ControlContent>
+      <EventType>LEAVE</EventType>
+      <EventTiming>2016-06-28T20:29:20.1970366-05:00</EventTiming>
+      <LogError>false</LogError>
+    </csLogAction>
+    <csLogAction>
+      <ControlType>Button</ControlType>
+      <ControlName>btnAddMultiParts</ControlName>
+      <ControlContent>Add</ControlContent>
+      <EventType>CLICK</EventType>
+      <EventTiming>2016-06-28T20:29:20.2682326-05:00</EventTiming>
+      <LogError>false</LogError>
+    </csLogAction>
+    <csLogAction>
+      <EventType>NOTE</EventType>
+      <EventTiming>2016-06-28T20:29:20.2682326-05:00</EventTiming>
+      <LogNote>Adding Part Replaced '123-456' and Ref Designator 'ref-123' to dgMultipleParts.</LogNote>
+      <LogError>false</LogError>
+    </csLogAction>
+    <csLogAction>
+      <ControlType>Textbox</ControlType>
+      <ControlName>txtRefDesignator</ControlName>
+      <ControlContent />
+      <EventType>ENTER</EventType>
+      <EventTiming>2016-06-28T20:29:20.6923918-05:00</EventTiming>
+      <LogError>false</LogError>
+    </csLogAction>
+    <csLogAction>
+      <ControlType>Textbox</ControlType>
+      <ControlName>txtRefDesignator</ControlName>
+      <ControlContent>ref-456</ControlContent>
+      <EventType>LEAVE</EventType>
+      <EventTiming>2016-06-28T20:29:25.0176618-05:00</EventTiming>
+      <LogError>false</LogError>
+    </csLogAction>
+    <csLogAction>
+      <ControlType>Textbox</ControlType>
+      <ControlName>txtPartsReplaced</ControlName>
+      <ControlContent />
+      <EventType>ENTER</EventType>
+      <EventTiming>2016-06-28T20:29:25.0176618-05:00</EventTiming>
+      <LogError>false</LogError>
+    </csLogAction>
+    <csLogAction>
+      <ControlType>Textbox</ControlType>
+      <ControlName>txtPartsReplaced</ControlName>
+      <ControlContent>pr-852</ControlContent>
+      <EventType>LEAVE</EventType>
+      <EventTiming>2016-06-28T20:29:28.7027733-05:00</EventTiming>
+      <LogError>false</LogError>
+    </csLogAction>
+    <csLogAction>
+      <ControlType>Button</ControlType>
+      <ControlName>btnAddMultiParts</ControlName>
+      <ControlContent>Add</ControlContent>
+      <EventType>CLICK</EventType>
+      <EventTiming>2016-06-28T20:29:28.7904601-05:00</EventTiming>
+      <LogError>false</LogError>
+    </csLogAction>
+    <csLogAction>
+      <EventType>NOTE</EventType>
+      <EventTiming>2016-06-28T20:29:28.7904601-05:00</EventTiming>
+      <LogNote>Adding Part Replaced 'pr-852' and Ref Designator 'ref-456' to dgMultipleParts.</LogNote>
+      <LogError>false</LogError>
+    </csLogAction>
+    <csLogAction>
+      <ControlType>Button</ControlType>
+      <ControlName>btnSaveIssues</ControlName>
+      <ControlContent>Save And Add Another</ControlContent>
+      <EventType>CLICK</EventType>
+      <EventTiming>2016-06-28T20:29:31.591279-05:00</EventTiming>
+      <LogError>false</LogError>
+    </csLogAction>
+    <csLogAction>
+      <EventType>NOTE</EventType>
+      <EventTiming>2016-06-28T20:29:31.591279-05:00</EventTiming>
+      <LogNote>Attempting to save unit issues to the Multiple Issues list.</LogNote>
+      <LogError>false</LogError>
+    </csLogAction>
+    <csLogAction>
+      <EventType>NOTE</EventType>
+      <EventTiming>2016-06-28T20:29:31.591279-05:00</EventTiming>
+      <LogNote>The criteria for saving this unit issue to the Multiple Unit Issues list has been met.
+Attempting to save the unit issue.</LogNote>
+      <LogError>false</LogError>
+    </csLogAction>
+    <csLogAction>
+      <ControlType>ComboBox</ControlType>
+      <ControlName>cbReportedIssue</ControlName>
+      <ControlContent>Power-None</ControlContent>
+      <EventType>DROPDOWNCLOSED</EventType>
+      <EventTiming>2016-06-28T20:29:34.3415425-05:00</EventTiming>
+      <LogError>false</LogError>
+    </csLogAction>
+    <csLogAction>
+      <ControlType>ComboBox</ControlType>
+      <ControlName>cbTestResult</ControlName>
+      <ControlContent>Pass</ControlContent>
+      <EventType>DROPDOWNCLOSED</EventType>
+      <EventTiming>2016-06-28T20:29:37.5627442-05:00</EventTiming>
+      <LogError>false</LogError>
+    </csLogAction>
+    <csLogAction>
+      <ControlType>RichTextBox</ControlType>
+      <ControlName>rtbAdditionalComments</ControlName>
+      <ControlContent />
+      <EventType>ENTER</EventType>
+      <EventTiming>2016-06-28T20:29:48.0085256-05:00</EventTiming>
+      <LogError>false</LogError>
+    </csLogAction>
+    <csLogAction>
+      <ControlType>RichTextBox</ControlType>
+      <ControlName>rtbAdditionalComments</ControlName>
+      <ControlContent>Updated software.</ControlContent>
+      <EventType>LEAVE</EventType>
+      <EventTiming>2016-06-28T20:29:55.2353246-05:00</EventTiming>
+      <LogError>false</LogError>
+    </csLogAction>
+    <csLogAction>
+      <ControlType>Button</ControlType>
+      <ControlName>btnComplete</ControlName>
+      <ControlContent>Complete</ControlContent>
+      <EventType>CLICK</EventType>
+      <EventTiming>2016-06-28T20:29:55.3292808-05:00</EventTiming>
+      <LogError>false</LogError>
+    </csLogAction>
+    <csLogAction>
+      <EventType>WARNING</EventType>
+      <EventTiming>2016-06-28T20:29:58.6203233-05:00</EventTiming>
+      <LogNote>The submission criteria has not been met.
+The following items are missing:
+Type of Failure
+</LogNote>
+      <LogError>false</LogError>
+    </csLogAction>
+    <csLogAction>
+      <ControlType>ComboBox</ControlType>
+      <ControlName>cbTOF</ControlName>
+      <ControlContent>Out of Box</ControlContent>
+      <EventType>DROPDOWNCLOSED</EventType>
+      <EventTiming>2016-06-28T20:30:01.422062-05:00</EventTiming>
+      <LogError>false</LogError>
+    </csLogAction>
+    <csLogAction>
+      <ControlType>Button</ControlType>
+      <ControlName>btnComplete</ControlName>
+      <ControlContent>Complete</ControlContent>
+      <EventType>CLICK</EventType>
+      <EventTiming>2016-06-28T20:30:03.7841088-05:00</EventTiming>
+      <LogError>false</LogError>
+    </csLogAction>
+    <csLogAction>
+      <EventType>NOTE</EventType>
+      <EventTiming>2016-06-28T20:30:03.7841088-05:00</EventTiming>
+      <LogNote>The submission criteria has been met. Attempting to submit...</LogNote>
+      <LogError>false</LogError>
+    </csLogAction>
+    <csLogAction>
+      <EventType>NOTE</EventType>
+      <EventTiming>2016-06-28T20:30:03.7841088-05:00</EventTiming>
+      <LogNote>The criteria for saving this unit issue to the Multiple Unit Issues list has been met.
+Attempting to save the unit issue.</LogNote>
+      <LogError>false</LogError>
+    </csLogAction>
+    <csLogAction>
+      <EventType>SUBMISSIONDETAILS</EventType>
+      <EventTiming>2016-06-28T20:30:03.7861109-05:00</EventTiming>
+      <LogNote>Attemping to submit the data with the following parameters:
+@Technician: estabile
+@DateReceived: 06/28/2016
+@PartName: MAIN- ONIX10
+@PartNumber: 408806-1
+@CommoditySubClass: H32       
+@Quantity: 1
+@SoftwareVersion: 1.23
+@Scrap: False
+@TypeOfReturn: Production
+@TypeOfFailure: Out of Box
+@HoursOnUnit: -1
+@Issue: Unstated, Power-None
+@TestResult: SW Fail, Pass
+@TestResultAbort: N/A, N/F
+@Cause: SW, N/F
+@Replacement: Re-Flash, N/F
+@PartsReplaced: {123-456, pr-852}{N/F}
+@RefDesignator: {ref-123, ref-456}{N/F}
+@AdditionalComments: Updated software.
+
+@CustomerNumber: 1123456
+@Barcode: N/A
+@DateSubmitted: 06/28/2016 08:30:03 PM
+@SubmissionStatus: COMPLETE
+@SaveID: -1
+@RP: 654321
+@TechAct1: Updated Software
+@TechAct2: Re-Tested - No Problem Found
+@TechAct3: N/A
+</LogNote>
+      <LogError>false</LogError>
+    </csLogAction>
+  </lActions>
+  <LogSubmitTime>2016-06-28T20:30:03.8341576-05:00</LogSubmitTime>
+</csLog>

@@ -1,0 +1,63 @@
+﻿<?xml version='1.0' encoding='utf-8'?>
+<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="RApID_Project_WPF.Properties" GeneratedClassName="Settings">
+  <Profiles />
+  <Settings>
+    <Setting Name="MaxSonarBeams" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">10</Value>
+    </Setting>
+    <Setting Name="SPPortName" Type="System.String" Scope="User">
+      <Value Profile="(Default)">""</Value>
+    </Setting>
+    <Setting Name="SPBaudRate" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">9600</Value>
+    </Setting>
+    <Setting Name="SPParity" Type="System.IO.Ports.Parity" Scope="User">
+      <Value Profile="(Default)">Even</Value>
+    </Setting>
+    <Setting Name="SPDataBit" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">7</Value>
+    </Setting>
+    <Setting Name="SPStopBit" Type="System.IO.Ports.StopBits" Scope="User">
+      <Value Profile="(Default)">One</Value>
+    </Setting>
+    <Setting Name="HBConn" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Data Source=10.110.1.251;Initial Catalog=HummingBird; Persist Security Info=True;User ID=inhouse;Password=Password1</Value>
+    </Setting>
+    <Setting Name="HBConnStrings" Type="System.String" Scope="User">
+      <Value Profile="(Default)">{Data Source=10.110.1.251;Initial Catalog=HummingBird; Persist Security Info=True;User ID=inhouse;Password=Password1}{Provider=Microsoft.Jet.OLEDB.4.0; Data Source=C:\Users\esdog\Dropbox\HumminbirdWork\RApID\Databases\mdb\HummingBird.mdb}</Value>
+    </Setting>
+    <Setting Name="RepairConn" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Data Source=10.110.1.251;Initial Catalog=Repair; Persist Security Info=True;User ID=inhouse;Password=Password1</Value>
+    </Setting>
+    <Setting Name="RepairConnStrings" Type="System.String" Scope="User">
+      <Value Profile="(Default)">{Data Source=10.110.1.251;Initial Catalog=Repair; Persist Security Info=True;User ID=inhouse;Password=Password1}{Provider=Microsoft.Jet.OLEDB.4.0; Data Source=C:\Users\esdog\Dropbox\HumminbirdWork\RApID\Databases\mdb\Repair.mdb}</Value>
+    </Setting>
+    <Setting Name="YesDBConn" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Data Source=10.110.1.251;Initial Catalog=YesDB; Persist Security Info=True;User ID=inhouse;Password=Password1</Value>
+    </Setting>
+    <Setting Name="YesDBConnStrings" Type="System.String" Scope="User">
+      <Value Profile="(Default)">{Data Source=10.110.1.251;Initial Catalog=YesDB; Persist Security Info=True;User ID=inhouse;Password=Password1}</Value>
+    </Setting>
+    <Setting Name="LogWriteLocation" Type="System.String" Scope="User">
+      <Value Profile="(Default)">P:\EE Process Test\Logs\RApID\</Value>
+    </Setting>
+    <Setting Name="PrinterToUse" Type="System.String" Scope="User">
+      <Value Profile="(Default)">\\eufs04\EU_B3_Repair label printer</Value>
+    </Setting>
+    <Setting Name="PrinterXOffset" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">0</Value>
+    </Setting>
+    <Setting Name="PrinterYOffset" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">0</Value>
+    </Setting>
+    <Setting Name="PrinterInitSetup" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="AccessDatabase" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="DefaultReportManagerLink" Type="System.String" Scope="User">
+      <Value Profile="(Default)">http://euap01/Reports/Pages/Folder.aspx?ItemPath=%2fRApID+(Repair+Database)&amp;ViewMode=List</Value>
+    </Setting>
+  </Settings>
+</SettingsFile>

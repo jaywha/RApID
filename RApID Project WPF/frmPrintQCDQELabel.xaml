@@ -1,0 +1,19 @@
+﻿<Window
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:System="clr-namespace:System;assembly=mscorlib" x:Class="RApID_Project_WPF.frmPrintQCDQELabel"
+        Title="Print QC or DQE Label" Height="150" Width="350" ResizeMode="NoResize" WindowStartupLocation="CenterScreen" Topmost="True" WindowStyle="ToolWindow" Loaded="Window_Loaded">
+    <Grid>
+        <Label Content="Location:" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="62,10,0,0" />
+        <ComboBox x:Name="cbLocation" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="125,10,0,0" Width="75">
+            <System:String>QC</System:String>
+            <System:String>DQE</System:String>
+        </ComboBox>
+
+        <Label Content="Enter Save ID:" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="37,41,0,0" />
+        <TextBox x:Name="txtQCDQEID" Width="200" Height="23" Margin="125,42,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" />
+
+        <Button x:Name="btnPrint" Content="Print Label" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10,80,0,0" Width="75" Click="btnPrint_Click"/>
+        <Button x:Name="btnClose" Content="Exit" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="50,80,0,0" Width="75" Click="btnClose_Click"/>
+    </Grid>
+</Window>
