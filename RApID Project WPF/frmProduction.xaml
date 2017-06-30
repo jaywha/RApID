@@ -31,7 +31,7 @@
             <Setter Property="HorizontalAlignment" Value="Left" />
             <Setter Property="VerticalAlignment" Value="Top" />
         </Style>
-        
+
         <Style x:Key="UnitIssueButtons" TargetType="{x:Type Button}">
             <Setter Property="HorizontalAlignment" Value="Left" />
             <Setter Property="VerticalAlignment" Value="Top" />
@@ -39,7 +39,7 @@
             <Setter Property="Height" Value="25" />
             <Setter Property="Visibility" Value="Hidden" />
         </Style>
-        
+
         <Style x:Key="RepairButtons" TargetType="Button">
             <Setter Property="Template">
                 <Setter.Value>
@@ -105,13 +105,17 @@
     <Viewbox Stretch="Uniform">
 
         <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="571*"/>
+                <ColumnDefinition Width="516*"/>
+            </Grid.ColumnDefinitions>
 
             <Label Content="Serial Number:" FontWeight="Bold" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10,20,0,0" />
             <TextBox Name="txtSerialNumber" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="105,22,0,0" Width="200" Height="23" PreviewTextInput="previewInput" KeyDown="txtSerialNumber_KeyDown"/>
-            <Button Name="btnStartOver" Content="Start Over" HorizontalAlignment="Left" VerticalAlignment="Top" Width="100" Height="46" Margin="875,10,0,0" Style="{StaticResource RepairButtons}" Click="btnStartOver_Click"/>
-            <Button Name="btnComplete" Content="Complete" HorizontalAlignment="Left" VerticalAlignment="Top" Width="100" Height="46" Margin="985,10,0,0" Style="{StaticResource RepairButtons}" Click="btnComplete_Click"/>
+            <Button Name="btnStartOver" Content="Start Over" HorizontalAlignment="Left" VerticalAlignment="Top" Width="100" Height="46" Margin="303.562,10,0,0" Style="{StaticResource RepairButtons}" Click="btnStartOver_Click" Grid.Column="1"/>
+            <Button Name="btnComplete" Content="Complete" HorizontalAlignment="Left" VerticalAlignment="Top" Width="100" Height="46" Margin="413.562,10,0,0" Style="{StaticResource RepairButtons}" Click="btnComplete_Click" Grid.Column="1"/>
 
-            <TabControl HorizontalAlignment="Left" VerticalAlignment="Top" Width="1085" Height="665" Margin="2,65,0,0">
+            <TabControl HorizontalAlignment="Left" VerticalAlignment="Top" Width="1085" Height="665" Margin="2,65,0,0" Grid.ColumnSpan="2">
 
                 <TabItem Header="DataLog">
                     <Grid Background="#FFE5E5E5">
@@ -181,7 +185,7 @@
                                     <Button Name="btnReset" Content="Reset Unit Issue #1" Margin="10,555,0,0" Style="{StaticResource UnitIssueButtons}" Width="275" Visibility="Visible" Click="btnReset_Click"/>
                                 </Grid>
                             </TabItem>
-                            
+
                             <TabItem Name="tiUI2" Header="Unit Issue #2" IsEnabled="False">
                                 <Grid Name="gridUI2" Background="#FFE5E5E5">
                                     <Label Content="Reported Issue:" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10,10,0,0" />
@@ -213,7 +217,7 @@
                                     <Button Name="btnReset_2" Content="Reset Unit Issue #2" Margin="10,555,0,0" Style="{StaticResource UnitIssueButtons}" Width="275" Visibility="Visible" Click="btnReset_Click"/>
                                 </Grid>
                             </TabItem>
-                            
+
                             <TabItem Name="tiUI3" Header="Unit Issue #3" IsEnabled="False">
                                 <Grid Name="gridUI3" Background="#FFE5E5E5">
                                     <Label Content="Reported Issue:" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10,10,0,0" />
@@ -303,7 +307,7 @@
 
                         <Label Content="Beams:" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="816,53,0,0" />
                         <ComboBox Name="cbBEAMSBeamNum" Margin="860,56,0,0" Style="{StaticResource EOLComboBox}" DropDownClosed="cbBEAMSBeamNum_DropDownClosed"/>
-                        
+
                         <Label Content="Beam Test Results" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="807,77,0,0" />
                         <ListView Name="lsvBeamTestId" Margin="807,97,0,0" Style="{StaticResource EOLListView}" Height="500">
                             <ListView.View>
@@ -338,7 +342,7 @@
 
             </TabControl>
 
-            <ToolBar Name="tbSPStatus" HorizontalAlignment="Stretch" Margin="0,740,0,0" VerticalAlignment="Top" Width="auto" Height="34" Header="Serial Port Status:">
+            <ToolBar Name="tbSPStatus" HorizontalAlignment="Stretch" Margin="0,740,0,0" VerticalAlignment="Top" Width="auto" Height="34" Header="Serial Port Status:" Grid.ColumnSpan="2">
                 <Label Name="tbPortStatus" Content="Port Status: Closed" Height="34" ToolBar.OverflowMode="Never" VerticalAlignment="Top" HorizontalAlignment="Left" Padding="5,7,5,0" />
                 <Separator />
                 <Label Name="tbPortName" Content="Port Name:" Height="34" ToolBar.OverflowMode="Never" VerticalAlignment="Top" HorizontalAlignment="Left" Padding="5,7,5,0"/>

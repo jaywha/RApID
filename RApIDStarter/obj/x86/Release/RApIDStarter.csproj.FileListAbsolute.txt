@@ -1,0 +1,5 @@
+C:\Visual Studio Projects\RApID\RApIDStarter\bin\x86\Release\RApIDStarter.exe.config
+C:\Visual Studio Projects\RApID\RApIDStarter\bin\x86\Release\RApIDStarter.exe
+C:\Visual Studio Projects\RApID\RApIDStarter\bin\x86\Release\RApIDStarter.pdb
+C:\Visual Studio Projects\RApID\RApIDStarter\obj\x86\Release\RApIDStarter.exe
+C:\Visual Studio Projects\RApID\RApIDStarter\obj\x86\Release\RApIDStarter.pdb

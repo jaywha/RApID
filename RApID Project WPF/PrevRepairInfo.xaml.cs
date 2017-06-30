@@ -20,6 +20,13 @@ namespace RApID_Project_WPF
     /// </summary>
     public partial class PrevRepairInfo : Window
     {
+
+        /// <summary>
+        /// >>>>
+        /// THIS IS ONLY USED FOR GETTING PREVIOUS INFORMATION FROM THE DQE/QC FORM
+        /// <<<<
+        /// </summary>
+
         PreviousRepairInformation PRI;
         List<string> lUnitIssues = new List<string>(7); //-This will be used to house the unit issues and will be used to build the unit issue tab control.
         public PrevRepairInfo(PreviousRepairInformation prevInfo)

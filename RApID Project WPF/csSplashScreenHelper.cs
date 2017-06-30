@@ -17,6 +17,9 @@ namespace RApID_Project_WPF
     internal class csSplashScreenHelper
     {
         public static frmSplashScreen SplashScreen { get; set; }
+        public static Thread thread_Hide;
+        public static Thread thread_Show;
+        public static Thread thread_Close;
 
         /// <summary>
         /// Display Splash Screen
@@ -32,26 +35,34 @@ namespace RApID_Project_WPF
         /// </summary>
         public static void Hide()
         {
-            if (SplashScreen == null) return;
-
-            if (!SplashScreen.Dispatcher.CheckAccess())
+            try
             {
-                Thread thread = new Thread(new System.Threading.ThreadStart(delegate()
-                    {
-                        SplashScreen.Dispatcher.Invoke(DispatcherPriority.Normal, new Action(delegate()
-                            {
-                                Thread.Sleep(1000);
-                                try
+                if (SplashScreen == null) return;
+
+                if (!SplashScreen.Dispatcher.CheckAccess())
+                {
+                    thread_Hide = new Thread(new System.Threading.ThreadStart(delegate ()
+                        {
+                            SplashScreen.Dispatcher.Invoke(DispatcherPriority.Normal, new Action(delegate ()
                                 {
-                                    SplashScreen.Hide();
-                                }
-                                catch { }
-                            }));
-                    }));
-                thread.SetApartmentState(ApartmentState.STA);
-                thread.Start();
+                                    Thread.Sleep(1000);
+                                    try
+                                    {
+                                        SplashScreen.Hide();
+                                    }
+                                    catch { }
+                                }));
+                        }));
+                    thread_Hide.Name = "RApID_Hide";
+                    thread_Hide.SetApartmentState(ApartmentState.STA);
+                    thread_Hide.Start();
+                }
+                else SplashScreen.Hide();
             }
-            else SplashScreen.Hide();
+            catch (Exception ex)
+            {
+
+            }
         }
 
         /// <summary>
@@ -59,29 +70,72 @@ namespace RApID_Project_WPF
         /// </summary>
         public static void ShowText(string text)
         {
-            if (SplashScreen == null) return;
-
-            if (!SplashScreen.Dispatcher.CheckAccess())
+            try
             {
-                Thread thread = new Thread(
-                    new System.Threading.ThreadStart(
-                        delegate()
-                        {
-                            SplashScreen.Dispatcher.Invoke(
-                                DispatcherPriority.Normal,
+                if (SplashScreen == null) return;
 
-                                new Action(delegate()
-                                    {
-                                        ((SplashScreenVM)SplashScreen.DataContext).SplashText = text;
-                                    }
-                            ));
-                            SplashScreen.Dispatcher.Invoke(DispatcherPriority.ApplicationIdle, new Action(() => { }));
-                        }
-                ));
-                thread.SetApartmentState(ApartmentState.STA);
-                thread.Start();
+                if (!SplashScreen.Dispatcher.CheckAccess())
+                {
+                    thread_Show = new Thread(
+                        new System.Threading.ThreadStart(
+                            delegate ()
+                            {
+                                SplashScreen.Dispatcher.Invoke(
+                                    DispatcherPriority.Normal,
+
+                                    new Action(delegate ()
+                                        {
+                                            ((SplashScreenVM)SplashScreen.DataContext).SplashText = text;
+                                        }
+                                ));
+                                SplashScreen.Dispatcher.Invoke(DispatcherPriority.ApplicationIdle, new Action(() => { }));
+                            }
+                    ));
+                    thread_Show.Name = "RApID_Show";
+                    thread_Show.SetApartmentState(ApartmentState.STA);
+                    thread_Show.Start();
+                }
+                else ((SplashScreenVM)SplashScreen.DataContext).SplashText = text;
             }
-            else ((SplashScreenVM)SplashScreen.DataContext).SplashText = text;
+            catch (Exception ex)
+            {
+
+            }
+        }
+
+        /// <summary>
+        /// Close Splash Screen
+        /// </summary>
+        public static void Close()
+        {
+            try
+            {
+                if (SplashScreen == null) return;
+
+                if (!SplashScreen.Dispatcher.CheckAccess())
+                {
+                    thread_Close = new Thread(new System.Threading.ThreadStart(delegate ()
+                    {
+                        SplashScreen.Dispatcher.Invoke(DispatcherPriority.Normal, new Action(delegate ()
+                        {
+                            Thread.Sleep(1000);
+                            try
+                            {
+                                SplashScreen.Close();
+                            }
+                            catch { }
+                        }));
+                    }));
+                    thread_Close.Name = "RApID_Close";
+                    thread_Close.SetApartmentState(ApartmentState.STA);
+                    thread_Close.Start();
+                }
+                else SplashScreen.Close();
+            }
+            catch (Exception ex)
+            {
+
+            }
         }
     }
 }

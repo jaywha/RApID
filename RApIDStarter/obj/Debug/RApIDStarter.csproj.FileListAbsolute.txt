@@ -16,3 +16,9 @@ C:\Users\dglanton\Dropbox\RApID\Solutions\RApID Solution WPF\RApID Solution WPF\
 C:\Users\dglanton\Dropbox\RApID\Solutions\RApID Solution WPF\RApID Solution WPF\RApIDStarter\obj\Debug\RApIDStarter.exe
 C:\Users\dglanton\Dropbox\RApID\Solutions\RApID Solution WPF\RApID Solution WPF\RApIDStarter\obj\Debug\RApIDStarter.pdb
 C:\Users\dglanton\Dropbox\RApID\Solutions\RApID Solution WPF\RApID Solution WPF\RApIDStarter\obj\Debug\RApIDStarter.csprojResolveAssemblyReference.cache
+C:\Visual Studio Projects\RApID\RApIDStarter\bin\Debug\RApIDStarter.exe.config
+C:\Visual Studio Projects\RApID\RApIDStarter\bin\Debug\RApIDStarter.exe
+C:\Visual Studio Projects\RApID\RApIDStarter\bin\Debug\RApIDStarter.pdb
+C:\Visual Studio Projects\RApID\RApIDStarter\obj\Debug\RApIDStarter.csprojResolveAssemblyReference.cache
+C:\Visual Studio Projects\RApID\RApIDStarter\obj\Debug\RApIDStarter.exe
+C:\Visual Studio Projects\RApID\RApIDStarter\obj\Debug\RApIDStarter.pdb

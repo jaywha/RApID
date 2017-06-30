@@ -28,6 +28,8 @@ namespace RApID_Project_WPF
         #region Variables
         private enum SubmissionStatus { COMPLETE, SENDTOQC, SENDTODQE };
 
+        csSQL.csSQLClass sqlClass = new csSQL.csSQLClass();
+
         StaticVars sVar = StaticVars.StaticVarsInstance();
         SerialPort sp;
         DispatcherTimer tSPChecker;
@@ -39,8 +41,11 @@ namespace RApID_Project_WPF
         bool bTimerRebootAttempt = false; //NOTE: tSPChecker will attempt to reboot itself once if it gets disconnected. This flag will be used to track that.
         
         private string sRPNum = String.Empty;
-        
+        string sUserDepartmentNumber = "";
+        string sDQE_DeptNum = "320900";
         double dLineNumber;
+
+        InitSplash initS = new InitSplash();
         #endregion
         
         public Repair(bool bRework)
@@ -50,7 +55,7 @@ namespace RApID_Project_WPF
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
-            InitSplash initS = new InitSplash("Initializing Form...");
+            initS.InitSplash1("Initializing Form...");
             buildDGViews();
             csSplashScreenHelper.ShowText("Loading DataLog...");
             initDataLogForm();
@@ -60,7 +65,7 @@ namespace RApID_Project_WPF
             handleInitSerialPort();
             csSplashScreenHelper.ShowText("Iniializing Logging...");
             setupLogging();
-            txtOrderNumber.Focus();
+            
             GC.Collect();
             csSplashScreenHelper.ShowText("Done!");
             csSplashScreenHelper.Hide();
@@ -89,9 +94,26 @@ namespace RApID_Project_WPF
         {
             txtTechName.Text = System.Environment.UserName;
 #if DEBUG
-            txtTechName.Text = "estabile";
+            //txtTechName.Text = "rkaiser";
+            txtOrderNumber.Text = "7601898";
+            txtBarcode.Text = "161130180149";
 #endif
             dtpDateReceived.SelectedDate = DateTime.Now;
+
+            // --->
+            // need to get the department name so that I can tell who is in DQE/Alpharetta to allow
+            // for the DQE form to submit if a unit comes directly to them without an order number
+            sUserDepartmentNumber = sqlClass.SQLGet_String(@"Select [Department Number] From UserLogin Where Username = '" + txtTechName.Text + "'",
+                Properties.Settings.Default.HBConn); //([Department Number] = N'320900' = Alpharetta)
+
+            if (sUserDepartmentNumber.Equals(sDQE_DeptNum))
+            {
+                txtOrderNumber.IsReadOnly = true;
+                txtOrderNumber.Background = Brushes.LightGray;
+                txtBarcode.Focus();
+            }
+            else txtOrderNumber.Focus();
+            // <---
         }
 
         private void initSQLQuery()
@@ -629,7 +651,13 @@ namespace RApID_Project_WPF
 
         private void QueryProduction()
         {
-            string query = "SELECT Assy FROM Production3 WHERE SerialNum = '" + txtBarcode.Text + "';";
+            string query = "";
+
+            if (lblRPNumber.Content.ToString().Replace("RP Number: ", "").StartsWith("SV")) // this is a transducer so lets do something different
+                query = "SELECT PartNumber FROM tblXducerTestResults WHERE SerialNumber = '" + txtBarcode.Text + "';";
+            else query = "SELECT Assy FROM Production3 WHERE SerialNum = '" + txtBarcode.Text + "';";
+            
+
             string sProdQueryResults = csCrossClassInteraction.ProductionQuery(query);
             if(sProdQueryResults.ToLower().Contains("rev"))
             {
@@ -677,23 +705,33 @@ namespace RApID_Project_WPF
         private void fillEOLData()
         {
             resetEOLTab();
-            string query = "SELECT TestID FROM tblEOL WHERE PCBSerial = '" + txtBarcode.Text + "';";
+
+            string query = "";
+
+            if (lblRPNumber.Content.ToString().Replace("RP Number: ", "").StartsWith("SV")) // this is a transducer so lets do something different
+                query = "SELECT DISTINCT TestID FROM tblXducerTestResultsBenchTest WHERE SerialNumber = '" + txtBarcode.Text + "';";
+            else query = "SELECT TestID FROM tblEOL WHERE PCBSerial = '" + txtBarcode.Text + "';";
             csCrossClassInteraction.cbFillFromQuery(cbEOLTestID, query);
 
             query = "SELECT TestID FROM tblPRE WHERE PCBSerial = '" + txtBarcode.Text + "';";
             csCrossClassInteraction.cbFillFromQuery(cbPRETestID, query);
 
-            query = "SELECT TestID FROM tblPOST WHERE PCBSerial = '" + txtBarcode.Text + "';";
+            if (lblRPNumber.Content.ToString().Replace("RP Number: ", "").StartsWith("SV")) // this is a transducer so lets do something different
+                query = "SELECT DISTINCT TestID FROM tblXducerTestResults WHERE SerialNumber = '" + txtBarcode.Text + "';";
+            else query = "SELECT TestID FROM tblPOST WHERE PCBSerial = '" + txtBarcode.Text + "';";
             csCrossClassInteraction.cbFillFromQuery(cbPOSTTestID, query);
 
-            if (cbEOLTestID.Items.Count > 0)
-                cbBEAMSTestType.Items.Add("EOL");
+            if (!lblRPNumber.Content.ToString().Replace("RP Number: ", "").StartsWith("SV")) // this is a transducer so lets do something different
+            {
+                if (cbEOLTestID.Items.Count > 0)
+                    cbBEAMSTestType.Items.Add("EOL");
 
-            if (cbPRETestID.Items.Count > 0)
-                cbBEAMSTestType.Items.Add("PRE");
+                if (cbPRETestID.Items.Count > 0)
+                    cbBEAMSTestType.Items.Add("PRE");
 
-            if (cbPOSTTestID.Items.Count > 0)
-                cbBEAMSTestType.Items.Add("POST");
+                if (cbPOSTTestID.Items.Count > 0)
+                    cbBEAMSTestType.Items.Add("POST");
+            }
         }
 
         /// <summary>
@@ -858,19 +896,19 @@ namespace RApID_Project_WPF
             {
                 bool bSubmit = true;
 
-                if (string.IsNullOrEmpty(txtOrderNumber.Text))
+                if (string.IsNullOrEmpty(txtOrderNumber.Text) && !sUserDepartmentNumber.Equals(sDQE_DeptNum))
                 {
                     bSubmit = false;
                     sErrMsg += "-Order Number\n";
                 }
 
-                if (string.IsNullOrEmpty(cbTechAction1.Text))
+                if (string.IsNullOrEmpty(cbTechAction1.Text) && !sUserDepartmentNumber.Equals(sDQE_DeptNum))
                 {
                     bSubmit = false;
                     sErrMsg += "-At least 1 Technician Action\n";
                 }
 
-                if (string.IsNullOrEmpty(txtCustomerNumber.Text) && !txtOrderNumber.Text.Equals("1"))
+                if (string.IsNullOrEmpty(txtCustomerNumber.Text) && !sUserDepartmentNumber.Equals(sDQE_DeptNum))
                 {
                     bSubmit = false;
                     sErrMsg += "-Customer Information\n";
@@ -1005,7 +1043,7 @@ namespace RApID_Project_WPF
                 cmd.Parameters.AddWithValue("@TechAct2", cbTechAction2.Text);
                 cmd.Parameters.AddWithValue("@TechAct3", cbTechAction3.Text);
 
-                if (string.IsNullOrEmpty(txtOrderNumber.Text) || txtOrderNumber.Text.Equals("1"))
+                if (string.IsNullOrEmpty(txtOrderNumber.Text) || sUserDepartmentNumber.Equals(sDQE_DeptNum))
                     cmd.Parameters.AddWithValue("@OrderNumber", string.Empty);
                 else cmd.Parameters.AddWithValue("@OrderNumber", txtOrderNumber.Text);
 
@@ -1013,19 +1051,19 @@ namespace RApID_Project_WPF
                     cmd.Parameters.AddWithValue("@LineNumber", dLineNumber);
                 else cmd.Parameters.AddWithValue("@LineNumber", 1.0);
 
-                if (txtOrderNumber.Text.Equals("1"))
+                if (sUserDepartmentNumber.Equals(sDQE_DeptNum))
                     cmd.Parameters.AddWithValue("@pc1", "");
                 else cmd.Parameters.AddWithValue("@pc1", getRepairCodes("PC1", cbReportedIssue.Text, bIsCR));
 
-                if (string.IsNullOrEmpty(cbTechAction1.Text) || txtOrderNumber.Text.Equals("1"))
+                if (string.IsNullOrEmpty(cbTechAction1.Text) || sUserDepartmentNumber.Equals(sDQE_DeptNum))
                     cmd.Parameters.AddWithValue("@pc2", "");
                 else cmd.Parameters.AddWithValue("@pc2", getRepairCodes("PC2", cbTechAction1.Text, bIsCR));
 
-                if (string.IsNullOrEmpty(cbTechAction2.Text) || txtOrderNumber.Text.Equals("1"))
+                if (string.IsNullOrEmpty(cbTechAction2.Text) || sUserDepartmentNumber.Equals(sDQE_DeptNum))
                     cmd.Parameters.AddWithValue("@rc", "");
                 else cmd.Parameters.AddWithValue("@rc", getRepairCodes("PC3", cbTechAction2.Text, bIsCR));
 
-                if (string.IsNullOrEmpty(cbTechAction3.Text) || txtOrderNumber.Text.Equals("1"))
+                if (string.IsNullOrEmpty(cbTechAction3.Text) || sUserDepartmentNumber.Equals(sDQE_DeptNum))
                     cmd.Parameters.AddWithValue("@tc", "");
                 else cmd.Parameters.AddWithValue("@tc", getRepairCodes("EndUse", cbTechAction3.Text, bIsCR));
 
@@ -1312,6 +1350,8 @@ namespace RApID_Project_WPF
         private void beginSerialNumberSearch()
         {
             resetForm(false);
+            vSleep(500);
+
             sVar.LogHandler.LogCreation = DateTime.Now;
 
             if(!String.IsNullOrEmpty(txtBarcode.Text))
@@ -1689,8 +1729,10 @@ namespace RApID_Project_WPF
         {
             if(!String.IsNullOrEmpty(cbEOLTestID.Text))
             {
-                InitSplash ss = new InitSplash("Loading EOL Data...");
-                csCrossClassInteraction.lsvFillFromQuery(Properties.Settings.Default.HBConn, "SELECT * FROM tblEOL WHERE TestID = '" + cbEOLTestID.Text + "';", lsvEOL);
+                initS.InitSplash1("Loading EOL Data...");
+                if (lblRPNumber.Content.ToString().Replace("RP Number: ", "").StartsWith("SV")) // this is a transducer so lets do something different
+                    csCrossClassInteraction.lsvFillFromQuery(Properties.Settings.Default.HBConn, "SELECT * FROM tblXducerTestResultsBenchTest WHERE TestID = '" + cbEOLTestID.Text + "';", lsvEOL);
+                else csCrossClassInteraction.lsvFillFromQuery(Properties.Settings.Default.HBConn, "SELECT * FROM tblEOL WHERE TestID = '" + cbEOLTestID.Text + "';", lsvEOL);
                 csSplashScreenHelper.ShowText("Done...");
                 csSplashScreenHelper.Hide();
             }
@@ -1700,7 +1742,7 @@ namespace RApID_Project_WPF
         {
             if (!string.IsNullOrEmpty(cbPRETestID.Text))
             {
-                InitSplash ss = new InitSplash("Loading PRE Data...");
+                initS.InitSplash1("Loading PRE Data...");
                 csCrossClassInteraction.lsvFillFromQuery(Properties.Settings.Default.HBConn, "SELECT * FROM tblPRE WHERE TestID = '" + cbPRETestID.Text + "';", lsvPreBurnIn);
                 csSplashScreenHelper.ShowText("Done...");
                 csSplashScreenHelper.Hide();
@@ -1711,8 +1753,10 @@ namespace RApID_Project_WPF
         {
             if (!string.IsNullOrEmpty(cbPOSTTestID.Text))
             {
-                InitSplash ss = new InitSplash("Loading POST Data...");
-                csCrossClassInteraction.lsvFillFromQuery(Properties.Settings.Default.HBConn, "SELECT * FROM tblPOST WHERE TestID = '" + cbPOSTTestID.Text + "';", lsvPostBurnIn);
+                initS.InitSplash1("Loading POST Data...");
+                if (lblRPNumber.Content.ToString().Replace("RP Number: ", "").StartsWith("SV")) // this is a transducer so lets do something different
+                    csCrossClassInteraction.lsvFillFromQuery(Properties.Settings.Default.HBConn, "SELECT * FROM tblXducerTestResults WHERE TestID = '" + cbPOSTTestID.Text + "';", lsvPostBurnIn);
+                else csCrossClassInteraction.lsvFillFromQuery(Properties.Settings.Default.HBConn, "SELECT * FROM tblPOST WHERE TestID = '" + cbPOSTTestID.Text + "';", lsvPostBurnIn);
                 csSplashScreenHelper.ShowText("Done...");
                 csSplashScreenHelper.Hide();
             }
@@ -1740,7 +1784,7 @@ namespace RApID_Project_WPF
         {
             if(!String.IsNullOrEmpty(cbBEAMSTestID.Text))
             {
-                InitSplash ss = new InitSplash("Generating Beams...");
+                initS.InitSplash1("Generating Beams...");
                 csCrossClassInteraction.BeamsQuery(txtBarcode.Text, cbBEAMSBeamNum, lsvBeamTestId);
                 csSplashScreenHelper.ShowText("Done...");
                 csSplashScreenHelper.Hide();
@@ -1751,7 +1795,7 @@ namespace RApID_Project_WPF
         {
             if(!String.IsNullOrEmpty(cbBEAMSTestType.Text) && !String.IsNullOrEmpty(cbBEAMSTestID.Text) && !String.IsNullOrEmpty(cbBEAMSBeamNum.Text))
             {
-                InitSplash ss = new InitSplash("Loading Beam Data...");
+                initS.InitSplash1("Loading Beam Data...");
                 csCrossClassInteraction.BeamsQuery("SELECT * FROM Beams WHERE TestID = '" + cbBEAMSTestID.Text + "' AND PCBSerial = '" + txtBarcode.Text + "' AND BeamNumber = '" + csCrossClassInteraction.GetSpecificBeamNumber(cbBEAMSBeamNum.Text) + "';", lsvBeamTestId);
                 csSplashScreenHelper.ShowText("Done...");
                 csSplashScreenHelper.Hide();
@@ -2033,10 +2077,12 @@ namespace RApID_Project_WPF
             if (dgPrevRepairInfo.SelectedItem != null)
             {
 #if DEBUG
+                //TODO: new form that is not working yet
                 repairPRI pri = new repairPRI((PreviousRepairInformation)dgPrevRepairInfo.SelectedItem);
                 pri.Owner = this;
                 pri.ShowDialog();
 #else
+                // Working form with only one issue that can be displayed
                 PrevRepairInfo pri = new PrevRepairInfo((PreviousRepairInformation)dgPrevRepairInfo.SelectedItem);
                 pri.ShowDialog();
 #endif
@@ -2296,6 +2342,13 @@ namespace RApID_Project_WPF
             tSPChecker = null;
 
             sVar.resetStaticVars();
+        }
+
+        private void vSleep(int iSleepTime)
+        {
+            DateTime dt = DateTime.Now.AddMilliseconds(iSleepTime);
+            while (DateTime.Now < dt)
+            { }
         }
     }
 }

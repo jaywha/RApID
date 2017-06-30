@@ -417,22 +417,34 @@ namespace EricStabileLibrary
     /// </summary>
     public class InitSplash
     {
-        public InitSplash(string sLoadText)
-        {
-            System.Threading.Thread thread = new System.Threading.Thread(new System.Threading.ThreadStart(
-                delegate()
-                {
-                    RApID_Project_WPF.csSplashScreenHelper.SplashScreen = new RApID_Project_WPF.frmSplashScreen();
-                    RApID_Project_WPF.csSplashScreenHelper.Show();
-                    if (!String.IsNullOrEmpty(sLoadText))
-                        RApID_Project_WPF.csSplashScreenHelper.ShowText(sLoadText);
-                    System.Windows.Threading.Dispatcher.Run();
-                }));
-            thread.SetApartmentState(System.Threading.ApartmentState.STA);
-            thread.IsBackground = true;
-            thread.Start();
+        public static System.Threading.Thread thread_Splash;
 
-            System.Threading.Thread.Sleep(1000);
+        public void InitSplash1(string sLoadText)
+        {
+            try
+            {
+                thread_Splash = new System.Threading.Thread(new System.Threading.ThreadStart(
+                    delegate ()
+                    {
+                        RApID_Project_WPF.csSplashScreenHelper.SplashScreen = new RApID_Project_WPF.frmSplashScreen();
+                        RApID_Project_WPF.csSplashScreenHelper.Show();
+                        if (!String.IsNullOrEmpty(sLoadText))
+                        {
+                            RApID_Project_WPF.csSplashScreenHelper.ShowText(sLoadText);
+                        }
+                        System.Windows.Threading.Dispatcher.Run();
+                    }));
+                thread_Splash.Name = "RApID_InitSplash";
+                thread_Splash.SetApartmentState(System.Threading.ApartmentState.STA);
+                thread_Splash.IsBackground = true;
+                thread_Splash.Start();
+
+                System.Threading.Thread.Sleep(1000);
+            }
+            catch (Exception ex)
+            {
+
+            }
         }
     }
 }

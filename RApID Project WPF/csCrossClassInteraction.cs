@@ -490,7 +490,7 @@ namespace RApID_Project_WPF
                             SystemID = reader["SystemID"].ToString(),
                             Inspector = reader["Inspector"].ToString(),
                             Assy = reader["Assy"].ToString(),
-                            IDate = Convert.ToDateTime(reader["IDate"]),
+                            IDate = (string.IsNullOrEmpty(reader["IDate"].ToString()) ? Convert.ToDateTime("1/1/1111") : Convert.ToDateTime(reader["IDate"])),
                             SN = reader["SN"].ToString(),
                             RefID = reader["RefID"].ToString(),
                             DefectCode = reader["DefectCode"].ToString(),
@@ -506,7 +506,7 @@ namespace RApID_Project_WPF
                                        "SystemID = " + reader["SystemID"].ToString() + "\n" +
                                        "Inspector = " + reader["Inspector"].ToString() + "\n" +
                                        "Assy = " + reader["Assy"].ToString() + "\n" +
-                                       "IDate = " + Convert.ToDateTime(reader["IDate"]) + "\n" +
+                                       "IDate = " + (string.IsNullOrEmpty(reader["IDate"].ToString()) ? Convert.ToDateTime("1/1/1111") : Convert.ToDateTime(reader["IDate"])) + "\n" +
                                        "SN = " + reader["SN"].ToString() + "\n" +
                                        "RefID = " + reader["RefID"].ToString() + "\n" +
                                        "DefectCode = " + reader["DefectCode"].ToString() + "\n" +

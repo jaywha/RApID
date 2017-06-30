@@ -185,3 +185,6 @@ C:\Users\esdog\Dropbox\HumminbirdWork\RApID\Solutions\RApID Solution WPF\RApID S
 C:\Users\esdog\Dropbox\HumminbirdWork\RApID\Solutions\RApID Solution WPF\RApID Solution WPF\RApID Project WPF\obj\Release\frmRepairPRI.baml
 C:\Users\esdog\Dropbox\HumminbirdWork\RApID\Solutions\RApID Solution WPF\RApID Solution WPF\RApID Project WPF\obj\Release\frmProductionPRI.g.cs
 C:\Users\esdog\Dropbox\HumminbirdWork\RApID\Solutions\RApID Solution WPF\RApID Solution WPF\RApID Project WPF\obj\Release\frmRepairPRI.g.cs
+C:\Visual Studio Projects\RApID\RApID Project WPF\bin\Release\RApID Project WPF.exe.config
+C:\Visual Studio Projects\RApID\RApID Project WPF\obj\Release\RApID Project WPF.exe
+C:\Visual Studio Projects\RApID\RApID Project WPF\obj\Release\RApID Project WPF.pdb

@@ -4,17 +4,17 @@
 winexe
 C#
 .cs
-C:\Users\dglanton\Dropbox\RApID\Solutions\RApID Solution WPF\RApID Solution WPF\RApID Project WPF\obj\Debug\
+C:\Visual Studio Projects\RApID\RApID Project WPF\obj\Debug\
 RApID_Project_WPF
 none
 false
 DEBUG;TRACE
-C:\Users\dglanton\Dropbox\RApID\Solutions\RApID Solution WPF\RApID Solution WPF\RApID Project WPF\App.xaml
+C:\Visual Studio Projects\RApID\RApID Project WPF\App.xaml
 15750691442
 1-1885038259
-331890849030
-15630798972
+37-972522622
+15-54171157
 frmFullCustomerInformation.xaml;frmMultipleRP.xaml;frmPartNumber.xaml;frmPrintQCDQELabel.xaml;frmProduction.xaml;frmProductionPRI.xaml;frmQCDQE.xaml;frmSettings.xaml;frmSplashScreen.xaml;frmViewFullLog.xaml;frmViewMultipleIssues.xaml;MainWindow.xaml;PrevRepairInfo.xaml;Repair.xaml;frmRepairPRI.xaml;
 
-True
+False
 

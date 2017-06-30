@@ -49,8 +49,12 @@ namespace RApID_Project_WPF
         /// <param name="_s"></param>
         private void getCorrectData()
         {
+            //TODO: need to change this to just get the part numbers from the ItemMaster table (XRefCode = XD and UC)
             dgvPartNumber.Items.Clear();
-            string query = "SELECT PossibleAssemblies, ProductName FROM ProductTestParams ORDER BY ProductName ASC";
+            string query = "";
+            if (bIsProduction)
+                query = "SELECT PossibleAssemblies, ProductName FROM ProductTestParams ORDER BY ProductName ASC";
+            else query = "Select PartNumber, PartName From ItemMaster Where XRefCode = 'UC' OR XRefCode = 'XD' Order By PartName ASC";
 
             SqlConnection conn = new SqlConnection(Properties.Settings.Default.HBConn);
             SqlCommand cmd = new SqlCommand(query, conn);

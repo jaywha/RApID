@@ -18,7 +18,7 @@ namespace RApID_Project_WPF
 {
     public class csVersionControl
     {
-        private double _currentVersion = 1.231;
+        private double _currentVersion = 1.232;
         private string _fileCheckLocation = @"P:\EE Process Test\Software\RApID\version.txt";
         public double CurrentVersion
         {

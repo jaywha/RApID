@@ -1,0 +1,6 @@
+C:\Visual Studio Projects\RApID\RApIDStarter\bin\x86\Debug\RApIDStarter.exe.config
+C:\Visual Studio Projects\RApID\RApIDStarter\bin\x86\Debug\RApIDStarter.exe
+C:\Visual Studio Projects\RApID\RApIDStarter\bin\x86\Debug\RApIDStarter.pdb
+C:\Visual Studio Projects\RApID\RApIDStarter\obj\x86\Debug\RApIDStarter.csprojResolveAssemblyReference.cache
+C:\Visual Studio Projects\RApID\RApIDStarter\obj\x86\Debug\RApIDStarter.exe
+C:\Visual Studio Projects\RApID\RApIDStarter\obj\x86\Debug\RApIDStarter.pdb

@@ -33,6 +33,8 @@ namespace RApID_Project_WPF
         bool bTimerRebootAttempt = false; //NOTE: tSPChecker will attempt to reboot itself once if it gets disconnected. This flag will be used to track that.
 
         StaticVars sVar = StaticVars.StaticVarsInstance();
+
+        InitSplash initS = new InitSplash();
         #endregion
 
         public frmProduction()
@@ -42,7 +44,7 @@ namespace RApID_Project_WPF
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
-            InitSplash initS = new InitSplash("Initializing Form..."); //--Initialize the Splash Screen.
+            initS.InitSplash1("Initializing Form..."); //--Initialize the Splash Screen.
             buildDG();
             csSplashScreenHelper.ShowText("Loading DataLog...");
             initDataLog();
@@ -61,6 +63,7 @@ namespace RApID_Project_WPF
             //txtSerialNumber.Text = "160127030018"; //NOTE: Use when at HB
             txtSerialNumber.Text = "160412020075"; //NOTE: Use when at home
 #endif
+
         }
 
         #region Initialize Form
@@ -1668,7 +1671,7 @@ namespace RApID_Project_WPF
         {
             if(!String.IsNullOrEmpty(cbEOLTestID.Text))
             {
-                InitSplash ss = new InitSplash("Loading EOL Data...");
+                initS.InitSplash1("Loading EOL Data...");
                 csCrossClassInteraction.lsvFillFromQuery(Properties.Settings.Default.HBConn, "SELECT * FROM tblEOL WHERE TestID = '" + cbEOLTestID.Text + "';", lsvEOL);
                 csSplashScreenHelper.ShowText("Done...");
                 csSplashScreenHelper.Hide();
@@ -1679,7 +1682,7 @@ namespace RApID_Project_WPF
         {
             if (!String.IsNullOrEmpty(cbPRETestID.Text))
             {
-                InitSplash ss = new InitSplash("Loading PRE Data...");
+                initS.InitSplash1("Loading PRE Data...");
                 csCrossClassInteraction.lsvFillFromQuery(Properties.Settings.Default.HBConn, "SELECT * FROM tblPRE WHERE TestID = '" + cbPRETestID.Text + "';", lsvPreBurnIn);
                 csSplashScreenHelper.ShowText("Done...");
                 csSplashScreenHelper.Hide();
@@ -1690,7 +1693,7 @@ namespace RApID_Project_WPF
         {
             if (!String.IsNullOrEmpty(cbPOSTTestID.Text))
             {
-                InitSplash ss = new InitSplash("Loading POST Data...");
+                initS.InitSplash1("Loading POST Data...");
                 csCrossClassInteraction.lsvFillFromQuery(Properties.Settings.Default.HBConn, "SELECT * FROM tblPOST WHERE TestID = '" + cbPOSTTestID.Text + "';", lsvPostBurnIn);
                 csSplashScreenHelper.ShowText("Done...");
                 csSplashScreenHelper.Hide();
@@ -1719,7 +1722,7 @@ namespace RApID_Project_WPF
         {
             if (!String.IsNullOrEmpty(cbBEAMSTestID.Text))
             {
-                InitSplash ss = new InitSplash("Generating Beams...");
+                initS.InitSplash1("Generating Beams...");
                 csCrossClassInteraction.BeamsQuery(txtSerialNumber.Text, cbBEAMSBeamNum, lsvBeamTestId);
                 csSplashScreenHelper.ShowText("Done...");
                 csSplashScreenHelper.Hide();
@@ -1730,7 +1733,7 @@ namespace RApID_Project_WPF
         {
             if(!String.IsNullOrEmpty(cbBEAMSTestType.Text) && !String.IsNullOrEmpty(cbBEAMSTestID.Text) && !String.IsNullOrEmpty(cbBEAMSBeamNum.Text))
             {
-                InitSplash ss = new InitSplash("Loading Beam Data...");
+                initS.InitSplash1("Loading Beam Data...");
                 csCrossClassInteraction.BeamsQuery("SELECT * FROM Beams WHERE TestID = '" + cbBEAMSTestID.Text + "' AND PCBSerial = '" + txtSerialNumber.Text + "' AND BeamNumber = '" + csCrossClassInteraction.GetSpecificBeamNumber(cbBEAMSBeamNum.Text) + "';", lsvBeamTestId);
                 csSplashScreenHelper.ShowText("Done...");
                 csSplashScreenHelper.Hide();
