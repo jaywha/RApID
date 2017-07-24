@@ -30,6 +30,9 @@ namespace RApID_Project_WPF
     {
         private string sOrderNumber = String.Empty;
         StaticVars sVars = StaticVars.StaticVarsInstance();
+        csObjectHolder.csObjectHolder holder = csObjectHolder.csObjectHolder.ObjectHolderInstance();
+
+
         public frmMultipleRP(string OrderNum)
         {
             InitializeComponent();
@@ -56,7 +59,7 @@ namespace RApID_Project_WPF
         private void loadDGView()
         {
             string query = "SELECT * FROM CustomerRepairOrderFromJDE WHERE OrderNumber = '" + sOrderNumber + "'";
-            SqlConnection conn = new SqlConnection(Properties.Settings.Default.RepairConn);
+            SqlConnection conn = new SqlConnection(holder.RepairConnectionString);
             SqlCommand cmd = new SqlCommand(query, conn);
             try
             {

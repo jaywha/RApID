@@ -30,6 +30,8 @@ namespace RApID_Project_WPF
         DispatcherTimer tSPChecker;
         bool bTimerRebootAttempt = false;
         QCDQEPageLoad ScannedUnitInformation = new QCDQEPageLoad();
+        csObjectHolder.csObjectHolder holder = csObjectHolder.csObjectHolder.ObjectHolderInstance();
+
 
         public frmQCDQE()
         {
@@ -249,7 +251,7 @@ namespace RApID_Project_WPF
                 query = "SELECT * FROM TechnicianSubmission WHERE SerialNumber = '" + txtRepairBarcode.Text + "' ORDER BY ID DESC;";
             }
 
-            SqlConnection conn = new SqlConnection(Properties.Settings.Default.RepairConn);
+            SqlConnection conn = new SqlConnection(holder.RepairConnectionString);
             SqlCommand cmd = new SqlCommand(query, conn);
             try
             {
@@ -316,7 +318,7 @@ namespace RApID_Project_WPF
         {
             List<RepairMultipleIssues> lRMI = new List<RepairMultipleIssues>();
             string query = "SELECT * FROM TechnicianUnitIssues WHERE ID = '" + ScannedUnitInformation.ID + "' ORDER BY ID DESC";
-            SqlConnection conn = new SqlConnection(Properties.Settings.Default.RepairConn);
+            SqlConnection conn = new SqlConnection(holder.RepairConnectionString);
             SqlCommand cmd = new SqlCommand(query, conn);
 
             try
@@ -486,7 +488,7 @@ namespace RApID_Project_WPF
 
         private void submitData(QCDQESubmitData _submitData)
         {
-            SqlConnection conn = new SqlConnection(Properties.Settings.Default.RepairConn);
+            SqlConnection conn = new SqlConnection(holder.RepairConnectionString);
             SqlCommand cmd = new SqlCommand(_submitData.SubmitQuery, conn);
             try
             {

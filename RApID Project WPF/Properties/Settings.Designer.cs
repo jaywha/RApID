@@ -97,86 +97,6 @@ namespace RApID_Project_WPF.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("Data Source=10.110.1.251;Initial Catalog=HummingBird; Persist Security Info=True;" +
-            "User ID=inhouse;Password=Password1")]
-        public string HBConn {
-            get {
-                return ((string)(this["HBConn"]));
-            }
-            set {
-                this["HBConn"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("{Data Source=10.110.1.251;Initial Catalog=HummingBird; Persist Security Info=True" +
-            ";User ID=inhouse;Password=Password1}{Provider=Microsoft.Jet.OLEDB.4.0; Data Sour" +
-            "ce=C:\\Users\\esdog\\Dropbox\\HumminbirdWork\\RApID\\Databases\\mdb\\HummingBird.mdb}")]
-        public string HBConnStrings {
-            get {
-                return ((string)(this["HBConnStrings"]));
-            }
-            set {
-                this["HBConnStrings"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("Data Source=10.110.1.251;Initial Catalog=Repair; Persist Security Info=True;User " +
-            "ID=inhouse;Password=Password1")]
-        public string RepairConn {
-            get {
-                return ((string)(this["RepairConn"]));
-            }
-            set {
-                this["RepairConn"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("{Data Source=10.110.1.251;Initial Catalog=Repair; Persist Security Info=True;User" +
-            " ID=inhouse;Password=Password1}{Provider=Microsoft.Jet.OLEDB.4.0; Data Source=C:" +
-            "\\Users\\esdog\\Dropbox\\HumminbirdWork\\RApID\\Databases\\mdb\\Repair.mdb}")]
-        public string RepairConnStrings {
-            get {
-                return ((string)(this["RepairConnStrings"]));
-            }
-            set {
-                this["RepairConnStrings"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("Data Source=10.110.1.251;Initial Catalog=YesDB; Persist Security Info=True;User I" +
-            "D=inhouse;Password=Password1")]
-        public string YesDBConn {
-            get {
-                return ((string)(this["YesDBConn"]));
-            }
-            set {
-                this["YesDBConn"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("{Data Source=10.110.1.251;Initial Catalog=YesDB; Persist Security Info=True;User " +
-            "ID=inhouse;Password=Password1}")]
-        public string YesDBConnStrings {
-            get {
-                return ((string)(this["YesDBConnStrings"]));
-            }
-            set {
-                this["YesDBConnStrings"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("P:\\EE Process Test\\Logs\\RApID\\")]
         public string LogWriteLocation {
             get {
@@ -249,7 +169,7 @@ namespace RApID_Project_WPF.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("http://euap01/Reports/Pages/Folder.aspx?ItemPath=%2fRApID+(Repair+Database)&ViewM" +
+        [global::System.Configuration.DefaultSettingValueAttribute("http://eudb01/Reports/Pages/Folder.aspx?ItemPath=%2fRApID+(Repair+Database)&ViewM" +
             "ode=List")]
         public string DefaultReportManagerLink {
             get {

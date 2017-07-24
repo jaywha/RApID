@@ -31,6 +31,8 @@ namespace RApID_Project_WPF
         bool bIsProduction;
         DataSet ds = new DataSet();
         DataTable dt = new DataTable();
+        csObjectHolder.csObjectHolder holder = csObjectHolder.csObjectHolder.ObjectHolderInstance();
+
 
         public frmPartNumber(bool _bProduction)
         {
@@ -56,7 +58,7 @@ namespace RApID_Project_WPF
                 query = "SELECT PossibleAssemblies, ProductName FROM ProductTestParams ORDER BY ProductName ASC";
             else query = "Select PartNumber, PartName From ItemMaster Where XRefCode = 'UC' OR XRefCode = 'XD' Order By PartName ASC";
 
-            SqlConnection conn = new SqlConnection(Properties.Settings.Default.HBConn);
+            SqlConnection conn = new SqlConnection(holder.HummingBirdConnectionString);
             SqlCommand cmd = new SqlCommand(query, conn);
             try
             {

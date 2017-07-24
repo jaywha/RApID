@@ -29,6 +29,7 @@ namespace RApID_Project_WPF
         private enum SubmissionStatus { COMPLETE, SENDTOQC, SENDTODQE };
 
         csSQL.csSQLClass sqlClass = new csSQL.csSQLClass();
+        csObjectHolder.csObjectHolder holder = csObjectHolder.csObjectHolder.ObjectHolderInstance();
 
         StaticVars sVar = StaticVars.StaticVarsInstance();
         SerialPort sp;
@@ -104,7 +105,7 @@ namespace RApID_Project_WPF
             // need to get the department name so that I can tell who is in DQE/Alpharetta to allow
             // for the DQE form to submit if a unit comes directly to them without an order number
             sUserDepartmentNumber = sqlClass.SQLGet_String(@"Select [Department Number] From UserLogin Where Username = '" + txtTechName.Text + "'",
-                Properties.Settings.Default.HBConn); //([Department Number] = N'320900' = Alpharetta)
+                holder.HummingBirdConnectionString); //([Department Number] = N'320900' = Alpharetta)
 
             if (sUserDepartmentNumber.Equals(sDQE_DeptNum))
             {
@@ -134,7 +135,7 @@ namespace RApID_Project_WPF
             string query1 = "SELECT * FROM RApID_DropDowns";
             string query2 = "SELECT PC1 FROM JDECodes";
 
-            SqlConnection conn = new SqlConnection(Properties.Settings.Default.RepairConn);
+            SqlConnection conn = new SqlConnection(holder.RepairConnectionString);
             SqlCommand cmd = new SqlCommand(query1, conn);
             try
             {
@@ -236,7 +237,7 @@ namespace RApID_Project_WPF
             lPC3 = new List<PC3>();
             lEndUse = new List<EndUse>();
 
-            SqlConnection conn = new SqlConnection(Properties.Settings.Default.RepairConn);
+            SqlConnection conn = new SqlConnection(holder.RepairConnectionString);
             SqlCommand cmd = new SqlCommand(query, conn);
             try
             {
@@ -991,7 +992,7 @@ namespace RApID_Project_WPF
                                   "@TypeOfFailure, @HoursOnUnit, @ReportedIssue, @TestResult, @TestResultAbort, @Cause, @Replacement, @PartsReplaced, @RefDesignator, @AdditionalComments, @CustomerNumber, " +
                                   "@SerialNumber, @DateSubmitted, @SubmissionStatus, @SaveID, @RP, @TechAct1, @TechAct2, @TechAct3, @OrderNumber, @LineNumber, @pc1, @pc2, @rc, @tc, @series)";
 
-            SqlConnection conn = new SqlConnection(Properties.Settings.Default.RepairConn);
+            SqlConnection conn = new SqlConnection(holder.RepairConnectionString);
             SqlCommand cmd = new SqlCommand(insertQuery, conn);
             try
             {
@@ -1142,7 +1143,7 @@ namespace RApID_Project_WPF
             string sLogString = "";
             List<RepairMultipleIssues> lRMI = getUnitIssues();
 
-            SqlConnection conn = new SqlConnection(Properties.Settings.Default.RepairConn);
+            SqlConnection conn = new SqlConnection(holder.RepairConnectionString);
             SqlCommand cmd = new SqlCommand(query, conn);
             try
             {
@@ -1396,7 +1397,7 @@ namespace RApID_Project_WPF
             string query = "SELECT ItemNumber, CustomerNumber, LineNumber FROM CustomerRepairOrderFromJDE WHERE OrderNumber = '" + txtOrderNumber.Text.ToString().TrimEnd() + "'";
             sVar.LogHandler.CreateLogAction("Attempting to search CustomerRepairOrderFromJDE for the Order Number.\nSQL CMD: " + query, csLogging.LogState.NOTE);
             
-            SqlConnection conn = new SqlConnection(Properties.Settings.Default.RepairConn);
+            SqlConnection conn = new SqlConnection(holder.RepairConnectionString);
             SqlCommand cmd = new SqlCommand(query, conn);
             try
             {
@@ -1533,7 +1534,7 @@ namespace RApID_Project_WPF
             CustomerInformation cInfo = new CustomerInformation();
             string query = "SELECT * FROM CustomerRepairOrderFromJDE WHERE CustomerNumber = '" + sCustNum + "'";
             sVar.LogHandler.CreateLogAction("Attempting to load the Customer Information from CustomerRepairOrderFromJDE.\nSQL CMD: " + query, csLogging.LogState.NOTE);
-            SqlConnection conn = new SqlConnection(Properties.Settings.Default.RepairConn);
+            SqlConnection conn = new SqlConnection(holder.RepairConnectionString);
             SqlCommand cmd = new SqlCommand(query, conn);
             try
             {
@@ -1597,7 +1598,7 @@ namespace RApID_Project_WPF
             #region Check To See If Customer Exists
 
             string query = "SELECT CustomerNumber FROM RepairCustomerInformation WHERE CustomerNumber = '" + cInfo.CustomerNumber + "'";
-            SqlConnection conn = new SqlConnection(Properties.Settings.Default.RepairConn);
+            SqlConnection conn = new SqlConnection(holder.RepairConnectionString);
             SqlCommand cmd = new SqlCommand(query, conn);
             try
             {
@@ -1731,8 +1732,8 @@ namespace RApID_Project_WPF
             {
                 initS.InitSplash1("Loading EOL Data...");
                 if (lblRPNumber.Content.ToString().Replace("RP Number: ", "").StartsWith("SV")) // this is a transducer so lets do something different
-                    csCrossClassInteraction.lsvFillFromQuery(Properties.Settings.Default.HBConn, "SELECT * FROM tblXducerTestResultsBenchTest WHERE TestID = '" + cbEOLTestID.Text + "';", lsvEOL);
-                else csCrossClassInteraction.lsvFillFromQuery(Properties.Settings.Default.HBConn, "SELECT * FROM tblEOL WHERE TestID = '" + cbEOLTestID.Text + "';", lsvEOL);
+                    csCrossClassInteraction.lsvFillFromQuery(holder.HummingBirdConnectionString, "SELECT * FROM tblXducerTestResultsBenchTest WHERE TestID = '" + cbEOLTestID.Text + "';", lsvEOL);
+                else csCrossClassInteraction.lsvFillFromQuery(holder.HummingBirdConnectionString, "SELECT * FROM tblEOL WHERE TestID = '" + cbEOLTestID.Text + "';", lsvEOL);
                 csSplashScreenHelper.ShowText("Done...");
                 csSplashScreenHelper.Hide();
             }
@@ -1743,7 +1744,7 @@ namespace RApID_Project_WPF
             if (!string.IsNullOrEmpty(cbPRETestID.Text))
             {
                 initS.InitSplash1("Loading PRE Data...");
-                csCrossClassInteraction.lsvFillFromQuery(Properties.Settings.Default.HBConn, "SELECT * FROM tblPRE WHERE TestID = '" + cbPRETestID.Text + "';", lsvPreBurnIn);
+                csCrossClassInteraction.lsvFillFromQuery(holder.HummingBirdConnectionString, "SELECT * FROM tblPRE WHERE TestID = '" + cbPRETestID.Text + "';", lsvPreBurnIn);
                 csSplashScreenHelper.ShowText("Done...");
                 csSplashScreenHelper.Hide();
             }
@@ -1755,8 +1756,8 @@ namespace RApID_Project_WPF
             {
                 initS.InitSplash1("Loading POST Data...");
                 if (lblRPNumber.Content.ToString().Replace("RP Number: ", "").StartsWith("SV")) // this is a transducer so lets do something different
-                    csCrossClassInteraction.lsvFillFromQuery(Properties.Settings.Default.HBConn, "SELECT * FROM tblXducerTestResults WHERE TestID = '" + cbPOSTTestID.Text + "';", lsvPostBurnIn);
-                else csCrossClassInteraction.lsvFillFromQuery(Properties.Settings.Default.HBConn, "SELECT * FROM tblPOST WHERE TestID = '" + cbPOSTTestID.Text + "';", lsvPostBurnIn);
+                    csCrossClassInteraction.lsvFillFromQuery(holder.HummingBirdConnectionString, "SELECT * FROM tblXducerTestResults WHERE TestID = '" + cbPOSTTestID.Text + "';", lsvPostBurnIn);
+                else csCrossClassInteraction.lsvFillFromQuery(holder.HummingBirdConnectionString, "SELECT * FROM tblPOST WHERE TestID = '" + cbPOSTTestID.Text + "';", lsvPostBurnIn);
                 csSplashScreenHelper.ShowText("Done...");
                 csSplashScreenHelper.Hide();
             }

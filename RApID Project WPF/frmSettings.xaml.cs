@@ -26,6 +26,8 @@ namespace RApID_Project_WPF
         SerialPort sp;
         csPrintQCDQELabel printLabel;
         StaticVars sVars = StaticVars.StaticVarsInstance();
+        csObjectHolder.csObjectHolder holder = csObjectHolder.csObjectHolder.ObjectHolderInstance();
+
 
         public frmSettings()
         {
@@ -47,9 +49,9 @@ namespace RApID_Project_WPF
             txtHBDBNew.Visibility = txtRepairDBNew.Visibility = txtAOIDBNew.Visibility = btnHBDBDeleteConnString.Visibility = btnRepairDBDeleteConnString.Visibility = btnAOIDBDeleteConnString.Visibility = Visibility.Hidden;
             cbHBDB.Visibility = cbRepairDB.Visibility = cbAOIDB.Visibility = Visibility.Visible;
 
-            updateCBConnection(Properties.Settings.Default.HBConnStrings, Properties.Settings.Default.HBConn, cbHBDB, btnHBDBDeleteConnString);
-            updateCBConnection(Properties.Settings.Default.RepairConnStrings, Properties.Settings.Default.RepairConn, cbRepairDB, btnRepairDBDeleteConnString);
-            updateCBConnection(Properties.Settings.Default.YesDBConnStrings, Properties.Settings.Default.YesDBConn, cbAOIDB, btnAOIDBDeleteConnString);
+            updateCBConnection(holder.HummingBirdConnectionString, holder.HummingBirdConnectionString, cbHBDB, btnHBDBDeleteConnString);
+            updateCBConnection(holder.RepairConnectionString, holder.RepairConnectionString, cbRepairDB, btnRepairDBDeleteConnString);
+            updateCBConnection(holder.YesDBConnectionString, holder.YesDBConnectionString, cbAOIDB, btnAOIDBDeleteConnString);
 
             if (Properties.Settings.Default.AccessDatabase)
                 cbUseAccess.IsChecked = true;
@@ -102,9 +104,9 @@ namespace RApID_Project_WPF
             {
                 if (cbHBDB.Visibility == Visibility.Visible && cbHBDB.SelectedItem != null)
                 {
-                    Properties.Settings.Default.HBConnStrings = csAppSettings.RemoveConnectionString(Properties.Settings.Default.HBConnStrings, cbHBDB.Text);
+                    holder.HummingBirdConnectionString = csAppSettings.RemoveConnectionString(holder.HummingBirdConnectionString, cbHBDB.Text);
                     Properties.Settings.Default.Save();
-                    updateCBConnection(Properties.Settings.Default.HBConnStrings, Properties.Settings.Default.HBConn, cbHBDB, btnHBDBDeleteConnString);
+                    updateCBConnection(holder.HummingBirdConnectionString, holder.HummingBirdConnectionString, cbHBDB, btnHBDBDeleteConnString);
                 }
             }
             else if (((Control)sender).Name.ToString().Equals("btnRepairDBNew"))
@@ -126,9 +128,9 @@ namespace RApID_Project_WPF
             {
                 if (cbRepairDB.Visibility == Visibility.Visible && cbRepairDB.SelectedItem != null)
                 {
-                    Properties.Settings.Default.RepairConnStrings = csAppSettings.RemoveConnectionString(Properties.Settings.Default.RepairConnStrings, cbRepairDB.Text);
+                    holder.RepairConnectionString = csAppSettings.RemoveConnectionString(holder.RepairConnectionString, cbRepairDB.Text);
                     Properties.Settings.Default.Save();
-                    updateCBConnection(Properties.Settings.Default.RepairConnStrings, Properties.Settings.Default.RepairConn, cbRepairDB, btnRepairDBDeleteConnString);
+                    updateCBConnection(holder.RepairConnectionString, holder.RepairConnectionString, cbRepairDB, btnRepairDBDeleteConnString);
                 }
             }
             else if (((Control)sender).Name.ToString().Equals("btnAOIDBNew"))
@@ -150,9 +152,9 @@ namespace RApID_Project_WPF
             {
                 if (cbAOIDB.Visibility == Visibility.Visible && cbAOIDB.SelectedItem != null)
                 {
-                    Properties.Settings.Default.YesDBConnStrings = csAppSettings.RemoveConnectionString(Properties.Settings.Default.YesDBConnStrings, cbAOIDB.Text);
+                    holder.YesDBConnectionString = csAppSettings.RemoveConnectionString(holder.YesDBConnectionString, cbAOIDB.Text);
                     Properties.Settings.Default.Save();
-                    updateCBConnection(Properties.Settings.Default.YesDBConnStrings, Properties.Settings.Default.YesDBConn, cbAOIDB, btnAOIDBDeleteConnString);
+                    updateCBConnection(holder.YesDBConnectionString, holder.YesDBConnectionString, cbAOIDB, btnAOIDBDeleteConnString);
                 }
             }
         }
@@ -163,35 +165,35 @@ namespace RApID_Project_WPF
             {
                 if (txtHBDBNew.Visibility == Visibility.Visible && !String.IsNullOrEmpty(txtHBDBNew.Text))
                 {
-                    Properties.Settings.Default.HBConnStrings = csAppSettings.AddNewConnectionString(Properties.Settings.Default.HBConnStrings, txtHBDBNew.Text);
-                    Properties.Settings.Default.HBConn = txtHBDBNew.Text;
+                    holder.HummingBirdConnectionString = csAppSettings.AddNewConnectionString(holder.HummingBirdConnectionString, txtHBDBNew.Text);
+                    holder.HummingBirdConnectionString = txtHBDBNew.Text;
                 }
                 else if (cbHBDB.Visibility == Visibility.Visible && !String.IsNullOrEmpty(cbHBDB.Text))
                 {
-                    if (Properties.Settings.Default.HBConn != cbHBDB.Text)
-                        Properties.Settings.Default.HBConn = cbHBDB.Text;
+                    if (holder.HummingBirdConnectionString != cbHBDB.Text)
+                        holder.HummingBirdConnectionString = cbHBDB.Text;
                 }
 
                 if (txtRepairDBNew.Visibility == Visibility.Visible && !String.IsNullOrEmpty(txtRepairDBNew.Text))
                 {
-                    Properties.Settings.Default.RepairConnStrings = csAppSettings.AddNewConnectionString(Properties.Settings.Default.RepairConnStrings, txtRepairDBNew.Text);
-                    Properties.Settings.Default.RepairConn = txtRepairDBNew.Text;
+                    holder.RepairConnectionString = csAppSettings.AddNewConnectionString(holder.RepairConnectionString, txtRepairDBNew.Text);
+                    holder.RepairConnectionString = txtRepairDBNew.Text;
                 }
                 else if (cbRepairDB.Visibility == Visibility.Visible && !String.IsNullOrEmpty(cbRepairDB.Text))
                 {
-                    if (Properties.Settings.Default.RepairConn != cbRepairDB.Text)
-                        Properties.Settings.Default.RepairConn = cbRepairDB.Text;
+                    if (holder.RepairConnectionString != cbRepairDB.Text)
+                        holder.RepairConnectionString = cbRepairDB.Text;
                 }
 
                 if (txtAOIDBNew.Visibility == Visibility.Visible && !String.IsNullOrEmpty(txtAOIDBNew.Text))
                 {
-                    Properties.Settings.Default.YesDBConnStrings = csAppSettings.AddNewConnectionString(Properties.Settings.Default.YesDBConnStrings, txtAOIDBNew.Text);
-                    Properties.Settings.Default.YesDBConn = txtAOIDBNew.Text;
+                    holder.YesDBConnectionString = csAppSettings.AddNewConnectionString(holder.YesDBConnectionString, txtAOIDBNew.Text);
+                    holder.YesDBConnectionString = txtAOIDBNew.Text;
                 }
                 else if (cbAOIDB.Visibility == Visibility.Visible && !String.IsNullOrEmpty(cbAOIDB.Text))
                 {
-                    if (Properties.Settings.Default.YesDBConn != cbAOIDB.Text)
-                        Properties.Settings.Default.YesDBConn = cbAOIDB.Text;
+                    if (holder.YesDBConnectionString != cbAOIDB.Text)
+                        holder.YesDBConnectionString = cbAOIDB.Text;
                 }
 
                 Properties.Settings.Default.AccessDatabase = (bool)cbUseAccess.IsChecked;

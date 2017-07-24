@@ -35,6 +35,7 @@ namespace RApID_Project_WPF
         StaticVars sVar = StaticVars.StaticVarsInstance();
 
         InitSplash initS = new InitSplash();
+        csObjectHolder.csObjectHolder holder = csObjectHolder.csObjectHolder.ObjectHolderInstance();
         #endregion
 
         public frmProduction()
@@ -93,7 +94,7 @@ namespace RApID_Project_WPF
             #endregion
 
             string query = "SELECT * FROM RApID_DropDowns;";
-            SqlConnection conn = new SqlConnection(Properties.Settings.Default.RepairConn);
+            SqlConnection conn = new SqlConnection(holder.RepairConnectionString);
             SqlCommand cmd = new SqlCommand(query, conn);
             try
             {
@@ -149,7 +150,7 @@ namespace RApID_Project_WPF
         private void buildIIP()
         {
             string query = "SELECT * FROM tblManufacturingTechIssues ORDER BY ID;";
-            SqlConnection conn = new SqlConnection(Properties.Settings.Default.RepairConn);
+            SqlConnection conn = new SqlConnection(holder.RepairConnectionString);
             SqlCommand cmd = new SqlCommand(query, conn);
             try
             {
@@ -889,7 +890,7 @@ namespace RApID_Project_WPF
             sVar.LogHandler.CreateLogAction("Attempting to submit the tech data into the TechnicianSubmission Table.", csLogging.LogState.NOTE);
             sVar.LogHandler.CreateLogAction("SQL QUERY: " + query, csLogging.LogState.SQLQUERY);
 
-            SqlConnection conn = new SqlConnection(Properties.Settings.Default.RepairConn);
+            SqlConnection conn = new SqlConnection(holder.RepairConnectionString);
             SqlCommand cmd = new SqlCommand(query, conn);
             try
             {
@@ -967,7 +968,7 @@ namespace RApID_Project_WPF
 
             string sLogString = "";
             List<ProductionMultipleUnitIssues> lPI = getUnitIssues();
-            SqlConnection conn = new SqlConnection(Properties.Settings.Default.RepairConn);
+            SqlConnection conn = new SqlConnection(holder.RepairConnectionString);
             SqlCommand cmd = new SqlCommand(query, conn);
             try
             {
@@ -1672,7 +1673,7 @@ namespace RApID_Project_WPF
             if(!String.IsNullOrEmpty(cbEOLTestID.Text))
             {
                 initS.InitSplash1("Loading EOL Data...");
-                csCrossClassInteraction.lsvFillFromQuery(Properties.Settings.Default.HBConn, "SELECT * FROM tblEOL WHERE TestID = '" + cbEOLTestID.Text + "';", lsvEOL);
+                csCrossClassInteraction.lsvFillFromQuery(holder.HummingBirdConnectionString, "SELECT * FROM tblEOL WHERE TestID = '" + cbEOLTestID.Text + "';", lsvEOL);
                 csSplashScreenHelper.ShowText("Done...");
                 csSplashScreenHelper.Hide();
             }
@@ -1683,7 +1684,7 @@ namespace RApID_Project_WPF
             if (!String.IsNullOrEmpty(cbPRETestID.Text))
             {
                 initS.InitSplash1("Loading PRE Data...");
-                csCrossClassInteraction.lsvFillFromQuery(Properties.Settings.Default.HBConn, "SELECT * FROM tblPRE WHERE TestID = '" + cbPRETestID.Text + "';", lsvPreBurnIn);
+                csCrossClassInteraction.lsvFillFromQuery(holder.HummingBirdConnectionString, "SELECT * FROM tblPRE WHERE TestID = '" + cbPRETestID.Text + "';", lsvPreBurnIn);
                 csSplashScreenHelper.ShowText("Done...");
                 csSplashScreenHelper.Hide();
             }
@@ -1694,7 +1695,7 @@ namespace RApID_Project_WPF
             if (!String.IsNullOrEmpty(cbPOSTTestID.Text))
             {
                 initS.InitSplash1("Loading POST Data...");
-                csCrossClassInteraction.lsvFillFromQuery(Properties.Settings.Default.HBConn, "SELECT * FROM tblPOST WHERE TestID = '" + cbPOSTTestID.Text + "';", lsvPostBurnIn);
+                csCrossClassInteraction.lsvFillFromQuery(holder.HummingBirdConnectionString, "SELECT * FROM tblPOST WHERE TestID = '" + cbPOSTTestID.Text + "';", lsvPostBurnIn);
                 csSplashScreenHelper.ShowText("Done...");
                 csSplashScreenHelper.Hide();
             }

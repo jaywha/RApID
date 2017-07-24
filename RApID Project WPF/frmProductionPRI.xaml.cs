@@ -21,6 +21,8 @@ namespace RApID_Project_WPF
     public partial class frmProductionPRI : Window
     {
         PreviousRepairInformation PRI;
+        csObjectHolder.csObjectHolder holder = csObjectHolder.csObjectHolder.ObjectHolderInstance();
+
 
         public frmProductionPRI(PreviousRepairInformation _pri)
         {
@@ -40,7 +42,7 @@ namespace RApID_Project_WPF
         private bool loadPRI()
         {
             string query = "SELECT * FROM TechnicianSubmission WHERE ID = '" + PRI.ID + "'";
-            SqlConnection conn = new SqlConnection(Properties.Settings.Default.RepairConn);
+            SqlConnection conn = new SqlConnection(holder.RepairConnectionString);
             SqlCommand cmd = new SqlCommand(query, conn);
             try
             {

@@ -20,9 +20,12 @@ namespace RApID_Project_WPF
     /// </summary>
     public partial class MainWindow : Window
     {
+        csObjectHolder.csObjectHolder holder = csObjectHolder.csObjectHolder.ObjectHolderInstance();
         StaticVars sVars = StaticVars.StaticVarsInstance();
+
         public MainWindow()
         {
+            holder.vGetServerName("");
             InitializeComponent();
         }
 

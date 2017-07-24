@@ -26,7 +26,7 @@ namespace RApID_Project_WPF
         /// THIS IS ONLY USED FOR GETTING PREVIOUS INFORMATION FROM THE DQE/QC FORM
         /// <<<<
         /// </summary>
-
+        csObjectHolder.csObjectHolder holder = csObjectHolder.csObjectHolder.ObjectHolderInstance();
         PreviousRepairInformation PRI;
         List<string> lUnitIssues = new List<string>(7); //-This will be used to house the unit issues and will be used to build the unit issue tab control.
         public PrevRepairInfo(PreviousRepairInformation prevInfo)
@@ -118,7 +118,7 @@ namespace RApID_Project_WPF
         {
             string query = "SELECT * FROM tblManufacturingTechReport WHERE SerialNumber = '" + PRI.SerialNumber + "' AND Date_Time = '" + PRI.DateSubmitted.ToString() + "' AND Technician = '" + PRI.TechName + "'";
 
-            SqlConnection conn = new SqlConnection(Properties.Settings.Default.RepairConn);
+            SqlConnection conn = new SqlConnection(holder.RepairConnectionString);
             SqlCommand cmd = new SqlCommand(query, conn);
             try
             {
@@ -147,7 +147,7 @@ namespace RApID_Project_WPF
                 conn.Close();
 
                 query = "SELECT CommodityClass FROM ItemMaster WHERE PartNumber = '" + txtPartNumber.Text + "'";
-                conn.ConnectionString = Properties.Settings.Default.HBConn;
+                conn.ConnectionString = holder.HummingBirdConnectionString;
                 cmd = new SqlCommand(query, conn);
                 try
                 {
@@ -188,7 +188,7 @@ namespace RApID_Project_WPF
         {
             string query = "SELECT * FROM TechnicianSubmission WHERE SerialNumber = '" + PRI.SerialNumber + "' AND DateSubmitted = '" + PRI.DateSubmitted.ToString() + "' AND Technician = '" + PRI.TechName + "'";
             
-            SqlConnection conn = new SqlConnection(Properties.Settings.Default.RepairConn);
+            SqlConnection conn = new SqlConnection(holder.RepairConnectionString);
             SqlCommand cmd = new SqlCommand(query, conn);
             try
             {
@@ -500,7 +500,7 @@ namespace RApID_Project_WPF
 
                     string query = "SELECT * FROM TechnicianUnitIssues WHERE ID = '" + PRI.ID + "';";
 
-                    SqlConnection conn = new SqlConnection(Properties.Settings.Default.RepairConn);
+                    SqlConnection conn = new SqlConnection(holder.RepairConnectionString);
                     SqlCommand cmd = new SqlCommand(query, conn);
                     try
                     {

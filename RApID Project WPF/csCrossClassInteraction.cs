@@ -17,7 +17,8 @@ namespace RApID_Project_WPF
     class csCrossClassInteraction
     {
         private static StaticVars sVar = StaticVars.StaticVarsInstance();
-        
+        private static csObjectHolder.csObjectHolder holder = csObjectHolder.csObjectHolder.ObjectHolderInstance();
+
         /// <summary>
         /// Takes an empy datagrid and fills it with the appropriate columns based on the criteria.
         /// This is used in Production and Repair.
@@ -107,7 +108,7 @@ namespace RApID_Project_WPF
             sVar.LogHandler.CreateLogAction(String.Format("Attempting to fill {0} from a SQL Query.", cbToFill.Name.ToString()), EricStabileLibrary.csLogging.LogState.NOTE);
             sVar.LogHandler.CreateLogAction("SQL QUERY: " + _query, EricStabileLibrary.csLogging.LogState.SQLQUERY);
 
-            SqlConnection conn = new SqlConnection(Properties.Settings.Default.HBConn);
+            SqlConnection conn = new SqlConnection(holder.HummingBirdConnectionString);
             SqlCommand cmd = new SqlCommand(_query, conn);
             try
             {
@@ -146,7 +147,7 @@ namespace RApID_Project_WPF
             sVar.LogHandler.CreateLogAction(String.Format("Attempting to fill {0} from a SQL Query.", txtToFill.Name.ToString()), EricStabileLibrary.csLogging.LogState.NOTE);
             sVar.LogHandler.CreateLogAction("SQL QUERY: " + _query, EricStabileLibrary.csLogging.LogState.SQLQUERY);
             
-            SqlConnection conn = new SqlConnection(Properties.Settings.Default.HBConn);
+            SqlConnection conn = new SqlConnection(holder.HummingBirdConnectionString);
             SqlCommand cmd = new SqlCommand(_query, conn);
             try
             {
@@ -240,7 +241,7 @@ namespace RApID_Project_WPF
         /// <param name="_serialNum">Serial Number we are searching</param>
         public static void dgTechReport(string _query, bool oldDb, DataGrid dgToFill, string _serialNum)
         {
-            SqlConnection conn = new SqlConnection(Properties.Settings.Default.RepairConn);
+            SqlConnection conn = new SqlConnection(holder.RepairConnectionString);
             SqlCommand cmd = new SqlCommand(_query, conn);
             try
             {
@@ -292,7 +293,7 @@ namespace RApID_Project_WPF
 
             bool bQueryPassed = false;
 
-            SqlConnection conn = new SqlConnection(Properties.Settings.Default.HBConn);
+            SqlConnection conn = new SqlConnection(holder.HummingBirdConnectionString);
             SqlCommand cmd = new SqlCommand(query, conn);
             try
             {
@@ -339,7 +340,7 @@ namespace RApID_Project_WPF
             sVar.LogHandler.CreateLogAction("Attempting to query the ItemMaster Table.", EricStabileLibrary.csLogging.LogState.NOTE);
             sVar.LogHandler.CreateLogAction("SQL QUERY: " + query, EricStabileLibrary.csLogging.LogState.SQLQUERY);
 
-            SqlConnection conn = new SqlConnection(Properties.Settings.Default.HBConn);
+            SqlConnection conn = new SqlConnection(holder.HummingBirdConnectionString);
             SqlCommand cmd = new SqlCommand(query, conn);
             try
             {
@@ -390,7 +391,7 @@ namespace RApID_Project_WPF
             sVar.LogHandler.CreateLogAction("SQL QUERY: " + _query, EricStabileLibrary.csLogging.LogState.SQLQUERY); 
             string sReturn = "";
             
-            SqlConnection conn = new SqlConnection(Properties.Settings.Default.HBConn);
+            SqlConnection conn = new SqlConnection(holder.HummingBirdConnectionString);
             SqlCommand cmd = new SqlCommand(_query, conn);
             try
             {
@@ -428,7 +429,7 @@ namespace RApID_Project_WPF
             sVar.LogHandler.CreateLogAction("SQL QUERY: " + _query, EricStabileLibrary.csLogging.LogState.SQLQUERY);
             string sReturn = "";
 
-            SqlConnection conn = new SqlConnection(Properties.Settings.Default.HBConn);
+            SqlConnection conn = new SqlConnection(holder.HummingBirdConnectionString);
             SqlCommand cmd = new SqlCommand(_query, conn);
             try
             {
@@ -475,7 +476,7 @@ namespace RApID_Project_WPF
             sVar.LogHandler.CreateLogAction("Attemping to query the AOI Table.", EricStabileLibrary.csLogging.LogState.NOTE);
             sVar.LogHandler.CreateLogAction("SQL QUERY: " + query, EricStabileLibrary.csLogging.LogState.SQLQUERY);
 
-            SqlConnection conn = new SqlConnection(Properties.Settings.Default.HBConn);
+            SqlConnection conn = new SqlConnection(holder.HummingBirdConnectionString);
             SqlCommand cmd = new SqlCommand(query, conn);
             try
             {
@@ -550,8 +551,8 @@ namespace RApID_Project_WPF
         public static int GetDBIDValue(string _query)
         {
             int rID = -1;
-
-            SqlConnection conn = new SqlConnection(Properties.Settings.Default.RepairConn);
+            
+            SqlConnection conn = new SqlConnection(holder.RepairConnectionString);
             SqlCommand cmd = new SqlCommand(_query, conn);
             try
             {
@@ -594,7 +595,7 @@ namespace RApID_Project_WPF
             sVar.LogHandler.CreateLogAction("Attempting to query the DefectCode table.", EricStabileLibrary.csLogging.LogState.NOTE);
             sVar.LogHandler.CreateLogAction("SQL QUERY: " + query, EricStabileLibrary.csLogging.LogState.SQLQUERY);
 
-            SqlConnection conn = new SqlConnection(Properties.Settings.Default.YesDBConn);
+            SqlConnection conn = new SqlConnection(holder.YesDBConnectionString);
             SqlCommand cmd = new SqlCommand(query, conn);
             try
             {
@@ -637,7 +638,7 @@ namespace RApID_Project_WPF
             sVar.LogHandler.CreateLogAction("Attempting to query the Beams table to see if the Serial Number exists.", EricStabileLibrary.csLogging.LogState.NOTE);
             sVar.LogHandler.CreateLogAction("SQL QUERY: " + _query, EricStabileLibrary.csLogging.LogState.SQLQUERY);
 
-            SqlConnection conn = new SqlConnection(Properties.Settings.Default.HBConn);
+            SqlConnection conn = new SqlConnection(holder.HummingBirdConnectionString);
             SqlCommand cmd = new SqlCommand(_query, conn);
             try
             {
@@ -705,7 +706,7 @@ namespace RApID_Project_WPF
 
         public static void BeamsQuery(string _query, ListView lsvToFill)
         {
-            SqlConnection conn = new SqlConnection(Properties.Settings.Default.HBConn);
+            SqlConnection conn = new SqlConnection(holder.HummingBirdConnectionString);
             SqlCommand cmd = new SqlCommand(_query, conn);
             try
             {
@@ -907,7 +908,7 @@ namespace RApID_Project_WPF
             _ciReturn.CustomerNumber = CustomerNumber;
 
             string query = "SELECT * FROM RepairCustomerInformation WHERE CustomerNumber = '" + CustomerNumber + "'";
-            SqlConnection conn = new SqlConnection(Properties.Settings.Default.RepairConn);
+            SqlConnection conn = new SqlConnection(holder.RepairConnectionString);
             SqlCommand cmd = new SqlCommand(query, conn);
 
             try
@@ -1045,7 +1046,7 @@ namespace RApID_Project_WPF
             List<RepairMultipleIssues> lRMI = new List<RepairMultipleIssues>();
 
             string query = "SELECT TestResult, TestResultAbort, Cause, Replacement, PartsReplaced, RefDesignator, PartsReplacedPartDescription FROM TechnicianUnitIssues WHERE ID = '" + ID + "'";
-            SqlConnection conn = new SqlConnection(Properties.Settings.Default.RepairConn);
+            SqlConnection conn = new SqlConnection(holder.RepairConnectionString);
             SqlCommand cmd = new SqlCommand(query, conn);
 
             try
@@ -1097,7 +1098,7 @@ namespace RApID_Project_WPF
         //    List<ProductionMultipleUnitIssues> lRMI = new List<ProductionMultipleUnitIssues>();
 
         //    string query = "SELECT TestResult, TestResultAbort, Issue, Item, Problem, PartsReplaced, RefDesignator, PartsReplacedPartDescription FROM TechnicianUnitIssues WHERE ID = '" + ID + "'";
-        //    SqlConnection conn = new SqlConnection(Properties.Settings.Default.RepairConn);
+        //    SqlConnection conn = new SqlConnection(holder.RepairConnectionString);
         //    SqlCommand cmd = new SqlCommand(query, conn);
 
         //    try
