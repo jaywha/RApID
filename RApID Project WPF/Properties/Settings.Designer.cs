@@ -97,7 +97,7 @@ namespace RApID_Project_WPF.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("P:\\EE Process Test\\Logs\\RApID\\")]
+        [global::System.Configuration.DefaultSettingValueAttribute("\\\\joi\\eu\\Public\\EE Process Test\\Logs\\RApID\\")]
         public string LogWriteLocation {
             get {
                 return ((string)(this["LogWriteLocation"]));

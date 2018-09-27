@@ -21,7 +21,7 @@
       <Value Profile="(Default)">One</Value>
     </Setting>
     <Setting Name="LogWriteLocation" Type="System.String" Scope="User">
-      <Value Profile="(Default)">P:\EE Process Test\Logs\RApID\</Value>
+      <Value Profile="(Default)">\\joi\eu\Public\EE Process Test\Logs\RApID\</Value>
     </Setting>
     <Setting Name="PrinterToUse" Type="System.String" Scope="User">
       <Value Profile="(Default)">\\eufs04\EU_B3_Repair label printer</Value>

@@ -17,8 +17,8 @@ namespace RApIDStarter
             string StartupFolder = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
 
             StartupFolder += @"\RApID\";
-            string mainFileFolder = @"P:\EE Process Test\Software\RApID Program 6-27-16\OfficialRApID\RApID Project WPF.exe";
-            string barcodeDLL = @"P:\EE Process Test\Software\RApID Program 6-27-16\OfficialRApID\BarcodeLib.dll";
+            string mainFileFolder = @"\\joi\eu\Public\EE Process Test\Software\RApID Project WPF\Main\RApID Project WPF.exe";
+            string barcodeDLL = @"\\joi\eu\Public\EE Process Test\Software\RApID Project WPF\Main\BarcodeLib.dll";
 
             string exeName = Path.GetFileName(mainFileFolder);
             string barcodeName = Path.GetFileName(barcodeDLL);
@@ -28,42 +28,25 @@ namespace RApIDStarter
             {
                 if (File.Exists(mainFileFolder))
                 {
-                    if (Directory.Exists(StartupFolder))
-                    {
-                        StartupFolder += exeNameOnly + @"\";
-                        if (!Directory.Exists(StartupFolder))
-                        {
-                            Directory.CreateDirectory(StartupFolder);
-                        }
-
-                        //Copy the DLL file.
-                        File.Copy(barcodeDLL, StartupFolder + barcodeName, true);
-
-                        //Copy the main file.
-                        File.Copy(mainFileFolder, StartupFolder + exeName, true);
-
-                        //Start the program.
-                        System.Diagnostics.Process.Start(StartupFolder + exeName);
-                    }
-                    else
+                    if (!Directory.Exists(StartupFolder))
                     {
                         Directory.CreateDirectory(StartupFolder);
-
-                        StartupFolder += exeNameOnly + @"\";
-                        if (!Directory.Exists(StartupFolder))
-                        {
-                            Directory.CreateDirectory(StartupFolder);
-                        }
-
-                        //Copy the DLL file.
-                        File.Copy(barcodeDLL, StartupFolder + barcodeName, true);
-
-                        //Copy the main file.
-                        File.Copy(mainFileFolder, StartupFolder + exeName, true);
-
-                        //Start the program.
-                        System.Diagnostics.Process.Start(StartupFolder + exeName);
                     }
+
+                    StartupFolder += exeNameOnly + @"\";
+                    if (!Directory.Exists(StartupFolder))
+                    {
+                        Directory.CreateDirectory(StartupFolder);
+                    }
+
+                    //Copy the DLL file.
+                    File.Copy(barcodeDLL, StartupFolder + barcodeName, true);
+
+                    //Copy the main file.
+                    File.Copy(mainFileFolder, StartupFolder + exeName, true);
+
+                    //Start the program.
+                    System.Diagnostics.Process.Start(StartupFolder + exeName);
                 }
                 else
                 {
