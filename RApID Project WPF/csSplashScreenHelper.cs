@@ -61,7 +61,7 @@ namespace RApID_Project_WPF
             }
             catch (Exception ex)
             {
-
+                csExceptionLogger.csExceptionLogger.Write("SplashScreenHelper_Hide", ex);
             }
         }
 
@@ -99,7 +99,7 @@ namespace RApID_Project_WPF
             }
             catch (Exception ex)
             {
-
+                csExceptionLogger.csExceptionLogger.Write("SplashScreenHelper_ShowText", ex);
             }
         }
 
@@ -134,7 +134,7 @@ namespace RApID_Project_WPF
             }
             catch (Exception ex)
             {
-
+                csExceptionLogger.csExceptionLogger.Write("SplashScreenHelper_Close", ex);
             }
         }
     }

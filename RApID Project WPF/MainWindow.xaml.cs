@@ -1,17 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 
 namespace RApID_Project_WPF
 {
@@ -26,15 +15,13 @@ namespace RApID_Project_WPF
         public MainWindow()
         {
             holder.vGetServerName("");
+            csExceptionLogger.csExceptionLogger.DefaultLogLocation
+                = $@"\\joi\EU\Public\_Error Logs\{AppDomain.CurrentDomain.FriendlyName}\{DateTime.Now:yyyy-MM-dd}";
             InitializeComponent();
         }
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
-            int xLoc = Convert.ToInt32((Width / 2) - (lblTitle.Width / 2));
-            lblTitle.Margin = new Thickness(xLoc, 10, 0, 0);
-            xLoc = Convert.ToInt32((Width / 2) - (lblTitleDef.Width / 2));
-            lblTitleDef.Margin = new Thickness(xLoc, lblTitleDef.Margin.Top, 0, 0);
             sVars.initStaticVars();
 
             var s = ((decimal)sVars.VersionControl.CurrentVersion).ToString();
@@ -45,50 +32,44 @@ namespace RApID_Project_WPF
         {
             try
             {
-                if (((Control)sender).Name.ToString().Equals("btnRework"))
+                switch (((Control)sender).Name.ToString())
                 {
-                    Hide();
-                    frmProduction fpr = new frmProduction();
-                    fpr.Owner = this;
-                    fpr.ShowDialog();
-                    Show();
-                    Activate();
-                }
-                else if (((Control)sender).Name.ToString().Equals("btnRepair"))
-                {
-                    Hide();
-                    Repair rpr = new Repair(false);
-                    rpr.Owner = this;
-                    rpr.ShowDialog();
-                    Show();
-                    Activate();
-                }
-                else if (((Control)sender).Name.ToString().Equals("btnReportViewer"))
-                {
-                    System.Diagnostics.Process.Start(Properties.Settings.Default.DefaultReportManagerLink);
-                }
-                else if (((Control)sender).Name.ToString().Equals("btnQCDQE"))
-                {
-                    Hide();
-                    frmQCDQE fQC = new frmQCDQE();
-                    fQC.Owner = this;
-                    fQC.ShowDialog();
-                    Show();
-                    Activate();
-                }
-                else if (((Control)sender).Name.ToString().Equals("btnSettings"))
-                {
-                    Hide();
-                    frmSettings fSettings = new frmSettings();
-                    fSettings.Owner = this;
-                    fSettings.ShowDialog();
-                    Show();
-                    Activate();
+                    case "btnRework":
+                        Hide();
+                        var fpr = new frmProduction { Owner = this };
+                        fpr.ShowDialog();
+                        Show();
+                        Activate();
+                        break;
+                    case "btnRepair":
+                        Hide();
+                        var rpr = new Repair(false) { Owner = this};
+                        rpr.ShowDialog();
+                        Show();
+                        Activate();
+                        break;
+                    case "btnReportViewer":
+                        System.Diagnostics.Process.Start(Properties.Settings.Default.DefaultReportManagerLink);
+                        break;
+                    case "btnQCDQE":
+                        Hide();
+                        var fQC = new frmQCDQE { Owner = this };
+                        fQC.ShowDialog();
+                        Show();
+                        Activate();
+                        break;
+                    case "btnSettings":
+                        Hide();
+                        var fSettings = new frmSettings { Owner = this };
+                        fSettings.ShowDialog();
+                        Show();
+                        Activate();
+                        break;
                 }
             }
             catch (Exception ex)
             {
-
+                csExceptionLogger.csExceptionLogger.Write("MainWindow_btnClicks", ex);
             }
         }
 
@@ -98,6 +79,7 @@ namespace RApID_Project_WPF
             {
                 // --->
                 // for some reason, the program will not close while in visual studio. Trying to figure out whats happening...
+                // ANSWER: Threads aren't being closed correctly
 
                 //EricStabileLibrary.InitSplash.thread_Splash = null;
 
@@ -109,12 +91,12 @@ namespace RApID_Project_WPF
                 //    System.Diagnostics.Process.GetCurrentProcess().Threads.Count);
 
                 //EricStabileLibrary.InitSplash.thread_Splash = null;
-                
+
                 // <---  
             }
             catch (Exception ex)
             {
-
+                csExceptionLogger.csExceptionLogger.Write("MainWindow_Window__Closing", ex);
             }
         }
     }

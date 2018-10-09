@@ -118,8 +118,8 @@ namespace RApID_Project_WPF
         {
             string query = "SELECT * FROM tblManufacturingTechReport WHERE SerialNumber = '" + PRI.SerialNumber + "' AND Date_Time = '" + PRI.DateSubmitted.ToString() + "' AND Technician = '" + PRI.TechName + "'";
 
-            SqlConnection conn = new SqlConnection(holder.RepairConnectionString);
-            SqlCommand cmd = new SqlCommand(query, conn);
+            var conn = new SqlConnection(holder.RepairConnectionString);
+            var cmd = new SqlCommand(query, conn);
             try
             {
                 conn.Open();
@@ -188,8 +188,8 @@ namespace RApID_Project_WPF
         {
             string query = "SELECT * FROM TechnicianSubmission WHERE SerialNumber = '" + PRI.SerialNumber + "' AND DateSubmitted = '" + PRI.DateSubmitted.ToString() + "' AND Technician = '" + PRI.TechName + "'";
             
-            SqlConnection conn = new SqlConnection(holder.RepairConnectionString);
-            SqlCommand cmd = new SqlCommand(query, conn);
+            var conn = new SqlConnection(holder.RepairConnectionString);
+            var cmd = new SqlCommand(query, conn);
             try
             {
                 conn.Open();
@@ -248,7 +248,7 @@ namespace RApID_Project_WPF
         /// <returns>Returns a List of strings for each unit issue.</returns>
         private List<string> processUnitIssues(string unitIssue, bool IsPartOrRef)
         {
-            List<string> lUnitIssueReturn = new List<string>();
+            var lUnitIssueReturn = new List<string>();
             
             if(IsPartOrRef)
             {
@@ -272,7 +272,7 @@ namespace RApID_Project_WPF
         /// </summary>
         private void buildTabControlOLDDB()
         {
-            Grid UILayout = new Grid();
+            var UILayout = new Grid();
             UILayout.Width = 300;
             UILayout.Height = 430;
             UILayout.HorizontalAlignment = HorizontalAlignment.Left;
@@ -282,14 +282,14 @@ namespace RApID_Project_WPF
             try
             {
 
-                Label lblTestFailure = new Label();
+                var lblTestFailure = new Label();
                 lblTestFailure.HorizontalAlignment = HorizontalAlignment.Left;
                 lblTestFailure.VerticalAlignment = VerticalAlignment.Top;
                 lblTestFailure.Content = "Test Failure:";
                 lblTestFailure.Margin = new Thickness(10, 10, 0, 0);
                 UILayout.Children.Add(lblTestFailure);
 
-                TextBox txtTestFailure = new TextBox();
+                var txtTestFailure = new TextBox();
                 txtTestFailure.HorizontalAlignment = HorizontalAlignment.Left;
                 txtTestFailure.VerticalAlignment = VerticalAlignment.Top;
                 txtTestFailure.Name = "txtTestFailure";
@@ -300,14 +300,14 @@ namespace RApID_Project_WPF
                 txtTestFailure.IsReadOnly = true;
                 UILayout.Children.Add(txtTestFailure);
 
-                Label lblIssue = new Label();
+                var lblIssue = new Label();
                 lblIssue.HorizontalAlignment = HorizontalAlignment.Left;
                 lblIssue.VerticalAlignment = VerticalAlignment.Top;
                 lblIssue.Content = "Issue:";
                 lblIssue.Margin = new Thickness(10, 60, 0, 0);
                 UILayout.Children.Add(lblIssue);
 
-                TextBox txtIssue = new TextBox();
+                var txtIssue = new TextBox();
                 txtIssue.HorizontalAlignment = HorizontalAlignment.Left;
                 txtIssue.VerticalAlignment = VerticalAlignment.Top;
                 txtIssue.Name = "txtIssue";
@@ -318,14 +318,14 @@ namespace RApID_Project_WPF
                 txtIssue.IsReadOnly = true;
                 UILayout.Children.Add(txtIssue);
 
-                Label lblItem = new Label();
+                var lblItem = new Label();
                 lblItem.HorizontalAlignment = HorizontalAlignment.Left;
                 lblItem.VerticalAlignment = VerticalAlignment.Top;
                 lblItem.Content = "Item:";
                 lblItem.Margin = new Thickness(10, 110, 0, 0);
                 UILayout.Children.Add(lblItem);
 
-                TextBox txtItem = new TextBox();
+                var txtItem = new TextBox();
                 txtItem.HorizontalAlignment = HorizontalAlignment.Left;
                 txtItem.VerticalAlignment = VerticalAlignment.Top;
                 txtItem.Name = "txtTestResultAbort";
@@ -336,14 +336,14 @@ namespace RApID_Project_WPF
                 txtItem.IsReadOnly = true;
                 UILayout.Children.Add(txtItem);
 
-                Label lblProblem = new Label();
+                var lblProblem = new Label();
                 lblProblem.HorizontalAlignment = HorizontalAlignment.Left;
                 lblProblem.VerticalAlignment = VerticalAlignment.Top;
                 lblProblem.Content = "Problem:";
                 lblProblem.Margin = new Thickness(10, 160, 0, 0);
                 UILayout.Children.Add(lblProblem);
 
-                TextBox txtProblem = new TextBox();
+                var txtProblem = new TextBox();
                 txtProblem.HorizontalAlignment = HorizontalAlignment.Left;
                 txtProblem.VerticalAlignment = VerticalAlignment.Top;
                 txtProblem.Name = "txtCause";
@@ -358,7 +358,7 @@ namespace RApID_Project_WPF
             }
             catch { }
 
-            TabItem ti = new TabItem();
+            var ti = new TabItem();
             ti.Header = "Unit Issue";
             ti.Content = UILayout;
             
@@ -380,7 +380,7 @@ namespace RApID_Project_WPF
 
             for (int i = 0; i < lTestResult.Count; i++)
             {
-                Grid UILayout = new Grid();
+                var UILayout = new Grid();
                 UILayout.Width = 300;
                 UILayout.Height = 430;
                 UILayout.HorizontalAlignment = HorizontalAlignment.Left;
@@ -390,14 +390,14 @@ namespace RApID_Project_WPF
                 try
                 {
 
-                    Label lblIssue = new Label();
+                    var lblIssue = new Label();
                     lblIssue.HorizontalAlignment = HorizontalAlignment.Left;
                     lblIssue.VerticalAlignment = VerticalAlignment.Top;
                     lblIssue.Content = "Issue:";
                     lblIssue.Margin = new Thickness(10, 10, 0, 0);
                     UILayout.Children.Add(lblIssue);
 
-                    TextBox txtIssue = new TextBox();
+                    var txtIssue = new TextBox();
                     txtIssue.HorizontalAlignment = HorizontalAlignment.Left;
                     txtIssue.VerticalAlignment = VerticalAlignment.Top;
                     txtIssue.Name = "txtIssue_" + i.ToString();
@@ -409,14 +409,14 @@ namespace RApID_Project_WPF
                     txtIssue.IsReadOnly = true;
                     UILayout.Children.Add(txtIssue);
 
-                    Label lblTestResult = new Label();
+                    var lblTestResult = new Label();
                     lblTestResult.HorizontalAlignment = HorizontalAlignment.Left;
                     lblTestResult.VerticalAlignment = VerticalAlignment.Top;
                     lblTestResult.Content = "Test Result:";
                     lblTestResult.Margin = new Thickness(10, 60, 0, 0);
                     UILayout.Children.Add(lblTestResult);
 
-                    TextBox txtTestResult = new TextBox();
+                    var txtTestResult = new TextBox();
                     txtTestResult.HorizontalAlignment = HorizontalAlignment.Left;
                     txtTestResult.VerticalAlignment = VerticalAlignment.Top;
                     txtTestResult.Name = "txtTestResult_" + i.ToString();
@@ -428,14 +428,14 @@ namespace RApID_Project_WPF
                     txtTestResult.IsReadOnly = true;
                     UILayout.Children.Add(txtTestResult);
 
-                    Label lblTestResultAbort = new Label();
+                    var lblTestResultAbort = new Label();
                     lblTestResultAbort.HorizontalAlignment = HorizontalAlignment.Left;
                     lblTestResultAbort.VerticalAlignment = VerticalAlignment.Top;
                     lblTestResultAbort.Content = "Test Result (Abort Input):";
                     lblTestResultAbort.Margin = new Thickness(10, 110, 0, 0);
                     UILayout.Children.Add(lblTestResultAbort);
 
-                    TextBox txtTestResultAbort = new TextBox();
+                    var txtTestResultAbort = new TextBox();
                     txtTestResultAbort.HorizontalAlignment = HorizontalAlignment.Left;
                     txtTestResultAbort.VerticalAlignment = VerticalAlignment.Top;
                     txtTestResultAbort.Name = "txtTestResultAbort_" + i.ToString();
@@ -447,14 +447,14 @@ namespace RApID_Project_WPF
                     txtTestResultAbort.IsReadOnly = true;
                     UILayout.Children.Add(txtTestResultAbort);
 
-                    Label lblCause = new Label();
+                    var lblCause = new Label();
                     lblCause.HorizontalAlignment = HorizontalAlignment.Left;
                     lblCause.VerticalAlignment = VerticalAlignment.Top;
                     lblCause.Content = "Cause:";
                     lblCause.Margin = new Thickness(10, 160, 0, 0);
                     UILayout.Children.Add(lblCause);
 
-                    TextBox txtCause = new TextBox();
+                    var txtCause = new TextBox();
                     txtCause.HorizontalAlignment = HorizontalAlignment.Left;
                     txtCause.VerticalAlignment = VerticalAlignment.Top;
                     txtCause.Name = "txtCause_" + i.ToString();
@@ -466,14 +466,14 @@ namespace RApID_Project_WPF
                     txtCause.IsReadOnly = true;
                     UILayout.Children.Add(txtCause);
 
-                    Label lblReplacement = new Label();
+                    var lblReplacement = new Label();
                     lblReplacement.HorizontalAlignment = HorizontalAlignment.Left;
                     lblReplacement.VerticalAlignment = VerticalAlignment.Top;
                     lblReplacement.Content = "Replacement:";
                     lblReplacement.Margin = new Thickness(10, 210, 0, 0);
                     UILayout.Children.Add(lblReplacement);
 
-                    TextBox txtReplacement = new TextBox();
+                    var txtReplacement = new TextBox();
                     txtReplacement.HorizontalAlignment = HorizontalAlignment.Left;
                     txtReplacement.VerticalAlignment = VerticalAlignment.Top;
                     txtReplacement.Name = "txtReplacement_" + i.ToString();
@@ -485,7 +485,7 @@ namespace RApID_Project_WPF
                     txtReplacement.IsReadOnly = true;
                     UILayout.Children.Add(txtReplacement);
 
-                    DataGrid dgMultiPart = new DataGrid();
+                    var dgMultiPart = new DataGrid();
                     dgMultiPart.HorizontalAlignment = HorizontalAlignment.Left;
                     dgMultiPart.VerticalAlignment = VerticalAlignment.Top;
                     dgMultiPart.Width = 275;
@@ -495,13 +495,13 @@ namespace RApID_Project_WPF
                     dgMultiPart.Columns.Add(DataGridViewHelper.newColumn("Part Replaced", "PartReplaced"));
                     dgMultiPart.Columns.Add(DataGridViewHelper.newColumn("Ref Designator", "RefDesignator"));
 
-                    List<string> lPartToAdd = new List<string>();
-                    List<string> lRefToAdd = new List<string>();
+                    var lPartToAdd = new List<string>();
+                    var lRefToAdd = new List<string>();
 
                     string query = "SELECT * FROM TechnicianUnitIssues WHERE ID = '" + PRI.ID + "';";
 
-                    SqlConnection conn = new SqlConnection(holder.RepairConnectionString);
-                    SqlCommand cmd = new SqlCommand(query, conn);
+                    var conn = new SqlConnection(holder.RepairConnectionString);
+                    var cmd = new SqlCommand(query, conn);
                     try
                     {
                         conn.Open();
@@ -511,11 +511,11 @@ namespace RApID_Project_WPF
                             {
                                 if(reader["Replacement"].ToString().Equals(lReplacement[i].ToString()))
                                 {
-                                    if (reader["PartsReplaced"] != DBNull.Value && !String.IsNullOrEmpty(reader["PartsReplaced"].ToString()))
+                                    if (reader["PartsReplaced"] != DBNull.Value && !string.IsNullOrEmpty(reader["PartsReplaced"].ToString()))
                                         lPartToAdd.Add(reader["PartsReplaced"].ToString());
                                     else lPartToAdd.Add("NF");
 
-                                    if (reader["RefDesignator"] != DBNull.Value && !String.IsNullOrEmpty(reader["RefDesignator"].ToString()))
+                                    if (reader["RefDesignator"] != DBNull.Value && !string.IsNullOrEmpty(reader["RefDesignator"].ToString()))
                                         lRefToAdd.Add(reader["RefDesignator"].ToString());
                                     else lRefToAdd.Add("NF");
                                 }
@@ -543,7 +543,7 @@ namespace RApID_Project_WPF
                 }
                 catch { }
 
-                TabItem ti = new TabItem();
+                var ti = new TabItem();
                 ti.Header = "Issue # " + (i + 1).ToString();
                 ti.Content = UILayout;
                 UnitIssueTabControl.Items.Add(ti);

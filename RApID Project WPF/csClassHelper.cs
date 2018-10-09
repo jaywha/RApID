@@ -21,7 +21,7 @@ namespace RApID_Project_WPF
         /// <returns>DataGridTextColumn</returns>
         public static System.Windows.Controls.DataGridTextColumn newColumn(string _header, string _binding)
         {
-            System.Windows.Controls.DataGridTextColumn newCol = new System.Windows.Controls.DataGridTextColumn();
+            var newCol = new System.Windows.Controls.DataGridTextColumn();
             newCol.Header = _header;
             newCol.Binding = new System.Windows.Data.Binding(_binding);
             return newCol;

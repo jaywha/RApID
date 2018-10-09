@@ -43,8 +43,8 @@ namespace RApID_Project_WPF
         {
             string sUnitID = string.Empty;
             string query = "SELECT * FROM TechnicianSubmission WHERE ID = '" + PRI.ID + "'";
-            SqlConnection conn = new SqlConnection(holder.RepairConnectionString);
-            SqlCommand cmd = new SqlCommand(query, conn);
+            var conn = new SqlConnection(holder.RepairConnectionString);
+            var cmd = new SqlCommand(query, conn);
             try
             {
                 conn.Open();

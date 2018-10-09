@@ -58,8 +58,8 @@ namespace RApID_Project_WPF
                 query = "SELECT PossibleAssemblies, ProductName FROM ProductTestParams ORDER BY ProductName ASC";
             else query = "Select PartNumber, PartName From ItemMaster Where XRefCode = 'UC' OR XRefCode = 'XD' Order By PartName ASC";
 
-            SqlConnection conn = new SqlConnection(holder.HummingBirdConnectionString);
-            SqlCommand cmd = new SqlCommand(query, conn);
+            var conn = new SqlConnection(holder.HummingBirdConnectionString);
+            var cmd = new SqlCommand(query, conn);
             try
             {
                 conn.Open();
@@ -81,7 +81,7 @@ namespace RApID_Project_WPF
                                 {
                                     if (sSplit[i].Contains("0-") || sSplit[i].Contains("6-"))
                                     {
-                                        dt.Rows.Add(new Object[] { sSplit[i].ToString().TrimEnd(), reader[1].ToString().TrimEnd() });
+                                        dt.Rows.Add(new object[] { sSplit[i].ToString().TrimEnd(), reader[1].ToString().TrimEnd() });
                                     }
                                 }
                             }
@@ -95,7 +95,7 @@ namespace RApID_Project_WPF
                                 {
                                     if(sSplit[i].Contains("5-") || sSplit[i].Contains("6-") || sSplit[i].Contains("7-"))
                                     {
-                                        dt.Rows.Add(new Object[] { sSplit[i].ToString().TrimEnd(), reader[1].ToString().TrimEnd() });
+                                        dt.Rows.Add(new object[] { sSplit[i].ToString().TrimEnd(), reader[1].ToString().TrimEnd() });
                                     }
                                 }
                             }
@@ -133,7 +133,7 @@ namespace RApID_Project_WPF
         /// </summary>
         private void searchDataTable()
         {
-            DataTable dtSearch = new DataTable();
+            var dtSearch = new DataTable();
             dtSearch.Columns.Add("Part Number");
             dtSearch.Columns.Add("Part Name");
             string dtQuery = "[Part Name] LIKE '%" + txtSearch.Text + "%'";
@@ -155,8 +155,8 @@ namespace RApID_Project_WPF
             {
                 try
                 {
-                    DataRowView drv = (DataRowView)dgvPartNumber.SelectedItem;
-                    DGVPARTNUMNAMEITEM selItem = new DGVPARTNUMNAMEITEM() { PartNumber = drv[0].ToString(), PartName = drv[1].ToString(), PartSeries = csCrossClassInteraction.SeriesQuery(drv[0].ToString()) };
+                    var drv = (DataRowView)dgvPartNumber.SelectedItem;
+                    var selItem = new DGVPARTNUMNAMEITEM() { PartNumber = drv[0].ToString(), PartName = drv[1].ToString(), PartSeries = csCrossClassInteraction.SeriesQuery(drv[0].ToString()) };
                     sVar.SelectedPartNumberPartName = selItem;
                     sVar.SelectedPartNumberPartName.PartNumberSelected = true;
                     this.Close();

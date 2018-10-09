@@ -2,6 +2,8 @@ C:\Visual Studio Projects\RApID\RApID Project WPF\bin\x86\Debug\RApID Project WP
 C:\Visual Studio Projects\RApID\RApID Project WPF\bin\x86\Debug\RApID Project WPF.exe
 C:\Visual Studio Projects\RApID\RApID Project WPF\bin\x86\Debug\RApID Project WPF.pdb
 C:\Visual Studio Projects\RApID\RApID Project WPF\bin\x86\Debug\BarcodeLib.dll
+C:\Visual Studio Projects\RApID\RApID Project WPF\bin\x86\Debug\csExceptionLogger.dll
+C:\Visual Studio Projects\RApID\RApID Project WPF\obj\x86\Debug\RApID Project WPF.csprojAssemblyReference.cache
 C:\Visual Studio Projects\RApID\RApID Project WPF\obj\x86\Debug\frmMultipleRP.baml
 C:\Visual Studio Projects\RApID\RApID Project WPF\obj\x86\Debug\frmPartNumber.baml
 C:\Visual Studio Projects\RApID\RApID Project WPF\obj\x86\Debug\frmPrintQCDQELabel.baml
@@ -39,7 +41,8 @@ C:\Visual Studio Projects\RApID\RApID Project WPF\obj\x86\Debug\frmFullCustomerI
 C:\Visual Studio Projects\RApID\RApID Project WPF\obj\x86\Debug\RApID Project WPF.g.resources
 C:\Visual Studio Projects\RApID\RApID Project WPF\obj\x86\Debug\frmMessageBox.frmMessageBox.resources
 C:\Visual Studio Projects\RApID\RApID Project WPF\obj\x86\Debug\RApID_Project_WPF.Properties.Resources.resources
-C:\Visual Studio Projects\RApID\RApID Project WPF\obj\x86\Debug\RApID Project WPF.csproj.GenerateResource.Cache
+C:\Visual Studio Projects\RApID\RApID Project WPF\obj\x86\Debug\RApID Project WPF.csproj.GenerateResource.cache
+C:\Visual Studio Projects\RApID\RApID Project WPF\obj\x86\Debug\RApID Project WPF.csproj.CoreCompileInputs.cache
+C:\Visual Studio Projects\RApID\RApID Project WPF\obj\x86\Debug\RApID Project WPF.csproj.CopyComplete
 C:\Visual Studio Projects\RApID\RApID Project WPF\obj\x86\Debug\RApID Project WPF.exe
 C:\Visual Studio Projects\RApID\RApID Project WPF\obj\x86\Debug\RApID Project WPF.pdb
-C:\Visual Studio Projects\RApID\RApID Project WPF\obj\x86\Debug\RApID Project WPF.csprojResolveAssemblyReference.cache

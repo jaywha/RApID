@@ -79,7 +79,7 @@ namespace RApID_Project_WPF
             foreach (string s in csAppSettings.GetConnectionStrings(connStringList))
                 cb.Items.Add(s);
             cb.Text = connString;
-            if (!String.IsNullOrEmpty(cb.Text))
+            if (!string.IsNullOrEmpty(cb.Text))
                 btn.Visibility = Visibility.Visible;
         }
 
@@ -96,7 +96,7 @@ namespace RApID_Project_WPF
                 else if (btnHBDBNew.Content.Equals("Cancel"))
                 {
                     dbBTNHelper(cbHBDB, txtHBDBNew, btnHBDBNew, "Add New Connection String");
-                    if (!String.IsNullOrEmpty(cbHBDB.Text))
+                    if (!string.IsNullOrEmpty(cbHBDB.Text))
                         btnHBDBDeleteConnString.Visibility = Visibility.Visible;
                 }
             }
@@ -120,7 +120,7 @@ namespace RApID_Project_WPF
                 else if (btnRepairDBNew.Content.Equals("Cancel"))
                 {
                     dbBTNHelper(cbRepairDB, txtRepairDBNew, btnRepairDBNew, "Add New Connection String");
-                    if (!String.IsNullOrEmpty(cbRepairDB.Text))
+                    if (!string.IsNullOrEmpty(cbRepairDB.Text))
                         btnRepairDBDeleteConnString.Visibility = Visibility.Visible;
                 }
             }
@@ -144,7 +144,7 @@ namespace RApID_Project_WPF
                 else if (btnAOIDBNew.Content.Equals("Cancel"))
                 {
                     dbBTNHelper(cbAOIDB, txtAOIDBNew, btnAOIDBNew, "Add New Connection String");
-                    if (!String.IsNullOrEmpty(cbAOIDB.Text))
+                    if (!string.IsNullOrEmpty(cbAOIDB.Text))
                         btnAOIDBDeleteConnString.Visibility = Visibility.Visible;
                 }
             }
@@ -163,34 +163,34 @@ namespace RApID_Project_WPF
         {
             try
             {
-                if (txtHBDBNew.Visibility == Visibility.Visible && !String.IsNullOrEmpty(txtHBDBNew.Text))
+                if (txtHBDBNew.Visibility == Visibility.Visible && !string.IsNullOrEmpty(txtHBDBNew.Text))
                 {
                     holder.HummingBirdConnectionString = csAppSettings.AddNewConnectionString(holder.HummingBirdConnectionString, txtHBDBNew.Text);
                     holder.HummingBirdConnectionString = txtHBDBNew.Text;
                 }
-                else if (cbHBDB.Visibility == Visibility.Visible && !String.IsNullOrEmpty(cbHBDB.Text))
+                else if (cbHBDB.Visibility == Visibility.Visible && !string.IsNullOrEmpty(cbHBDB.Text))
                 {
                     if (holder.HummingBirdConnectionString != cbHBDB.Text)
                         holder.HummingBirdConnectionString = cbHBDB.Text;
                 }
 
-                if (txtRepairDBNew.Visibility == Visibility.Visible && !String.IsNullOrEmpty(txtRepairDBNew.Text))
+                if (txtRepairDBNew.Visibility == Visibility.Visible && !string.IsNullOrEmpty(txtRepairDBNew.Text))
                 {
                     holder.RepairConnectionString = csAppSettings.AddNewConnectionString(holder.RepairConnectionString, txtRepairDBNew.Text);
                     holder.RepairConnectionString = txtRepairDBNew.Text;
                 }
-                else if (cbRepairDB.Visibility == Visibility.Visible && !String.IsNullOrEmpty(cbRepairDB.Text))
+                else if (cbRepairDB.Visibility == Visibility.Visible && !string.IsNullOrEmpty(cbRepairDB.Text))
                 {
                     if (holder.RepairConnectionString != cbRepairDB.Text)
                         holder.RepairConnectionString = cbRepairDB.Text;
                 }
 
-                if (txtAOIDBNew.Visibility == Visibility.Visible && !String.IsNullOrEmpty(txtAOIDBNew.Text))
+                if (txtAOIDBNew.Visibility == Visibility.Visible && !string.IsNullOrEmpty(txtAOIDBNew.Text))
                 {
                     holder.YesDBConnectionString = csAppSettings.AddNewConnectionString(holder.YesDBConnectionString, txtAOIDBNew.Text);
                     holder.YesDBConnectionString = txtAOIDBNew.Text;
                 }
-                else if (cbAOIDB.Visibility == Visibility.Visible && !String.IsNullOrEmpty(cbAOIDB.Text))
+                else if (cbAOIDB.Visibility == Visibility.Visible && !string.IsNullOrEmpty(cbAOIDB.Text))
                 {
                     if (holder.YesDBConnectionString != cbAOIDB.Text)
                         holder.YesDBConnectionString = cbAOIDB.Text;
@@ -214,21 +214,21 @@ namespace RApID_Project_WPF
 
         private void cbHBDB_DropDownClosed(object sender, EventArgs e)
         {
-            if (!String.IsNullOrEmpty(cbHBDB.Text))
+            if (!string.IsNullOrEmpty(cbHBDB.Text))
                 btnHBDBDeleteConnString.Visibility = Visibility.Visible;
             else btnHBDBDeleteConnString.Visibility = Visibility.Hidden;
         }
 
         private void cbRepairDB_DropDownClosed(object sender, EventArgs e)
         {
-            if (!String.IsNullOrEmpty(cbRepairDB.Text))
+            if (!string.IsNullOrEmpty(cbRepairDB.Text))
                 btnRepairDBDeleteConnString.Visibility = Visibility.Visible;
             else btnRepairDBDeleteConnString.Visibility = Visibility.Hidden;
         }
 
         private void cbRapidDB_DropDownClosed(object sender, EventArgs e)
         {
-            if (!String.IsNullOrEmpty(cbAOIDB.Text))
+            if (!string.IsNullOrEmpty(cbAOIDB.Text))
                 btnAOIDBDeleteConnString.Visibility = Visibility.Visible;
             else btnAOIDBDeleteConnString.Visibility = Visibility.Hidden;
         }
@@ -353,7 +353,7 @@ namespace RApID_Project_WPF
         {
             try
             {
-                string data = String.Empty;
+                string data = string.Empty;
                 while (true)
                 {
                     if (!sp.IsOpen)
@@ -389,7 +389,7 @@ namespace RApID_Project_WPF
                                 {
                                     rtbPortData.AppendText(data);
                                 });
-                                data = String.Empty;
+                                data = string.Empty;
                             }
                         }
                     }
@@ -407,7 +407,7 @@ namespace RApID_Project_WPF
                         {
                             rtbPortData.AppendText(data);
                         });
-                        data = String.Empty;
+                        data = string.Empty;
                     }
                 }
             }
@@ -470,10 +470,10 @@ namespace RApID_Project_WPF
 
         private void btnUpdateLogLocation_Click(object sender, RoutedEventArgs e)
         {
-            WinForm.FolderBrowserDialog fbd = new WinForm.FolderBrowserDialog();
+            var fbd = new WinForm.FolderBrowserDialog();
             if (fbd.ShowDialog() == WinForm.DialogResult.OK)
             {
-                if (!String.IsNullOrEmpty(fbd.SelectedPath))
+                if (!string.IsNullOrEmpty(fbd.SelectedPath))
                 {
                     txtLogWriteLoc.Text = fbd.SelectedPath.ToString() + @"\";
 
@@ -509,7 +509,7 @@ namespace RApID_Project_WPF
 
         private void btnViewLogNewWindow_Click(object sender, RoutedEventArgs e)
         {
-            frmViewFullLog fvfl = new frmViewFullLog();
+            var fvfl = new frmViewFullLog();
             fvfl.ShowDialog();
         }
         #endregion
@@ -524,7 +524,7 @@ namespace RApID_Project_WPF
 
             //cbPrinterList.Items.Add(@"\\eufs04\EU_B3_Repair label printer");
 
-            if (!String.IsNullOrEmpty(Properties.Settings.Default.PrinterToUse))
+            if (!string.IsNullOrEmpty(Properties.Settings.Default.PrinterToUse))
                 cbPrinterList.Text = Properties.Settings.Default.PrinterToUse;
 
             txtXOffset.Text = Properties.Settings.Default.PrinterXOffset.ToString();
@@ -534,16 +534,16 @@ namespace RApID_Project_WPF
         private void btnSavePrinterSettings_Click(object sender, RoutedEventArgs e)
         {
 
-            if (!String.IsNullOrEmpty(cbPrinterList.Text))
+            if (!string.IsNullOrEmpty(cbPrinterList.Text))
                 Properties.Settings.Default.PrinterToUse = cbPrinterList.Text;
-            if (!String.IsNullOrEmpty(txtXOffset.Text))
+            if (!string.IsNullOrEmpty(txtXOffset.Text))
                 Properties.Settings.Default.PrinterXOffset = Convert.ToInt32(txtXOffset.Text);
-            if (!String.IsNullOrEmpty(txtYOffset.Text))
+            if (!string.IsNullOrEmpty(txtYOffset.Text))
                 Properties.Settings.Default.PrinterYOffset = Convert.ToInt32(txtYOffset.Text);
 
             if(!Properties.Settings.Default.PrinterInitSetup)
             {
-                if(!String.IsNullOrEmpty(Properties.Settings.Default.PrinterToUse))
+                if(!string.IsNullOrEmpty(Properties.Settings.Default.PrinterToUse))
                 {
                     Properties.Settings.Default.PrinterInitSetup = true;
                 }
@@ -568,7 +568,7 @@ namespace RApID_Project_WPF
 
         private void btnPrintQCDQELabel_Click(object sender, RoutedEventArgs e)
         {
-            frmPrintQCDQELabel fpqcedqel = new frmPrintQCDQELabel();
+            var fpqcedqel = new frmPrintQCDQELabel();
             fpqcedqel.ShowDialog();
         }
         #endregion

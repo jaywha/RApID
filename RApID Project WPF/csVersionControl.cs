@@ -26,19 +26,11 @@ namespace RApID_Project_WPF
         }
         public DispatcherTimer tVersionChecker;
 
-        public void initVersionControl()
-        {
-            //tVersionChecker = new DispatcherTimer();
-            //tVersionChecker.Tick += new EventHandler(tVersionChecker_Tick);
-            //tVersionChecker.Interval = new TimeSpan(0, 0, 30);
-            //tVersionChecker.Start();
-        }
-
         private void tVersionChecker_Tick(object sender, EventArgs e)
         {
             try
             {
-                using (StreamReader reader = new StreamReader(_fileCheckLocation))
+                using (var reader = new StreamReader(_fileCheckLocation))
                 {
                     string sVer = reader.ReadLine();
                     double dVer = Convert.ToDouble(sVer);

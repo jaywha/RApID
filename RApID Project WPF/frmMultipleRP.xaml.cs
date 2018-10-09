@@ -28,7 +28,7 @@ namespace RApID_Project_WPF
     /// </summary>
     public partial class frmMultipleRP : Window
     {
-        private string sOrderNumber = String.Empty;
+        private string sOrderNumber = string.Empty;
         StaticVars sVars = StaticVars.StaticVarsInstance();
         csObjectHolder.csObjectHolder holder = csObjectHolder.csObjectHolder.ObjectHolderInstance();
 
@@ -59,8 +59,8 @@ namespace RApID_Project_WPF
         private void loadDGView()
         {
             string query = "SELECT * FROM CustomerRepairOrderFromJDE WHERE OrderNumber = '" + sOrderNumber + "'";
-            SqlConnection conn = new SqlConnection(holder.RepairConnectionString);
-            SqlCommand cmd = new SqlCommand(query, conn);
+            var conn = new SqlConnection(holder.RepairConnectionString);
+            var cmd = new SqlCommand(query, conn);
             try
             {
                 conn.Open();
@@ -68,7 +68,7 @@ namespace RApID_Project_WPF
                 {
                     while (reader.Read())
                     {
-                        DGVMULTIPLERP dmpr = new DGVMULTIPLERP
+                        var dmpr = new DGVMULTIPLERP
                         {
                             RPNumber = reader["ItemNumber"].ToString().TrimEnd(),
                             LineNumber = Convert.ToDouble(reader["LineNumber"]),

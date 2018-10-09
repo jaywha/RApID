@@ -39,14 +39,14 @@ namespace RApID_Project_WPF
 
         private void btnPrint_Click(object sender, RoutedEventArgs e)
         {
-            if(String.IsNullOrEmpty(txtQCDQEID.Text) || String.IsNullOrEmpty(cbLocation.Text))
+            if(string.IsNullOrEmpty(txtQCDQEID.Text) || string.IsNullOrEmpty(cbLocation.Text))
             {
                 MessageBox.Show("Please enter a Location and a Save ID before attempting to print the label.", "Missing Data", MessageBoxButton.OK, MessageBoxImage.Information);
                 txtQCDQEID.Focus();
             }
             else
             {
-                csPrintQCDQELabel printLabel = new csPrintQCDQELabel(cbLocation.Text.ToString(), System.Environment.UserName, DateTime.Now.ToString("MM/dd/yyyy hh:mm tt"), txtQCDQEID.Text.ToString());
+                var printLabel = new csPrintQCDQELabel(cbLocation.Text.ToString(), System.Environment.UserName, DateTime.Now.ToString("MM/dd/yyyy hh:mm tt"), txtQCDQEID.Text.ToString());
                 printLabel.PrintLabel();
             }
         }

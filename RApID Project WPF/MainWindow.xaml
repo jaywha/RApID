@@ -72,7 +72,7 @@
         </LinearGradientBrush>
     </Window.Background>
     <Grid>
-        <Label Name="lblTitle" Margin="10,10,0,0" Width="135" Height="60" HorizontalAlignment="Left" VerticalAlignment="Top">
+        <Label Name="lblTitle" Margin="10,10,0,0" Width="135" Height="60" HorizontalAlignment="Center" VerticalAlignment="Top">
             <TextBlock Text="RApID" FontFamily="Arial" FontWeight="Bold" FontSize="40">
                 <TextBlock.Effect>
                     <DropShadowEffect ShadowDepth="4" Direction="330" Color="Gray" Opacity="0.8" BlurRadius="4" />

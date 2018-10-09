@@ -85,7 +85,7 @@ namespace RApID_Project_WPF
             {
                 if (uie.GetType().Name.Equals("TextBox"))
                 {
-                    TextBox txtBox = (TextBox)uie;
+                    var txtBox = (TextBox)uie;
                     txtBox.Text = string.Empty;
                 }
             }
@@ -94,7 +94,7 @@ namespace RApID_Project_WPF
             {
                 if (uie.GetType().Name.Equals("TextBox"))
                 {
-                    TextBox txtBox = (TextBox)uie;
+                    var txtBox = (TextBox)uie;
                     txtBox.Text = string.Empty;
                 }
             }
@@ -103,7 +103,7 @@ namespace RApID_Project_WPF
             {
                 if (uie.GetType().Name.Equals("TextBox"))
                 {
-                    TextBox txtBox = (TextBox)uie;
+                    var txtBox = (TextBox)uie;
                     txtBox.Text = string.Empty;
                 }
             }
@@ -112,7 +112,7 @@ namespace RApID_Project_WPF
             {
                 if (uie.GetType().Name.Equals("TextBox"))
                 {
-                    TextBox txtBox = (TextBox)uie;
+                    var txtBox = (TextBox)uie;
                     txtBox.Text = string.Empty;
                 }
             }
@@ -128,7 +128,7 @@ namespace RApID_Project_WPF
             {
                 if(uie.GetType().Name.Equals("TextBox"))
                 {
-                    TextBox txtBox = (TextBox)uie;
+                    var txtBox = (TextBox)uie;
                     txtBox.Text = string.Empty;
                 }
             }
@@ -137,7 +137,7 @@ namespace RApID_Project_WPF
             {
                 if(uie.GetType().Name.Equals("TextBox"))
                 {
-                    TextBox txtBox = (TextBox)uie;
+                    var txtBox = (TextBox)uie;
                     txtBox.Text = string.Empty;
                 }
             }
@@ -181,13 +181,13 @@ namespace RApID_Project_WPF
             else if (sp != null && !sp.IsOpen)
             {
                 tbPortStatus.Content = "Port Status: Created/Not Connected";
-                tbPortName.Content = tbBaudRate.Content = tbParity.Content = tbDataBits.Content = tbStopBits.Content = String.Empty;
+                tbPortName.Content = tbBaudRate.Content = tbParity.Content = tbDataBits.Content = tbStopBits.Content = string.Empty;
                 btnRebootSP.Visibility = Visibility.Hidden;
             }
             else if (sp == null)
             {
                 tbPortStatus.Content = "Port Status: Does Not Exist";
-                tbPortName.Content = tbBaudRate.Content = tbParity.Content = tbDataBits.Content = tbStopBits.Content = String.Empty;
+                tbPortName.Content = tbBaudRate.Content = tbParity.Content = tbDataBits.Content = tbStopBits.Content = string.Empty;
                 btnRebootSP.Visibility = Visibility.Hidden;
             }
         }
@@ -251,8 +251,8 @@ namespace RApID_Project_WPF
                 query = "SELECT * FROM TechnicianSubmission WHERE SerialNumber = '" + txtRepairBarcode.Text + "' ORDER BY ID DESC;";
             }
 
-            SqlConnection conn = new SqlConnection(holder.RepairConnectionString);
-            SqlCommand cmd = new SqlCommand(query, conn);
+            var conn = new SqlConnection(holder.RepairConnectionString);
+            var cmd = new SqlCommand(query, conn);
             try
             {
                 ScannedUnitInformation = new QCDQEPageLoad();
@@ -316,10 +316,10 @@ namespace RApID_Project_WPF
 
         private void getUnitIssueInfo()
         {
-            List<RepairMultipleIssues> lRMI = new List<RepairMultipleIssues>();
+            var lRMI = new List<RepairMultipleIssues>();
             string query = "SELECT * FROM TechnicianUnitIssues WHERE ID = '" + ScannedUnitInformation.ID + "' ORDER BY ID DESC";
-            SqlConnection conn = new SqlConnection(holder.RepairConnectionString);
-            SqlCommand cmd = new SqlCommand(query, conn);
+            var conn = new SqlConnection(holder.RepairConnectionString);
+            var cmd = new SqlCommand(query, conn);
 
             try
             {
@@ -465,7 +465,7 @@ namespace RApID_Project_WPF
 
         private QCDQESubmitData prepDataForSubmission(string _submitStatus)
         {
-            QCDQESubmitData _submitInfo = new QCDQESubmitData();
+            var _submitInfo = new QCDQESubmitData();
 
             if((bool)cbxScanSwitch.IsChecked)
             {
@@ -488,8 +488,8 @@ namespace RApID_Project_WPF
 
         private void submitData(QCDQESubmitData _submitData)
         {
-            SqlConnection conn = new SqlConnection(holder.RepairConnectionString);
-            SqlCommand cmd = new SqlCommand(_submitData.SubmitQuery, conn);
+            var conn = new SqlConnection(holder.RepairConnectionString);
+            var cmd = new SqlCommand(_submitData.SubmitQuery, conn);
             try
             {
                 conn.Open();
@@ -601,7 +601,7 @@ namespace RApID_Project_WPF
             {
                 if (!string.IsNullOrEmpty(ScannedUnitInformation.CustomerInformation.CustomerNumber))
                 {
-                    frmFullCustomerInformation fcfi = new frmFullCustomerInformation(ScannedUnitInformation.CustomerInformation);
+                    var fcfi = new frmFullCustomerInformation(ScannedUnitInformation.CustomerInformation);
                     fcfi.Show();
                 }
             }
@@ -649,7 +649,7 @@ namespace RApID_Project_WPF
         {
             if (dgPrevRepairInfo.SelectedItem != null)
             {
-                PrevRepairInfo pri = new PrevRepairInfo((PreviousRepairInformation)dgPrevRepairInfo.SelectedItem);
+                var pri = new PrevRepairInfo((PreviousRepairInformation)dgPrevRepairInfo.SelectedItem);
                 pri.ShowDialog();
             }
         }

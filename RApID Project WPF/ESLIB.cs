@@ -47,7 +47,7 @@ namespace EricStabileLibrary
         /// <returns>Returns a list of Parity</returns>
         public static List<Parity> GetParityList()
         {
-            List<Parity> lParity = new List<Parity>();
+            var lParity = new List<Parity>();
             foreach(Parity p in Enum.GetValues(typeof(Parity)))
             {
                 lParity.Add(p);
@@ -60,7 +60,7 @@ namespace EricStabileLibrary
         /// <returns>Returns a list of all available Stop Bits.</returns>
         public static List<StopBits> GetStopBits()
         {
-            List<StopBits> lStopBits = new List<StopBits>();
+            var lStopBits = new List<StopBits>();
             foreach(StopBits sb in Enum.GetValues(typeof(StopBits)))
             {
                 lStopBits.Add(sb);
@@ -137,13 +137,13 @@ namespace EricStabileLibrary
         /// </summary>
         public static bool serializeFile(string tech, DateTime dtLC, List<csLogAction> lLA, string sFileLoc, string sFileName)
         {
-            csLog csL = new csLog();
+            var csL = new csLog();
             csL.buildCSLog(tech, dtLC, lLA);
 
             StreamWriter sw = null;
             try
             {
-                XmlSerializer _ser = new XmlSerializer(typeof(csLog));
+                var _ser = new XmlSerializer(typeof(csLog));
                 sw = new StreamWriter(sFileLoc + sFileName, false);
                 _ser.Serialize(sw, csL);
                 sw.Close();
@@ -169,7 +169,7 @@ namespace EricStabileLibrary
         {
             csLog logReadIn = null;
 
-            XmlSerializer serRead = new XmlSerializer(typeof(csLog));
+            var serRead = new XmlSerializer(typeof(csLog));
             StreamReader sr = null;
             try
             {
@@ -317,7 +317,7 @@ namespace EricStabileLibrary
             if(bClearRTB)
                 _rtb.Document.Blocks.Clear();
 
-            string sLogData = String.Format("{0} began this entry at {1}.\n", _log.Tech, _log.LogCreationTime.ToString("MM/dd/yyyy hh:mm:ss tt"));
+            string sLogData = string.Format("{0} began this entry at {1}.\n", _log.Tech, _log.LogCreationTime.ToString("MM/dd/yyyy hh:mm:ss tt"));
 
             sLogData += "*** Filtered Actions Associated With This Log File*** \n";
 
@@ -428,7 +428,7 @@ namespace EricStabileLibrary
                     {
                         RApID_Project_WPF.csSplashScreenHelper.SplashScreen = new RApID_Project_WPF.frmSplashScreen();
                         RApID_Project_WPF.csSplashScreenHelper.Show();
-                        if (!String.IsNullOrEmpty(sLoadText))
+                        if (!string.IsNullOrEmpty(sLoadText))
                         {
                             RApID_Project_WPF.csSplashScreenHelper.ShowText(sLoadText);
                         }
@@ -443,7 +443,7 @@ namespace EricStabileLibrary
             }
             catch (Exception ex)
             {
-
+                csExceptionLogger.csExceptionLogger.Write("InitSplash_InitSplash1", ex);
             }
         }
     }

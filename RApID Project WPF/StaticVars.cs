@@ -29,7 +29,6 @@ namespace RApID_Project_WPF
             if (VersionControl == null)
             {
                 VersionControl = new csVersionControl();
-                VersionControl.initVersionControl();
             }
         }
 

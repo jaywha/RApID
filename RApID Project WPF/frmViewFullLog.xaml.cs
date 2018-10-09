@@ -54,14 +54,14 @@ namespace RApID_Project_WPF
 
             //-Convert the timestamp of the file into a format we can understand.
             string sFormat = "MMddyyhhmmsstt";
-            DateTime res = DateTime.ParseExact(sSplit[1], sFormat, CultureInfo.InvariantCulture);
+            var res = DateTime.ParseExact(sSplit[1], sFormat, CultureInfo.InvariantCulture);
 
-            _logDispName = String.Format("{0}: {1}", sSplit[0], res.ToString("MM/dd/yyyy hh:mm:ss tt"));
+            _logDispName = string.Format("{0}: {1}", sSplit[0], res.ToString("MM/dd/yyyy hh:mm:ss tt"));
         }
 
         private void SetFilePath()
         {
-            _logFilePath = String.Format(@"{0}\{1}\{2}", Properties.Settings.Default.LogWriteLocation, _techName, _logFileName);
+            _logFilePath = string.Format(@"{0}\{1}\{2}", Properties.Settings.Default.LogWriteLocation, _techName, _logFileName);
         }
     }
 
@@ -133,7 +133,7 @@ namespace RApID_Project_WPF
                 for (int i = 0; i < Files.Length; i++)
                 {
                     string[] sFileSplit = Files[i].Split(splitters, StringSplitOptions.RemoveEmptyEntries);
-                    LogInfo li = new LogInfo(lbTechList.SelectedItem.ToString(), sFileSplit[sFileSplit.Length - 1]);
+                    var li = new LogInfo(lbTechList.SelectedItem.ToString(), sFileSplit[sFileSplit.Length - 1]);
                     lbLogsToView.Items.Add(li.LogDisplayName);
                     lLogList.Add(li);
                 }
