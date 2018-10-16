@@ -1,22 +1,17 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
+using System.Data.SqlClient;
+using System.IO.Ports;
 using System.Linq;
-using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
 using System.Windows.Documents;
 using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
-using System.Data.SqlClient;
-using System.IO.Ports;
 using System.Windows.Threading;
 using EricStabileLibrary;
-using System.Text.RegularExpressions;
-using System.Collections;
 
 namespace RApID_Project_WPF
 {
@@ -27,7 +22,7 @@ namespace RApID_Project_WPF
     {
         #region Variables
         List<IssueItemProblemCombinations> lIIPC = new List<IssueItemProblemCombinations>();
-        
+
         SerialPort sp;
         DispatcherTimer tSPChecker;
         bool bTimerRebootAttempt = false; //NOTE: tSPChecker will attempt to reboot itself once if it gets disconnected. This flag will be used to track that.
@@ -70,17 +65,17 @@ namespace RApID_Project_WPF
         #region Initialize Form
         private void buildDG()
         {
-            csCrossClassInteraction.dgBuildView(dgMultipleParts, "MULTIPLEPARTS");
-            csCrossClassInteraction.dgBuildView(dgMultipleParts_2, "MULTIPLEPARTS");
-            csCrossClassInteraction.dgBuildView(dgMultipleParts_3, "MULTIPLEPARTS");
-            csCrossClassInteraction.dgBuildView(dgAOI, "AOI");
-            csCrossClassInteraction.dgBuildView(dgDefectCodes, "DEFECTCODES");
-            csCrossClassInteraction.dgBuildView(dgPrevRepairInfo, "PREVREPAIRINFO");
+            dgMultipleParts.dgBuildView("MULTIPLEPARTS");
+            dgMultipleParts_2.dgBuildView("MULTIPLEPARTS");
+            dgMultipleParts_3.dgBuildView("MULTIPLEPARTS");
+            dgAOI.dgBuildView("AOI");
+            dgDefectCodes.dgBuildView("DEFECTCODES");
+            dgPrevRepairInfo.dgBuildView("PREVREPAIRINFO");
         }
 
         private void initDataLog()
         {
-            txtTechName.Text = System.Environment.UserName;
+            txtTechName.Text = Environment.UserName;
             dtpDateReceived.SelectedDate = DateTime.Now;
         }
 
@@ -99,19 +94,19 @@ namespace RApID_Project_WPF
             try
             {
                 conn.Open();
-                using(SqlDataReader reader = cmd.ExecuteReader())
+                using (SqlDataReader reader = cmd.ExecuteReader())
                 {
-                    while(reader.Read())
+                    while (reader.Read())
                     {
                         if (!string.IsNullOrEmpty(reader["ReportedIssue"].ToString()))
                             lReportedIssue.Add(reader["ReportedIssue"].ToString());
 
                         if (!string.IsNullOrEmpty(reader["TestResult"].ToString()))
                             lTestResult.Add(reader["TestResult"].ToString());
-                        
+
                         if (!string.IsNullOrEmpty(reader["TestResult_Abort"].ToString()))
                             lTestResultAbort.Add(reader["TestResult_Abort"].ToString());
-                        
+
                         if (!string.IsNullOrEmpty(reader["FromArea"].ToString()))
                             lFromArea.Add(reader["FromArea"].ToString());
                     }
@@ -133,7 +128,7 @@ namespace RApID_Project_WPF
 
                 buildIIP();
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 if (conn != null)
                     conn.Close();
@@ -168,20 +163,20 @@ namespace RApID_Project_WPF
                 }
                 conn.Close();
 
-                for(int i = 0; i < lIIPC.Count; i++)
+                for (int i = 0; i < lIIPC.Count; i++)
                 {
                     if (!cbIssue.Items.Contains(lIIPC[i].Issue))
                         cbIssue.Items.Add(lIIPC[i].Issue);
-                    
+
                     if (!cbIssue_2.Items.Contains(lIIPC[i].Issue))
                         cbIssue_2.Items.Add(lIIPC[i].Issue);
-                    
+
                     if (!cbIssue_3.Items.Contains(lIIPC[i].Issue))
                         cbIssue_3.Items.Add(lIIPC[i].Issue);
                 }
 
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 if (conn != null)
                     conn.Close();
@@ -234,6 +229,9 @@ namespace RApID_Project_WPF
             dgPrevRepairInfo.Items.Clear();
             rtbAdditionalComments.Document.Blocks.Clear();
 
+            lblEOL.Content = "End of Line";
+            lblPOST.Content = "Post Burn-In";
+
             resetUnitIssues();
             resetEOL();
             resetAOI();
@@ -276,7 +274,7 @@ namespace RApID_Project_WPF
         /// <param name="iUIReset">Which tab do I reset?</param>
         private void resetUnitIssues(int iUIReset)
         {
-            switch(iUIReset)
+            switch (iUIReset)
             {
                 case 1:
                     cbReportedIssue.SelectedIndex = cbTestResult.SelectedIndex = cbTestResultAbort.SelectedIndex = cbIssue.SelectedIndex = cbItem.SelectedIndex = cbProblem.SelectedIndex = -1;
@@ -322,7 +320,7 @@ namespace RApID_Project_WPF
                     }
                 }
             }
-            
+
             foreach (UIElement uie in gridUI2.Children)
             {
                 if (uie.GetType().Name.Equals("ComboBox"))
@@ -347,13 +345,13 @@ namespace RApID_Project_WPF
                 }
             }
 
-            if(!bUI3DataFound && !bUI2DataFound && tiUI3.IsEnabled)
+            if (!bUI3DataFound && !bUI2DataFound && tiUI3.IsEnabled)
             {
                 resetUnitIssues(3);
                 tiUI3.IsEnabled = false;
             }
 
-            if(!bUI2DataFound && !bUI1DataFound && tiUI2.IsEnabled)
+            if (!bUI2DataFound && !bUI1DataFound && tiUI2.IsEnabled)
             {
                 resetUnitIssues(2);
                 tiUI2.IsEnabled = false;
@@ -371,19 +369,19 @@ namespace RApID_Project_WPF
         private bool checkForUITabData(int iUITab)
         {
             Grid gToCheck = null;
-            
+
             if (iUITab == 1) gToCheck = gridUI1;
             else if (iUITab == 2) gToCheck = gridUI2;
             else if (iUITab == 3) gToCheck = gridUI3;
 
-            if(gToCheck != null)
+            if (gToCheck != null)
             {
                 foreach (UIElement uie in gToCheck.Children)
                 {
-                    if(uie.GetType().Name.Equals("ComboBox"))
+                    if (uie.GetType().Name.Equals("ComboBox"))
                     {
                         var cb = (ComboBox)uie;
-                        if(!string.IsNullOrEmpty(cb.Text) && !cb.Name.StartsWith("cbReportedIssue"))
+                        if (!string.IsNullOrEmpty(cb.Text) && !cb.Name.StartsWith("cbReportedIssue"))
                         {
                             return true;
                         }
@@ -525,37 +523,63 @@ namespace RApID_Project_WPF
             cbProblemEdit.IsEnabled = true;
         }
 
-        private void resetIIPItems(bool bResetAll, ComboBox cbItemReset, ComboBox cbProblemReset, TextBox txtRefReset, Label lblRefReset, TextBox txtPartReset, Label lblPartReset, Button btnAddReset, DataGrid dgReset)
+        private void resetIIPItems(bool bResetAll, ComboBox cbItemReset, ComboBox cbProblemReset, Control txtRefReset, Label lblRefReset, Control txtPartReset, Label lblPartReset, Button btnAddReset, DataGrid dgReset)
         {
             if (bResetAll)
             {
                 cbItemReset.Items.Clear();
                 cbItemReset.SelectedIndex = -1;
                 cbItemReset.IsEnabled = false;
-                txtRefReset.Text = string.Empty;
-                lblRefReset.Visibility = txtRefReset.Visibility = System.Windows.Visibility.Hidden;
+                txtRefReset.SetContent(string.Empty);
+                lblRefReset.Visibility = Visibility.Hidden;
+                txtRefReset.Visibility = Visibility.Hidden;
             }
 
             cbProblemReset.Items.Clear();
             cbProblemReset.SelectedIndex = -1;
             cbProblemReset.IsEnabled = false;
-            txtPartReset.Text = string.Empty;
+            txtPartReset.SetContent(string.Empty);
             dgReset.Items.Clear();
-            lblPartReset.Visibility = txtPartReset.Visibility = btnAddReset.Visibility = dgReset.Visibility = System.Windows.Visibility.Hidden;
+            lblPartReset.Visibility = Visibility.Hidden;
+            txtPartReset.Visibility = Visibility.Hidden;
+            btnAddReset.Visibility = Visibility.Hidden;
+            dgReset.Visibility = Visibility.Hidden;
         }
 
-        private void dispIIPElements(Label lblRefToDisp, TextBox txtRefToDisp, Label lblPartToDisp, TextBox txtPartToDisp, ComboBox cbItemToCompare, ComboBox cbProblemToCompare, DataGrid dgToEdit, Button btnAddToDG)
+        private void dispIIPElements(Label lblRefToDisp, Control txtRefToDisp, Label lblPartToDisp, Control txtPartToDisp, ComboBox cbItemToCompare, ComboBox cbProblemToCompare, DataGrid dgToEdit, Button btnAddToDG)
         {
             bool bDispAll = false;
 
-            if (cbItemToCompare.Text.Equals("Ref Designator Code")) { lblRefToDisp.Visibility = txtRefToDisp.Visibility = Visibility.Visible; bDispAll = true; }
-            else lblRefToDisp.Visibility = txtRefToDisp.Visibility = Visibility.Hidden;
+            if (cbItemToCompare.Text.Equals("Ref Designator Code"))
+            {
+                lblRefToDisp.Visibility = Visibility.Visible;
+                txtRefToDisp.Visibility = Visibility.Visible;
+                bDispAll = true;
+            }
+            else
+            {
+                lblRefToDisp.Visibility = Visibility.Hidden;
+                txtRefToDisp.Visibility = Visibility.Hidden;
+            }
 
-            if (cbProblemToCompare.Text.Equals("Part Number")) { lblPartToDisp.Visibility = txtPartToDisp.Visibility = Visibility.Visible; bDispAll = true; }
-            else lblPartToDisp.Visibility = txtPartToDisp.Visibility = Visibility.Hidden;
+            if (cbProblemToCompare.Text.Equals("Part Number"))
+            {
+                lblPartToDisp.Visibility = Visibility.Visible;
+                txtPartToDisp.Visibility = Visibility.Visible;
+                bDispAll = true;
+            }
+            else
+            {
+                lblPartToDisp.Visibility = Visibility.Hidden;
+                txtPartToDisp.Visibility = Visibility.Hidden;
+            }
 
-            if (bDispAll) { btnAddToDG.Visibility = dgToEdit.Visibility = Visibility.Visible; }
-        } 
+            if (bDispAll)
+            {
+                btnAddToDG.Visibility = Visibility.Visible;
+                dgToEdit.Visibility = Visibility.Visible;
+            }
+        }
 
         #endregion
 
@@ -567,7 +591,7 @@ namespace RApID_Project_WPF
             resetForm(false);
             sVar.LogHandler.LogCreation = DateTime.Now;
 
-            if(!string.IsNullOrEmpty(txtSerialNumber.Text))
+            if (!string.IsNullOrEmpty(txtSerialNumber.Text))
             {
                 sVar.LogHandler.CreateLogAction("**** This is a Production Log ****", csLogging.LogState.NOTE);
                 sVar.LogHandler.CreateLogAction("The Serial Number related to this log is: " + txtSerialNumber.Text.TrimEnd(), csLogging.LogState.NOTE);
@@ -582,13 +606,13 @@ namespace RApID_Project_WPF
         /// </summary>
         private void fillDataLog()
         {
-            if(!QueryEOL())
+            if (!QueryEOL())
             {
                 sVar.LogHandler.CreateLogAction("QueryEOL() was unsuccessful. Attempting QueryProduction() then QueryItemMaster().", csLogging.LogState.NOTE);
                 QueryProduction();
             }
 
-            if(!string.IsNullOrEmpty(txtPartNumber.Text))
+            if (!string.IsNullOrEmpty(txtPartNumber.Text))
             {
                 sVar.LogHandler.CreateLogAction("Attempting to get the Part Series now.", csLogging.LogState.NOTE);
 
@@ -609,7 +633,7 @@ namespace RApID_Project_WPF
             string query = "SELECT PartNumber, ModelDesc FROM tblEOL WHERE PCBSerial = '" + txtSerialNumber.Text.ToString().TrimEnd() + "';";
             bool bQueryEOLPassed = csCrossClassInteraction.SNEOLQuery(query, txtPartNumber, txtPartName);
 
-            if(bQueryEOLPassed) { sVar.LogHandler.CreateLogAction("The EOL Query was successful!", csLogging.LogState.NOTE); }
+            if (bQueryEOLPassed) { sVar.LogHandler.CreateLogAction("The EOL Query was successful!", csLogging.LogState.NOTE); }
 
             return bQueryEOLPassed;
         }
@@ -622,9 +646,9 @@ namespace RApID_Project_WPF
             string query = "SELECT Model FROM Production WHERE SerialNum = '" + txtSerialNumber.Text + "';";
             string sProdQueryResults = csCrossClassInteraction.ProductionQuery(query);
 
-            if (sProdQueryResults.ToLower().Contains("rev")) 
-            { 
-                csCrossClassInteraction.LoadPartNumberForm(true, new List<TextBox> { txtPartNumber, txtPartName, txtPartSeries }); 
+            if (sProdQueryResults.ToLower().Contains("rev"))
+            {
+                csCrossClassInteraction.LoadPartNumberForm(true, new List<TextBox> { txtPartNumber, txtPartName, txtPartSeries });
             }
             else
             {
@@ -642,7 +666,7 @@ namespace RApID_Project_WPF
             string query = "SELECT PartName FROM ItemMaster WHERE PartNumber = '" + txtPartNumber.Text.ToString().TrimEnd() + "';";
             string sItemMasterQueryResults = csCrossClassInteraction.ItemMasterQuery(query);
 
-            if(!string.IsNullOrEmpty(sItemMasterQueryResults))
+            if (!string.IsNullOrEmpty(sItemMasterQueryResults))
             {
                 txtPartName.Text = sItemMasterQueryResults;
                 sVar.LogHandler.CreateLogAction("txtPartName's value has been set to " + txtPartName.Text + ".", csLogging.LogState.NOTE);
@@ -655,22 +679,34 @@ namespace RApID_Project_WPF
         private void fillEOLData()
         {
             resetEOL();
-            string query = "SELECT TestID FROM tblEOL WHERE PCBSerial = '" + txtSerialNumber.Text + "';";
+            string query = "";
+            if (txtPartSeries.Text.Contains("XDR")) {
+                query = $"SELECT TestID FROM tblXducerTestResultsBenchTest WHERE SerialNumber = '{txtSerialNumber.Text}';";
+            } else {
+                query = "SELECT TestID FROM tblEOL WHERE PCBSerial = '" + txtSerialNumber.Text + "';";
+            }
             csCrossClassInteraction.cbFillFromQuery(cbEOLTestID, query);
-            
+
             query = "SELECT TestID FROM tblPre WHERE PCBSerial = '" + txtSerialNumber.Text + "';";
             csCrossClassInteraction.cbFillFromQuery(cbPRETestID, query);
 
-            query = "SELECT TestID FROM tblPost WHERE PCBSerial = '" + txtSerialNumber.Text + "';";
+            if (txtPartSeries.Text.Contains("XDR"))
+            {
+                query = $"SELECT TestID FROM tblXducerTestResults WHERE SerialNumber = '{txtSerialNumber.Text}';";
+            }
+            else
+            {
+                query = "SELECT TestID FROM tblPost WHERE PCBSerial = '" + txtSerialNumber.Text + "';";
+            }
             csCrossClassInteraction.cbFillFromQuery(cbPOSTTestID, query);
 
-            if(cbEOLTestID.Items.Count > 0)
+            if (cbEOLTestID.Items.Count > 0)
                 cbBEAMSTestType.Items.Add("EOL");
 
-            if(cbPRETestID.Items.Count > 0)
+            if (cbPRETestID.Items.Count > 0)
                 cbBEAMSTestType.Items.Add("PRE");
 
-            if(cbPOSTTestID.Items.Count > 0)
+            if (cbPOSTTestID.Items.Count > 0)
                 cbBEAMSTestType.Items.Add("POST");
         }
 
@@ -724,11 +760,11 @@ namespace RApID_Project_WPF
             string sWarning = "Submission Criteria not met.\n";
 
             #region Unit Issue 1
-            if(!string.IsNullOrEmpty(txtMultiPartNum.Text))
+            if (!string.IsNullOrEmpty(txtMultiPartNum.Text))
             {
                 string _sPRPD = getPartReplacedPartDescription(txtMultiPartNum.Text);
 
-                if(string.IsNullOrEmpty(_sPRPD))
+                if (string.IsNullOrEmpty(_sPRPD))
                 {
                     sWarning += string.Format("The Part Replaced entered into Unit Issue #1 ( {0} ) does not exist. Please verify the Part Number and try again.\n", txtMultiPartNum.Text);
                     bCanSubmit = false;
@@ -749,11 +785,11 @@ namespace RApID_Project_WPF
             #endregion
 
             #region Unit Issue 2
-            if(!string.IsNullOrEmpty(txtMultiPartNum_2.Text))
+            if (!string.IsNullOrEmpty(txtMultiPartNum_2.Text))
             {
                 string _sPRPD = getPartReplacedPartDescription(txtMultiPartNum_2.Text);
 
-                if(string.IsNullOrEmpty(_sPRPD))
+                if (string.IsNullOrEmpty(_sPRPD))
                 {
                     sWarning += string.Format("The Part Replaced entered into Unit Issue #2 ( {0} ) does not exist. Please verify the Part Number and try again.\n", txtMultiPartNum_2.Text);
                     bCanSubmit = false;
@@ -774,11 +810,11 @@ namespace RApID_Project_WPF
             #endregion
 
             #region Unit Issue 3
-            if(!string.IsNullOrEmpty(txtMultiPartNum_3.Text))
+            if (!string.IsNullOrEmpty(txtMultiPartNum_3.Text))
             {
                 string _sPRPD = getPartReplacedPartDescription(txtMultiPartNum_3.Text);
 
-                if(string.IsNullOrEmpty(_sPRPD))
+                if (string.IsNullOrEmpty(_sPRPD))
                 {
                     sWarning += string.Format("The Part Replaced entered into Unit Issue #3 ( {0} ) does not exist. Please verify the Part Number and try again.\n", txtMultiPartNum_3.Text);
                     bCanSubmit = false;
@@ -812,49 +848,47 @@ namespace RApID_Project_WPF
         /// <returns>Returns an ArrayList(2) with: 1.(bool)Has Submission Criteria Been Met, 2.(string)What submission criteria has been missed.</returns>
         private ArrayList canSubmit()
         {
-            //TODO: Get full submission restrictions.
-
             var alReturn = new ArrayList(2);
             string sErrMsg = "The following items are missing:\n";
             bool bCanSubmit = true;
 
-            if(string.IsNullOrEmpty(txtSerialNumber.Text))
+            if (string.IsNullOrEmpty(txtSerialNumber.Text))
             {
                 bCanSubmit = false;
                 sErrMsg += "-Serial Number\n";
             }
-            if(string.IsNullOrEmpty(txtPartNumber.Text))
+            if (string.IsNullOrEmpty(txtPartNumber.Text))
             {
                 bCanSubmit = false;
                 sErrMsg += "-Part Number\n";
             }
-            if(string.IsNullOrEmpty(txtPartName.Text))
+            if (string.IsNullOrEmpty(txtPartName.Text))
             {
                 bCanSubmit = false;
                 sErrMsg += "-Part Name\n";
             }
-            if(string.IsNullOrEmpty(txtPartSeries.Text))
+            if (string.IsNullOrEmpty(txtPartSeries.Text))
             {
                 bCanSubmit = false;
                 sErrMsg += "-Part Series\n";
             }
-            if(string.IsNullOrEmpty(txtCommSubClass.Text))
+            if (string.IsNullOrEmpty(txtCommSubClass.Text))
             {
                 bCanSubmit = false;
                 sErrMsg += "-Commodity Sub-Class\n";
             }
-            if(string.IsNullOrEmpty(cbFromArea.Text))
+            if (string.IsNullOrEmpty(cbFromArea.Text))
             {
                 bCanSubmit = false;
                 sErrMsg += "-From Area\n";
             }
 
             bool bUnitIssueFound = false;
-            if(!string.IsNullOrEmpty(cbReportedIssue.Text))
+            if (!string.IsNullOrEmpty(cbReportedIssue.Text))
                 bUnitIssueFound = true;
             if (!string.IsNullOrEmpty(cbTestResult.Text))
                 bUnitIssueFound = true;
-            if(!string.IsNullOrEmpty(cbTestResultAbort.Text))
+            if (!string.IsNullOrEmpty(cbTestResultAbort.Text))
                 bUnitIssueFound = true;
             if (!string.IsNullOrEmpty(cbIssue.Text))
                 bUnitIssueFound = true;
@@ -880,11 +914,11 @@ namespace RApID_Project_WPF
             string dtSubmission = DateTime.Now.ToString("MM/dd/yyyy hh:mm:ss tt");
             string sLogString = "Attemping to submit the data with the following parameters to the TechnicianSubmission Table:\n";
             string query = "INSERT INTO TechnicianSubmission " +
-                           "(SerialNumber, Technician, DateReceived, PartName, PartNumber, Series, CommoditySubClass, SoftwareVersion, TypeOfReturn, FromArea, Scrap, " + 
+                           "(SerialNumber, Technician, DateReceived, PartName, PartNumber, Series, CommoditySubClass, SoftwareVersion, TypeOfReturn, FromArea, Scrap, " +
                            "ReportedIssue, TestResult, TestResultAbort, Issue, Item, Problem, RefDesignator, PartsReplaced, AdditionalComments, " +
                            "DateSubmitted, SubmissionStatus, SaveID, Quantity) " +
-                           "VALUES (@serialNum, @technician, @dateReceived, @partName, @partNumber, @partSeries, @commoditySubClass, @softwareVersion, @typeOfReturn, @fromArea, @scrap, " + 
-                           "@reportedIssue, @testResult, @testResultAbort, @issue, @item, @problem, @refDesignator, @partsReplaced, @additionalComments, " + 
+                           "VALUES (@serialNum, @technician, @dateReceived, @partName, @partNumber, @partSeries, @commoditySubClass, @softwareVersion, @typeOfReturn, @fromArea, @scrap, " +
+                           "@reportedIssue, @testResult, @testResultAbort, @issue, @item, @problem, @refDesignator, @partsReplaced, @additionalComments, " +
                            "@dateSubmitted, @submissionStatus, @saveID, @quantity);";
 
             sVar.LogHandler.CreateLogAction("Attempting to submit the tech data into the TechnicianSubmission Table.", csLogging.LogState.NOTE);
@@ -895,7 +929,7 @@ namespace RApID_Project_WPF
             try
             {
                 conn.Open();
-                
+
                 cmd.Parameters.AddWithValue("@serialNum", txtSerialNumber.Text.ToString().TrimEnd());
                 cmd.Parameters.AddWithValue("@technician", txtTechName.Text.ToString());
                 cmd.Parameters.AddWithValue("@dateReceived", dtpDateReceived.SelectedDate.Value.ToString("MM/dd/yyyy"));
@@ -909,7 +943,7 @@ namespace RApID_Project_WPF
                 cmd.Parameters.AddWithValue("@scrap", cbxScrap.IsChecked);
 
                 #region Unit Issues
-                ProductionMultipleUnitIssues lUI = getUnitIssueString(0);                
+                ProductionMultipleUnitIssues lUI = getUnitIssueString(0);
                 cmd.Parameters.AddWithValue("@reportedIssue", lUI.ReportedIssue);
                 cmd.Parameters.AddWithValue("@testResult", csCrossClassInteraction.dbValSubmit(lUI.TestResult));
                 cmd.Parameters.AddWithValue("@testResultAbort", csCrossClassInteraction.dbValSubmit(lUI.TestResultAbort));
@@ -944,7 +978,7 @@ namespace RApID_Project_WPF
 
                 return true;
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 if (conn != null)
                     conn.Close();
@@ -1047,7 +1081,7 @@ namespace RApID_Project_WPF
                     }
                 }
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 if (conn != null)
                     conn.Close();
@@ -1073,7 +1107,7 @@ namespace RApID_Project_WPF
                 pmuiReturn.Item += csCrossClassInteraction.unitIssuesValSubmit(cbItem);
                 pmuiReturn.Problem += csCrossClassInteraction.unitIssuesValSubmit(cbProblem);
             }
-            
+
             if (tiUI2.IsEnabled && checkForUITabData(2) && (iUIData == 0 || iUIData == 2))
             {
                 pmuiReturn.ReportedIssue = csCrossClassInteraction.unitIssuesValSubmit(cbReportedIssue_2);
@@ -1083,7 +1117,7 @@ namespace RApID_Project_WPF
                 pmuiReturn.Item += csCrossClassInteraction.unitIssuesValSubmit(cbItem_2);
                 pmuiReturn.Problem += csCrossClassInteraction.unitIssuesValSubmit(cbProblem_2);
             }
-            
+
             if (tiUI3.IsEnabled && checkForUITabData(3) && (iUIData == 0 || iUIData == 3))
             {
                 pmuiReturn.ReportedIssue = csCrossClassInteraction.unitIssuesValSubmit(cbReportedIssue_3);
@@ -1169,12 +1203,12 @@ namespace RApID_Project_WPF
         private List<ProductionMultipleUnitIssues> getUnitIssues()
         {
             var lMPUI = new List<ProductionMultipleUnitIssues>();
-            
+
             lMPUI.Add(getUnitIssueString(1));
-            
+
             if (checkForUITabData(2))
                 lMPUI.Add(getUnitIssueString(2));
-            
+
             if (checkForUITabData(3))
                 lMPUI.Add(getUnitIssueString(3));
 
@@ -1189,10 +1223,10 @@ namespace RApID_Project_WPF
         {
             string[] splitters = { "_" };
 
-            if(cb.Name.Contains("_")) //NOTE: Will be Unit Issue 2 or 3
+            if (cb.Name.Contains("_")) //NOTE: Will be Unit Issue 2 or 3
             {
                 string[] sSplit = cb.Name.Split(splitters, StringSplitOptions.RemoveEmptyEntries);
-                if(sSplit[1].Equals("2"))
+                if (sSplit[1].Equals("2"))
                 {
                     if (!string.IsNullOrEmpty(cb.Text))
                         tiUI3.IsEnabled = true;
@@ -1234,7 +1268,7 @@ namespace RApID_Project_WPF
             sVar.LogHandler.CreateLogAction((Button)sender, csLogging.LogState.CLICK);
             csCrossClassInteraction.LoadPartNumberForm(true, new List<TextBox> { txtPartNumber, txtPartName, txtPartSeries });
             sVar.LogHandler.CreateLogAction(string.Format("The operator selected Part Number '{0}', Part Name '{1}', Part Series '{2}'.", sVar.SelectedPartNumberPartName.PartNumber, sVar.SelectedPartNumberPartName.PartName, sVar.SelectedPartNumberPartName.PartSeries), csLogging.LogState.NOTE);
-            
+
             if (!string.IsNullOrEmpty(txtPartNumber.Text))
                 fillCommSubClass();
         }
@@ -1243,7 +1277,7 @@ namespace RApID_Project_WPF
         {
             try
             {
-                if(sp != null)
+                if (sp != null)
                 {
                     sp.Close();
                     System.Threading.Thread.Sleep(500);
@@ -1291,7 +1325,7 @@ namespace RApID_Project_WPF
         {
             if (((Control)sender).Name.Contains("_"))
             {
-                if(((Control)sender).Name.EndsWith("2"))
+                if (((Control)sender).Name.EndsWith("2"))
                 {
                     if (string.IsNullOrEmpty(txtMultiRefDes_2.Text) && string.IsNullOrEmpty(txtMultiPartNum_2.Text)) { return; }
                     else
@@ -1391,7 +1425,7 @@ namespace RApID_Project_WPF
         {
             sVar.LogHandler.CreateLogAction((Button)sender, csLogging.LogState.CLICK);
 
-            if(((Control)sender).Name.ToString().Equals("btnReset"))
+            if (((Control)sender).Name.ToString().Equals("btnReset"))
             {
                 resetUnitIssues(1);
                 checkToDisableUITabs();
@@ -1411,7 +1445,7 @@ namespace RApID_Project_WPF
 
         private void dgPrevRepairInfo_MouseDoubleClick(object sender, MouseButtonEventArgs e)
         {
-            if(dgPrevRepairInfo.SelectedItem != null)
+            if (dgPrevRepairInfo.SelectedItem != null)
             {
                 var pri = new frmProductionPRI((PreviousRepairInformation)dgPrevRepairInfo.SelectedItem);
                 pri.Owner = this;
@@ -1439,7 +1473,7 @@ namespace RApID_Project_WPF
             try
             {
                 sVar.LogHandler.CreateLogAction("Serial Port Data Received - Begin", csLogging.LogState.NOTE);
-                Dispatcher.Invoke((Action)delegate
+                Dispatcher.Invoke(delegate
                 {
                     txtSerialNumber.Text = string.Empty;
                 });
@@ -1470,7 +1504,7 @@ namespace RApID_Project_WPF
                                 txtSerialNumber.Text += data;
                             else
                             {
-                                Dispatcher.Invoke((Action)delegate
+                                Dispatcher.Invoke(delegate
                                 {
                                     txtSerialNumber.Text += data;
                                 });
@@ -1489,7 +1523,7 @@ namespace RApID_Project_WPF
                     }
                     else
                     {
-                        Dispatcher.Invoke((Action)delegate
+                        Dispatcher.Invoke(delegate
                         {
                             txtSerialNumber.Text += data;
                             txtSerialNumber.Text = txtSerialNumber.Text.TrimEnd();
@@ -1499,6 +1533,37 @@ namespace RApID_Project_WPF
                         data = string.Empty;
                     }
                 }
+
+                using (var mapper = csSerialNumberMapper.Instance)
+                {
+                    Task.Factory.StartNew(new Action(() => {
+                        Dispatcher.BeginInvoke(new Action(() => {// perform actions on dispatched thread
+                            if (!mapper.GetData(txtSerialNumber.Text))
+                                throw new InvalidOperationException("Couldn't find data for this barcode!");
+                            else
+                            {
+                                var result = mapper.FindFile(".xls");
+                                csCrossClassInteraction.DoExcelOperations(result.Item1,
+                                new Tuple<Control, Control>(txtMultiRefDes, txtMultiPartNum),
+                                new Tuple<Control, Control>(txtMultiRefDes_2, txtMultiPartNum_2),
+                                new Tuple<Control, Control>(txtMultiRefDes_3, txtMultiPartNum_3));
+                            }
+                        }));
+                    }));
+                }
+
+                Dispatcher.Invoke(delegate { 
+                    if(txtPartSeries.Text.Contains("XDR"))
+                    {                
+                        lblEOL.Content = "Bench Test";
+                        lblPOST.Content = "Final Test";
+                    }
+                });
+            }
+            catch (InvalidOperationException ioe)
+            {
+                MessageBox.Show($"{ioe.Message}\nspDataReceived()", "Serial Number - Null Binding", MessageBoxButton.OK, MessageBoxImage.Warning);
+                sVar.LogHandler.CreateLogAction("Error parsing data from the COM Port.\nError Message: " + ioe.Message, csLogging.LogState.WARNING);
             }
             catch (Exception ex)
             {
@@ -1560,7 +1625,19 @@ namespace RApID_Project_WPF
 
         private void txtMultiRefKeyUp(object sender, KeyEventArgs e)
         {
-            csCrossClassInteraction.checkForValidRefDes((TextBox)sender);
+            /*TextBox tbox;
+
+            if(sender is ComboBox cbox)
+            {
+                tbox = (cbox.Template.FindName("PART_EditableTextBox", cbox) as TextBox);
+            } else if (sender is TextBox ttbox) {
+                tbox = ttbox;
+            } else {
+                Console.WriteLine($"Null path not supported for txtMultiRefKeyUp");
+                return;
+            }
+
+            csCrossClassInteraction.checkForValidRefDes(tbox);*/
         }
 
         private void dataGrid_KeyUp(object sender, KeyEventArgs e)
@@ -1594,36 +1671,38 @@ namespace RApID_Project_WPF
         {
             sVar.LogHandler.CreateLogAction((ComboBox)sender, csLogging.LogState.DROPDOWNCLOSED);
 
-            if(!((ComboBox)sender).Name.Equals("cbFromArea"))
+            var chosenOption = ((Control)sender).Name.ToString();
+
+            if (!chosenOption.Equals("cbFromArea"))
                 handleUnitIssues((ComboBox)sender);
 
-            if(((Control)sender).Name.ToString().Equals("cbReportedIssue"))
+            if (chosenOption.Equals("cbReportedIssue"))
             {
                 cbReportedIssue_2.Text = cbReportedIssue_3.Text = cbReportedIssue.Text;
             }
 
             //NOTE: Need to handle the Issue, Item and Problem items separately
-            if(((Control)sender).Name.ToString().StartsWith("cbIssue"))
+            if (chosenOption.StartsWith("cbIssue"))
             {
-                if (!((Control)sender).Name.ToString().Contains("_"))
+                if (!chosenOption.Contains("_"))
                 {
                     resetIIPItems(true, cbItem, cbProblem, txtMultiRefDes, lblRefDes, txtMultiPartNum, lblPartNum, btnAddRefPart, dgMultipleParts);
                     fillItemCB(cbIssue, cbItem, cbProblem);
                 }
-                else if (((Control)sender).Name.ToString().EndsWith("2"))
+                else if (chosenOption.EndsWith("2"))
                 {
                     resetIIPItems(true, cbItem_2, cbProblem_2, txtMultiRefDes_2, lblRefDes_2, txtMultiPartNum_2, lblPartNum_2, btnAddRefPart_2, dgMultipleParts_2);
                     fillItemCB(cbIssue_2, cbItem_2, cbProblem_2);
                 }
-                else if (((Control)sender).Name.ToString().EndsWith("3"))
+                else if (chosenOption.EndsWith("3"))
                 {
                     resetIIPItems(true, cbItem_3, cbProblem_3, txtMultiRefDes_3, lblRefDes_3, txtMultiPartNum_3, lblPartNum_3, btnAddRefPart_3, dgMultipleParts_3);
                     fillItemCB(cbIssue_3, cbItem_3, cbProblem_3);
                 }
             }
-            else if (((Control)sender).Name.ToString().StartsWith("cbItem"))
+            else if (chosenOption.StartsWith("cbItem"))
             {
-                if (!((Control)sender).Name.ToString().Contains("_"))
+                if (!chosenOption.Contains("_"))
                 {
                     if (!string.IsNullOrEmpty(cbItem.Text))
                     {
@@ -1632,7 +1711,7 @@ namespace RApID_Project_WPF
                         dispIIPElements(lblRefDes, txtMultiRefDes, lblPartNum, txtMultiPartNum, cbItem, cbProblem, dgMultipleParts, btnAddRefPart);
                     }
                 }
-                else if (((Control)sender).Name.ToString().EndsWith("2"))
+                else if (chosenOption.EndsWith("2"))
                 {
                     if (!string.IsNullOrEmpty(cbItem_2.Text))
                     {
@@ -1641,7 +1720,7 @@ namespace RApID_Project_WPF
                         dispIIPElements(lblRefDes_2, txtMultiRefDes_2, lblPartNum_2, txtMultiPartNum_2, cbItem_2, cbProblem_2, dgMultipleParts_2, btnAddRefPart_2);
                     }
                 }
-                else if (((Control)sender).Name.ToString().EndsWith("3"))
+                else if (chosenOption.EndsWith("3"))
                 {
                     if (!string.IsNullOrEmpty(cbItem_3.Text))
                     {
@@ -1651,17 +1730,17 @@ namespace RApID_Project_WPF
                     }
                 }
             }
-            else if (((Control)sender).Name.ToString().StartsWith("cbProblem"))
+            else if (chosenOption.StartsWith("cbProblem"))
             {
-                if (!((Control)sender).Name.ToString().Contains("_"))
+                if (!chosenOption.Contains("_"))
                 {
                     dispIIPElements(lblRefDes, txtMultiRefDes, lblPartNum, txtMultiPartNum, cbItem, cbProblem, dgMultipleParts, btnAddRefPart);
                 }
-                else if (((Control)sender).Name.ToString().EndsWith("2"))
+                else if (chosenOption.EndsWith("2"))
                 {
                     dispIIPElements(lblRefDes_2, txtMultiRefDes_2, lblPartNum_2, txtMultiPartNum_2, cbItem_2, cbProblem_2, dgMultipleParts_2, btnAddRefPart_2);
                 }
-                else if (((Control)sender).Name.ToString().EndsWith("3"))
+                else if (chosenOption.EndsWith("3"))
                 {
                     dispIIPElements(lblRefDes_3, txtMultiRefDes_3, lblPartNum_3, txtMultiPartNum_3, cbItem_3, cbProblem_3, dgMultipleParts_3, btnAddRefPart_3);
                 }
@@ -1670,10 +1749,18 @@ namespace RApID_Project_WPF
 
         private void cbEOLTestID_DropDownClosed(object sender, EventArgs e)
         {
-            if(!string.IsNullOrEmpty(cbEOLTestID.Text))
+            if (!string.IsNullOrEmpty(cbEOLTestID.Text))
             {
-                initS.InitSplash1("Loading EOL Data...");
-                csCrossClassInteraction.lsvFillFromQuery(holder.HummingBirdConnectionString, "SELECT * FROM tblEOL WHERE TestID = '" + cbEOLTestID.Text + "';", lsvEOL);
+                if (txtPartSeries.Text.Contains("XDR"))
+                {
+                    initS.InitSplash1("Loading Bench Test Data...");
+                    csCrossClassInteraction.lsvFillFromQuery(holder.HummingBirdConnectionString,
+                        $"SELECT * FROM tblXducerTestResultsBenchTest WHERE TestID = '{cbEOLTestID.Text}';", lsvEOL);                    
+                } else {
+                    initS.InitSplash1("Loading EOL Data...");
+                    csCrossClassInteraction.lsvFillFromQuery(holder.HummingBirdConnectionString,
+                        "SELECT * FROM tblEOL WHERE TestID = '" + cbEOLTestID.Text + "';", lsvEOL);
+                }
                 csSplashScreenHelper.ShowText("Done...");
                 csSplashScreenHelper.Hide();
             }
@@ -1684,7 +1771,8 @@ namespace RApID_Project_WPF
             if (!string.IsNullOrEmpty(cbPRETestID.Text))
             {
                 initS.InitSplash1("Loading PRE Data...");
-                csCrossClassInteraction.lsvFillFromQuery(holder.HummingBirdConnectionString, "SELECT * FROM tblPRE WHERE TestID = '" + cbPRETestID.Text + "';", lsvPreBurnIn);
+                csCrossClassInteraction.lsvFillFromQuery(holder.HummingBirdConnectionString,
+                    "SELECT * FROM tblPRE WHERE TestID = '" + cbPRETestID.Text + "';", lsvPreBurnIn);
                 csSplashScreenHelper.ShowText("Done...");
                 csSplashScreenHelper.Hide();
             }
@@ -1694,8 +1782,15 @@ namespace RApID_Project_WPF
         {
             if (!string.IsNullOrEmpty(cbPOSTTestID.Text))
             {
-                initS.InitSplash1("Loading POST Data...");
-                csCrossClassInteraction.lsvFillFromQuery(holder.HummingBirdConnectionString, "SELECT * FROM tblPOST WHERE TestID = '" + cbPOSTTestID.Text + "';", lsvPostBurnIn);
+                if (txtPartSeries.Text.Contains("XDR")) {
+                    initS.InitSplash1("Loading Final Test Data...");
+                    csCrossClassInteraction.lsvFillFromQuery(holder.HummingBirdConnectionString,
+                        $"SELECT * FROM tblXducerTestResults WHERE TestID = '{cbPOSTTestID.Text}';", lsvPostBurnIn);
+                } else {
+                    initS.InitSplash1("Loading POST Data...");
+                    csCrossClassInteraction.lsvFillFromQuery(holder.HummingBirdConnectionString,
+                        "SELECT * FROM tblPOST WHERE TestID = '" + cbPOSTTestID.Text + "';", lsvPostBurnIn);
+                }
                 csSplashScreenHelper.ShowText("Done...");
                 csSplashScreenHelper.Hide();
             }
@@ -1703,7 +1798,7 @@ namespace RApID_Project_WPF
 
         private void cbBEAMSTestType_DropDownClosed(object sender, EventArgs e)
         {
-            switch(cbBEAMSTestType.Text)
+            switch (cbBEAMSTestType.Text)
             {
                 case "EOL":
                     csCrossClassInteraction.FillBeamTestIDFromType(cbEOLTestID, cbBEAMSTestID, lsvBeamTestId, cbBEAMSBeamNum);
@@ -1732,7 +1827,7 @@ namespace RApID_Project_WPF
 
         private void cbBEAMSBeamNum_DropDownClosed(object sender, EventArgs e)
         {
-            if(!string.IsNullOrEmpty(cbBEAMSTestType.Text) && !string.IsNullOrEmpty(cbBEAMSTestID.Text) && !string.IsNullOrEmpty(cbBEAMSBeamNum.Text))
+            if (!string.IsNullOrEmpty(cbBEAMSTestType.Text) && !string.IsNullOrEmpty(cbBEAMSTestID.Text) && !string.IsNullOrEmpty(cbBEAMSBeamNum.Text))
             {
                 initS.InitSplash1("Loading Beam Data...");
                 csCrossClassInteraction.BeamsQuery("SELECT * FROM Beams WHERE TestID = '" + cbBEAMSTestID.Text + "' AND PCBSerial = '" + txtSerialNumber.Text + "' AND BeamNumber = '" + csCrossClassInteraction.GetSpecificBeamNumber(cbBEAMSBeamNum.Text) + "';", lsvBeamTestId);
@@ -1756,6 +1851,25 @@ namespace RApID_Project_WPF
             tSPChecker = null;
 
             sVar.resetStaticVars();
+        }
+
+        private void refDesIndexChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (sender is Control c && c.Name.Contains("_"))
+            {
+                if (c.Name.EndsWith("2"))
+                {
+                    txtMultiPartNum_2.SelectedIndex = txtMultiRefDes_2.SelectedIndex;
+                }
+                else if (c.Name.EndsWith("3"))
+                {
+                    txtMultiPartNum_3.SelectedIndex = txtMultiRefDes_3.SelectedIndex;
+                }
+            }
+            else
+            {
+                txtMultiPartNum.SelectedIndex = txtMultiRefDes.SelectedIndex;
+            }
         }
     }
 }

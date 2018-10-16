@@ -20,7 +20,7 @@ namespace RApID_Project_WPF
 
         private StaticVars()
         {
-
+            // Empty private consturctor for singleton façade
         }
 
         public void initStaticVars()
@@ -35,30 +35,18 @@ namespace RApID_Project_WPF
         public void resetStaticVars()
         {
             SelectedIssue = -1;
-            SelPartNumPartName = new DGVPARTNUMNAMEITEM { PartNumber = "", PartName = "", PartSeries = "" };
-            SelRPNumber = new DGVMULTIPLERP { RPNumber = "", LineNumber = -1, CustInfo = new CustomerInformation()};
+            SelectedPartNumberPartName = new DGVPARTNUMNAMEITEM { PartNumber = "", PartName = "", PartSeries = "" };
+            SelectedRPNumber = new DGVMULTIPLERP { RPNumber = "", LineNumber = -1, CustInfo = new CustomerInformation()};
             LogHandler.resetLog();
         }
 
         public csLogging LogHandler;
         public static int SelectedIssue = -1;
+        public DGVPARTNUMNAMEITEM SelectedPartNumberPartName { get; set; }
+            = new DGVPARTNUMNAMEITEM { PartNumber = "", PartName = "", PartSeries = "" };
 
-        /// <summary>
-        /// SelectedPartNumberPartName is used to help with the selected part number and part name of a scanned in unit.
-        /// Since this item is accessed across multiple forms, I decided to store it here so it can be accessed/modified when needed.
-        /// </summary>
-        private DGVPARTNUMNAMEITEM SelPartNumPartName = new DGVPARTNUMNAMEITEM { PartNumber = "", PartName = "", PartSeries = "" };
-        public DGVPARTNUMNAMEITEM SelectedPartNumberPartName
-        {
-            get { return SelPartNumPartName; }
-            set { SelPartNumPartName = value; }
-        }
+        public DGVMULTIPLERP SelectedRPNumber { get; set; }
+            = new DGVMULTIPLERP { RPNumber = "", LineNumber = -1, CustInfo = new CustomerInformation() };
 
-        private DGVMULTIPLERP SelRPNumber = new DGVMULTIPLERP { RPNumber = "", LineNumber = -1, CustInfo = new CustomerInformation() };
-        public DGVMULTIPLERP SelectedRPNumber
-        {
-            get { return SelRPNumber; }
-            set { SelRPNumber = value; }
-        }
     }
 }

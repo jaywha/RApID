@@ -63,7 +63,7 @@ namespace RApID_Project_WPF
                         txtTOR.Text = csCrossClassInteraction.dbValSubmit(reader["TypeOfReturn"].ToString());
                         txtFromArea.Text = csCrossClassInteraction.dbValSubmit(reader["FromArea"].ToString());
 
-                        //TODO: Get Technician Actions
+                        //TODO: Get Technician Actions <- from Log Files?                        
 
                         rtbAddComm.AppendText(csCrossClassInteraction.dbValSubmit(reader["AdditionalComments"].ToString()));
                     }

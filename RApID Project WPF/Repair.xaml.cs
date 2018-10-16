@@ -17,6 +17,7 @@ using System.Windows.Threading;
 using System.Collections;
 using EricStabileLibrary;
 using System.Text.RegularExpressions;
+using System.Threading;
 
 namespace RApID_Project_WPF
 {
@@ -80,12 +81,12 @@ namespace RApID_Project_WPF
         #region Initialization
         private void buildDGViews()
         {
-            csCrossClassInteraction.dgBuildView(dgMultipleParts, "MULTIPLEPARTS");
-            csCrossClassInteraction.dgBuildView(dgMultipleParts_2, "MULTIPLEPARTS");
-            csCrossClassInteraction.dgBuildView(dgMultipleParts_3, "MULTIPLEPARTS");
-            csCrossClassInteraction.dgBuildView(dgvAOI, "AOI");
-            csCrossClassInteraction.dgBuildView(dgvDefectCodes, "DEFECTCODES");
-            csCrossClassInteraction.dgBuildView(dgPrevRepairInfo, "PREVREPAIRINFO");
+            dgMultipleParts.dgBuildView("MULTIPLEPARTS");
+            dgMultipleParts_2.dgBuildView("MULTIPLEPARTS");
+            dgMultipleParts_3.dgBuildView("MULTIPLEPARTS");
+            dgvAOI.dgBuildView("AOI");
+            dgvDefectCodes.dgBuildView("DEFECTCODES");
+            dgPrevRepairInfo.dgBuildView("PREVREPAIRINFO");
         }
 
         /// <summary>
@@ -1590,7 +1591,7 @@ namespace RApID_Project_WPF
 
         private void addCustomerToDB(CustomerInformation cInfo)
         {
-            //TODO: Log this?
+            //TODO: Log this?            
 
             bool bExistingCustomer = false;
             bool bNoSearchError = true;
@@ -1810,11 +1811,6 @@ namespace RApID_Project_WPF
             else return false;
         }
 
-        private void txtRefDes_TextChanged(object sender, TextChangedEventArgs e)
-        {
-            //TODO: Autopopulate Part Replaced
-        }
-
         #region Button Clicks
         private void btnComplete_Click(object sender, RoutedEventArgs e)
         {
@@ -1928,7 +1924,7 @@ namespace RApID_Project_WPF
 
                         if (string.IsNullOrEmpty(_sPRPD) && !string.IsNullOrEmpty(txtPartReplaced_2.Text))
                         {
-                            string sWarning = string.Format("The Part Replaced entered ( {0} ) does not exist. Please verify the Part Number and try again.", txtPartReplaced_2.Text);
+                            string sWarning = $"The Part Replaced entered ( {txtPartReplaced_2.Text} ) does not exist. Please verify the Part Number and try again.";
                             sVar.LogHandler.CreateLogAction(sWarning, csLogging.LogState.WARNING);
                             MessageBox.Show(sWarning, "Part Replaced Description Issue", MessageBoxButton.OK, MessageBoxImage.Warning);
                             txtPartReplaced_2.Focus();
@@ -1938,10 +1934,10 @@ namespace RApID_Project_WPF
                         {
                             var mpr = new MultiplePartsReplaced { RefDesignator = txtRefDes_2.Text.TrimEnd(), PartReplaced = txtPartReplaced_2.Text.TrimEnd(), PartsReplacedPartDescription = _sPRPD };
                             if (string.IsNullOrEmpty(mpr.PartReplaced) && !string.IsNullOrEmpty(mpr.RefDesignator))
-                                sVar.LogHandler.CreateLogAction(string.Format("Adding Ref Designator '{0}' to dgMultipleParts. Parts Replaced is empty.", mpr.RefDesignator), csLogging.LogState.NOTE);
+                                sVar.LogHandler.CreateLogAction($"Adding Ref Designator '{mpr.RefDesignator}' to dgMultipleParts. Parts Replaced is empty.", csLogging.LogState.NOTE);
                             else if (!string.IsNullOrEmpty(mpr.PartReplaced) && string.IsNullOrEmpty(mpr.RefDesignator))
-                                sVar.LogHandler.CreateLogAction(string.Format("Adding Part Replaced '{0}' to dgMultipleParts. Ref Designator is empty.", mpr.PartReplaced), csLogging.LogState.NOTE);
-                            else sVar.LogHandler.CreateLogAction(string.Format("Adding Part Replaced '{0}' and Ref Designator '{1}' to dgMultipleParts.", mpr.PartReplaced, mpr.RefDesignator), csLogging.LogState.NOTE);
+                                sVar.LogHandler.CreateLogAction($"Adding Part Replaced '{mpr.PartReplaced}' to dgMultipleParts. Ref Designator is empty.", csLogging.LogState.NOTE);
+                            else sVar.LogHandler.CreateLogAction($"Adding Part Replaced '{mpr.PartReplaced}' and Ref Designator '{mpr.RefDesignator}' to dgMultipleParts.", csLogging.LogState.NOTE);
 
                             dgMultipleParts_2.Items.Add(mpr);
                             txtPartReplaced_2.Text = txtRefDes_2.Text = string.Empty;
@@ -1959,7 +1955,7 @@ namespace RApID_Project_WPF
 
                         if (string.IsNullOrEmpty(_sPRPD) && !string.IsNullOrEmpty(txtPartReplaced_3.Text))
                         {
-                            string sWarning = string.Format("The Part Replaced entered ( {0} ) does not exist. Please verify the Part Number and try again.", txtPartReplaced_3.Text);
+                            string sWarning = $"The Part Replaced entered ( {txtPartReplaced_3.Text} ) does not exist. Please verify the Part Number and try again.";
                             sVar.LogHandler.CreateLogAction(sWarning, csLogging.LogState.WARNING);
                             MessageBox.Show(sWarning, "Part Replaced Description Issue", MessageBoxButton.OK, MessageBoxImage.Warning);
                             txtPartReplaced_3.Focus();
@@ -1969,10 +1965,10 @@ namespace RApID_Project_WPF
                         {
                             var mpr = new MultiplePartsReplaced { RefDesignator = txtRefDes_3.Text.TrimEnd(), PartReplaced = txtPartReplaced_3.Text.TrimEnd(), PartsReplacedPartDescription = _sPRPD };
                             if (string.IsNullOrEmpty(mpr.PartReplaced) && !string.IsNullOrEmpty(mpr.RefDesignator))
-                                sVar.LogHandler.CreateLogAction(string.Format("Adding Ref Designator '{0}' to dgMultipleParts. Parts Replaced is empty.", mpr.RefDesignator), csLogging.LogState.NOTE);
+                                sVar.LogHandler.CreateLogAction($"Adding Ref Designator '{mpr.RefDesignator}' to dgMultipleParts. Parts Replaced is empty.", csLogging.LogState.NOTE);
                             else if (!string.IsNullOrEmpty(mpr.PartReplaced) && string.IsNullOrEmpty(mpr.RefDesignator))
-                                sVar.LogHandler.CreateLogAction(string.Format("Adding Part Replaced '{0}' to dgMultipleParts. Ref Designator is empty.", mpr.PartReplaced), csLogging.LogState.NOTE);
-                            else sVar.LogHandler.CreateLogAction(string.Format("Adding Part Replaced '{0}' and Ref Designator '{1}' to dgMultipleParts.", mpr.PartReplaced, mpr.RefDesignator), csLogging.LogState.NOTE);
+                                sVar.LogHandler.CreateLogAction($"Adding Part Replaced '{mpr.PartReplaced}' to dgMultipleParts. Ref Designator is empty.", csLogging.LogState.NOTE);
+                            else sVar.LogHandler.CreateLogAction($"Adding Part Replaced '{mpr.PartReplaced}' and Ref Designator '{mpr.RefDesignator}' to dgMultipleParts.", csLogging.LogState.NOTE);
 
                             dgMultipleParts_3.Items.Add(mpr);
                             txtPartReplaced_3.Text = txtRefDes_3.Text = string.Empty;
@@ -2001,10 +1997,10 @@ namespace RApID_Project_WPF
                     {
                         var mpr = new MultiplePartsReplaced { RefDesignator = txtRefDes.Text.TrimEnd(), PartReplaced = txtPartReplaced.Text.TrimEnd(), PartsReplacedPartDescription = _sPRPD.TrimEnd() };
                         if (string.IsNullOrEmpty(mpr.PartReplaced) && !string.IsNullOrEmpty(mpr.RefDesignator))
-                            sVar.LogHandler.CreateLogAction(string.Format("Adding Ref Designator '{0}' to dgMultipleParts. Parts Replaced is empty.", mpr.RefDesignator), csLogging.LogState.NOTE);
+                            sVar.LogHandler.CreateLogAction($"Adding Ref Designator '{mpr.RefDesignator}' to dgMultipleParts. Parts Replaced is empty.", csLogging.LogState.NOTE);
                         else if (!string.IsNullOrEmpty(mpr.PartReplaced) && string.IsNullOrEmpty(mpr.RefDesignator))
-                            sVar.LogHandler.CreateLogAction(string.Format("Adding Part Replaced '{0}' to dgMultipleParts. Ref Designator is empty.", mpr.PartReplaced), csLogging.LogState.NOTE);
-                        else sVar.LogHandler.CreateLogAction(string.Format("Adding Part Replaced '{0}' and Ref Designator '{1}' to dgMultipleParts.", mpr.PartReplaced, mpr.RefDesignator), csLogging.LogState.NOTE);
+                            sVar.LogHandler.CreateLogAction($"Adding Part Replaced '{mpr.PartReplaced}' to dgMultipleParts. Ref Designator is empty.", csLogging.LogState.NOTE);
+                        else sVar.LogHandler.CreateLogAction($"Adding Part Replaced '{mpr.PartReplaced}' and Ref Designator '{mpr.RefDesignator}' to dgMultipleParts.", csLogging.LogState.NOTE);
 
                         dgMultipleParts.Items.Add(mpr);
                         txtPartReplaced.Text = txtRefDes.Text = string.Empty;
@@ -2084,8 +2080,9 @@ namespace RApID_Project_WPF
             {
 #if DEBUG
                 //TODO: new form that is not working yet
-                var pri = new repairPRI((PreviousRepairInformation)dgPrevRepairInfo.SelectedItem);
-                pri.Owner = this;
+                var pri = new repairPRI((PreviousRepairInformation)dgPrevRepairInfo.SelectedItem) {
+                    Owner = this
+                };
                 pri.ShowDialog();
 #else
                 // Working form with only one issue that can be displayed
@@ -2165,7 +2162,7 @@ namespace RApID_Project_WPF
             try
             {
                 sVar.LogHandler.CreateLogAction("Serial Port Data Received - Begin", csLogging.LogState.NOTE);
-                Dispatcher.Invoke((Action)delegate
+                Dispatcher.Invoke(delegate
                 {
                     txtBarcode.Text = string.Empty;
                 });
@@ -2196,7 +2193,7 @@ namespace RApID_Project_WPF
                                 txtBarcode.Text += data;
                             else
                             {
-                                Dispatcher.Invoke((Action)delegate
+                                Dispatcher.Invoke(delegate
                                 {
                                     txtBarcode.Text += data;
                                 });
@@ -2215,7 +2212,7 @@ namespace RApID_Project_WPF
                     }
                     else
                     {
-                        Dispatcher.Invoke((Action)delegate
+                        Dispatcher.Invoke(delegate
                         {
                             txtBarcode.Text += data;
                             txtBarcode.Text = txtBarcode.Text.TrimEnd();
@@ -2225,6 +2222,30 @@ namespace RApID_Project_WPF
                         data = string.Empty;
                     }
                 }
+
+                using (var mapper = csSerialNumberMapper.Instance)
+                {
+                    Task.Factory.StartNew(new Action(() => {
+                        Dispatcher.Invoke(delegate // perform actions on dispatched thread
+                        {
+                            if (!mapper.GetData(txtBarcode.Text))
+                                throw new InvalidOperationException("Couldn't find data for this barcode!");
+                            else
+                            {
+                                var result = mapper.FindFile(".xls");
+                                csCrossClassInteraction.DoExcelOperations(result.Item1,
+                                new Tuple<Control, Control>(txtRefDes, txtPartReplaced),
+                                new Tuple<Control, Control>(txtRefDes_2, txtPartReplaced_2),
+                                new Tuple<Control, Control>(txtRefDes_3, txtPartReplaced_3));
+                            }
+                        });
+                    }));
+                }
+            }
+            catch(InvalidOperationException ioe)
+            {
+                MessageBox.Show($"{ioe.Message}\nspDataReceived()", "Serial Number - Null Binding", MessageBoxButton.OK, MessageBoxImage.Warning);
+                sVar.LogHandler.CreateLogAction("Error parsing data from the COM Port.\nError Message: " + ioe.Message, csLogging.LogState.WARNING);                
             }
             catch(Exception ex)
             {
@@ -2280,31 +2301,21 @@ namespace RApID_Project_WPF
         }
         #endregion
 
-        private void dgBeginEdit(object sender, DataGridBeginningEditEventArgs e)
-        {
-            e.Cancel = true;
-        }
+        private void dgBeginEdit(object sender, DataGridBeginningEditEventArgs e) 
+            => e.Cancel = true;
 
         #region Log Actions
-        private void txtGotFocus(object sender, RoutedEventArgs e)
-        {
-            sVar.LogHandler.CreateLogAction((TextBox)sender, csLogging.LogState.ENTER);
-        }
+        private void txtGotFocus(object sender, RoutedEventArgs e) 
+            => sVar.LogHandler.CreateLogAction((TextBox)sender, csLogging.LogState.ENTER);
 
-        private void txtLostFocus(object sender, RoutedEventArgs e)
-        {
-            sVar.LogHandler.CreateLogAction((TextBox)sender, csLogging.LogState.LEAVE);
-        }
+        private void txtLostFocus(object sender, RoutedEventArgs e) 
+            => sVar.LogHandler.CreateLogAction((TextBox)sender, csLogging.LogState.LEAVE);
 
-        private void rtbGotFocus(object sender, RoutedEventArgs e)
-        {
-            sVar.LogHandler.CreateLogAction((RichTextBox)sender, csLogging.LogState.ENTER);
-        }
+        private void rtbGotFocus(object sender, RoutedEventArgs e) 
+            => sVar.LogHandler.CreateLogAction((RichTextBox)sender, csLogging.LogState.ENTER);
 
-        private void rtbLostFocus(object sender, RoutedEventArgs e)
-        {
-            sVar.LogHandler.CreateLogAction((RichTextBox)sender, csLogging.LogState.LEAVE);
-        }
+        private void rtbLostFocus(object sender, RoutedEventArgs e) 
+            => sVar.LogHandler.CreateLogAction((RichTextBox)sender, csLogging.LogState.LEAVE);
 
         private void cbDDClosed(object sender, EventArgs e)
         {

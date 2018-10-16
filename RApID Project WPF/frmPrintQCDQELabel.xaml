@@ -11,9 +11,9 @@
         </ComboBox>
 
         <Label Content="Enter Save ID:" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="37,41,0,0" />
-        <TextBox x:Name="txtQCDQEID" Width="200" Height="23" Margin="125,42,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" />
+        <TextBox x:Name="txtQCDQEID" Width="200" Height="23" Margin="125,42,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" TextChanged="txtQCDQEID_TextChanged" />
 
         <Button x:Name="btnPrint" Content="Print Label" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10,80,0,0" Width="75" Click="btnPrint_Click"/>
-        <Button x:Name="btnClose" Content="Exit" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="50,80,0,0" Width="75" Click="btnClose_Click"/>
+        <Button x:Name="btnClose" Content="Exit" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="125,80,0,0" Width="75" Click="btnClose_Click"/>
     </Grid>
 </Window>

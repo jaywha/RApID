@@ -51,7 +51,6 @@ namespace RApID_Project_WPF
         /// <param name="_s"></param>
         private void getCorrectData()
         {
-            //TODO: need to change this to just get the part numbers from the ItemMaster table (XRefCode = XD and UC)
             dgvPartNumber.Items.Clear();
             string query = "";
             if (bIsProduction)

@@ -7,6 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -16,8 +17,6 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
-
-//TODO: Make textbox only accept numbers
 
 namespace RApID_Project_WPF
 {
@@ -54,6 +53,16 @@ namespace RApID_Project_WPF
         private void btnClose_Click(object sender, RoutedEventArgs e)
         {
             this.Close();
+        }
+
+        private void txtQCDQEID_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            var pattern = new Regex(@"^\d+$");
+            if(!pattern.IsMatch(((TextBox)sender).Text))
+            {
+                MessageBox.Show("Please only enter numbers for the ID.",
+                    "Bad Save ID", MessageBoxButton.OK, MessageBoxImage.Warning);
+            }
         }
     }
 }

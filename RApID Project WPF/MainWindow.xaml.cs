@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using System.Windows;
 using System.Windows.Controls;
 
@@ -16,7 +17,9 @@ namespace RApID_Project_WPF
         {
             holder.vGetServerName("");
             csExceptionLogger.csExceptionLogger.DefaultLogLocation
-                = $@"\\joi\EU\Public\_Error Logs\{AppDomain.CurrentDomain.FriendlyName}\{DateTime.Now:yyyy-MM-dd}";
+                = $@"\\joi\EU\Public\_Error Logs\{AppDomain.CurrentDomain.FriendlyName.Replace(".exe", "")}\{DateTime.Now:yyyy-MM-dd}";
+            if (!Directory.Exists(csExceptionLogger.csExceptionLogger.DefaultLogLocation))
+                Directory.CreateDirectory(csExceptionLogger.csExceptionLogger.DefaultLogLocation);
             InitializeComponent();
         }
 
@@ -43,7 +46,7 @@ namespace RApID_Project_WPF
                         break;
                     case "btnRepair":
                         Hide();
-                        var rpr = new Repair(false) { Owner = this};
+                        var rpr = new Repair(false) { Owner = this };
                         rpr.ShowDialog();
                         Show();
                         Activate();

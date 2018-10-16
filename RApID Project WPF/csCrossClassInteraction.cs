@@ -6,8 +6,13 @@
 using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
+using System.Diagnostics;
+using System.IO;
+using System.Linq;
 using System.Windows.Controls;
 using System.Windows.Data;
+using ExcelDataReader;
+using DesginatorPair = System.Tuple<System.Windows.Controls.Control, System.Windows.Controls.Control>;
 
 namespace RApID_Project_WPF
 {
@@ -22,7 +27,7 @@ namespace RApID_Project_WPF
         /// </summary>
         /// <param name="dgToBuid"></param>
         /// <param name="sType">"MULTIPLEPARTS", "AOI", "DEFECTCODES", "PREVREPAIRINFO", "PARTNUMBERNAME", "CUSTOMERINFO"</param>
-        public static void dgBuildView(DataGrid dgToBuid, string sType)
+        public static void dgBuildView(this DataGrid dgToBuid, string sType)
         {
             switch (sType)
             {
@@ -76,12 +81,93 @@ namespace RApID_Project_WPF
         /// <param name="lData">List to fill CB with</param>
         public static void cbFill(this ComboBox cb, List<string> lData)
         {
-            lData.Sort((a, b) => a.CompareTo(b)); // old sort method; custom comparator
+            lData.Sort();
 
             for (int i = 0; i < lData.Count; i++)
             {
                 if (!cb.Items.Contains(lData[i]))
                     cb.Items.Add(lData[i]);
+            }
+        }
+
+        /// <summary>
+        /// Gets the typically visible content of the given <see cref="Control"/>.
+        /// </summary>
+        /// <param name="c">Specified Control</param>
+        /// <returns>Value of Control</returns>
+        public static object GetContent(this Control c)
+        {
+            if (c is ComboBox cbox)
+                return cbox.SelectedValue;
+            else if (c is TextBox tbox /*or a SuggestBox since custom conversion*/)
+                return tbox.Text;
+            else
+                return null;
+        }
+
+        /// <summary>
+        /// Sets the typically visible content of the given <see cref="Control"/>.
+        /// </summary>
+        /// <param name="c">Specified Control</param>
+        /// <param name="val">Value to set</param>
+        public static void SetContent(this Control c, object val)
+        {
+            if (c is ComboBox cbox)
+                cbox.SelectedValue = val;
+            else if (c is TextBox tbox /*or a SuggestBox since custom conversion*/)
+                tbox.Text = val as string;                
+        }
+
+        /// <summary>
+        /// Does the excel operations for grabbing Reference and Part numbers.
+        /// </summary>
+        /// <param name="filePath">Path to the Excel file - normally the BoM file.</param>
+        /// <param name="designators">A list of reference and part number designators to give autocompletion.</param>
+        public static void DoExcelOperations(string filePath, params DesginatorPair[] designators)
+        {
+            var refs = new List<string>();
+            var invs = new List<string>();
+
+            try
+            {
+                using (var stream = File.Open(filePath, FileMode.Open, FileAccess.Read))
+                {
+                    using (var reader = ExcelReaderFactory.CreateReader(stream))
+                    {
+                        while (reader.NextResult() && reader.Name != null && !reader.Name.Equals("JUKI"))
+                        { /*spin until JUKI sheet*/ }
+
+                        while (reader.Read() && !string.IsNullOrEmpty(reader.GetValue(0)?.ToString())
+                                             && !string.IsNullOrEmpty(reader.GetValue(4)?.ToString()))
+                        {
+                            refs.Add(reader.GetValue(0).ToString());
+                            invs.Add(reader.GetValue(4).ToString());
+                        }
+                    }
+                }
+
+                foreach (var designator in designators)
+                {
+                    var reference = designator.Item1;
+                    var partnumber = designator.Item2;
+
+                    if (reference is ComboBox refbox)
+                    {
+                        refbox.ItemsSource = refs;
+                    }
+
+                    if (partnumber is ComboBox invbox)
+                    {
+                        invbox.ItemsSource = invs;
+                    }
+                }
+
+                while (Process.GetProcessesByName("EXCEL").Any()) { Process.GetProcessesByName("EXCEL")[0].Kill(); }
+
+            }
+            catch (IOException ioe)
+            {
+                csExceptionLogger.csExceptionLogger.Write("RetestVerifier-MainWindow_ExcelOps-LockedFile", ioe);
             }
         }
 
@@ -683,7 +769,7 @@ namespace RApID_Project_WPF
                 {
                     if (conn != null)
                         conn.Close();
-                    //TODO: Log
+                    sVar.LogHandler.CreateLogAction("The Beam # could not be found.", EricStabileLibrary.csLogging.LogState.ERROR);
                 }
 
             }
@@ -1078,6 +1164,13 @@ namespace RApID_Project_WPF
                 return null;
             }
         }
+
+        /// <summary>
+        /// Redirection method for selecting all the text in a Combobox.
+        /// </summary>
+        /// <param name="cbox">Target Combobox</param>
+        public static void SelectAll(this ComboBox cbox)
+            => (cbox.Template.FindName("PART_EditableTextBox", cbox) as TextBox).SelectAll();
 
         #region Not In Use Anymore
         //public static List<ProductionMultipleUnitIssues> GetProductionUnitIssues(string ID)
