@@ -383,7 +383,7 @@
 
                         <Label Content="Test ID:" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="0,10,0,0" />
                         <ComboBox Name="cbEOLTestID" Margin="53,13,0,0" Style="{StaticResource EOLComboBox}" DropDownClosed="cbEOLTestID_DropDownClosed"/>
-                        <Label Content="End of Line" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="0,40,0,0" />
+                        <Label Name="lblEOL"  Content="End of Line" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="0,40,0,0" />
                         <ListView Name="lsvEOL" Margin="0,65,0,0" Style="{StaticResource EOLListView}">
                             <ListView.View>
                                 <GridView>
@@ -407,7 +407,7 @@
 
                         <Label Content="Test ID:" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="538,10,0,0" />
                         <ComboBox Name="cbPOSTTestID" Margin="591,13,0,0" Style="{StaticResource EOLComboBox}" DropDownClosed="cbPOSTTestID_DropDownClosed"/>
-                        <Label Content="Post Burn In" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="538,40,0,0" />
+                        <Label Name="lblPOST" Content="Post Burn In" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="538,40,0,0" />
                         <ListView Name="lsvPostBurnIn" Margin="538,65,0,0" Style="{StaticResource EOLListView}">
                             <ListView.View>
                                 <GridView>

@@ -355,6 +355,9 @@ namespace RApID_Project_WPF
 
             dgPrevRepairInfo.Items.Clear();
 
+            lblEOL.Content = "End of Line";
+            lblPOST.Content = "Post Burn-In";
+
             cbReportedIssue.SelectedIndex = -1;
             resetUnitIssues();
             resetEOLTab();
@@ -713,15 +716,15 @@ namespace RApID_Project_WPF
             if (lblRPNumber.Content.ToString().Replace("RP Number: ", "").StartsWith("SV")) // this is a transducer so lets do something different
                 query = "SELECT DISTINCT TestID FROM tblXducerTestResultsBenchTest WHERE SerialNumber = '" + txtBarcode.Text + "';";
             else query = "SELECT TestID FROM tblEOL WHERE PCBSerial = '" + txtBarcode.Text + "';";
-            csCrossClassInteraction.cbFillFromQuery(cbEOLTestID, query);
+            cbEOLTestID.FillFromQuery(query);
 
             query = "SELECT TestID FROM tblPRE WHERE PCBSerial = '" + txtBarcode.Text + "';";
-            csCrossClassInteraction.cbFillFromQuery(cbPRETestID, query);
+            cbPRETestID.FillFromQuery(query);
 
             if (lblRPNumber.Content.ToString().Replace("RP Number: ", "").StartsWith("SV")) // this is a transducer so lets do something different
                 query = "SELECT DISTINCT TestID FROM tblXducerTestResults WHERE SerialNumber = '" + txtBarcode.Text + "';";
             else query = "SELECT TestID FROM tblPOST WHERE PCBSerial = '" + txtBarcode.Text + "';";
-            csCrossClassInteraction.cbFillFromQuery(cbPOSTTestID, query);
+            cbPOSTTestID.FillFromQuery(query);
 
             if (!lblRPNumber.Content.ToString().Replace("RP Number: ", "").StartsWith("SV")) // this is a transducer so lets do something different
             {
@@ -2305,11 +2308,21 @@ namespace RApID_Project_WPF
             => e.Cancel = true;
 
         #region Log Actions
-        private void txtGotFocus(object sender, RoutedEventArgs e) 
-            => sVar.LogHandler.CreateLogAction((TextBox)sender, csLogging.LogState.ENTER);
+        private void txtGotFocus(object sender, RoutedEventArgs e)
+        {
+            if (sender is ComboBox c)
+                sVar.LogHandler.CreateLogAction(c, csLogging.LogState.ENTER);
+            else
+                sVar.LogHandler.CreateLogAction((TextBox)sender, csLogging.LogState.ENTER);
+        }
 
-        private void txtLostFocus(object sender, RoutedEventArgs e) 
-            => sVar.LogHandler.CreateLogAction((TextBox)sender, csLogging.LogState.LEAVE);
+        private void txtLostFocus(object sender, RoutedEventArgs e)
+        {
+            if(sender is ComboBox c)
+                sVar.LogHandler.CreateLogAction(c, csLogging.LogState.LEAVE);
+            else
+                sVar.LogHandler.CreateLogAction((TextBox) sender, csLogging.LogState.LEAVE);
+        }
 
         private void rtbGotFocus(object sender, RoutedEventArgs e) 
             => sVar.LogHandler.CreateLogAction((RichTextBox)sender, csLogging.LogState.ENTER);
@@ -2334,14 +2347,14 @@ namespace RApID_Project_WPF
                 if (cbTOR.Text.Equals("Credit Return"))
                 {
                     lblQTY.Visibility = txtQTY.Visibility = Visibility.Visible;
-                    cbxNPF.Visibility = System.Windows.Visibility.Visible;
+                    cbxNPF.Visibility = Visibility.Visible;
                     cbxNPF.IsEnabled = false;
                     sVar.LogHandler.CreateLogAction("Credit Return was selected. txtQTY and cbxNPF are now visible. cbxNPF is set to disabled.", csLogging.LogState.NOTE);
                 }
                 else
                 {
                     lblQTY.Visibility = txtQTY.Visibility = Visibility.Hidden;
-                    cbxNPF.Visibility = System.Windows.Visibility.Hidden;
+                    cbxNPF.Visibility = Visibility.Hidden;
                     sVar.LogHandler.CreateLogAction("Credit Return was selected. txtQTY and cbxNPF are now hidden.", csLogging.LogState.NOTE);
                 }
             }

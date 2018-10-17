@@ -679,35 +679,27 @@ namespace RApID_Project_WPF
         private void fillEOLData()
         {
             resetEOL();
-            string query = "";
-            if (txtPartSeries.Text.Contains("XDR")) {
-                query = $"SELECT TestID FROM tblXducerTestResultsBenchTest WHERE SerialNumber = '{txtSerialNumber.Text}';";
-            } else {
-                query = "SELECT TestID FROM tblEOL WHERE PCBSerial = '" + txtSerialNumber.Text + "';";
-            }
-            csCrossClassInteraction.cbFillFromQuery(cbEOLTestID, query);
+            string query = "SELECT TestID FROM tblEOL WHERE PCBSerial = '" + txtSerialNumber.Text + "';";            
+            cbEOLTestID.FillFromQuery(query);
 
             query = "SELECT TestID FROM tblPre WHERE PCBSerial = '" + txtSerialNumber.Text + "';";
-            csCrossClassInteraction.cbFillFromQuery(cbPRETestID, query);
+            cbPRETestID.FillFromQuery(query);
 
-            if (txtPartSeries.Text.Contains("XDR"))
-            {
-                query = $"SELECT TestID FROM tblXducerTestResults WHERE SerialNumber = '{txtSerialNumber.Text}';";
-            }
-            else
-            {
-                query = "SELECT TestID FROM tblPost WHERE PCBSerial = '" + txtSerialNumber.Text + "';";
-            }
-            csCrossClassInteraction.cbFillFromQuery(cbPOSTTestID, query);
+            query =  "SELECT TestID FROM tblPost WHERE PCBSerial = '" + txtSerialNumber.Text + "';";
+            cbPOSTTestID.FillFromQuery(query);
 
             if (cbEOLTestID.Items.Count > 0)
+            {
                 cbBEAMSTestType.Items.Add("EOL");
+            }
 
             if (cbPRETestID.Items.Count > 0)
                 cbBEAMSTestType.Items.Add("PRE");
 
             if (cbPOSTTestID.Items.Count > 0)
+            {
                 cbBEAMSTestType.Items.Add("POST");
+            }
         }
 
         /// <summary>
@@ -1551,14 +1543,6 @@ namespace RApID_Project_WPF
                         }));
                     }));
                 }
-
-                Dispatcher.Invoke(delegate { 
-                    if(txtPartSeries.Text.Contains("XDR"))
-                    {                
-                        lblEOL.Content = "Bench Test";
-                        lblPOST.Content = "Final Test";
-                    }
-                });
             }
             catch (InvalidOperationException ioe)
             {
@@ -1751,16 +1735,9 @@ namespace RApID_Project_WPF
         {
             if (!string.IsNullOrEmpty(cbEOLTestID.Text))
             {
-                if (txtPartSeries.Text.Contains("XDR"))
-                {
-                    initS.InitSplash1("Loading Bench Test Data...");
-                    csCrossClassInteraction.lsvFillFromQuery(holder.HummingBirdConnectionString,
-                        $"SELECT * FROM tblXducerTestResultsBenchTest WHERE TestID = '{cbEOLTestID.Text}';", lsvEOL);                    
-                } else {
-                    initS.InitSplash1("Loading EOL Data...");
-                    csCrossClassInteraction.lsvFillFromQuery(holder.HummingBirdConnectionString,
-                        "SELECT * FROM tblEOL WHERE TestID = '" + cbEOLTestID.Text + "';", lsvEOL);
-                }
+                initS.InitSplash1("Loading EOL Data...");
+                csCrossClassInteraction.lsvFillFromQuery(holder.HummingBirdConnectionString,
+                    "SELECT * FROM tblEOL WHERE TestID = '" + cbEOLTestID.Text + "';", lsvEOL);
                 csSplashScreenHelper.ShowText("Done...");
                 csSplashScreenHelper.Hide();
             }
@@ -1782,15 +1759,9 @@ namespace RApID_Project_WPF
         {
             if (!string.IsNullOrEmpty(cbPOSTTestID.Text))
             {
-                if (txtPartSeries.Text.Contains("XDR")) {
-                    initS.InitSplash1("Loading Final Test Data...");
-                    csCrossClassInteraction.lsvFillFromQuery(holder.HummingBirdConnectionString,
-                        $"SELECT * FROM tblXducerTestResults WHERE TestID = '{cbPOSTTestID.Text}';", lsvPostBurnIn);
-                } else {
-                    initS.InitSplash1("Loading POST Data...");
-                    csCrossClassInteraction.lsvFillFromQuery(holder.HummingBirdConnectionString,
-                        "SELECT * FROM tblPOST WHERE TestID = '" + cbPOSTTestID.Text + "';", lsvPostBurnIn);
-                }
+                initS.InitSplash1("Loading POST Data...");
+                csCrossClassInteraction.lsvFillFromQuery(holder.HummingBirdConnectionString,
+                    "SELECT * FROM tblPOST WHERE TestID = '" + cbPOSTTestID.Text + "';", lsvPostBurnIn);
                 csSplashScreenHelper.ShowText("Done...");
                 csSplashScreenHelper.Hide();
             }
@@ -1819,7 +1790,8 @@ namespace RApID_Project_WPF
             if (!string.IsNullOrEmpty(cbBEAMSTestID.Text))
             {
                 initS.InitSplash1("Generating Beams...");
-                csCrossClassInteraction.BeamsQuery(txtSerialNumber.Text, cbBEAMSBeamNum, lsvBeamTestId);
+                csCrossClassInteraction.BeamsQuery(txtSerialNumber.Text, cbBEAMSBeamNum,
+                    lsvBeamTestId, txtPartSeries.Text.Contains("XDR"));
                 csSplashScreenHelper.ShowText("Done...");
                 csSplashScreenHelper.Hide();
             }
@@ -1830,7 +1802,11 @@ namespace RApID_Project_WPF
             if (!string.IsNullOrEmpty(cbBEAMSTestType.Text) && !string.IsNullOrEmpty(cbBEAMSTestID.Text) && !string.IsNullOrEmpty(cbBEAMSBeamNum.Text))
             {
                 initS.InitSplash1("Loading Beam Data...");
-                csCrossClassInteraction.BeamsQuery("SELECT * FROM Beams WHERE TestID = '" + cbBEAMSTestID.Text + "' AND PCBSerial = '" + txtSerialNumber.Text + "' AND BeamNumber = '" + csCrossClassInteraction.GetSpecificBeamNumber(cbBEAMSBeamNum.Text) + "';", lsvBeamTestId);
+                var tableName = txtPartSeries.Text.Contains("XDR") ? "tblXducerTestResults" : "Beams";
+                var serialName = txtPartSeries.Text.Contains("XDR") ? "SerialNumber" : "PCBSerial";
+                var _query = $"SELECT * FROM {tableName} WHERE TestID = '{cbBEAMSTestID.Text}' AND {serialName} = '{txtSerialNumber.Text}' " +
+                    $"AND BeamNumber = '{csCrossClassInteraction.GetSpecificBeamNumber(cbBEAMSBeamNum.Text)}';";
+                csCrossClassInteraction.BeamsQuery(_query, lsvBeamTestId, serialName);
                 csSplashScreenHelper.ShowText("Done...");
                 csSplashScreenHelper.Hide();
             }

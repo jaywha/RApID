@@ -176,7 +176,7 @@ namespace RApID_Project_WPF
         /// </summary>
         /// <param name="cbToFill">ComboBox to fill</param>
         /// <param name="_query">SQL Query</param>
-        public static void cbFillFromQuery(ComboBox cbToFill, string _query)
+        public static void FillFromQuery(this ComboBox cbToFill, string _query)
         {
             sVar.LogHandler.CreateLogAction(string.Format("Attempting to fill {0} from a SQL Query.", cbToFill.Name.ToString()), EricStabileLibrary.csLogging.LogState.NOTE);
             sVar.LogHandler.CreateLogAction("SQL QUERY: " + _query, EricStabileLibrary.csLogging.LogState.SQLQUERY);
@@ -699,14 +699,16 @@ namespace RApID_Project_WPF
         /// <summary>
         /// Queries the Beams table for information relevant to the serial number.
         /// </summary>
-        public static void BeamsQuery(string _sn, ComboBox cbBeams, ListView lsvToClear)
+        public static void BeamsQuery(string _sn, ComboBox cbBeams, ListView lsvToClear, bool isXDR = false) 
         {
             cbBeams.Items.Clear();
             lsvToClear.Items.Clear();
 
             bool bFoundSN = false;
 
-            string _query = "SELECT PCBSerial FROM Beams WHERE PCBSerial = '" + _sn + "';";
+            var _query = "";
+            if (isXDR) _query = $"SELECT SerialNumber FROM tblXducerTestResultsBenchTest WHERE SerialNumber = '{_sn}';";
+            else _query = "SELECT PCBSerial FROM Beams WHERE PCBSerial = '" + _sn + "';";
 
             sVar.LogHandler.CreateLogAction("Attempting to query the Beams table to see if the Serial Number exists.", EricStabileLibrary.csLogging.LogState.NOTE);
             sVar.LogHandler.CreateLogAction("SQL QUERY: " + _query, EricStabileLibrary.csLogging.LogState.SQLQUERY);
@@ -742,7 +744,8 @@ namespace RApID_Project_WPF
             {
                 var hBeams = new HashSet<string>();
                 var lBeams = new List<string>();
-                _query = "SELECT BeamNumber FROM Beams WHERE PCBSerial = '" + _sn + "' ORDER BY BeamNumber ASC;";
+                if (isXDR) _query = $"SELECT BeamNumber FROM tblXducerTestResults WHERE SerialNumber = '{_sn}' ORDER BY BeamNumber ASC;";
+                else _query = "SELECT BeamNumber FROM Beams WHERE PCBSerial = '" + _sn + "' ORDER BY BeamNumber ASC;";
                 cmd = new SqlCommand(_query, conn);
                 try
                 {
@@ -777,7 +780,7 @@ namespace RApID_Project_WPF
 
         }
 
-        public static void BeamsQuery(string _query, ListView lsvToFill)
+        public static void BeamsQuery(string _query, ListView lsvToFill, string serialName = "PCBSerial")
         {
             var conn = new SqlConnection(holder.HummingBirdConnectionString);
             var cmd = new SqlCommand(_query, conn);
@@ -801,7 +804,7 @@ namespace RApID_Project_WPF
                                 try
                                 {
                                     testVal[0] = reader.GetName(i).ToString();
-                                    if (testVal[0].Equals("TestID") || testVal[0].Equals("PCBSerial") || testVal[0].Equals("BeamNumber") || testVal[0].Equals("TestType") || testVal[0].Equals("BeamKey")) { }//ignore these values
+                                    if (testVal[0].Equals("TestID") || testVal[0].Equals(serialName) || testVal[0].Equals("BeamNumber") || testVal[0].Equals("TestType") || testVal[0].Equals("BeamKey")) { }//ignore these values
                                     else
                                     {
                                         testVal[1] = reader[i].ToString();
