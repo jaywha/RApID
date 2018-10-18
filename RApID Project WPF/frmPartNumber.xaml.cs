@@ -113,20 +113,6 @@ namespace RApID_Project_WPF
             }
         }
 
-        //private void sortDGV(DataGridColumn col, System.ComponentModel.ListSortDirection lsd)
-        //{
-        //    dgvPartNumber.Items.SortDescriptions.Clear();
-        //    string propertyName = "PartNumber";
-        //    dgvPartNumber.Items.SortDescriptions.Add(new System.ComponentModel.SortDescription(propertyName, lsd));
-
-        //    foreach (DataGridColumn c in dgvPartNumber.Columns)
-        //    {
-        //        c.SortDirection = null;
-        //    }
-
-        //    col.SortDirection = lsd;
-        //}
-
         /// <summary>
         /// Searches over the DataTable for the Part Number entered
         /// </summary>

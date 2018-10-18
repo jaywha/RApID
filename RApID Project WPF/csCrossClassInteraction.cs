@@ -115,7 +115,9 @@ namespace RApID_Project_WPF
             if (c is ComboBox cbox)
                 cbox.SelectedValue = val;
             else if (c is TextBox tbox /*or a SuggestBox since custom conversion*/)
-                tbox.Text = val as string;                
+                tbox.Text = val as string;
+            else if (c is Label lbl)
+                lbl.Content = val as string;
         }
 
         /// <summary>
@@ -858,14 +860,12 @@ namespace RApID_Project_WPF
         }
 
         /// <summary>
-        /// Checks to see if the string passed in is null.
+        /// Checks to see if the string passed in is null or equal to <see cref="DBNull"/>.
         /// </summary>
         /// <param name="valToTest">Value that needs to be checked.</param>
-        /// <returns>Returns String.Empty if the value is null; otherwise, return the value passed in.</returns>
-        public static string dbValSubmit(string valToTest)
-        {
-            return string.IsNullOrEmpty(valToTest) ? string.Empty : valToTest;
-        }
+        /// <returns>Returns String.Empty if the value is null or DBNull; otherwise, return the value passed in.</returns>
+        public static string dbValSubmit(string valToTest) 
+            => string.IsNullOrEmpty(valToTest) || ((object)valToTest) == DBNull.Value ? string.Empty : valToTest;
 
         public static string unitIssuesValSubmit(ComboBox cbToCheck)
         {
@@ -1097,8 +1097,10 @@ namespace RApID_Project_WPF
                                 _rmiCombine.TestResultAbort = kvp.Value[i].TestResultAbort;
                                 _rmiCombine.Cause = kvp.Value[i].Cause;
                                 _rmiCombine.Replacement = kvp.Value[i].Replacement;
-                                _rmiCombine.MultiPartsReplaced = new List<MultiplePartsReplaced>();
-                                _rmiCombine.MultiPartsReplaced.Add(kvp.Value[i].SinglePartReplaced);
+                                _rmiCombine.MultiPartsReplaced = new List<MultiplePartsReplaced>
+                                {
+                                    kvp.Value[i].SinglePartReplaced
+                                };
                             }
                             else
                             {

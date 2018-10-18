@@ -193,7 +193,8 @@
                     <Label Content="Customer Name:" Margin="0,50,0,0" Style="{StaticResource LabelBaseStyle}" />
                     <TextBox Name="txtCustName" Margin="0,75,0,0" Style="{StaticResource TextboxBaseStyle}" />
                     
-                    <Button Name="btnViewCustInfo" Content="View Full Customer Info" Margin="0,105,0,0" Style="{StaticResource ButtonBaseStyle}" />
+                    <Button Name="btnViewCustInfo" Content="View Full Customer Info" Margin="0,105,0,0" Style="{StaticResource ButtonBaseStyle}" Click="btnViewCustInfo_Click"
+                            />
                 </Grid>
             </GroupBox>
             

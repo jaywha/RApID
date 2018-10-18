@@ -1528,8 +1528,8 @@ namespace RApID_Project_WPF
 
                 using (var mapper = csSerialNumberMapper.Instance)
                 {
-                    Task.Factory.StartNew(new Action(() => {
-                        Dispatcher.BeginInvoke(new Action(() => {// perform actions on dispatched thread
+                    Task.Factory.StartNew(new Action(() => { // on new task
+                        Dispatcher.BeginInvoke(new Action(() => {// perform dispatched UI actions
                             if (!mapper.GetData(txtSerialNumber.Text))
                                 throw new InvalidOperationException("Couldn't find data for this barcode!");
                             else

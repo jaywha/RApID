@@ -196,10 +196,11 @@
                                     <ComboBox Name="cbReplacement" Margin="10,275,0,0" DropDownClosed="cbDDClosed" Style="{StaticResource Combobox}" />
                                     
                                     <Label Content="Ref Designator" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10,310,0,0" />
-                                    <ComboBox x:Name="txtRefDes" IsEditable="True" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10,335,0,0" VerticalContentAlignment="Center" Width="100" Height="23" GotFocus="txtGotFocus" LostFocus="txtLostFocus" KeyUp="txtMultiRefKeyUp"/>
+                                    <ComboBox x:Name="txtRefDes" IsTextSearchEnabled="False" IsEditable="True" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10,335,0,0" VerticalContentAlignment="Center" Width="100" Height="23"
+                                              SelectionChanged="refDesIndexChanged" GotFocus="txtGotFocus" LostFocus="txtLostFocus" KeyUp="txtMultiRefKeyUp"/>
                                     
                                     <Label Content="Part Replaced" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="115,310,0,0" />
-                                    <ComboBox x:Name="txtPartReplaced" IsEditable="True" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="115,335,0,0" VerticalContentAlignment="Center" Width="100" Height="23" GotFocus="txtGotFocus" LostFocus="txtLostFocus" />
+                                    <ComboBox x:Name="txtPartReplaced" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="115,335,0,0" VerticalContentAlignment="Center" Width="100" Height="23" GotFocus="txtGotFocus" LostFocus="txtLostFocus" />
                                     <Button Name="btnAddMultiParts" Content="Add" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="220,335,0,0" Width="65" Height="23" Click="btnAddMultiParts_Click" />
                                     
                                     <DataGrid Name="dgMultipleParts" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10,370,0,0" Width="275" Height="180" IsReadOnly="True" BeginningEdit="dgBeginEdit" />
@@ -225,10 +226,11 @@
                                     <ComboBox Name="cbReplacement_2" Margin="10,275,0,0" DropDownClosed="cbDDClosed" Style="{StaticResource Combobox}" />
 
                                     <Label Content="Ref Designator" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10,310,0,0" />
-                                    <ComboBox x:Name="txtRefDes_2" IsEditable="True" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10,335,0,0" VerticalContentAlignment="Center" Width="100" Height="23" GotFocus="txtGotFocus" LostFocus="txtLostFocus" KeyUp="txtMultiRefKeyUp"/>
+                                    <ComboBox x:Name="txtRefDes_2" IsTextSearchEnabled="False" IsEditable="True" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10,335,0,0" VerticalContentAlignment="Center" Width="100" Height="23"
+                                              SelectionChanged="refDesIndexChanged" GotFocus="txtGotFocus" LostFocus="txtLostFocus" KeyUp="txtMultiRefKeyUp"/>
 
                                     <Label Content="Part Replaced" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="115,310,0,0" />
-                                    <ComboBox x:Name="txtPartReplaced_2" IsEditable="True" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="115,335,0,0" VerticalContentAlignment="Center" Width="100" Height="23" GotFocus="txtGotFocus" LostFocus="txtLostFocus" />
+                                    <ComboBox x:Name="txtPartReplaced_2" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="115,335,0,0" VerticalContentAlignment="Center" Width="100" Height="23" GotFocus="txtGotFocus" LostFocus="txtLostFocus" />
                                     <Button Name="btnAddMultiParts_2" Content="Add" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="220,335,0,0" Width="65" Height="23" Click="btnAddMultiParts_Click" />
 
                                     <DataGrid Name="dgMultipleParts_2" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10,370,0,0" Width="275" Height="180" IsReadOnly="True" BeginningEdit="dgBeginEdit" />
@@ -254,10 +256,11 @@
                                     <ComboBox Name="cbReplacement_3" Margin="10,275,0,0" DropDownClosed="cbDDClosed" Style="{StaticResource Combobox}" />
 
                                     <Label Content="Ref Designator" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10,310,0,0" />
-                                    <ComboBox x:Name="txtRefDes_3" IsEditable="True" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10,335,0,0" VerticalContentAlignment="Center" Width="100" Height="23" GotFocus="txtGotFocus" LostFocus="txtLostFocus" KeyUp="txtMultiRefKeyUp"/>
+                                    <ComboBox x:Name="txtRefDes_3" IsTextSearchEnabled="False" IsEditable="True" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10,335,0,0" VerticalContentAlignment="Center" Width="100" Height="23"
+                                              SelectionChanged="refDesIndexChanged" GotFocus="txtGotFocus" LostFocus="txtLostFocus" KeyUp="txtMultiRefKeyUp"/>
 
                                     <Label Content="Part Replaced" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="115,310,0,0" />
-                                    <ComboBox x:Name="txtPartReplaced_3" IsEditable="True" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="115,335,0,0" VerticalContentAlignment="Center" Width="100" Height="23" GotFocus="txtGotFocus" LostFocus="txtLostFocus" />
+                                    <ComboBox x:Name="txtPartReplaced_3" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="115,335,0,0" VerticalContentAlignment="Center" Width="100" Height="23" GotFocus="txtGotFocus" LostFocus="txtLostFocus" />
                                     <Button Name="btnAddMultiParts_3" Content="Add" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="220,335,0,0" Width="65" Height="23" Click="btnAddMultiParts_Click" />
 
                                     <DataGrid Name="dgMultipleParts_3" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10,370,0,0" Width="275" Height="180" IsReadOnly="True" BeginningEdit="dgBeginEdit" />

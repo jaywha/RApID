@@ -5,8 +5,8 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:RApID_Project_WPF"
         mc:Ignorable="d"
-        Title="Customer Information" Height="550" Width="230" WindowStartupLocation="CenterScreen" Background="#FF8B8585" ResizeMode="NoResize" Loaded="Window_Loaded">
-    
+        Title="Customer Information" Height="529.375" Width="220.833" WindowStartupLocation="CenterScreen" Background="#FF8B8585" ResizeMode="NoResize" Loaded="Window_Loaded">
+
     <Window.Resources>
         <Style x:Key="CITextBox" TargetType="{x:Type TextBox}">
             <Setter Property="HorizontalAlignment" Value="Left"/>
@@ -18,35 +18,35 @@
             <Setter Property="IsReadOnly" Value="True"/>
         </Style>
     </Window.Resources>
-    <Grid>
-        <Label Content="Customer Number:" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="6,2,0,0"/>
-        <TextBox Name="txtCustomerNumber" Margin="6,22,0,0" Style="{StaticResource CITextBox}"/>
+    <StackPanel Orientation="Vertical">
+        <Label Content="Customer Number:" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+        <TextBox Name="txtCustomerNumber" Style="{StaticResource CITextBox}"/>
 
-        <Label Content="Customer Name:" HorizontalAlignment="Left" Margin="6,52,0,0" VerticalAlignment="Top"/>
-        <TextBox Name="txtCustomerName" Margin="6,72,0,0" Style="{StaticResource CITextBox}"/>
+        <Label Content="Customer Name:" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+        <TextBox Name="txtCustomerName" Style="{StaticResource CITextBox}"/>
 
-        <Label Content="Customer Address Line 1:" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="6,102,0,0" />
-        <TextBox Name="txtCustAddy1" Margin="6,122,0,0" Style="{StaticResource CITextBox}"/>
+        <Label Name="lblCustAddy1" Content="Customer Address Line 1:" HorizontalAlignment="Left" VerticalAlignment="Top"  />
+        <TextBox Name="txtCustAddy1"  Style="{StaticResource CITextBox}" AutomationProperties.LabeledBy="{Binding ElementName=lblCustAddy1, Mode=OneWay}"/>
 
-        <Label Content="Customer Address Line 2:" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="6,152,0,0" />
-        <TextBox Name="txtCustAddy2" Margin="6,172,0,0" Style="{StaticResource CITextBox}" />
+        <Label Name="lblCustAddy2" Content="Customer Address Line 2:" HorizontalAlignment="Left" VerticalAlignment="Top"  />
+        <TextBox Name="txtCustAddy2"  Style="{StaticResource CITextBox}" AutomationProperties.LabeledBy="{Binding ElementName=lblCustAddy2, Mode=OneWay}"/>
 
-        <Label Content="Customer Address Line 3:" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="6,202,0,0" />
-        <TextBox Name="txtCustAddy3" Margin="6,222,0,0" Style="{StaticResource CITextBox}" />
-        
-        <Label Content="Customer Address Line 4:" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="6,252,0,0" />
-        <TextBox Name="txtCustAddy4" Margin="6,272,0,0" Style="{StaticResource CITextBox}" />
+        <Label Name="lblCustAddy3" Content="Customer Address Line 3:" HorizontalAlignment="Left" VerticalAlignment="Top"  />
+        <TextBox Name="txtCustAddy3"  Style="{StaticResource CITextBox}" AutomationProperties.LabeledBy="{Binding ElementName=lblCustAddy3, Mode=OneWay}"/>
 
-        <Label Content="Customer City:" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="6,302,0,0" />
-        <TextBox Name="txtCustCity" Margin="6,322,0,0" Style="{StaticResource CITextBox}" />
+        <Label Name="lblCustAddy4" Content="Customer Address Line 4:" HorizontalAlignment="Left" VerticalAlignment="Top"  />
+        <TextBox Name="txtCustAddy4"  Style="{StaticResource CITextBox}" AutomationProperties.LabeledBy="{Binding ElementName=lblCustAddy4, Mode=OneWay}"/>
 
-        <Label Content="Customer State:" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="6,352,0,0"/>
-        <TextBox Name="txtCustState" Margin="6,372,0,0" Style="{StaticResource CITextBox}" />
+        <Label Content="Customer City:" HorizontalAlignment="Left" VerticalAlignment="Top"  />
+        <TextBox Name="txtCustCity"  Style="{StaticResource CITextBox}" />
 
-        <Label Content="Customer Postal Code:" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="6,402,0,0"/>
-        <TextBox Name="txtCustPostal" Margin="6,422,0,0" Style="{StaticResource CITextBox}" />
+        <Label Content="Customer State:" HorizontalAlignment="Left" VerticalAlignment="Top" />
+        <TextBox Name="txtCustState"  Style="{StaticResource CITextBox}" />
 
-        <Label Content="Customer Country Code:" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="6,452,0,0"/>
-        <TextBox Name="txtCustCountryCode" Margin="6,472,0,0" Style="{StaticResource CITextBox}" />
-    </Grid>
+        <Label Content="Customer Postal Code:" HorizontalAlignment="Left" VerticalAlignment="Top" />
+        <TextBox Name="txtCustPostal"  Style="{StaticResource CITextBox}" />
+
+        <Label Content="Customer Country Code:" HorizontalAlignment="Left" VerticalAlignment="Top" />
+        <TextBox Name="txtCustCountryCode"  Style="{StaticResource CITextBox}" />
+    </StackPanel>
 </Window>

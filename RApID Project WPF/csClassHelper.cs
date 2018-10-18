@@ -99,6 +99,8 @@ namespace RApID_Project_WPF
     /// </summary>
     public class RepairMultipleIssues
     {
+        //TODO: Create UserControl with this Model
+        //=> View (frmRepairPRI.xaml) <= Controller (frmRepairPRI.xaml.cs)
         public int ID { get; set; }
         public string ReportedIssue { get; set; }
         public string TestResult { get; set; }

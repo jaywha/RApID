@@ -317,7 +317,7 @@ namespace EricStabileLibrary
             if(bClearRTB)
                 _rtb.Document.Blocks.Clear();
 
-            string sLogData = string.Format("{0} began this entry at {1}.\n", _log.Tech, _log.LogCreationTime.ToString("MM/dd/yyyy hh:mm:ss tt"));
+            string sLogData = $"{_log.Tech} began this entry at {_log.LogCreationTime.ToString("MM/dd/yyyy hh:mm:ss tt")}.\n";
 
             sLogData += "*** Filtered Actions Associated With This Log File*** \n";
 
@@ -325,16 +325,16 @@ namespace EricStabileLibrary
             {
                 if (_ls.Equals(_log.lActions[i].EventType) || _ls.Equals(csLogging.LogState.NONE))
                 {
-                    sLogData += "Event Type: " + _log.lActions[i].EventType.ToString() + "\n";
+                    sLogData += $"Event Type: {_log.lActions[i].EventType.ToString()}\n";
 
                     if (_log.lActions[i].LogNote != null)
-                        sLogData += "Log Action: " + _log.lActions[i].LogNote + "\n";
+                        sLogData += $"Log Action: {_log.lActions[i].LogNote}\n";
                     if (_log.lActions[i].ControlType != null)
-                        sLogData += "Control Type: " + _log.lActions[i].ControlType + "\n";
+                        sLogData += $"Control Type: {_log.lActions[i].ControlType}\n";
                     if (_log.lActions[i].ControlName != null)
-                        sLogData += "Control Name: " + _log.lActions[i].ControlName + "\n";
+                        sLogData += $"Control Name: {_log.lActions[i].ControlName}\n";
                     if (_log.lActions[i].ControlContent != null)
-                        sLogData += "Control Content: " + _log.lActions[i].ControlContent + "\n";
+                        sLogData += $"Control Content: {_log.lActions[i].ControlContent}\n";
 
                     sLogData += "Event Timing: " + _log.lActions[i].EventTiming.ToString("MM/dd/yyyy hh:mm:ss tt") + "\n";
 

@@ -601,8 +601,10 @@ namespace RApID_Project_WPF
             {
                 if (!string.IsNullOrEmpty(ScannedUnitInformation.CustomerInformation.CustomerNumber))
                 {
-                    var fcfi = new frmFullCustomerInformation(ScannedUnitInformation.CustomerInformation);
-                    fcfi.Show();
+                    var fullInfo = new frmFullCustomerInformation(ScannedUnitInformation.CustomerInformation);
+                    fullInfo.Closed += delegate { btnViewFullCustInfo.IsEnabled = true; };
+                    fullInfo.Show();
+                    btnViewFullCustInfo.IsEnabled = false;
                 }
             }
         }
