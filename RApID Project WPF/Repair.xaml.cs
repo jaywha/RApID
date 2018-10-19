@@ -1091,6 +1091,8 @@ namespace RApID_Project_WPF
                     cmd.Parameters.AddWithValue("@series", DBNull.Value);
                 else cmd.Parameters.AddWithValue("@series", txtSeries.Text.ToString());
 
+                cmd.Parameters.AddWithValue("@logid", new Random(int.MaxValue).Next());
+
                 cmd.ExecuteNonQuery();
                 conn.Close();
 
@@ -1354,9 +1356,10 @@ namespace RApID_Project_WPF
         /// </summary>
         private List<RepairMultipleIssues> getUnitIssues()
         {
-            var lMPUI = new List<RepairMultipleIssues>();
-
-            lMPUI.Add(getUnitIssueString(1));
+            var lMPUI = new List<RepairMultipleIssues>
+            {
+                getUnitIssueString(1)
+            };
 
             if (checkForUITabData(2))
                 lMPUI.Add(getUnitIssueString(2));

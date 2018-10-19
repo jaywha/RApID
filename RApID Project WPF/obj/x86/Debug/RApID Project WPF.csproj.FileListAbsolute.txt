@@ -28,7 +28,6 @@ C:\Visual Studio Projects\RApID\RApID Project WPF\obj\x86\Debug\MainWindow.g.cs
 C:\Visual Studio Projects\RApID\RApID Project WPF\obj\x86\Debug\PrevRepairInfo.g.cs
 C:\Visual Studio Projects\RApID\RApID Project WPF\obj\x86\Debug\Repair.g.cs
 C:\Visual Studio Projects\RApID\RApID Project WPF\obj\x86\Debug\frmRepairPRI.g.cs
-C:\Visual Studio Projects\RApID\RApID Project WPF\obj\x86\Debug\SuggestBox.g.cs
 C:\Visual Studio Projects\RApID\RApID Project WPF\obj\x86\Debug\App.g.cs
 C:\Visual Studio Projects\RApID\RApID Project WPF\obj\x86\Debug\RApID Project WPF_Content.g.cs
 C:\Visual Studio Projects\RApID\RApID Project WPF\obj\x86\Debug\GeneratedInternalTypeHelper.g.cs
@@ -37,7 +36,6 @@ C:\Visual Studio Projects\RApID\RApID Project WPF\obj\x86\Debug\RApID Project WP
 C:\Visual Studio Projects\RApID\RApID Project WPF\obj\x86\Debug\frmFullCustomerInformation.baml
 C:\Visual Studio Projects\RApID\RApID Project WPF\obj\x86\Debug\frmProduction.baml
 C:\Visual Studio Projects\RApID\RApID Project WPF\obj\x86\Debug\Repair.baml
-C:\Visual Studio Projects\RApID\RApID Project WPF\obj\x86\Debug\SuggestBox.baml
 C:\Visual Studio Projects\RApID\RApID Project WPF\obj\x86\Debug\RApID Project WPF.g.resources
 C:\Visual Studio Projects\RApID\RApID Project WPF\obj\x86\Debug\frmMessageBox.frmMessageBox.resources
 C:\Visual Studio Projects\RApID\RApID Project WPF\obj\x86\Debug\RApID_Project_WPF.Properties.Resources.resources
@@ -45,4 +43,7 @@ C:\Visual Studio Projects\RApID\RApID Project WPF\obj\x86\Debug\RApID Project WP
 C:\Visual Studio Projects\RApID\RApID Project WPF\obj\x86\Debug\RApID Project WPF.csproj.CoreCompileInputs.cache
 C:\Visual Studio Projects\RApID\RApID Project WPF\obj\x86\Debug\RApID Project WPF.exe
 C:\Visual Studio Projects\RApID\RApID Project WPF\obj\x86\Debug\RApID Project WPF.pdb
-C:\Visual Studio Projects\RApID\RApID Project WPF\obj\x86\Debug\RApID Project WPF.csprojAssemblyReference.cache
+C:\Visual Studio Projects\RApID\RApID Project WPF\obj\x86\Debug\ucSuggestBox.g.cs
+C:\Visual Studio Projects\RApID\RApID Project WPF\obj\x86\Debug\ucLogActionView.g.cs
+C:\Visual Studio Projects\RApID\RApID Project WPF\obj\x86\Debug\ucSuggestBox.baml
+C:\Visual Studio Projects\RApID\RApID Project WPF\obj\x86\Debug\ucLogActionView.baml

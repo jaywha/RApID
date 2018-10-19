@@ -56,12 +56,12 @@ namespace RApID_Project_WPF
             string sFormat = "MMddyyhhmmsstt";
             var res = DateTime.ParseExact(sSplit[1], sFormat, CultureInfo.InvariantCulture);
 
-            _logDispName = string.Format("{0}: {1}", sSplit[0], res.ToString("MM/dd/yyyy hh:mm:ss tt"));
+            _logDispName = $"{sSplit[0]}: {res.ToString("MM/dd/yyyy hh:mm:ss tt")}";
         }
 
         private void SetFilePath()
         {
-            _logFilePath = string.Format(@"{0}\{1}\{2}", Properties.Settings.Default.LogWriteLocation, _techName, _logFileName);
+            _logFilePath = $@"{Properties.Settings.Default.LogWriteLocation}\{_techName}\{_logFileName}";
         }
     }
 

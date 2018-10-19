@@ -14,7 +14,7 @@
             <Setter Property="VerticalContentAlignment" Value="Center" />
         </Style>
 
-        <Style x:Key="SuggestboxBaseStyle" TargetType="{x:Type rapid_project_wpf:SuggestBox}">
+        <Style x:Key="SuggestboxBaseStyle" TargetType="{x:Type rapid_project_wpf:ucSuggestBox}">
             <Setter Property="Width" Value="195" />
             <Setter Property="Height" Value="23" />
             <Setter Property="IsReadOnly" Value="True" />

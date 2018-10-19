@@ -10,11 +10,11 @@ none
 false
 DEBUG;TRACE
 C:\Visual Studio Projects\RApID\RApID Project WPF\App.xaml
-16-74125025
+17745042984
 1-1885038259
-35-313545647
+362065602168
 20979729552
-frmFullCustomerInformation.xaml;frmMultipleRP.xaml;frmPartNumber.xaml;frmPrintQCDQELabel.xaml;frmProduction.xaml;frmProductionPRI.xaml;frmQCDQE.xaml;frmSettings.xaml;frmSplashScreen.xaml;frmViewFullLog.xaml;frmViewMultipleIssues.xaml;MainWindow.xaml;PrevRepairInfo.xaml;Repair.xaml;frmRepairPRI.xaml;SuggestBox.xaml;
+frmFullCustomerInformation.xaml;frmMultipleRP.xaml;frmPartNumber.xaml;frmPrintQCDQELabel.xaml;frmProduction.xaml;frmProductionPRI.xaml;frmQCDQE.xaml;frmSettings.xaml;frmSplashScreen.xaml;frmViewFullLog.xaml;frmViewMultipleIssues.xaml;MainWindow.xaml;PrevRepairInfo.xaml;Repair.xaml;frmRepairPRI.xaml;ucSuggestBox.xaml;ucLogActionView.xaml;
 
 False
 

@@ -1,17 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
 using System.Data.SqlClient;
+using EricStabileLibrary;
 
 namespace RApID_Project_WPF
 {
@@ -41,14 +31,21 @@ namespace RApID_Project_WPF
 
         private bool loadPRI()
         {
-            string query = "SELECT * FROM TechnicianSubmission WHERE ID = '" + PRI.ID + "'";
             var conn = new SqlConnection(holder.RepairConnectionString);
+
+            string query = "SELECT * FROM TechnicianSubmission WHERE ID = '" + PRI.ID + "'";
+            string logQuery = "SELECT * FROM TechLogs WHERE ID = @logID";
+            string actionQuery = "SELECT * FROM TechLogActions WHERE ActionID = @aid";
+
             var cmd = new SqlCommand(query, conn);
+            var logCmd = new SqlCommand(logQuery, conn);
+            var actionCmd = new SqlCommand(actionQuery, conn);
+
             try
             {
                 conn.Open();
 
-                using (SqlDataReader reader = cmd.ExecuteReader())
+                using (var reader = cmd.ExecuteReader())
                 {
                     while (reader.Read())
                     {
@@ -63,13 +60,50 @@ namespace RApID_Project_WPF
                         txtTOR.Text = csCrossClassInteraction.dbValSubmit(reader["TypeOfReturn"].ToString());
                         txtFromArea.Text = csCrossClassInteraction.dbValSubmit(reader["FromArea"].ToString());
 
-                        //TODO: Get Technician Actions <- from Log Files?
+                        logCmd.Parameters.AddWithValue("@logID",
+                            int.Parse(csCrossClassInteraction.dbValSubmit(reader["LogID"].ToString())));
 
                         rtbAddComm.AppendText(csCrossClassInteraction.dbValSubmit(reader["AdditionalComments"].ToString()));
                     }
                 }
 
+                using(var reader = logCmd.ExecuteReader())
+                {
+                    reader.Read(); // only one record
+
+                    actionCmd.Parameters.AddWithValue("@aid", csCrossClassInteraction.dbValSubmit(reader["ActionID"].ToString()));
+
+                    uclaTechActions.LogToView = new csLog() {                        
+                        Tech = csCrossClassInteraction.dbValSubmit(reader["Tech"].ToString()),
+                        LogCreationTime = DateTime.Parse(csCrossClassInteraction.dbValSubmit(reader["LogCreationTime"].ToString())),
+                        LogSubmitTime = DateTime.Parse(csCrossClassInteraction.dbValSubmit(reader["LogSubmitTime"].ToString()))
+                    };
+                }
+
+                using(var reader = actionCmd.ExecuteReader())
+                {
+                    while(reader.Read())
+                    {
+                        var @action = new csLogAction()
+                        {
+                            ControlType = csCrossClassInteraction.dbValSubmit(reader["ControlType"].ToString()),
+                            ControlName = csCrossClassInteraction.dbValSubmit(reader["ControlName"].ToString()),
+                            ControlContent = csCrossClassInteraction.dbValSubmit(reader["ControlContent"].ToString()),
+                            EventType = (csLogging.LogState) Enum.Parse(typeof(csLogging.LogState),
+                                csCrossClassInteraction.dbValSubmit(reader["LogState"].ToString())),
+                            EventTiming = DateTime.Parse(csCrossClassInteraction.dbValSubmit(reader["EventTiming"].ToString())),
+                            LogNote = csCrossClassInteraction.dbValSubmit(reader["LogNote"].ToString()),
+                            LogError = reader.GetBoolean(reader.GetOrdinal("LogError"))
+                        };
+
+                        uclaTechActions.LogToView.lActions.Add(@action);
+                    }
+                }
+
                 conn.Close();
+
+                uclaTechActions.InitView();
+
                 return true;
             }
             catch (Exception ex)

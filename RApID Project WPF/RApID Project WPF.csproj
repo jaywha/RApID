@@ -176,8 +176,11 @@
     </Compile>
     <Compile Include="Settings.cs" />
     <Compile Include="StaticVars.cs" />
-    <Compile Include="SuggestBox.xaml.cs">
-      <DependentUpon>SuggestBox.xaml</DependentUpon>
+    <Compile Include="ucSuggestBox.xaml.cs">
+      <DependentUpon>ucSuggestBox.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="ucLogActionView.xaml.cs">
+      <DependentUpon>ucLogActionView.xaml</DependentUpon>
     </Compile>
     <Compile Include="ViewModelBase.cs" />
     <Compile Include="VMB\ViewModelBase.cs" />
@@ -249,7 +252,11 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="SuggestBox.xaml">
+    <Page Include="ucSuggestBox.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="ucLogActionView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
