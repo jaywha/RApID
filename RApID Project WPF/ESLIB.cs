@@ -149,9 +149,27 @@ namespace EricStabileLibrary
                 sw.Close();
                 sw = null;
 
-                var actionID = new Random(int.MaxValue).Next();
+                /**
+                #region Submit Log to DB
+
                 var conn = new SqlConnection(csObjectHolder.csObjectHolder.ObjectHolderInstance().RepairConnectionString);
                 conn.Open();
+                
+                /* [1.] Get ActionID index to increment by 1. /
+                var actionID = 0;
+                using (var cmd = new SqlCommand("SELECT ActionID FROM TechLogActions ORDER BY ActionID DESC", conn))
+                {
+                    using (var reader = cmd.ExecuteReader())
+                    {
+                        if (reader.Read())
+                        {
+                            actionID = reader.GetInt32(0) + 1;
+                        }
+                        else throw new IOException("ActionID could not be set.\nPlease confirm validity in the Database");
+                    }
+                }
+
+                /* [2.] Insert initial log details in into TechLogs table. /
                 using (var cmd = new SqlCommand("INSERT INTO TechLogs (ActionID, Tech, LogCreationTime, LogSubmitTime) " +
                     "VALUES (@aid, @tech, @createtime, @submittime)", conn))
                 {
@@ -164,26 +182,32 @@ namespace EricStabileLibrary
                     if (cmd.ExecuteNonQuery() == 0) return false;
                 }
 
-                foreach(var action in csL.lActions)
+                /* [3.] Insert all relevant actions into TechLogActions table with ActionID as the pairing column. /
+                foreach (var action in csL.lActions)
                 {
                     using (var cmd = new SqlCommand("INSERT INTO TechLogActions (ActionID, ControlType, ControlName, " +
                         "ControlContent, LogState, EventTiming, LogNote, LogError)" +
                         "VALUES (@aid, @cType, @cName, @cContent, @state, @time, @note, @error)", conn))
                     {
-                        cmd.Parameters.AddWithValue("@aid",actionID);
-                        cmd.Parameters.AddWithValue("@cType", action.ControlType);
-                        cmd.Parameters.AddWithValue("@cName", action.ControlName);
-                        cmd.Parameters.AddWithValue("@cContent", action.ControlContent);
-                        cmd.Parameters.AddWithValue("@state", action.EventType.ToString());
-                        cmd.Parameters.AddWithValue("@time", action.EventTiming);
-                        cmd.Parameters.AddWithValue("@note", action.LogNote);
+                        cmd.Parameters.AddWithValue("@aid", actionID);
+                        cmd.Parameters.AddWithValue("@cType", action.ControlType ?? "");
+                        cmd.Parameters.AddWithValue("@cName", action.ControlName ?? "");
+                        cmd.Parameters.AddWithValue("@cContent", action.ControlContent ?? "");
+                        cmd.Parameters.AddWithValue("@state", action.EventType.ToString() ?? "");
+                        cmd.Parameters.AddWithValue("@time", action.EventTiming.ToString("yyyy-MM-dd HH:mm:ss.fff")
+                            ?? DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff"));
+                        cmd.Parameters.AddWithValue("@note", action.LogNote ?? "");
                         cmd.Parameters.AddWithValue("@error", action.LogError);
 
                         if (cmd.ExecuteNonQuery() == 0) return false;
                     }
                 }
-
+                
                 conn.Close();
+                
+                #endregion
+                
+                */
 
                 return true;
             }

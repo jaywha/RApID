@@ -4,20 +4,10 @@
  */
 
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
 using System.Data.SqlClient;
-using EricStabileLibrary;
 using System.Data;
 
 namespace RApID_Project_WPF
@@ -40,10 +30,7 @@ namespace RApID_Project_WPF
             bIsProduction = _bProduction;
         }
 
-        private void Window_Loaded(object sender, RoutedEventArgs e)
-        {
-            getCorrectData();
-        }
+        private void Window_Loaded(object sender, RoutedEventArgs e) => getCorrectData();
 
         /// <summary>
         /// Fills dgvPartNumber with a list of part names and part numbers.
@@ -71,21 +58,21 @@ namespace RApID_Project_WPF
                     while(reader.Read())
                     {
                         string[] splitters = { "," };
-                        if(!bIsProduction)
+                        if(!bIsProduction) // REPAIR
                         {
                             if(reader[0].ToString().Contains("0-") || reader.ToString().Contains("6-"))
                             {
                                 string[] sSplit = reader[0].ToString().Split(splitters, StringSplitOptions.RemoveEmptyEntries);
                                 for(int i = 0; i < sSplit.Length; i++)
                                 {
-                                    if (sSplit[i].Contains("0-") || sSplit[i].Contains("6-"))
+                                    if (sSplit[i].Contains("0-") || sSplit[i].Contains("6-") || sSplit[i].Contains("8-"))
                                     {
                                         dt.Rows.Add(new object[] { sSplit[i].ToString().TrimEnd(), reader[1].ToString().TrimEnd() });
                                     }
                                 }
                             }
                         }
-                        else
+                        else // PRODUCTION
                         {
                             if(reader[0].ToString().Contains("5-") || reader[0].ToString().Contains("6-") || reader[1].ToString().ToUpper().Contains("KEYPAD"))
                             {
@@ -121,7 +108,16 @@ namespace RApID_Project_WPF
             var dtSearch = new DataTable();
             dtSearch.Columns.Add("Part Number");
             dtSearch.Columns.Add("Part Name");
-            string dtQuery = "[Part Name] LIKE '%" + txtSearch.Text + "%'";
+            string dtQuery = (!string.IsNullOrEmpty(txtSearchName.Text))
+                ? $"[Part Name] LIKE '%{txtSearchName.Text}%' " : "";
+
+            if(!string.IsNullOrEmpty(txtSearchName.Text))
+                dtQuery += (rbtnAND.IsChecked.Value ? " AND " :
+                            rbtnOR.IsChecked.Value ? " OR " : "");
+
+            dtQuery += (!string.IsNullOrEmpty(txtSearchNum.Text))
+                ? $"[Part Number] LIKE '%{txtSearchNum.Text}%'" : "";
+
             DataRow[] drRes = dt.Select(dtQuery);
             foreach(DataRow dr in drRes)
             {

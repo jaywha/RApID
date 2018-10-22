@@ -37,7 +37,6 @@ namespace RApID_Project_WPF
                     dgToBuid.Columns.Add(DataGridViewHelper.newColumn("Part Description", "PartsReplacedPartDescription"));
                     break;
                 case "AOI":
-                    dgToBuid.Columns.Add(DataGridViewHelper.newColumn("Shift", "Shift"));
                     dgToBuid.Columns.Add(DataGridViewHelper.newColumn("System ID", "SystemID"));
                     dgToBuid.Columns.Add(DataGridViewHelper.newColumn("Inspector", "Inspector"));
                     dgToBuid.Columns.Add(DataGridViewHelper.newColumn("Assy", "Assy"));
@@ -546,12 +545,12 @@ namespace RApID_Project_WPF
         {
             var lDefectCode = new List<string>();
 
-            string query = "SELECT * FROM DexterAOI WHERE SN = '" + _sSN + "';";
+            string query = "SELECT * FROM SPC_Data WHERE SN = '" + _sSN + "';";
 
             sVar.LogHandler.CreateLogAction("Attemping to query the AOI Table.", EricStabileLibrary.csLogging.LogState.NOTE);
             sVar.LogHandler.CreateLogAction("SQL QUERY: " + query, EricStabileLibrary.csLogging.LogState.SQLQUERY);
 
-            var conn = new SqlConnection(holder.HummingBirdConnectionString);
+            var conn = new SqlConnection(holder.YesDBConnectionString);
             var cmd = new SqlCommand(query, conn);
             try
             {
@@ -562,7 +561,6 @@ namespace RApID_Project_WPF
                     {
                         _dgAOI.Items.Add(new DGVAOI
                         {
-                            Shift = reader["Shift"].ToString(),
                             SystemID = reader["SystemID"].ToString(),
                             Inspector = reader["Inspector"].ToString(),
                             Assy = reader["Assy"].ToString(),
@@ -578,7 +576,6 @@ namespace RApID_Project_WPF
                         });
 
                         string sAOI = "The following AOI Data was found: \n" +
-                                       "Shift = " + reader["Shift"].ToString() + "\n" +
                                        "SystemID = " + reader["SystemID"].ToString() + "\n" +
                                        "Inspector = " + reader["Inspector"].ToString() + "\n" +
                                        "Assy = " + reader["Assy"].ToString() + "\n" +
