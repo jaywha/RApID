@@ -655,7 +655,8 @@ namespace RApID_Project_WPF
         {
             string query = "";
 
-            if (lblRPNumber.Content.ToString().Replace("RP Number: ", "").StartsWith("SV")) // this is a transducer so lets do something different
+            if (lblRPNumber.Content.ToString().Replace("RP Number: ", "").StartsWith("SV")
+                || txtSeries.Text.Contains("XDR")) // this is a transducer so lets do something different
                 query = "SELECT PartNumber FROM tblXducerTestResults WHERE SerialNumber = '" + txtBarcode.Text + "';";
             else query = "SELECT Assy FROM Production3 WHERE SerialNum = '" + txtBarcode.Text + "';";
 
