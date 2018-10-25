@@ -68,6 +68,13 @@ namespace RApID_Project_WPF
                         Show();
                         Activate();
                         break;
+                    case "btnTicketLookup":
+                        Hide();
+                        var fGSearch = new frmGlobalSearch() { Owner = this };
+                        fGSearch.ShowDialog();
+                        Show();
+                        Activate();
+                        break;
                 }
             }
             catch (Exception ex)

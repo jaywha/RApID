@@ -135,6 +135,9 @@
     <Compile Include="frmFullCustomerInformation.xaml.cs">
       <DependentUpon>frmFullCustomerInformation.xaml</DependentUpon>
     </Compile>
+    <Compile Include="frmGlobalSearch.xaml.cs">
+      <DependentUpon>frmGlobalSearch.xaml</DependentUpon>
+    </Compile>
     <Compile Include="frmMultipleRP.xaml.cs">
       <DependentUpon>frmMultipleRP.xaml</DependentUpon>
     </Compile>
@@ -185,6 +188,10 @@
     <Compile Include="ViewModelBase.cs" />
     <Compile Include="VMB\ViewModelBase.cs" />
     <Page Include="frmFullCustomerInformation.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="frmGlobalSearch.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

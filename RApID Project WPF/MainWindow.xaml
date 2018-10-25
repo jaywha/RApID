@@ -89,5 +89,6 @@
                 <Image Source="Resources/settingsIcon.png" />
             </StackPanel>
         </Button>
+        <Button Name="btnTicketLookup" Content="🔍" FontSize="20" Width="35" Height="35" Margin="359,312,50,10" Click="btnClicks"/>
     </Grid>
 </Window>
