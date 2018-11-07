@@ -1439,8 +1439,10 @@ namespace RApID_Project_WPF
         {
             if (dgPrevRepairInfo.SelectedItem != null)
             {
-                var pri = new frmProductionPRI((PreviousRepairInformation)dgPrevRepairInfo.SelectedItem);
-                pri.Owner = this;
+                var pri = new frmProductionPRI((PreviousRepairInformation)dgPrevRepairInfo.SelectedItem)
+                {
+                    Owner = this
+                };
                 pri.ShowDialog();
                 //PrevRepairInfo pri = new PrevRepairInfo((PreviousRepairInformation)dgPrevRepairInfo.SelectedItem);
                 //pri.ShowDialog();

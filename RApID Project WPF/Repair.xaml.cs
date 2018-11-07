@@ -1092,7 +1092,7 @@ namespace RApID_Project_WPF
                     cmd.Parameters.AddWithValue("@series", DBNull.Value);
                 else cmd.Parameters.AddWithValue("@series", txtSeries.Text.ToString());
 
-                cmd.Parameters.AddWithValue("@logid", new Random(int.MaxValue).Next());
+                cmd.Parameters.AddWithValue("@logid", DateTime.Now.Ticks);
 
                 cmd.ExecuteNonQuery();
                 conn.Close();
@@ -1633,8 +1633,6 @@ namespace RApID_Project_WPF
 
         private void addCustomerToDB(CustomerInformation cInfo)
         {
-            //TODO: Log this?            
-
             bool bExistingCustomer = false;
             bool bNoSearchError = true;
 
@@ -1674,7 +1672,7 @@ namespace RApID_Project_WPF
             {
                 if (!bExistingCustomer)
                 {
-
+                    sVar.LogHandler.CreateLogAction("Adding new customer to the database...", csLogging.LogState.NOTE);
                     query = "INSERT INTO RepairCustomerInformation (CustomerNumber, CustomerName, CustomerAddressLine1, CustomerAddressLine2, CustomerAddressLine3, CustomerAddressLine4, CustomerCity, CustomerState, CustomerPostalCode, CustomerCountryCode) " +
                                              "VALUES (@cNum, @cName, @cA1, @cA2, @cA3, @cA4, @cCity, @cState, @cPostCode, @cCountryCode)";
                     cmd = new SqlCommand(query, conn);
@@ -1693,6 +1691,16 @@ namespace RApID_Project_WPF
                         cmd.Parameters.AddWithValue("@cCountryCode", cInfo.CustomerCountryCode);
                         cmd.ExecuteNonQuery();
                         conn.Close();
+
+                        var sLogString = "Inserting new record into the RepairCustomerInformation table.\n";
+                        for (int pCount = 0; pCount < cmd.Parameters.Count; pCount++)
+                        {
+                            var paramName = cmd.Parameters[pCount].ToString();
+                            if (string.IsNullOrEmpty(cmd.Parameters[pCount].Value.ToString()))
+                                sLogString += paramName + ": N/A\n";
+                            else sLogString += $"{paramName}: {cmd.Parameters[pCount].Value.ToString()}\n";
+                        }
+                        sVar.LogHandler.CreateLogAction(sLogString,csLogging.LogState.SUBMISSIONDETAILS);
                     }
                     catch (Exception ex)
                     {
@@ -1701,7 +1709,6 @@ namespace RApID_Project_WPF
 
                         sVar.LogHandler.CreateLogAction("Error adding new customer to the database.\nError Message: " + ex.Message, csLogging.LogState.ERROR);
                     }
-
                 }
                 else
                 {
@@ -1723,6 +1730,16 @@ namespace RApID_Project_WPF
                         cmd.Parameters.AddWithValue("@cCountryCode", cInfo.CustomerCountryCode);
                         cmd.ExecuteNonQuery();
                         conn.Close();
+
+                        var sLogString = "Updating existing record in the RepairCustomerInformation table.\n";
+                        for (int pCount = 0; pCount < cmd.Parameters.Count; pCount++)
+                        {
+                            var paramName = cmd.Parameters[pCount].ToString();
+                            if (string.IsNullOrEmpty(cmd.Parameters[pCount].Value.ToString()))
+                                sLogString += paramName + ": N/A\n";
+                            else sLogString += $"{paramName}: {cmd.Parameters[pCount].Value.ToString()}\n";
+                        }
+                        sVar.LogHandler.CreateLogAction(sLogString,csLogging.LogState.SUBMISSIONDETAILS);
                     }
                     catch (Exception ex)
                     {

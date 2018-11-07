@@ -38,8 +38,8 @@ namespace RApID_Project_WPF
             string actionQuery = "SELECT * FROM TechLogActions WHERE ActionID = @aid";
 
             var cmd = new SqlCommand(query, conn);
-            var logCmd = new SqlCommand(logQuery, conn);
-            var actionCmd = new SqlCommand(actionQuery, conn);
+            var logCmd = new SqlCommand(logQuery, conn); logCmd.Parameters.Add("@logID", System.Data.SqlDbType.Int);
+            var actionCmd = new SqlCommand(actionQuery, conn); actionCmd.Parameters.Add("@aid", System.Data.SqlDbType.Int);
 
             try
             {
@@ -60,11 +60,18 @@ namespace RApID_Project_WPF
                         txtTOR.Text = csCrossClassInteraction.dbValSubmit(reader["TypeOfReturn"].ToString());
                         txtFromArea.Text = csCrossClassInteraction.dbValSubmit(reader["FromArea"].ToString());
 
-                        logCmd.Parameters.AddWithValue("@logID",
-                            int.Parse(csCrossClassInteraction.dbValSubmit(reader["LogID"].ToString())));
+                        if(reader["LogID"] != DBNull.Value)
+                            logCmd.Parameters.AddWithValue("@logID",
+                                int.Parse(csCrossClassInteraction.dbValSubmit(reader["LogID"].ToString())));
 
-                        rtbAddComm.AppendText(csCrossClassInteraction.dbValSubmit(reader["AdditionalComments"].ToString()));
+                        rtbAddComm.AppendText(csCrossClassInteraction.dbValSubmit(reader["AdditionalComments"]?.ToString() ?? ""));
                     }
+                }
+
+                if (logCmd.Parameters[0].Value == null || logCmd.Parameters[0].Value == DBNull.Value)
+                {
+                    conn.Close();
+                    return true;
                 }
 
                 using(var reader = logCmd.ExecuteReader())

@@ -47,6 +47,6 @@ C:\Visual Studio Projects\RApID\RApID Project WPF\obj\x86\Debug\ucSuggestBox.g.c
 C:\Visual Studio Projects\RApID\RApID Project WPF\obj\x86\Debug\ucLogActionView.g.cs
 C:\Visual Studio Projects\RApID\RApID Project WPF\obj\x86\Debug\ucSuggestBox.baml
 C:\Visual Studio Projects\RApID\RApID Project WPF\obj\x86\Debug\ucLogActionView.baml
-C:\Visual Studio Projects\RApID\RApID Project WPF\obj\x86\Debug\RApID Project WPF.csprojAssemblyReference.cache
 C:\Visual Studio Projects\RApID\RApID Project WPF\obj\x86\Debug\frmGlobalSearch.g.cs
 C:\Visual Studio Projects\RApID\RApID Project WPF\obj\x86\Debug\frmGlobalSearch.baml
+C:\Visual Studio Projects\RApID\RApID Project WPF\obj\x86\Debug\RApID Project WPF.csprojAssemblyReference.cache

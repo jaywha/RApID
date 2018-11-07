@@ -15,7 +15,7 @@
         <RichTextBox Name="rtbLogBox" AllowDrop="False" IsTabStop="False" Height="200">
             <FlowDocument>
                 <Paragraph>
-                    <Run Text="Technician Submission Details Will Appear Here"/>
+                    <Run Text="Technician Submission Details Would Appear Here if a LogID is associated with this record."/>
                 </Paragraph>
             </FlowDocument>
         </RichTextBox>

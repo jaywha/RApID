@@ -17,8 +17,6 @@ using System.Data.Sql;
 using System.Data.SqlClient;
 using System.Windows.Threading;
 
-//TODO: Add logging to the QC/DQE page.
-
 namespace RApID_Project_WPF
 {
     /// <summary>
@@ -32,6 +30,8 @@ namespace RApID_Project_WPF
         QCDQEPageLoad ScannedUnitInformation = new QCDQEPageLoad();
         csObjectHolder.csObjectHolder holder = csObjectHolder.csObjectHolder.ObjectHolderInstance();
 
+        InitSplash initS = new InitSplash();
+        StaticVars sVars = StaticVars.StaticVarsInstance();
 
         public frmQCDQE()
         {
@@ -40,14 +40,34 @@ namespace RApID_Project_WPF
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
+            initS.InitSplash1("Initializing form...");
             buildDGViews();
+            csSplashScreenHelper.ShowText("Handling Serial Port...");
             handleInitSerialPort();
+            csSplashScreenHelper.ShowText("Waking up...");
             txtQCDQETech.Text = System.Environment.UserName;
             txtRepairBarcode.Focus();
             dtpDateReceived.SelectedDate = DateTime.Now;
-#if DEBUG
-            txtRepairBarcode.Text = "123456";
-#endif
+            csSplashScreenHelper.ShowText("Preparing logs...");
+            setupLogging();
+
+            GC.Collect();
+            csSplashScreenHelper.ShowText("Done!");
+            csSplashScreenHelper.Hide();
+            this.Activate();
+
+            #if DEBUG
+                txtRepairBarcode.Text = "123456";
+            #endif
+            
+        }
+
+        private void setupLogging()
+        {
+            try
+            {
+                sVars.LogHandler.CheckDirectory(Environment.UserName);
+            }catch { }
         }
 
         private void buildDGViews()
@@ -74,6 +94,8 @@ namespace RApID_Project_WPF
 
         private void resetForm(bool bCompleteReset)
         {
+            sVars.resetStaticVars();
+
             if (bCompleteReset)
             {
                 txtRepairBarcode.Text = string.Empty;
@@ -233,9 +255,13 @@ namespace RApID_Project_WPF
 
         private void beginSerialNumberSearch()
         {
+            sVars.LogHandler.LogCreation = DateTime.Now;
+
             resetForm(false);
             if(!string.IsNullOrEmpty(txtRepairBarcode.Text))
             {
+                sVars.LogHandler.CreateLogAction("**** This is a DQE/QC Log ****", csLogging.LogState.NOTE);
+                sVars.LogHandler.CreateLogAction($"The Serial Number related to this log is: {txtSN.Text.TrimEnd()}", csLogging.LogState.NOTE);
                 fillDataLog();
             }
         }
@@ -246,6 +272,15 @@ namespace RApID_Project_WPF
             string sPartReplaced = string.Empty;
             string query = "SELECT * FROM TechnicianSubmission WHERE SaveID = '" + txtRepairBarcode.Text + "' ORDER BY ID DESC;";
 
+            if(!(bool)cbxScanSwitch.IsChecked && txtRepairBarcode.Text.Length == 12 && 
+                MessageBox.Show("This looks like a serial number.\nDid you mean to click the checkbox for scanning Serial Numbers?",
+                    "Serial Number Format Recognized", MessageBoxButton.YesNo, MessageBoxImage.Warning)==MessageBoxResult.Yes)
+            {
+                cbxScanSwitch.IsChecked = true;
+                cbxScanSwitch_Click(null, null);
+            }                
+            
+
             if((bool)cbxScanSwitch.IsChecked)
             {
                 query = "SELECT * FROM TechnicianSubmission WHERE SerialNumber = '" + txtRepairBarcode.Text + "' ORDER BY ID DESC;";
@@ -255,6 +290,8 @@ namespace RApID_Project_WPF
             var cmd = new SqlCommand(query, conn);
             try
             {
+                sVars.LogHandler.CreateLogAction("Attempting to get the Scanned Unit Information...", csLogging.LogState.NOTE);
+
                 ScannedUnitInformation = new QCDQEPageLoad();
                 ScannedUnitInformation.LoadSuccessful = false;
                 conn.Open();
@@ -293,6 +330,9 @@ namespace RApID_Project_WPF
                     }
                 }
                 conn.Close();
+
+                sVars.LogHandler.CreateLogAction($"The Unit Information was found for {ScannedUnitInformation.SerialNumber}. " +
+                    $"It was a {ScannedUnitInformation.PartName}. The series was {ScannedUnitInformation.PartSeries}", csLogging.LogState.NOTE);
 
                 getUnitIssueInfo();
 
@@ -374,21 +414,22 @@ namespace RApID_Project_WPF
             txtTOF.Text = csCrossClassInteraction.dbValSubmit(ScannedUnitInformation.TypeOfFailure);
             txtHOU.Text = csCrossClassInteraction.dbValSubmit(ScannedUnitInformation.HoursOnUnit);
 
-            //TODO: 99% of the data only has one unit issue. Will expand to multiple in a future update.
-            RepairMultipleIssues rmi = null;
-            if(ScannedUnitInformation.UnitIssues.Count > 0)
-                rmi = ScannedUnitInformation.UnitIssues[0];
-
-            if(rmi != null)
+            if (ScannedUnitInformation.UnitIssues.Count > 0)
             {
-                txtReportedIssue.Text = rmi.ReportedIssue;
-                txtTestResult.Text = rmi.TestResult;
-                txtTestResultAbort.Text = rmi.TestResultAbort;
-                txtCause.Text = rmi.Cause;
-                txtReplacement.Text = rmi.Replacement;
-                if(!string.IsNullOrEmpty(rmi.SinglePartReplaced.PartReplaced) || !string.IsNullOrEmpty(rmi.SinglePartReplaced.RefDesignator))
+                foreach (RepairMultipleIssues rmi in ScannedUnitInformation.UnitIssues)
                 {
-                    dgMultipleParts.Items.Add(rmi.SinglePartReplaced);
+                    if (rmi != null)
+                    {
+                        txtReportedIssue.Text = rmi.ReportedIssue;
+                        txtTestResult.Text = rmi.TestResult;
+                        txtTestResultAbort.Text = rmi.TestResultAbort;
+                        txtCause.Text = rmi.Cause;
+                        txtReplacement.Text = rmi.Replacement;
+                        if (!string.IsNullOrEmpty(rmi.SinglePartReplaced.PartReplaced) || !string.IsNullOrEmpty(rmi.SinglePartReplaced.RefDesignator))
+                        {
+                            dgMultipleParts.Items.Add(rmi.SinglePartReplaced);
+                        }
+                    }
                 }
             }
 
@@ -408,9 +449,15 @@ namespace RApID_Project_WPF
 
         private void QueryTechReport()
         {
+            sVars.LogHandler.CreateLogAction("Querying the Tech Report for previous tech information from the tblManufacturingTechReport table.", csLogging.LogState.NOTE);
+
             //NOTE: Old DB
             string query = "SELECT Date_Time, Technician FROM tblManufacturingTechReport WHERE SerialNumber = '" + txtSN.Text.TrimEnd() + "';";
             csCrossClassInteraction.dgTechReport(query, true, dgPrevRepairInfo, txtSN.Text.TrimEnd());
+            sVars.LogHandler.CreateLogAction("SQL QUERY: " + query, csLogging.LogState.SQLQUERY);
+
+            sVars.LogHandler.CreateLogAction("Querying the Tech Report for previous tech information from the TechnicianSubmission table.", csLogging.LogState.NOTE);
+            sVars.LogHandler.CreateLogAction("SQL QUERY: " + query, csLogging.LogState.SQLQUERY);
 
             //NOTE: New DB
             query = "SELECT DateSubmitted, Technician, ID FROM TechnicianSubmission WHERE SerialNumber = '" + txtSN.Text.TrimEnd() + "';";
@@ -492,6 +539,8 @@ namespace RApID_Project_WPF
             var cmd = new SqlCommand(_submitData.SubmitQuery, conn);
             try
             {
+                var sLogString = "Attemping to submit the data with the following parameters to the TechnicianSubmission Table:\n";
+
                 conn.Open();
                 cmd.Parameters.AddWithValue("@quality", _submitData.QualityTech);
                 cmd.Parameters.AddWithValue("@submissionStatus", _submitData.SubmissionStatus);
@@ -499,6 +548,17 @@ namespace RApID_Project_WPF
                 cmd.Parameters.AddWithValue("@QCDQEDateSubmit", _submitData.QCDQEDateSubmit);
                 cmd.ExecuteNonQuery();
                 conn.Close();
+
+                for (int i = 0; i < cmd.Parameters.Count; i++)
+                {
+                    var paramName = cmd.Parameters[i].ToString();
+                    if (string.IsNullOrEmpty(cmd.Parameters[i].Value.ToString()))
+                        sLogString += paramName + ": N/A\n";
+                    else sLogString += $"{paramName}: {cmd.Parameters[i].Value.ToString()}\n";
+                    
+                }
+                sVars.LogHandler.CreateLogAction(sLogString, csLogging.LogState.SUBMISSIONDETAILS);
+                sVars.LogHandler.CreateLogAction("Submission Successful!", csLogging.LogState.NOTE);
 
                 MessageBox.Show("The QC/DQE submission was successful.", "Success", MessageBoxButton.OK, MessageBoxImage.Information);
 
@@ -510,6 +570,7 @@ namespace RApID_Project_WPF
                     conn.Close();
 
                 MessageBox.Show("There was an issue submitting the data.\nError Message: " + ex.Message, "Submission Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                sVars.LogHandler.CreateLogAction($"Error attempting to submit the data.\nError Message: {ex.Message}\nStack Trace: {ex.StackTrace}", csLogging.LogState.ERROR);
             }
         }
 
@@ -577,21 +638,26 @@ namespace RApID_Project_WPF
 
         private void btnSubmit_Click(object sender, RoutedEventArgs e)
         {
+            sVars.LogHandler.CreateLogAction((Button)sender, csLogging.LogState.CLICK);
             submitButtonClicks("COMPLETE");
         }
 
         private void btnSendToQC_Click(object sender, RoutedEventArgs e)
         {
+            sVars.LogHandler.CreateLogAction((Button)sender, csLogging.LogState.CLICK);
+
             submitButtonClicks("SENDTOQC");
         }
 
         private void btnSendToDQE_Click(object sender, RoutedEventArgs e)
         {
+            sVars.LogHandler.CreateLogAction((Button)sender, csLogging.LogState.CLICK);
             submitButtonClicks("SENDTODQE");
         }
 
         private void btnReset_Click(object sender, RoutedEventArgs e)
         {
+            sVars.LogHandler.CreateLogAction((Button)sender, csLogging.LogState.CLICK);
             resetForm(true);
         }
 
@@ -612,30 +678,20 @@ namespace RApID_Project_WPF
         #endregion
 
         #region Log Events
-        private void cbDDClosed(object sender, EventArgs e)
-        {
+        private void cbDDClosed(object sender, EventArgs e) 
+            => sVars.LogHandler.CreateLogAction((ComboBox)sender, csLogging.LogState.DROPDOWNCLOSED);
 
-        }
+        private void rtbGotFocus(object sender, RoutedEventArgs e) 
+            => sVars.LogHandler.CreateLogAction((RichTextBox)sender, csLogging.LogState.ENTER);
 
-        private void rtbGotFocus(object sender, RoutedEventArgs e)
-        {
+        private void rtbLostFocus(object sender, RoutedEventArgs e) 
+            => sVars.LogHandler.CreateLogAction((RichTextBox)sender, csLogging.LogState.LEAVE);
 
-        }
+        private void txtGotFocus(object sender, RoutedEventArgs e) 
+            => sVars.LogHandler.CreateLogAction((TextBox)sender, csLogging.LogState.ENTER);
 
-        private void rtbLostFocus(object sender, RoutedEventArgs e)
-        {
-
-        }
-
-        private void txtGotFocus(object sender, RoutedEventArgs e)
-        {
-
-        }
-
-        private void txtLostFocus(object sender, RoutedEventArgs e)
-        {
-
-        }
+        private void txtLostFocus(object sender, RoutedEventArgs e) 
+            => sVars.LogHandler.CreateLogAction((TextBox)sender, csLogging.LogState.LEAVE);
         #endregion
 
         private void txtRepairBarcode_TextChanged(object sender, TextChangedEventArgs e)

@@ -160,7 +160,7 @@
 
             <Label Content="Additional Comments:" Margin="455,10,0,0" Style="{StaticResource LabelBaseStyle}" />
             <RichTextBox x:Name="rtbAddComm" Margin="455,33,0,0" Style="{StaticResource RTBBaseStyle}" />
-            <local:ucLogActionView x:Name="uclaTechActions" Margin="458,288,20,27"/>
+            <local:ucLogActionView x:Name="uclaTechActions" Margin="458,288,20,27" Visibility="Hidden"/>
         </Grid>
     </Viewbox>
 

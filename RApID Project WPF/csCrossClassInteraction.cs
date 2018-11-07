@@ -324,15 +324,14 @@ namespace RApID_Project_WPF
                 {
                     while (reader.Read())
                     {
-                        var pri = new PreviousRepairInformation();
-                        pri.DateSubmitted = Convert.ToDateTime(reader[0]);
-                        pri.TechName = reader[1].ToString();
-                        if (oldDb)
-                            pri.ID = -1;
-                        else pri.ID = Convert.ToInt32(reader[2]);
-                        pri.SerialNumber = _serialNum;
-                        pri.OldDB = oldDb;
-                        dgToFill.Items.Add(pri);
+                        dgToFill.Items.Add(new PreviousRepairInformation
+                        {
+                            DateSubmitted = Convert.ToDateTime(reader[0]),
+                            TechName = reader[1].ToString(),
+                            ID = (oldDb ? -1 : Convert.ToInt32(reader[2])),
+                            SerialNumber = _serialNum,
+                            OldDB = oldDb
+                        });
                     }
                 }
                 conn.Close();
