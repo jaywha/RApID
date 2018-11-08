@@ -5,21 +5,29 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:RApID_Project_WPF"
         mc:Ignorable="d"
-        Title="Global Ticket Search" Height="450" Width="800" Loaded="wndMain_Loaded">
+        Title="Global Ticket Search" Height="542.914" Width="1029.688" Loaded="wndMain_Loaded">
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="25*"/>
             <ColumnDefinition Width="107*"/>
         </Grid.ColumnDefinitions>
-        <DataGrid x:Name="dgSubmissions" AutoGenerateColumns="True" HorizontalAlignment="Left" Height="400" Margin="10,10,0,0" VerticalAlignment="Top" Width="622" Grid.Column="1"/>
+        <DataGrid x:Name="dgSubmissions" AutoGenerateColumns="True" Margin="10" Grid.Column="1"/>
         <Label x:Name="lblPN" Content="Part Number:" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top"/>
-        <TextBox x:Name="txtPartNumber" HorizontalAlignment="Left" Height="23" Margin="10,41,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120"/>
+        <TextBox x:Name="txtPartNumber" HorizontalAlignment="Left" Height="23" Margin="10,41,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="168"
+                GotFocus="textBoxGotFocus" LostFocus="textBoxLostFocus" KeyDown="textBoxKeyDown"/>
         <Label x:Name="lblON" Content="Order Number:" HorizontalAlignment="Left" Margin="10,69,0,0" VerticalAlignment="Top"/>
-        <TextBox x:Name="txtOrderNumber" HorizontalAlignment="Left" Height="23" Margin="10,100,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120"/>
+        <TextBox x:Name="txtOrderNumber" HorizontalAlignment="Left" Height="23" Margin="10,100,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="168"
+                GotFocus="textBoxGotFocus" LostFocus="textBoxLostFocus" TextChanged="textBoxNumericInput" KeyDown="textBoxKeyDown"/>
         <Label x:Name="lblSN" Content="Serial Number:" HorizontalAlignment="Left" Margin="10,128,0,0" VerticalAlignment="Top"/>
-        <TextBox x:Name="txtSerialNumber" HorizontalAlignment="Left" Height="23" Margin="10,159,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120"/>
+        <TextBox x:Name="txtSerialNumber" HorizontalAlignment="Left" Height="23" Margin="10,159,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="168"
+                GotFocus="textBoxGotFocus" LostFocus="textBoxLostFocus" TextChanged="textBoxNumericInput" KeyDown="textBoxKeyDown"/>
         <Label x:Name="lblCN" Content="Customer Name:" HorizontalAlignment="Left" Margin="10,187,0,0" VerticalAlignment="Top"/>
-        <TextBox x:Name="txtCutomerName" HorizontalAlignment="Left" Height="23" Margin="10,218,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120"/>
-        <Label x:Name="lblLoadingIndicator" Content="Loading..." Grid.Column="1" HorizontalAlignment="Left" Margin="283,187,0,0" VerticalAlignment="Top"/>
+        <TextBox x:Name="txtCutomerName" HorizontalAlignment="Left" Height="23" Margin="10,218,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="168"
+                GotFocus="textBoxGotFocus" LostFocus="textBoxLostFocus" KeyDown="textBoxKeyDown"/>
+        <Label x:Name="lblLoadingIndicator" Content="Loading..." Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+        <DatePicker x:Name="dpDisplayDateStart" HorizontalAlignment="Left" Margin="76,256,0,0" VerticalAlignment="Top" Width="108"/>
+        <DatePicker x:Name="dpDisplayDateEnd" HorizontalAlignment="Left" Margin="76,285,0,0" VerticalAlignment="Top" Width="108"/>
+        <Label x:Name="lblDateRangeStart" Content="Start Date:" HorizontalAlignment="Left" Margin="10,256,0,0" VerticalAlignment="Top"/>
+        <Label x:Name="lblDateRangeEnd" Content="End Date:" HorizontalAlignment="Left" Margin="10,283,0,0" VerticalAlignment="Top"/>
     </Grid>
 </Window>

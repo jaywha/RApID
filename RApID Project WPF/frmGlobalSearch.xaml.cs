@@ -50,5 +50,49 @@ namespace RApID_Project_WPF
         }
 
         private void wndMain_Loaded(object sender, RoutedEventArgs e) => GetData();
+
+        private void textBoxGotFocus(object sender, RoutedEventArgs e)
+        {
+            if(sender is TextBox txt)
+            {
+                if (txt.ToolTip == null)
+                {
+                    txt.ToolTip = new ToolTip()
+                    {
+                        Content = "Press enter to search on this value...",
+                        IsOpen = true
+                    };
+                } else
+                {
+                    ((ToolTip)txt.ToolTip).IsOpen = true;
+                }
+            }
+        }
+
+        private void textBoxLostFocus(object sender, RoutedEventArgs e)
+        {
+            if(sender is TextBox txt && txt.ToolTip is ToolTip tip)
+            {
+                tip.IsOpen = false;
+            }
+        }
+
+        private void textBoxNumericInput(object sender, TextChangedEventArgs e)
+        {
+            if(sender is TextBox txt && (txt.Text[0] > 57 || txt.Text[0] < 48))
+            {
+                txt.Text = txt.Text.Substring(0, txt.Text.Length-1);
+            }
+        }
+
+        private void textBoxKeyDown(object sender, KeyEventArgs e)
+        {
+            if(e.Key is Key.Enter 
+                && sender is TextBox txt 
+                && !string.IsNullOrEmpty(txt.Text.Trim()))
+            {
+                //TODO: Filter dgv
+            }
+        }
     }
 }

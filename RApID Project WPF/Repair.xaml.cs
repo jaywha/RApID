@@ -655,7 +655,8 @@ namespace RApID_Project_WPF
         {
             string query = "";
 
-            if (lblRPNumber.Content.ToString().Replace("RP Number: ", "").StartsWith("SV")
+            var repairLabel = (lblRPNumber.Content?.ToString().Replace("RP Number: ", "").StartsWith("SV"));
+            if ((repairLabel.HasValue && repairLabel.Value)
                 || txtSeries.Text.Contains("XDR")) // this is a transducer so lets do something different
                 query = "SELECT PartNumber FROM tblXducerTestResults WHERE SerialNumber = '" + txtBarcode.Text + "';";
             else query = "SELECT Assy FROM Production3 WHERE SerialNum = '" + txtBarcode.Text + "';";
@@ -711,7 +712,8 @@ namespace RApID_Project_WPF
 
             string query = "";
 
-            if (lblRPNumber.Content.ToString().Replace("RP Number: ", "").StartsWith("SV")
+            var repairLabel = (lblRPNumber.Content?.ToString().Replace("RP Number: ", "").StartsWith("SV"));
+            if ((repairLabel.HasValue && repairLabel.Value)
                 || txtSeries.Text.Contains("XDR")) // this is a transducer so lets do something different
                 query = "SELECT DISTINCT TestID FROM tblXducerTestResultsBenchTest WHERE SerialNumber = '" + txtBarcode.Text + "';";
             else query = "SELECT TestID FROM tblEOL WHERE PCBSerial = '" + txtBarcode.Text + "';";
@@ -720,7 +722,7 @@ namespace RApID_Project_WPF
             query = "SELECT TestID FROM tblPRE WHERE PCBSerial = '" + txtBarcode.Text + "';";
             cbPRETestID.FillFromQuery(query);
 
-            if (lblRPNumber.Content.ToString().Replace("RP Number: ", "").StartsWith("SV")
+            if ((repairLabel.HasValue && repairLabel.Value)
                 || txtSeries.Text.Contains("XDR")) // this is a transducer so lets do something different
                 query = "SELECT DISTINCT TestID FROM tblXducerTestResults WHERE SerialNumber = '" + txtBarcode.Text + "';";
             else query = "SELECT TestID FROM tblPOST WHERE PCBSerial = '" + txtBarcode.Text + "';";
@@ -1802,7 +1804,8 @@ namespace RApID_Project_WPF
         {
             if (!string.IsNullOrEmpty(cbEOLTestID.Text))
             {
-                if (lblRPNumber.Content.ToString().Replace("RP Number: ", "").StartsWith("SV")
+                var repairLabel = (lblRPNumber.Content?.ToString().Replace("RP Number: ", "").StartsWith("SV"));
+                if ((repairLabel.HasValue && repairLabel.Value)
                     || txtSeries.Text.Contains("XDR"))
                 { // this is a transducer so lets do something different
                     initS.InitSplash1("Loading Bench Data...");
@@ -1835,7 +1838,8 @@ namespace RApID_Project_WPF
         {
             if (!string.IsNullOrEmpty(cbPOSTTestID.Text))
             {
-                if (lblRPNumber.Content.ToString().Replace("RP Number: ", "").StartsWith("SV")
+                var repairLabel = (lblRPNumber.Content?.ToString().Replace("RP Number: ", "").StartsWith("SV"));
+                if ((repairLabel.HasValue && repairLabel.Value)
                     || txtSeries.Text.Contains("XDR"))
                 { // this is a transducer so lets do something different
                     initS.InitSplash1("Loading Final Data...");
