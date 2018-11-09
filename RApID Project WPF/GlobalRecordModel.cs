@@ -33,7 +33,7 @@ namespace RApID_Project_WPF
                 using (var conn = new SqlConnection(csObjectHolder.csObjectHolder.ObjectHolderInstance().RepairConnectionString))
                 {
                     conn.Open();
-                    using (var reader = new SqlCommand("SELECT * FROM [Repair].[dbo].[TechnicianSubmission]", conn).ExecuteReader())
+                    using (var reader = new SqlCommand("SELECT TOP(5000) * FROM [Repair].[dbo].[TechnicianSubmission] WHERE [DateReceived] >= CURRENT_TIMESTAMP-365", conn).ExecuteReader())
                     {
                         while (reader.Read())
                         {
@@ -46,6 +46,8 @@ namespace RApID_Project_WPF
                     }
                 }
             });
+
+            UIThread.Invoke(() => lbl.Content = $"Loading Complete! Added rows to user table...");
 
             // Put all the records into the acutal dgv
             UIThread.Invoke(() => { foreach(var rec in recs) Add(rec); });
@@ -617,52 +619,52 @@ namespace RApID_Project_WPF
 
             var newRecord = new Record();
 
-            newRecord.ID = int.TryParse(vals[0].ToString(), out int id_res) ? id_res : 0;
-            newRecord.Technician = vals[1].ToString();
-            newRecord.DateReceived = DateTime.TryParse(vals[2].ToString(), out DateTime drec_res) ? drec_res : DateTime.Now.AddYears(-100);
-            newRecord.PartName = vals[3].ToString();
-            newRecord.PartNumber = vals[4].ToString();
-            newRecord.CommoditySubClass = vals[5].ToString();
-            newRecord.Quantity = int.Parse(vals[6].ToString());
-            newRecord.SoftwareVersion = vals[7].ToString();
-            newRecord.Scrap = vals[8].ToString().Equals("1");
-            newRecord.TypeOfReturn = vals[9].ToString();
-            newRecord.TypeOfFailure = vals[10].ToString();
-            newRecord.HoursOnUnit = vals[11].ToString();
-            newRecord.ReportedIssue = vals[12].ToString();
-            newRecord.TestResult = vals[13].ToString();
-            newRecord.TestResultAbort = vals[14].ToString();
-            newRecord.Cause = vals[15].ToString();
-            newRecord.Replacement = vals[16].ToString();
-            newRecord.PartsReplaced = vals[17].ToString();
-            newRecord.RefDesignator = vals[18].ToString();
-            newRecord.AdditionalComments = vals[19].ToString();
-            newRecord.CustomerNumber = int.TryParse(vals[20].ToString(), out int cust_res) ? cust_res : 0;
-            newRecord.SerialNumber = vals[21].ToString();
-            newRecord.DateSubmitted = DateTime.TryParse(vals[22].ToString(), out DateTime dsub_res) ? drec_res : DateTime.Now.AddYears(-50);
-            newRecord.SubmissionStatus = vals[23].ToString();
-            newRecord.Quality = vals[24].ToString();
-            newRecord.RP = vals[25].ToString();
-            newRecord.TechAct1 = vals[26].ToString();
-            newRecord.TechAct2 = vals[27].ToString();
-            newRecord.TechAct3 = vals[28].ToString();
-            newRecord.QCDQEComments = vals[29].ToString();
-            newRecord.OrderNumber = vals[30].ToString();
-            newRecord.ProblemCode1 = vals[31].ToString();
-            newRecord.ProblemCode2 = vals[32].ToString();
-            newRecord.RepairCode = vals[33].ToString();
-            newRecord.TechComments = vals[34].ToString();
-            newRecord.LineNumber = decimal.TryParse(vals[35].ToString(), out decimal line_res) ? line_res : 0.0m;
-            newRecord.ProcessedFlag = char.TryParse(vals[36].ToString(), out char c_res) ? c_res : ' ';
-            newRecord.ProcessedDateTime = DateTime.TryParse(vals[37].ToString(), out DateTime dpro_res) ? dpro_res : DateTime.Now.AddYears(-25);
-            newRecord.Series = vals[38].ToString();
-            newRecord.FromArea = vals[39].ToString();
-            newRecord.SaveID = vals[40].ToString();
-            newRecord.QCDQEDateSubmitted = DateTime.TryParse(vals[41].ToString(), out DateTime ddqe_res) ? ddqe_res : DateTime.Now.AddYears(-5);
-            newRecord.Issue = vals[42].ToString();
-            newRecord.Item = vals[43].ToString();
-            newRecord.Problem = vals[44].ToString();
-            newRecord.LogID = long.TryParse(vals[45].ToString(), out long id_log) ? id_log : 0L;
+            newRecord.ID = int.TryParse(vals[0]?.ToString(), out int id_res) ? id_res : 0;
+            newRecord.Technician = vals[1]?.ToString() ?? "";
+            newRecord.DateReceived = DateTime.TryParse(vals[2]?.ToString(), out DateTime drec_res) ? drec_res : DateTime.Now.AddYears(-100);
+            newRecord.PartName = vals[3]?.ToString() ?? "";
+            newRecord.PartNumber = vals[4]?.ToString() ?? "";
+            newRecord.CommoditySubClass = vals[5]?.ToString() ?? "";
+            newRecord.Quantity = int.TryParse(vals[6]?.ToString(), out int q_res) ? q_res : 0;
+            newRecord.SoftwareVersion = vals[7]?.ToString() ?? "";
+            newRecord.Scrap = vals[8]?.ToString().Equals("1") ?? false;
+            newRecord.TypeOfReturn = vals[9]?.ToString() ?? "";
+            newRecord.TypeOfFailure = vals[10]?.ToString() ?? "";
+            newRecord.HoursOnUnit = vals[11]?.ToString() ?? "";
+            newRecord.ReportedIssue = vals[12]?.ToString() ?? "";
+            newRecord.TestResult = vals[13]?.ToString() ?? "";
+            newRecord.TestResultAbort = vals[14]?.ToString() ?? "";
+            newRecord.Cause = vals[15]?.ToString() ?? "";
+            newRecord.Replacement = vals[16]?.ToString() ?? "";
+            newRecord.PartsReplaced = vals[17]?.ToString() ?? "";
+            newRecord.RefDesignator = vals[18]?.ToString() ?? "";
+            newRecord.AdditionalComments = vals[19]?.ToString() ?? "";
+            newRecord.CustomerNumber = int.TryParse(vals[20]?.ToString(), out int cust_res) ? cust_res : 0;
+            newRecord.SerialNumber = vals[21]?.ToString() ?? "";
+            newRecord.DateSubmitted = DateTime.TryParse(vals[22]?.ToString(), out DateTime dsub_res) ? drec_res : DateTime.Now.AddYears(-50);
+            newRecord.SubmissionStatus = vals[23]?.ToString() ?? "";
+            newRecord.Quality = vals[24]?.ToString() ?? "";
+            newRecord.RP = vals[25]?.ToString() ?? "";
+            newRecord.TechAct1 = vals[26]?.ToString() ?? "";
+            newRecord.TechAct2 = vals[27]?.ToString() ?? "";
+            newRecord.TechAct3 = vals[28]?.ToString() ?? "";
+            newRecord.QCDQEComments = vals[29]?.ToString() ?? "";
+            newRecord.OrderNumber = vals[30]?.ToString() ?? "";
+            newRecord.ProblemCode1 = vals[31]?.ToString() ?? "";
+            newRecord.ProblemCode2 = vals[32]?.ToString() ?? "";
+            newRecord.RepairCode = vals[33]?.ToString() ?? "";
+            newRecord.TechComments = vals[34]?.ToString() ?? "";
+            newRecord.LineNumber = decimal.TryParse(vals[35]?.ToString(), out decimal line_res) ? line_res : 0.0m;
+            newRecord.ProcessedFlag = char.TryParse(vals[36]?.ToString(), out char c_res) ? c_res : ' ';
+            newRecord.ProcessedDateTime = DateTime.TryParse(vals[37]?.ToString(), out DateTime dpro_res) ? dpro_res : DateTime.Now.AddYears(-25);
+            newRecord.Series = vals[38]?.ToString() ?? "";
+            newRecord.FromArea = vals[39]?.ToString() ?? "";
+            newRecord.SaveID = vals[40]?.ToString() ?? "";
+            newRecord.QCDQEDateSubmitted = DateTime.TryParse(vals[41]?.ToString(), out DateTime ddqe_res) ? ddqe_res : DateTime.Now.AddYears(-5);
+            newRecord.Issue = vals[42]?.ToString() ?? "";
+            newRecord.Item = vals[43]?.ToString() ?? "";
+            newRecord.Problem = vals[44]?.ToString() ?? "";
+            newRecord.LogID = long.TryParse(vals[45]?.ToString(), out long id_log) ? id_log : 0L;
 
             return newRecord;
         }

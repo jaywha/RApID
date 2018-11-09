@@ -1,6 +1,7 @@
-C:\Visual Studio Projects\RApID\RApIDStarter\bin\x86\Debug\RApIDStarter.exe.config
-C:\Visual Studio Projects\RApID\RApIDStarter\bin\x86\Debug\RApIDStarter.exe
-C:\Visual Studio Projects\RApID\RApIDStarter\bin\x86\Debug\RApIDStarter.pdb
-C:\Visual Studio Projects\RApID\RApIDStarter\obj\x86\Debug\RApIDStarter.csprojResolveAssemblyReference.cache
-C:\Visual Studio Projects\RApID\RApIDStarter\obj\x86\Debug\RApIDStarter.exe
-C:\Visual Studio Projects\RApID\RApIDStarter\obj\x86\Debug\RApIDStarter.pdb
+C:\Visual Studio Projects\RApID\RApIDStarter\bin\x86\Debug\RApID Starter.exe.config
+C:\Visual Studio Projects\RApID\RApIDStarter\bin\x86\Debug\RApID Starter.exe
+C:\Visual Studio Projects\RApID\RApIDStarter\bin\x86\Debug\RApID Starter.pdb
+C:\Visual Studio Projects\RApID\RApIDStarter\obj\x86\Debug\RApIDStarter.csprojAssemblyReference.cache
+C:\Visual Studio Projects\RApID\RApIDStarter\obj\x86\Debug\RApIDStarter.csproj.CoreCompileInputs.cache
+C:\Visual Studio Projects\RApID\RApIDStarter\obj\x86\Debug\RApID Starter.exe
+C:\Visual Studio Projects\RApID\RApIDStarter\obj\x86\Debug\RApID Starter.pdb
