@@ -33,7 +33,7 @@ namespace RApID_Project_WPF
                 using (var conn = new SqlConnection(csObjectHolder.csObjectHolder.ObjectHolderInstance().RepairConnectionString))
                 {
                     conn.Open();
-                    using (var reader = new SqlCommand("SELECT TOP(5000) * FROM [Repair].[dbo].[TechnicianSubmission] WHERE [DateReceived] >= CURRENT_TIMESTAMP-365", conn).ExecuteReader())
+                    using (var reader = new SqlCommand("SELECT * FROM [Repair].[dbo].[TechnicianSubmission]", conn).ExecuteReader())
                     {
                         while (reader.Read())
                         {
