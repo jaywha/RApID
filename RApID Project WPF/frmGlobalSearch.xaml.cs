@@ -1,18 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
-using System.Data.SqlClient;
-using System.Data;
 
 namespace RApID_Project_WPF
 {
@@ -21,39 +12,34 @@ namespace RApID_Project_WPF
     /// </summary>
     public partial class frmGlobalSearch : Window
     {
+        private readonly RecordList _records;
+
         public frmGlobalSearch()
         {
             InitializeComponent();
+            _records = (RecordList)Resources["records"];
         }
 
-        private async void GetData()
+        private void wndMain_Loaded(object sender, RoutedEventArgs e)
         {
-            await Task.Factory.StartNew(() =>
+            _records.GetData(lblLoadingIndicator, Dispatcher).ContinueWith(new Action<Task>((_) =>
             {
-                using (var conn = new SqlConnection(csObjectHolder.csObjectHolder.ObjectHolderInstance().RepairConnectionString))
-                {
-                    conn.Open();
-                    using (var adapter = new SqlDataAdapter("SELECT * FROM [Repair].[dbo].[TechnicianSubmission]", conn))
-                    {
-                        var t = new DataTable();
-                        adapter.Fill(t);
-                        dgSubmissions.Dispatcher.Invoke(() =>
-                            dgSubmissions.ItemsSource = t.DefaultView
-                        );
-                    }
-                }
-            }).ContinueWith(new Action<Task>((_) => {
+                Console.WriteLine("[INFO]: Number of rows in data grid (" + dgSubmissions.Items.Count + ").");
+
                 lblLoadingIndicator.Dispatcher.Invoke(() =>
                     lblLoadingIndicator.Visibility = Visibility.Collapsed
                 );
+
+                progData.Dispatcher.Invoke(() =>
+                    progData.Visibility = Visibility.Collapsed
+                );
+
             }));
         }
 
-        private void wndMain_Loaded(object sender, RoutedEventArgs e) => GetData();
-
         private void textBoxGotFocus(object sender, RoutedEventArgs e)
         {
-            if(sender is TextBox txt)
+            if (sender is TextBox txt)
             {
                 if (txt.ToolTip == null)
                 {
@@ -62,7 +48,8 @@ namespace RApID_Project_WPF
                         Content = "Press enter to search on this value...",
                         IsOpen = true
                     };
-                } else
+                }
+                else
                 {
                     ((ToolTip)txt.ToolTip).IsOpen = true;
                 }
@@ -71,7 +58,7 @@ namespace RApID_Project_WPF
 
         private void textBoxLostFocus(object sender, RoutedEventArgs e)
         {
-            if(sender is TextBox txt && txt.ToolTip is ToolTip tip)
+            if (sender is TextBox txt && txt.ToolTip is ToolTip tip)
             {
                 tip.IsOpen = false;
             }
@@ -79,20 +66,52 @@ namespace RApID_Project_WPF
 
         private void textBoxNumericInput(object sender, TextChangedEventArgs e)
         {
-            if(sender is TextBox txt && (txt.Text[0] > 57 || txt.Text[0] < 48))
+            if (sender is TextBox txt && (txt.Text[0] > 57 || txt.Text[0] < 48))
             {
-                txt.Text = txt.Text.Substring(0, txt.Text.Length-1);
+                txt.Text = txt.Text.Substring(0, txt.Text.Length - 1);
             }
         }
 
         private void textBoxKeyDown(object sender, KeyEventArgs e)
         {
-            if(e.Key is Key.Enter 
-                && sender is TextBox txt 
+            if (e.Key is Key.Enter
+                && sender is TextBox txt
                 && !string.IsNullOrEmpty(txt.Text.Trim()))
             {
-                //TODO: Filter dgv
+                var dataView = CollectionViewSource.GetDefaultView(dgSubmissions.ItemsSource);
+
+                dataView.Filter
+                    = (obj) =>
+                    {
+                        var row = obj as Record;
+                        var allowRow = true;
+                        if(!string.IsNullOrEmpty(txtPartNumber.Text.Trim()))
+                        {
+                            allowRow = allowRow && row.PartNumber.Contains(txtPartNumber.Text.Trim());
+                        }
+
+                        if (!string.IsNullOrEmpty(txtOrderNumber.Text.Trim()))
+                        {
+                            allowRow = allowRow && row.OrderNumber.Equals(txtOrderNumber.Text.Trim());
+                        }
+
+                        if (!string.IsNullOrEmpty(txtSerialNumber.Text.Trim()))
+                        {
+                            allowRow = allowRow && row.SerialNumber.Equals(txtSerialNumber.Text.Trim());
+                        }
+
+                        if (!string.IsNullOrEmpty(txtCutomerNumber.Text.Trim()))
+                        {
+                            allowRow = allowRow && (row.CustomerNumber == int.Parse(txtCutomerNumber.Text.Trim()));
+                        }
+                        return allowRow;
+                    };
+
+                dataView.Refresh();
             }
         }
+
+        private void btnClearFilters_Click(object sender, RoutedEventArgs e)
+            => CollectionViewSource.GetDefaultView(dgSubmissions.ItemsSource).Filter = null;
     }
 }

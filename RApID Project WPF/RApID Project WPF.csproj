@@ -168,6 +168,7 @@
     <Compile Include="frmViewMultipleIssues.xaml.cs">
       <DependentUpon>frmViewMultipleIssues.xaml</DependentUpon>
     </Compile>
+    <Compile Include="GlobalRecordModel.cs" />
     <Compile Include="PrevRepairInfo.xaml.cs">
       <DependentUpon>PrevRepairInfo.xaml</DependentUpon>
     </Compile>
