@@ -346,7 +346,11 @@
                     <uc:ucEOLTab x:Name="ucEOLTab" SerialNumber="{Binding Path=Text, ElementName=txtSerialNumber, Mode=TwoWay}" PartSeries="{Binding Path=Text, ElementName=txtPartSeries, Mode=TwoWay}"
                                  VerticalAlignment="top" HorizontalAlignment="Left"/>
                 </TabItem>
-                
+
+                <TabItem Header="ucAOI">
+                    <uc:ucAOITab x:Name="ucAOITab" SerialNumber="{Binding Path=Text, ElementName=txtSerialNumber, Mode=TwoWay}" VerticalAlignment="top" HorizontalAlignment="Left"/>
+                </TabItem>
+
             </TabControl>
 
             <ToolBar Name="tbSPStatus" HorizontalAlignment="Stretch" Margin="0,740,0,0" VerticalAlignment="Top" Width="auto" Height="34" Header="Serial Port Status:" Grid.ColumnSpan="2">

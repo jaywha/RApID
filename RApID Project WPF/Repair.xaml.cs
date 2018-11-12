@@ -647,6 +647,7 @@ namespace RApID_Project_WPF
                 if (!string.IsNullOrEmpty(txtSeries.Text)) { sVar.LogHandler.CreateLogAction("The Part Series was found. (" + txtSeries.Text.TrimEnd() + ")", csLogging.LogState.NOTE); }
 
                 fillCommoditySubClass();
+                fillSoftwareVersion();
             }
             QueryTechReport();
         }
@@ -774,6 +775,17 @@ namespace RApID_Project_WPF
 
                 fillEOLData();
             }
+        }
+
+        /// <summary>
+        /// Fills txtSWVersion based on the given Serial Number
+        /// </summary>
+        private void fillSoftwareVersion()
+        {
+            string query = $"SELECT TOP(5) SoftwareVersion FROM tblPost WHERE PCBSerial = '{txtBarcode.Text.TrimEnd()}' ORDER BY [DateAndTime] DESC";
+            sVar.LogHandler.CreateLogAction("Attempting to fill the Software Version.", csLogging.LogState.NOTE);
+            csCrossClassInteraction.txtFillFromQuery(query, txtSWVersion);
+            txtSWVersion.Text = txtSWVersion.Text.Split(',')[0];
         }
 
         /// <summary>
@@ -1392,10 +1404,38 @@ namespace RApID_Project_WPF
             }
         }
 
+        private void MapRefDesToPartNum()
+        {
+            using (var mapper = csSerialNumberMapper.Instance)
+            {
+                Task.Factory.StartNew(new Action(() =>
+                {
+                    Dispatcher.Invoke(delegate // perform actions on dispatched thread
+                    {
+                        if (!mapper.GetData(txtBarcode.Text))
+                            throw new InvalidOperationException("Couldn't find data for this barcode!");
+                        else
+                        {
+                            var result = mapper.FindFile(".xls");
+                            csCrossClassInteraction.DoExcelOperations(result.Item1,
+                            new Tuple<Control, Control>(txtRefDes, txtPartReplaced),
+                            new Tuple<Control, Control>(txtRefDes_2, txtPartReplaced_2),
+                            new Tuple<Control, Control>(txtRefDes_3, txtPartReplaced_3));
+
+                            OrigRefSource = (List<string>)txtRefDes.ItemsSource;
+                            OrigPartSource = (List<string>)txtPartReplaced.ItemsSource;
+                        }
+                    }, DispatcherPriority.ApplicationIdle);
+                }));
+            }
+        }
+
         private void beginSerialNumberSearch()
         {
             resetForm(false);
             vSleep(500);
+
+            MapRefDesToPartNum();
 
             sVar.LogHandler.LogCreation = DateTime.Now;
 
@@ -1471,6 +1511,8 @@ namespace RApID_Project_WPF
 
                 MessageBox.Show("There was an issue searching for the order number.\nError Message: " + ex.Message, "searchOrderNumber()", MessageBoxButton.OK, MessageBoxImage.Error);
                 sVar.LogHandler.CreateLogAction("Error searching for the order number.\nError Message: " + ex.Message + "\nStack Trace: " + ex.StackTrace, csLogging.LogState.ERROR);
+
+                lblRPNumber.Content = string.Empty;
 
                 return bOrderNumberFound;
             }
@@ -2323,30 +2365,7 @@ namespace RApID_Project_WPF
                         });
                         data = string.Empty;
                     }
-                }
-
-                using (var mapper = csSerialNumberMapper.Instance)
-                {
-                    Task.Factory.StartNew(new Action(() =>
-                    {
-                        Dispatcher.Invoke(delegate // perform actions on dispatched thread
-                        {
-                            if (!mapper.GetData(txtBarcode.Text))
-                                throw new InvalidOperationException("Couldn't find data for this barcode!");
-                            else
-                            {
-                                var result = mapper.FindFile(".xls");
-                                csCrossClassInteraction.DoExcelOperations(result.Item1,
-                                new Tuple<Control, Control>(txtRefDes, txtPartReplaced),
-                                new Tuple<Control, Control>(txtRefDes_2, txtPartReplaced_2),
-                                new Tuple<Control, Control>(txtRefDes_3, txtPartReplaced_3));
-
-                                OrigRefSource = (List<string>)txtRefDes.ItemsSource;
-                                OrigPartSource = (List<string>)txtPartReplaced.ItemsSource;
-                            }
-                        });
-                    }));
-                }
+                }                
             }
             catch (InvalidOperationException ioe)
             {

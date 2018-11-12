@@ -82,5 +82,26 @@ namespace RApID_Project_WPF
                 csExceptionLogger.csExceptionLogger.Write("MainWindow_btnClicks", ex);
             }
         }
+
+        private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            try {
+                csSplashScreenHelper.StopTokenSource.Cancel();
+            } catch (Exception ex) {
+                csExceptionLogger.csExceptionLogger.Write("WindowClosing_ThreadStillRunning", ex);
+            }
+
+            notifyRapid = null; // Ensure GC collects notify icon
+        }
+
+        private void btnShow_Click(object sender, RoutedEventArgs e)
+        {
+            WindowState = WindowState.Normal;
+            Show();
+            BringIntoView();
+            Activate();
+        }
+
+        private void btnExit_Click(object sender, RoutedEventArgs e) => Close();
     }
 }

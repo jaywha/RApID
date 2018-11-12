@@ -4,9 +4,22 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:RApID_Project_WPF.UserControls"
-             mc:Ignorable="d" 
-             d:DesignHeight="450" d:DesignWidth="800">
-    <Grid>
-            
+             mc:Ignorable="d" Height="638.328" Width="1078.438">
+    <Grid Background="#FFE5E5E5">
+
+        <DataGrid Name="dgAOI" HorizontalAlignment="Left" VerticalAlignment="Top" Width="1058" Height="300" Margin="10,10,0,0" BeginningEdit="dgBeginEdit"/>
+
+        <Label Content="Defect Codes:" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10,325,0,0" />
+        <DataGrid Name="dgDefectCodes" HorizontalAlignment="Left" VerticalAlignment="Top" Width="350" Height="200" Margin="10,350,0,0" BeginningEdit="dgBeginEdit"/>
+
+        <ListBox HorizontalAlignment="Left" Height="129" Margin="800,325,0,0" VerticalAlignment="Top" Width="259" Background="{x:Null}" BorderThickness="0">
+            <ListBoxItem Content="RecType" HorizontalAlignment="Center"/>
+            <ListBoxItem Content="_________________________________________________"/>
+            <ListBoxItem Content="* I - Inspect"/>
+            <ListBoxItem Content="* R - Review"/>
+            <ListBoxItem Content="* W - Rework"/>
+            <ListBoxItem Content="* IR - Inspect and Review"/>
+        </ListBox>
+
     </Grid>
 </UserControl>

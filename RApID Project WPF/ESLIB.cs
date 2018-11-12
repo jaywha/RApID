@@ -13,6 +13,7 @@ using System.IO;
 using System.Xml.Serialization;
 using System.Data.Sql;
 using System.Data.SqlClient;
+using RApID_Project_WPF;
 
 namespace EricStabileLibrary
 {
@@ -487,11 +488,11 @@ namespace EricStabileLibrary
                 thread_Splash = new System.Threading.Thread(new System.Threading.ThreadStart(
                     delegate ()
                     {
-                        RApID_Project_WPF.csSplashScreenHelper.SplashScreen = new RApID_Project_WPF.frmSplashScreen();
-                        RApID_Project_WPF.csSplashScreenHelper.Show();
+                        csSplashScreenHelper.SplashScreen = new frmSplashScreen();
+                        csSplashScreenHelper.Show();
                         if (!string.IsNullOrEmpty(sLoadText))
                         {
-                            RApID_Project_WPF.csSplashScreenHelper.ShowText(sLoadText);
+                            csSplashScreenHelper.ShowText(sLoadText);
                         }
                         System.Windows.Threading.Dispatcher.Run();
                     }));

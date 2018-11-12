@@ -4,10 +4,6 @@
  */
 
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Threading;
 using System.Windows.Threading;
 using EricStabileLibrary;
@@ -20,6 +16,8 @@ namespace RApID_Project_WPF
         public static Thread thread_Hide;
         public static Thread thread_Show;
         public static Thread thread_Close;
+        public static CancellationTokenSource StopTokenSource = new CancellationTokenSource(TimeSpan.FromSeconds(2.0));
+        public static CancellationToken StopToken = StopTokenSource.Token;
 
         /// <summary>
         /// Display Splash Screen
@@ -39,7 +37,7 @@ namespace RApID_Project_WPF
             {
                 if (SplashScreen == null) return;
 
-                if (!SplashScreen.Dispatcher.CheckAccess())
+                if (!SplashScreen.Dispatcher.CheckAccess() && !StopToken.IsCancellationRequested)
                 {
                     thread_Hide = new Thread(new System.Threading.ThreadStart(delegate ()
                         {
@@ -74,23 +72,16 @@ namespace RApID_Project_WPF
             {
                 if (SplashScreen == null) return;
 
-                if (!SplashScreen.Dispatcher.CheckAccess())
+                if (!SplashScreen.Dispatcher.CheckAccess() && !StopToken.IsCancellationRequested)
                 {
-                    thread_Show = new Thread(
-                        new System.Threading.ThreadStart(
-                            delegate ()
-                            {
-                                SplashScreen.Dispatcher.Invoke(
-                                    DispatcherPriority.Normal,
-
-                                    new Action(delegate ()
-                                        {
-                                            ((SplashScreenVM)SplashScreen.DataContext).SplashText = text;
-                                        }
-                                ));
-                                SplashScreen.Dispatcher.Invoke(DispatcherPriority.ApplicationIdle, new Action(() => { }));
-                            }
-                    ));
+                    thread_Show = new Thread(new ThreadStart(delegate ()
+                    {
+                        SplashScreen.Dispatcher.Invoke(DispatcherPriority.Normal, new Action(delegate ()
+                        {
+                            ((SplashScreenVM)SplashScreen.DataContext).SplashText = text;
+                        }));
+                        SplashScreen.Dispatcher.Invoke(DispatcherPriority.ApplicationIdle, new Action(() => { }));
+                    }));
                     thread_Show.Name = "RApID_Show";
                     thread_Show.SetApartmentState(ApartmentState.STA);
                     thread_Show.Start();
@@ -112,9 +103,9 @@ namespace RApID_Project_WPF
             {
                 if (SplashScreen == null) return;
 
-                if (!SplashScreen.Dispatcher.CheckAccess())
+                if (!SplashScreen.Dispatcher.CheckAccess() && !StopToken.IsCancellationRequested)
                 {
-                    thread_Close = new Thread(new System.Threading.ThreadStart(delegate ()
+                    thread_Close = new Thread(new ThreadStart(delegate ()
                     {
                         SplashScreen.Dispatcher.Invoke(DispatcherPriority.Normal, new Action(delegate ()
                         {

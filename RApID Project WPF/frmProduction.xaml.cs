@@ -236,7 +236,7 @@ namespace RApID_Project_WPF
 
             resetUnitIssues();
             resetEOL(); ucEOLTab.resetEOL();
-            resetAOI();
+            resetAOI(); ucAOITab.resetAOI();
 
             txtSerialNumber.Focus();
         }
@@ -447,7 +447,7 @@ namespace RApID_Project_WPF
                 tSPChecker = new DispatcherTimer();
                 tSPChecker.Tick += new EventHandler(tSPChecker_Tick);
                 tSPChecker.Interval = new TimeSpan(0, 0, 30);
-                tSPChecker.Start();
+                if(!tSPChecker.Dispatcher.HasShutdownStarted) tSPChecker.Start();
             }
             else if (sp != null && !sp.IsOpen)
             {
@@ -585,6 +585,27 @@ namespace RApID_Project_WPF
 
         #endregion
 
+        private async void MapRefDesToPartNum()
+        {
+            using (var mapper = csSerialNumberMapper.Instance)
+            {
+                await Task.Factory.StartNew(new Action(() => { // in new task
+                    Dispatcher.BeginInvoke(new Action(() => {// perform dispatched UI actions
+                        if (!mapper.GetData(txtSerialNumber.Text))
+                            throw new InvalidOperationException("Couldn't find data for this barcode!");
+                        else
+                        {
+                            var result = mapper.FindFile(".xls");
+                            csCrossClassInteraction.DoExcelOperations(result.Item1,
+                            new Tuple<Control, Control>(txtMultiRefDes, txtMultiPartNum),
+                            new Tuple<Control, Control>(txtMultiRefDes_2, txtMultiPartNum_2),
+                            new Tuple<Control, Control>(txtMultiRefDes_3, txtMultiPartNum_3));
+                        }
+                    }), DispatcherPriority.ApplicationIdle);
+                }));
+            }
+        }
+
         /// <summary>
         /// Begins searching the database for the entered serial number.
         /// </summary>
@@ -593,13 +614,15 @@ namespace RApID_Project_WPF
             resetForm(false);
             sVar.LogHandler.LogCreation = DateTime.Now;
 
+            MapRefDesToPartNum();
+            
             if (!string.IsNullOrEmpty(txtSerialNumber.Text))
             {
                 sVar.LogHandler.CreateLogAction("**** This is a Production Log ****", csLogging.LogState.NOTE);
                 sVar.LogHandler.CreateLogAction("The Serial Number related to this log is: " + txtSerialNumber.Text.TrimEnd(), csLogging.LogState.NOTE);
                 fillDataLog();
                 fillEOLData(); ucEOLTab.fillEOLData();
-                fillAOIData();
+                fillAOIData(); ucAOITab.fillAOIData();
             }
         }
 
@@ -622,6 +645,7 @@ namespace RApID_Project_WPF
                 if (!string.IsNullOrEmpty(txtPartSeries.Text)) { sVar.LogHandler.CreateLogAction("The Part Series was found. (" + txtPartSeries.Text.ToString() + ")", csLogging.LogState.NOTE); }
 
                 fillCommSubClass();
+                fillSoftwareVersion();
             }
             QueryTechReport();
         }
@@ -722,6 +746,17 @@ namespace RApID_Project_WPF
             sVar.LogHandler.CreateLogAction("Attempting to fill the Commodity Sub-Class.", csLogging.LogState.NOTE);
             sVar.LogHandler.CreateLogAction("SQL QUERY: " + query, csLogging.LogState.SQLQUERY);
             csCrossClassInteraction.txtFillFromQuery(query, txtCommSubClass);
+        }
+
+        /// <summary>
+        /// Fills txtSWVersion based on the given Serial Number
+        /// </summary>
+        private void fillSoftwareVersion()
+        {
+            string query = $"SELECT TOP(5) SoftwareVersion FROM tblPost WHERE PCBSerial = '{txtSerialNumber.Text.TrimEnd()}' ORDER BY [DateAndTime] DESC";
+            sVar.LogHandler.CreateLogAction("Attempting to fill the Software Version.", csLogging.LogState.NOTE);
+            csCrossClassInteraction.txtFillFromQuery(query, txtSWVersion);
+            txtSWVersion.Text = txtSWVersion.Text.Split(',')[0];
         }
 
         /// <summary>
@@ -1528,24 +1563,6 @@ namespace RApID_Project_WPF
                         });
                         data = string.Empty;
                     }
-                }
-
-                using (var mapper = csSerialNumberMapper.Instance)
-                {
-                    Task.Factory.StartNew(new Action(() => { // in new task
-                        Dispatcher.BeginInvoke(new Action(() => {// perform dispatched UI actions
-                            if (!mapper.GetData(txtSerialNumber.Text))
-                                throw new InvalidOperationException("Couldn't find data for this barcode!");
-                            else
-                            {
-                                var result = mapper.FindFile(".xls");
-                                csCrossClassInteraction.DoExcelOperations(result.Item1,
-                                new Tuple<Control, Control>(txtMultiRefDes, txtMultiPartNum),
-                                new Tuple<Control, Control>(txtMultiRefDes_2, txtMultiPartNum_2),
-                                new Tuple<Control, Control>(txtMultiRefDes_3, txtMultiPartNum_3));
-                            }
-                        }));
-                    }));
                 }
             }
             catch (InvalidOperationException ioe)
