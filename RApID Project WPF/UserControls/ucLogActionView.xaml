@@ -1,0 +1,23 @@
+﻿<UserControl x:Class="RApID_Project_WPF.UserControls.ucLogActionView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:RApID_Project_WPF.UserControls"
+             Name="ucLogActionViewer"
+             mc:Ignorable="d" Height="221.952" Width="544">
+    <StackPanel Name="stkLayout" Orientation="Vertical">
+        <StackPanel Orientation="Horizontal">
+            <Label Name="lblTechName" Content="{Binding Path=TechName, ElementName=ucLogActionViewer}" Background="NavajoWhite"/>
+            <Label Name="lblCreateDate" Content="{Binding Path=CreateDate, ElementName=ucLogActionViewer}" Background="AntiqueWhite"/>
+            <Label Name="lblSubmitDate" Content="{Binding Path=SubmitDate, ElementName=ucLogActionViewer}" Background="GhostWhite"/>
+        </StackPanel>
+        <RichTextBox Name="rtbLogBox" AllowDrop="False" IsTabStop="False" Height="200">
+            <FlowDocument>
+                <Paragraph>
+                    <Run Text="Technician Submission Details Would Appear Here if a LogID is associated with this record."/>
+                </Paragraph>
+            </FlowDocument>
+        </RichTextBox>
+    </StackPanel>
+</UserControl>

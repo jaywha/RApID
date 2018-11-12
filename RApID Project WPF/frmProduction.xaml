@@ -2,6 +2,7 @@
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:rapid_project_wpf="clr-namespace:RApID_Project_WPF"
+        xmlns:uc="clr-namespace:RApID_Project_WPF.UserControls"
         Title="Production" Width="1104" Height="815" MinWidth="300" MinHeight="300" WindowStartupLocation="CenterScreen" WindowState="Maximized" Background="#FF808285" Loaded="Window_Loaded" Closing="Window_Closing">
     <Window.Resources>
         <Style x:Key="TextboxBaseStyle" TargetType="{x:Type TextBox}">
@@ -9,15 +10,6 @@
             <Setter Property="Height" Value="23" />
             <Setter Property="IsReadOnly" Value="True" />
             <Setter Property="TextWrapping" Value="Wrap" />
-            <Setter Property="HorizontalAlignment" Value="Left" />
-            <Setter Property="VerticalAlignment" Value="Top" />
-            <Setter Property="VerticalContentAlignment" Value="Center" />
-        </Style>
-
-        <Style x:Key="SuggestboxBaseStyle" TargetType="{x:Type rapid_project_wpf:ucSuggestBox}">
-            <Setter Property="Width" Value="195" />
-            <Setter Property="Height" Value="23" />
-            <Setter Property="IsReadOnly" Value="True" />
             <Setter Property="HorizontalAlignment" Value="Left" />
             <Setter Property="VerticalAlignment" Value="Top" />
             <Setter Property="VerticalContentAlignment" Value="Center" />
@@ -350,6 +342,11 @@
                     </Grid>
                 </TabItem>
 
+                <TabItem Header="ucEOL Test">
+                    <uc:ucEOLTab x:Name="ucEOLTab" SerialNumber="{Binding Path=Text, ElementName=txtSerialNumber, Mode=TwoWay}" PartSeries="{Binding Path=Text, ElementName=txtPartSeries, Mode=TwoWay}"
+                                 VerticalAlignment="top" HorizontalAlignment="Left"/>
+                </TabItem>
+                
             </TabControl>
 
             <ToolBar Name="tbSPStatus" HorizontalAlignment="Stretch" Margin="0,740,0,0" VerticalAlignment="Top" Width="auto" Height="34" Header="Serial Port Status:" Grid.ColumnSpan="2">

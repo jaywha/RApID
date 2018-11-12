@@ -14,11 +14,13 @@ namespace RApID_Project_WPF
     {
         private readonly RecordList _records;
 
-        public frmGlobalSearch()
-        {
+        static frmGlobalSearch() { }
+        private frmGlobalSearch() {
             InitializeComponent();
             _records = (RecordList)Resources["records"];
         }
+
+        public static frmGlobalSearch Instance { get; } = new frmGlobalSearch();
 
         private void wndMain_Loaded(object sender, RoutedEventArgs e)
         {
@@ -35,6 +37,12 @@ namespace RApID_Project_WPF
                 );
 
             }));
+        }
+
+        private void wndMain_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            Hide();
+            e.Cancel = true;
         }
 
         private void textBoxGotFocus(object sender, RoutedEventArgs e)
@@ -85,7 +93,7 @@ namespace RApID_Project_WPF
                     {
                         var row = obj as Record;
                         var allowRow = true;
-                        if(!string.IsNullOrEmpty(txtPartNumber.Text.Trim()))
+                        if (!string.IsNullOrEmpty(txtPartNumber.Text.Trim()))
                         {
                             allowRow = allowRow && row.PartNumber.Contains(txtPartNumber.Text.Trim());
                         }

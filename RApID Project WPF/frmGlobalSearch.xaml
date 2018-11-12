@@ -3,7 +3,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:local="clr-namespace:RApID_Project_WPF"
         xmlns:scm="clr-namespace:System.ComponentModel;assembly=WindowsBase"
-        Title="Global Ticket Search" Height="542.914" Width="1005.359" Loaded="wndMain_Loaded">
+        Title="Global Ticket Search" Height="542.914" Width="1005.359" Loaded="wndMain_Loaded" Closing="wndMain_Closing">
     <Window.Resources>
         <local:RecordList x:Key="records"/>
         <CollectionViewSource x:Key="cvsRecords" Source="{StaticResource records}">
@@ -21,10 +21,9 @@
     </Window.Resources>
     <Grid>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="25*"/>
-            <ColumnDefinition Width="107*"/>
+            <ColumnDefinition/>
         </Grid.ColumnDefinitions>
-        <DataGrid x:Name="dgSubmissions" ItemsSource="{Binding Source={StaticResource cvsRecords}}" Margin="10" Grid.Column="1" CanUserAddRows="False"/>
+        <DataGrid x:Name="dgSubmissions" ItemsSource="{Binding Source={StaticResource cvsRecords}}" Margin="199,10,10,10" CanUserAddRows="False"/>
         <Label x:Name="lblPN" Content="Part Number:" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top"/>
         <TextBox x:Name="txtPartNumber" HorizontalAlignment="Left" Height="23" Margin="10,41,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="168"
                 GotFocus="textBoxGotFocus" LostFocus="textBoxLostFocus" KeyDown="textBoxKeyDown"/>
@@ -37,7 +36,8 @@
         <Label x:Name="lblCN" Content="Customer Number:" HorizontalAlignment="Left" Margin="10,187,0,0" VerticalAlignment="Top"/>
         <TextBox x:Name="txtCutomerNumber" HorizontalAlignment="Left" Height="23" Margin="10,218,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="168"
                 GotFocus="textBoxGotFocus" LostFocus="textBoxLostFocus" KeyDown="textBoxKeyDown"/>
-        <Label x:Name="lblLoadingIndicator" Content="Loading..." Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center" Height="65" Margin="264,244,245,204" Width="300"/>
+        <Label x:Name="lblLoadingIndicator" Content="Loading..." HorizontalAlignment="Left" VerticalAlignment="Top" Height="100" Margin="452,244,0,0" Width="300"/>
+        <ProgressBar x:Name="progData" HorizontalAlignment="Left" VerticalAlignment="Top" Width="299" Height="20" Margin="453,270,0,0" IsIndeterminate="True"/>
         <DatePicker x:Name="dpDisplayDateStart" HorizontalAlignment="Left" Margin="76,256,0,0" VerticalAlignment="Top" Width="108"/>
         <DatePicker x:Name="dpDisplayDateEnd" HorizontalAlignment="Left" Margin="76,285,0,0" VerticalAlignment="Top" Width="108"/>
         <Label x:Name="lblDateRangeStart" Content="Start Date:" HorizontalAlignment="Left" Margin="10,256,0,0" VerticalAlignment="Top"/>
@@ -52,6 +52,5 @@
                 </LinearGradientBrush>
             </Button.Background>
         </Button>
-        <ProgressBar x:Name="progData" Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center" Width="299" Height="20" Margin="264,270,245,223" IsIndeterminate="True"/>
     </Grid>
 </Window>

@@ -2,6 +2,7 @@
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:local="clr-namespace:RApID_Project_WPF" x:Class="RApID_Project_WPF.frmProductionPRI"
+        xmlns:uc="clr-namespace:RApID_Project_WPF.UserControls"
         Title="Production: Previous Repair Information" Width="825" Height="550" Loaded="Window_Loaded">
     <Window.Resources>
         <Style x:Key="TextboxBaseStyle" TargetType="{x:Type TextBox}">
@@ -160,7 +161,7 @@
 
             <Label Content="Additional Comments:" Margin="455,10,0,0" Style="{StaticResource LabelBaseStyle}" />
             <RichTextBox x:Name="rtbAddComm" Margin="455,33,0,0" Style="{StaticResource RTBBaseStyle}" />
-            <local:ucLogActionView x:Name="uclaTechActions" Margin="458,288,20,27" Visibility="Hidden"/>
+            <uc:ucLogActionView x:Name="uclaTechActions" Margin="458,288,20,27" Visibility="Hidden"/>
         </Grid>
     </Viewbox>
 

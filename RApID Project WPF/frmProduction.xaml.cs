@@ -25,7 +25,10 @@ namespace RApID_Project_WPF
 
         SerialPort sp;
         DispatcherTimer tSPChecker;
-        bool bTimerRebootAttempt = false; //NOTE: tSPChecker will attempt to reboot itself once if it gets disconnected. This flag will be used to track that.
+        /// <summary>
+        /// Used to track tSPChecker reboot
+        /// </summary>
+        bool bTimerRebootAttempt = false;
 
         StaticVars sVar = StaticVars.StaticVarsInstance();
 
@@ -56,8 +59,7 @@ namespace RApID_Project_WPF
             csSplashScreenHelper.Hide();
             this.Activate();
 #if DEBUG
-            //txtSerialNumber.Text = "160127030018"; //NOTE: Use when at HB
-            txtSerialNumber.Text = "160412020075"; //NOTE: Use when at home
+            txtSerialNumber.Text = "180405030127";
 #endif
 
         }
@@ -233,7 +235,7 @@ namespace RApID_Project_WPF
             lblPOST.Content = "Post Burn-In";
 
             resetUnitIssues();
-            resetEOL();
+            resetEOL(); ucEOLTab.resetEOL();
             resetAOI();
 
             txtSerialNumber.Focus();
@@ -596,7 +598,7 @@ namespace RApID_Project_WPF
                 sVar.LogHandler.CreateLogAction("**** This is a Production Log ****", csLogging.LogState.NOTE);
                 sVar.LogHandler.CreateLogAction("The Serial Number related to this log is: " + txtSerialNumber.Text.TrimEnd(), csLogging.LogState.NOTE);
                 fillDataLog();
-                fillEOLData();
+                fillEOLData(); ucEOLTab.fillEOLData();
                 fillAOIData();
             }
         }
@@ -1530,7 +1532,7 @@ namespace RApID_Project_WPF
 
                 using (var mapper = csSerialNumberMapper.Instance)
                 {
-                    Task.Factory.StartNew(new Action(() => { // on new task
+                    Task.Factory.StartNew(new Action(() => { // in new task
                         Dispatcher.BeginInvoke(new Action(() => {// perform dispatched UI actions
                             if (!mapper.GetData(txtSerialNumber.Text))
                                 throw new InvalidOperationException("Couldn't find data for this barcode!");

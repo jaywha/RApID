@@ -70,8 +70,8 @@ namespace RApID_Project_WPF
                         break;
                     case "btnTicketLookup":
                         Hide();
-                        var fGSearch = new frmGlobalSearch() { Owner = this };
-                        fGSearch.ShowDialog();
+                        frmGlobalSearch.Instance.Owner = this;
+                        frmGlobalSearch.Instance.Show();
                         Show();
                         Activate();
                         break;
@@ -80,33 +80,6 @@ namespace RApID_Project_WPF
             catch (Exception ex)
             {
                 csExceptionLogger.csExceptionLogger.Write("MainWindow_btnClicks", ex);
-            }
-        }
-
-        private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
-        {
-            try
-            {
-                // --->
-                // for some reason, the program will not close while in visual studio. Trying to figure out whats happening...
-                // ANSWER: Threads aren't being closed correctly
-
-                //EricStabileLibrary.InitSplash.thread_Splash = null;
-
-
-                //MessageBox.Show(csSplashScreenHelper.thread_Hide.Name + " = " + csSplashScreenHelper.thread_Hide.ThreadState.ToString() + "\n" +
-                //    csSplashScreenHelper.thread_Show.Name + " = " + csSplashScreenHelper.thread_Show.ThreadState.ToString() + "\n" +
-                //    csSplashScreenHelper.thread_Close.Name + " = " + csSplashScreenHelper.thread_Close.ThreadState.ToString() + "\n" +
-                //    EricStabileLibrary.InitSplash.thread_Splash.ThreadState.ToString() +
-                //    System.Diagnostics.Process.GetCurrentProcess().Threads.Count);
-
-                //EricStabileLibrary.InitSplash.thread_Splash = null;
-
-                // <---  
-            }
-            catch (Exception ex)
-            {
-                csExceptionLogger.csExceptionLogger.Write("MainWindow_Window__Closing", ex);
             }
         }
     }

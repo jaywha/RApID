@@ -1,0 +1,75 @@
+﻿<UserControl x:Class="RApID_Project_WPF.UserControls.ucEOLTab"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:RApID_Project_WPF.UserControls"
+             mc:Ignorable="d" Width="1084.062" Height="638">
+    <UserControl.Resources>
+        <Style x:Key="EOLComboBox" TargetType="{x:Type ComboBox}">
+            <Setter Property="Width" Value="120" />
+            <Setter Property="HorizontalAlignment" Value="Left" />
+            <Setter Property="VerticalAlignment" Value="Top" />
+        </Style>
+
+        <Style x:Key="EOLListView" TargetType="{x:Type ListView}">
+            <Setter Property="Width" Value="268" />
+            <Setter Property="Height" Value="532" />
+            <Setter Property="HorizontalAlignment" Value="Left" />
+            <Setter Property="VerticalAlignment" Value="Top" />
+        </Style>
+    </UserControl.Resources>
+    <Grid Background="#FFE5E5E5">
+
+        <Label Content="Test ID:" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="0,10,0,0" />
+        <ComboBox Name="cbEOLTestID" Margin="53,13,0,0" Style="{StaticResource EOLComboBox}" DropDownClosed="cbEOLTestID_DropDownClosed" />
+        <Label Name="lblEOL" Content="End of Line" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="0,40,0,0" />
+        <ListView Name="lsvEOL" Margin="0,65,0,0" Style="{StaticResource EOLListView}">
+            <ListView.View>
+                <GridView>
+                    <GridViewColumn/>
+                </GridView>
+            </ListView.View>
+        </ListView>
+
+        <Label Content="Test ID:" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="269,10,0,0" />
+        <ComboBox Name="cbPRETestID" Margin="322,13,0,0" Style="{StaticResource EOLComboBox}" DropDownClosed="cbPRETestID_DropDownClosed" />
+        <Label Content="Pre Burn-In" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="269,40,0,0" />
+        <ListView Name="lsvPreBurnIn" Margin="269,65,0,0" Style="{StaticResource EOLListView}">
+            <ListView.View>
+                <GridView>
+                    <GridViewColumn/>
+                </GridView>
+            </ListView.View>
+        </ListView>
+
+        <Label Content="Test ID:" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="538,10,0,0" />
+        <ComboBox Name="cbPOSTTestID" Margin="591,13,0,0" Style="{StaticResource EOLComboBox}" DropDownClosed="cbPOSTTestID_DropDownClosed"/>
+        <Label Name="lblPOST" Content="Post Burn-In" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="538,40,0,0" />
+        <ListView Name="lsvPostBurnIn" Margin="538,65,0,0" Style="{StaticResource EOLListView}">
+            <ListView.View>
+                <GridView>
+                    <GridViewColumn/>
+                </GridView>
+            </ListView.View>
+        </ListView>
+
+        <Label Content="Test Type:" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="800,0,0,0" />
+        <ComboBox Name="cbBEAMSTestType" Margin="860,3,0,0" Style="{StaticResource EOLComboBox}" DropDownClosed="cbBEAMSTestType_DropDownClosed"/>
+
+        <Label Content="Test ID:" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="814,27,0,0" />
+        <ComboBox Name="cbBEAMSTestID" Margin="860,29,0,0" Style="{StaticResource EOLComboBox}" DropDownClosed="cbBEAMSTestID_DropDownClosed"/>
+
+        <Label Content="Beams:" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="816,53,0,0" />
+        <ComboBox Name="cbBEAMSBeamNum" Margin="860,56,0,0" Style="{StaticResource EOLComboBox}" DropDownClosed="cbBEAMSBeamNum_DropDownClosed"/>
+
+        <Label Content="Beam Test Results" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="807,77,0,0" />
+        <ListView Name="lsvBeamTestId" Margin="807,97,0,0" Style="{StaticResource EOLListView}" Height="500">
+            <ListView.View>
+                <GridView>
+                    <GridViewColumn/>
+                </GridView>
+            </ListView.View>
+        </ListView>
+    </Grid>
+</UserControl>

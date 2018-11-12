@@ -793,6 +793,23 @@ namespace RApID_Project_WPF
                         data = string.Empty;
                     }
                 }
+
+                using (var mapper = csSerialNumberMapper.Instance)
+                {
+                    Task.Factory.StartNew(new Action(() =>
+                    {
+                        Dispatcher.Invoke(delegate // perform actions on dispatched thread
+                        {
+                            if (!mapper.GetData(txtSN.Text))
+                                throw new InvalidOperationException("Couldn't find data for this barcode!");
+                            else
+                            {
+                                var result = mapper.FindFile(".xls");
+                                //TODO: Make User Control for BOM Matcher (2 cmbx: Ref Des. -> Part Number)
+                            }
+                        });
+                    }));
+                }
             }
             catch (Exception ex)
             {

@@ -43,10 +43,13 @@ C:\Visual Studio Projects\RApID\RApID Project WPF\obj\x86\Debug\RApID Project WP
 C:\Visual Studio Projects\RApID\RApID Project WPF\obj\x86\Debug\RApID Project WPF.csproj.CoreCompileInputs.cache
 C:\Visual Studio Projects\RApID\RApID Project WPF\obj\x86\Debug\RApID Project WPF.exe
 C:\Visual Studio Projects\RApID\RApID Project WPF\obj\x86\Debug\RApID Project WPF.pdb
-C:\Visual Studio Projects\RApID\RApID Project WPF\obj\x86\Debug\ucSuggestBox.g.cs
-C:\Visual Studio Projects\RApID\RApID Project WPF\obj\x86\Debug\ucLogActionView.g.cs
-C:\Visual Studio Projects\RApID\RApID Project WPF\obj\x86\Debug\ucSuggestBox.baml
-C:\Visual Studio Projects\RApID\RApID Project WPF\obj\x86\Debug\ucLogActionView.baml
 C:\Visual Studio Projects\RApID\RApID Project WPF\obj\x86\Debug\frmGlobalSearch.g.cs
 C:\Visual Studio Projects\RApID\RApID Project WPF\obj\x86\Debug\frmGlobalSearch.baml
-C:\Visual Studio Projects\RApID\RApID Project WPF\obj\x86\Debug\RApID Project WPF.csprojAssemblyReference.cache
+C:\Visual Studio Projects\RApID\RApID Project WPF\obj\x86\Debug\UserControls\ucEOLTab.g.cs
+C:\Visual Studio Projects\RApID\RApID Project WPF\obj\x86\Debug\UserControls\ucSuggestBox.g.cs
+C:\Visual Studio Projects\RApID\RApID Project WPF\obj\x86\Debug\UserControls\ucLogActionView.g.cs
+C:\Visual Studio Projects\RApID\RApID Project WPF\obj\x86\Debug\UserControls\ucEOLTab.baml
+C:\Visual Studio Projects\RApID\RApID Project WPF\obj\x86\Debug\UserControls\ucSuggestBox.baml
+C:\Visual Studio Projects\RApID\RApID Project WPF\obj\x86\Debug\UserControls\ucLogActionView.baml
+C:\Visual Studio Projects\RApID\RApID Project WPF\obj\x86\Debug\UserControls\ucAOITab.g.cs
+C:\Visual Studio Projects\RApID\RApID Project WPF\obj\x86\Debug\UserControls\ucAOITab.baml

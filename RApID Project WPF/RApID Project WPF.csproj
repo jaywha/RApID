@@ -172,7 +172,7 @@
     <Compile Include="frmViewMultipleIssues.xaml.cs">
       <DependentUpon>frmViewMultipleIssues.xaml</DependentUpon>
     </Compile>
-    <Compile Include="GlobalRecordModel.cs" />
+    <Compile Include="csRecordList.cs" />
     <Compile Include="PrevRepairInfo.xaml.cs">
       <DependentUpon>PrevRepairInfo.xaml</DependentUpon>
     </Compile>
@@ -184,10 +184,16 @@
     </Compile>
     <Compile Include="Settings.cs" />
     <Compile Include="StaticVars.cs" />
-    <Compile Include="ucSuggestBox.xaml.cs">
+    <Compile Include="UserControls\ucAOITab.xaml.cs">
+      <DependentUpon>ucAOITab.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="UserControls\ucEOLTab.xaml.cs">
+      <DependentUpon>ucEOLTab.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="UserControls\ucSuggestBox.xaml.cs">
       <DependentUpon>ucSuggestBox.xaml</DependentUpon>
     </Compile>
-    <Compile Include="ucLogActionView.xaml.cs">
+    <Compile Include="UserControls\ucLogActionView.xaml.cs">
       <DependentUpon>ucLogActionView.xaml</DependentUpon>
     </Compile>
     <Compile Include="ViewModelBase.cs" />
@@ -264,11 +270,19 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="ucSuggestBox.xaml">
+    <Page Include="UserControls\ucAOITab.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="ucLogActionView.xaml">
+    <Page Include="UserControls\ucEOLTab.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UserControls\ucSuggestBox.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UserControls\ucLogActionView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

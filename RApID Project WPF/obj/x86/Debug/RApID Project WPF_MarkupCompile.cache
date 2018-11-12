@@ -10,11 +10,11 @@ none
 false
 DEBUG;TRACE
 C:\Visual Studio Projects\RApID\RApID Project WPF\App.xaml
-18671373537
+20629584508
 1-1885038259
-38-547432807
+40-1698092778
 20-1220251177
-frmFullCustomerInformation.xaml;frmGlobalSearch.xaml;frmMultipleRP.xaml;frmPartNumber.xaml;frmPrintQCDQELabel.xaml;frmProduction.xaml;frmProductionPRI.xaml;frmQCDQE.xaml;frmSettings.xaml;frmSplashScreen.xaml;frmViewFullLog.xaml;frmViewMultipleIssues.xaml;MainWindow.xaml;PrevRepairInfo.xaml;Repair.xaml;frmRepairPRI.xaml;ucSuggestBox.xaml;ucLogActionView.xaml;
+frmFullCustomerInformation.xaml;frmGlobalSearch.xaml;frmMultipleRP.xaml;frmPartNumber.xaml;frmPrintQCDQELabel.xaml;frmProduction.xaml;frmProductionPRI.xaml;frmQCDQE.xaml;frmSettings.xaml;frmSplashScreen.xaml;frmViewFullLog.xaml;frmViewMultipleIssues.xaml;MainWindow.xaml;PrevRepairInfo.xaml;Repair.xaml;frmRepairPRI.xaml;UserControls\ucAOITab.xaml;UserControls\ucEOLTab.xaml;UserControls\ucSuggestBox.xaml;UserControls\ucLogActionView.xaml;
 
 False
 
