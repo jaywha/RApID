@@ -14,6 +14,7 @@ using System.Xml.Serialization;
 using System.Data.Sql;
 using System.Data.SqlClient;
 using RApID_Project_WPF;
+using System.Threading;
 
 namespace EricStabileLibrary
 {
@@ -479,13 +480,13 @@ namespace EricStabileLibrary
     /// </summary>
     public class InitSplash
     {
-        public static System.Threading.Thread thread_Splash;
+        public static Thread thread_Splash;
 
         public void InitSplash1(string sLoadText)
         {
             try
             {
-                thread_Splash = new System.Threading.Thread(new System.Threading.ThreadStart(
+                thread_Splash = new Thread(new ThreadStart(
                     delegate ()
                     {
                         csSplashScreenHelper.SplashScreen = new frmSplashScreen();
@@ -497,11 +498,17 @@ namespace EricStabileLibrary
                         System.Windows.Threading.Dispatcher.Run();
                     }));
                 thread_Splash.Name = "RApID_InitSplash";
-                thread_Splash.SetApartmentState(System.Threading.ApartmentState.STA);
+                thread_Splash.SetApartmentState(ApartmentState.STA);
                 thread_Splash.IsBackground = true;
                 thread_Splash.Start();
 
-                System.Threading.Thread.Sleep(1000);
+                Thread.Sleep(1000);
+            }
+            catch(ThreadAbortException tce)
+            {
+                Console.WriteLine("Thread - caught ThreadAbortException - resetting.");
+                Console.WriteLine("Exception message: {0}", tce.Message);
+                Thread.ResetAbort();
             }
             catch (Exception ex)
             {

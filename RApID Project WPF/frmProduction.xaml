@@ -14,7 +14,7 @@
             <Setter Property="VerticalAlignment" Value="Top" />
             <Setter Property="VerticalContentAlignment" Value="Center" />
         </Style>
-        
+
         <Style x:Key="Combobox" TargetType="{x:Type ComboBox}">
             <Setter Property="Width" Value="275" />
             <Setter Property="HorizontalAlignment" Value="Left" />
@@ -107,15 +107,14 @@
     <Viewbox Stretch="Uniform">
 
         <Grid>
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="571*"/>
-                <ColumnDefinition Width="516*"/>
-            </Grid.ColumnDefinitions>
-
-            <Label Content="Serial Number:" FontWeight="Bold" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10,20,0,0" />
-            <TextBox Name="txtSerialNumber" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="105,22,0,0" Width="200" Height="23" PreviewTextInput="previewInput" KeyDown="txtSerialNumber_KeyDown"/>
-            <Button Name="btnStartOver" Content="Start Over" HorizontalAlignment="Left" VerticalAlignment="Top" Width="100" Height="46" Margin="303.562,10,0,0" Style="{StaticResource RepairButtons}" Click="btnStartOver_Click" Grid.Column="1"/>
-            <Button Name="btnComplete" Content="Complete" HorizontalAlignment="Left" VerticalAlignment="Top" Width="100" Height="46" Margin="413.562,10,0,0" Style="{StaticResource RepairButtons}" Click="btnComplete_Click" Grid.Column="1"/>
+            <StackPanel Orientation="Horizontal">
+                <Label Content="Serial Number:" FontWeight="Bold" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10,20,0,0" />
+                <TextBox Name="txtSerialNumber" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="105,22,0,0" Width="200" Height="23" PreviewTextInput="previewInput" KeyDown="txtSerialNumber_KeyDown"/>
+                <Separator Width="400"/>
+                <Button Name="btnStartOver" Content="Start Over" HorizontalAlignment="Right" VerticalAlignment="Top" Width="100" Height="46" Style="{StaticResource RepairButtons}" Click="btnStartOver_Click"/>
+                <Separator Width="20"/>
+                <Button Name="btnComplete" Content="Complete" HorizontalAlignment="Right" VerticalAlignment="Top" Width="100" Height="46" Style="{StaticResource RepairButtons}" Click="btnComplete_Click"/>
+            </StackPanel>
 
             <TabControl HorizontalAlignment="Left" VerticalAlignment="Top" Width="1085" Height="665" Margin="2,65,0,0" Grid.ColumnSpan="2">
 

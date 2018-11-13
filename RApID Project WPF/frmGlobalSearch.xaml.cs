@@ -1,9 +1,7 @@
 ﻿using System;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
-using System.Windows.Input;
 
 namespace RApID_Project_WPF
 {
@@ -15,16 +13,21 @@ namespace RApID_Project_WPF
         private readonly RecordList _records;
 
         static frmGlobalSearch() { }
-        private frmGlobalSearch() {
+        private frmGlobalSearch()
+        {
             InitializeComponent();
             _records = (RecordList)Resources["records"];
+
+            ToggleFiltersEnabled(false);
+            ToggleButtonsEnabled(false);
         }
 
         public static frmGlobalSearch Instance { get; } = new frmGlobalSearch();
 
-        private void wndMain_Loaded(object sender, RoutedEventArgs e)
+        private async void wndMain_Loaded(object sender, RoutedEventArgs e)
         {
-            _records.GetData(lblLoadingIndicator, Dispatcher).ContinueWith(new Action<Task>((_) =>
+            await _records.GetData(lblLoadingIndicator, dgSubmissions.Dispatcher)
+            .ContinueWith((_) =>
             {
                 Console.WriteLine("[INFO]: Number of rows in data grid (" + dgSubmissions.Items.Count + ").");
 
@@ -36,7 +39,9 @@ namespace RApID_Project_WPF
                     progData.Visibility = Visibility.Collapsed
                 );
 
-            }));
+                stkPnlFilters.Dispatcher.Invoke(() => ToggleFiltersEnabled(true));
+                stkPnlButtons.Dispatcher.Invoke(() => ToggleButtonsEnabled(true));
+            });
         }
 
         private void wndMain_Closing(object sender, System.ComponentModel.CancelEventArgs e)
@@ -80,46 +85,108 @@ namespace RApID_Project_WPF
             }
         }
 
-        private void textBoxKeyDown(object sender, KeyEventArgs e)
+        private void ToggleFiltersEnabled(bool enabled)
         {
-            if (e.Key is Key.Enter
-                && sender is TextBox txt
-                && !string.IsNullOrEmpty(txt.Text.Trim()))
+            foreach (UIElement c in stkPnlFilters.Children)
             {
-                var dataView = CollectionViewSource.GetDefaultView(dgSubmissions.ItemsSource);
-
-                dataView.Filter
-                    = (obj) =>
-                    {
-                        var row = obj as Record;
-                        var allowRow = true;
-                        if (!string.IsNullOrEmpty(txtPartNumber.Text.Trim()))
-                        {
-                            allowRow = allowRow && row.PartNumber.Contains(txtPartNumber.Text.Trim());
-                        }
-
-                        if (!string.IsNullOrEmpty(txtOrderNumber.Text.Trim()))
-                        {
-                            allowRow = allowRow && row.OrderNumber.Equals(txtOrderNumber.Text.Trim());
-                        }
-
-                        if (!string.IsNullOrEmpty(txtSerialNumber.Text.Trim()))
-                        {
-                            allowRow = allowRow && row.SerialNumber.Equals(txtSerialNumber.Text.Trim());
-                        }
-
-                        if (!string.IsNullOrEmpty(txtCutomerNumber.Text.Trim()))
-                        {
-                            allowRow = allowRow && (row.CustomerNumber == int.Parse(txtCutomerNumber.Text.Trim()));
-                        }
-                        return allowRow;
-                    };
-
-                dataView.Refresh();
+                c.IsEnabled = enabled;
             }
         }
 
+        private void ToggleButtonsEnabled(bool enabled)
+        {
+            foreach (UIElement c in stkPnlButtons.Children)
+            {
+                c.IsEnabled = enabled;
+            }
+        }
+
+        private async void GetLatestRecords(object sender, RoutedEventArgs e)
+        {
+            await _records.AppendData(lblLoadingIndicator, dgSubmissions.Dispatcher)
+            .ContinueWith((_) =>
+            {
+                Console.WriteLine("[INFO]: Number of rows in data grid (" + dgSubmissions.Items.Count + ").");
+
+                lblLoadingIndicator.Dispatcher.Invoke(() =>
+                    lblLoadingIndicator.Visibility = Visibility.Collapsed
+                );
+
+                progData.Dispatcher.Invoke(() =>
+                    progData.Visibility = Visibility.Collapsed
+                );
+
+            });
+        }
+
+        private void ApplyFilters(object sender, RoutedEventArgs e)
+        {
+            var dataView = CollectionViewSource.GetDefaultView(dgSubmissions.ItemsSource);
+
+            lblLoadingIndicator.Visibility = Visibility.Visible;
+            lblLoadingIndicator.Content = "Applying filters...";
+            progData.Visibility = Visibility.Visible;
+
+            dataView.Filter
+                = (obj) =>
+                {
+                    var row = obj as Record;
+                    var allowRow = true;
+                    if (!string.IsNullOrEmpty(txtPartNumber.Text.Trim()))
+                    {
+                        allowRow = allowRow && row.PartNumber.Contains(txtPartNumber.Text.Trim());
+                    }
+
+                    if (!string.IsNullOrEmpty(txtOrderNumber.Text.Trim()))
+                    {
+                        allowRow = allowRow && row.OrderNumber.Equals(txtOrderNumber.Text.Trim());
+                    }
+
+                    if (!string.IsNullOrEmpty(txtSerialNumber.Text.Trim()))
+                    {
+                        allowRow = allowRow && row.SerialNumber.Equals(txtSerialNumber.Text.Trim());
+                    }
+
+                    if (!string.IsNullOrEmpty(txtCutomerNumber.Text.Trim()))
+                    {
+                        allowRow = allowRow && (row.CustomerNumber == int.Parse(txtCutomerNumber.Text.Trim()));
+                    }
+
+                    if (dpStartDate.SelectedDate.HasValue)
+                    {
+                        allowRow = allowRow && (row.DateReceived >= dpStartDate.SelectedDate.Value);
+                    }
+
+                    if (dpEndDate.SelectedDate.HasValue)
+                    {
+                        allowRow = allowRow && (row.DateReceived >= dpEndDate.SelectedDate.Value);
+                    }
+
+                    return allowRow;
+                };
+
+            dataView.Refresh();
+
+            progData.Visibility = Visibility.Collapsed;
+            lblLoadingIndicator.Visibility = Visibility.Collapsed;
+            lblLoadingIndicator.Content = "";
+
+            ToggleFiltersEnabled(false);
+        }
+
         private void btnClearFilters_Click(object sender, RoutedEventArgs e)
-            => CollectionViewSource.GetDefaultView(dgSubmissions.ItemsSource).Filter = null;
+        {
+            lblLoadingIndicator.Visibility = Visibility.Visible;
+            lblLoadingIndicator.Content = "Clearing filters...";
+            progData.Visibility = Visibility.Visible;
+
+            CollectionViewSource.GetDefaultView(dgSubmissions.ItemsSource).Filter = null;
+
+            progData.Visibility = Visibility.Collapsed;
+            lblLoadingIndicator.Visibility = Visibility.Collapsed;
+            lblLoadingIndicator.Content = "";
+
+            ToggleFiltersEnabled(true);
+        }
     }
 }

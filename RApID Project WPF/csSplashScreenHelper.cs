@@ -35,9 +35,9 @@ namespace RApID_Project_WPF
         {
             try
             {
-                if (SplashScreen == null) return;
+                if (SplashScreen == null && StopToken.IsCancellationRequested) return;
 
-                if (!SplashScreen.Dispatcher.CheckAccess() && !StopToken.IsCancellationRequested)
+                if (!SplashScreen.Dispatcher.CheckAccess())
                 {
                     thread_Hide = new Thread(new System.Threading.ThreadStart(delegate ()
                         {
@@ -57,6 +57,12 @@ namespace RApID_Project_WPF
                 }
                 else SplashScreen.Hide();
             }
+            catch (ThreadAbortException tce)
+            {
+                Console.WriteLine("Thread - caught ThreadAbortException - resetting.");
+                Console.WriteLine("Exception message: {0}", tce.Message);
+                Thread.ResetAbort();
+            }
             catch (Exception ex)
             {
                 csExceptionLogger.csExceptionLogger.Write("SplashScreenHelper_Hide", ex);
@@ -70,9 +76,9 @@ namespace RApID_Project_WPF
         {
             try
             {
-                if (SplashScreen == null) return;
+                if (SplashScreen == null && StopToken.IsCancellationRequested) return;
 
-                if (!SplashScreen.Dispatcher.CheckAccess() && !StopToken.IsCancellationRequested)
+                if (!SplashScreen.Dispatcher.CheckAccess())
                 {
                     thread_Show = new Thread(new ThreadStart(delegate ()
                     {
@@ -87,6 +93,12 @@ namespace RApID_Project_WPF
                     thread_Show.Start();
                 }
                 else ((SplashScreenVM)SplashScreen.DataContext).SplashText = text;
+            }
+            catch (ThreadAbortException tce)
+            {
+                Console.WriteLine("Thread - caught ThreadAbortException - resetting.");
+                Console.WriteLine("Exception message: {0}", tce.Message);
+                Thread.ResetAbort();
             }
             catch (Exception ex)
             {
@@ -103,7 +115,7 @@ namespace RApID_Project_WPF
             {
                 if (SplashScreen == null) return;
 
-                if (!SplashScreen.Dispatcher.CheckAccess() && !StopToken.IsCancellationRequested)
+                if (!SplashScreen.Dispatcher.CheckAccess())
                 {
                     thread_Close = new Thread(new ThreadStart(delegate ()
                     {
@@ -122,6 +134,12 @@ namespace RApID_Project_WPF
                     thread_Close.Start();
                 }
                 else SplashScreen.Close();
+            }
+            catch (ThreadAbortException tce)
+            {
+                Console.WriteLine("Thread - caught ThreadAbortException - resetting.");
+                Console.WriteLine("Exception message: {0}", tce.Message);
+                Thread.ResetAbort();
             }
             catch (Exception ex)
             {

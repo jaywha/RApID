@@ -92,9 +92,8 @@ namespace RApID_Project_WPF
         {
             txtTechName.Text = System.Environment.UserName;
 #if DEBUG
-            //txtTechName.Text = "rkaiser";
-            txtOrderNumber.Text = "7601898";
-            txtBarcode.Text = "161130180149";
+            txtOrderNumber.Text = "8149953";
+            txtBarcode.Text = "180405030127";
 #endif
             dtpDateReceived.SelectedDate = DateTime.Now;
 
@@ -357,8 +356,8 @@ namespace RApID_Project_WPF
 
             cbReportedIssue.SelectedIndex = -1;
             resetUnitIssues();
-            resetEOLTab();
-            resetAOITab();
+            resetEOLTab(); ucEOLTab.Reset();
+            resetAOITab(); ucAOITab.Reset();
             cbTechAction1.SelectedIndex = -1;
             cbTechAction2.SelectedIndex = -1;
             cbTechAction3.SelectedIndex = -1;
@@ -1404,11 +1403,13 @@ namespace RApID_Project_WPF
             }
         }
 
-        private void MapRefDesToPartNum()
+        private async void MapRefDesToPartNum()
         {
+            progMapper.Visibility = Visibility.Visible;
+
             using (var mapper = csSerialNumberMapper.Instance)
             {
-                Task.Factory.StartNew(new Action(() =>
+                await Task.Factory.StartNew(new Action(() =>
                 {
                     Dispatcher.Invoke(delegate // perform actions on dispatched thread
                     {
@@ -1425,8 +1426,9 @@ namespace RApID_Project_WPF
                             OrigRefSource = (List<string>)txtRefDes.ItemsSource;
                             OrigPartSource = (List<string>)txtPartReplaced.ItemsSource;
                         }
-                    }, DispatcherPriority.ApplicationIdle);
-                }));
+                    });
+                })).ContinueWith((_) => 
+                progMapper.Dispatcher.Invoke(() => progMapper.Visibility = Visibility.Hidden));
             }
         }
 
@@ -1444,8 +1446,8 @@ namespace RApID_Project_WPF
                 sVar.LogHandler.CreateLogAction("**** This is a Repair Log ****", csLogging.LogState.NOTE);
                 sVar.LogHandler.CreateLogAction("The Serial Number related to this log is: " + txtBarcode.Text.TrimEnd(), csLogging.LogState.NOTE);
                 fillDataLog();
-                fillEOLData();
-                fillAOIData();
+                fillEOLData(); ucEOLTab.Fill();
+                fillAOIData(); ucAOITab.Fill();
             }
         }
 
@@ -1744,7 +1746,7 @@ namespace RApID_Project_WPF
                                 sLogString += paramName + ": N/A\n";
                             else sLogString += $"{paramName}: {cmd.Parameters[pCount].Value.ToString()}\n";
                         }
-                        sVar.LogHandler.CreateLogAction(sLogString,csLogging.LogState.SUBMISSIONDETAILS);
+                        sVar.LogHandler.CreateLogAction(sLogString, csLogging.LogState.SUBMISSIONDETAILS);
                     }
                     catch (Exception ex)
                     {
@@ -1783,7 +1785,7 @@ namespace RApID_Project_WPF
                                 sLogString += paramName + ": N/A\n";
                             else sLogString += $"{paramName}: {cmd.Parameters[pCount].Value.ToString()}\n";
                         }
-                        sVar.LogHandler.CreateLogAction(sLogString,csLogging.LogState.SUBMISSIONDETAILS);
+                        sVar.LogHandler.CreateLogAction(sLogString, csLogging.LogState.SUBMISSIONDETAILS);
                     }
                     catch (Exception ex)
                     {
@@ -2365,7 +2367,7 @@ namespace RApID_Project_WPF
                         });
                         data = string.Empty;
                     }
-                }                
+                }
             }
             catch (InvalidOperationException ioe)
             {

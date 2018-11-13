@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Data.SqlClient;
+using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using System.Windows.Controls;
@@ -19,7 +20,7 @@ namespace RApID_Project_WPF
         /// Delegate record submission to asynchronously update data grid parallel to UI thread.
         /// </summary>
         /// <param name="records">List of records to process.</param>
-        private delegate void PushPapers(params Record[] records);
+        private delegate void PushRecord(Record record);
 
         /// <summary>
         /// Default constructor
@@ -27,44 +28,89 @@ namespace RApID_Project_WPF
         public RecordList() : base() { }
 
         /// <summary>
-        /// Implementation of the delegated method <see cref="PushPapers"/>.
+        /// Implementation of the delegated method <see cref="PushRecord"/>.
         /// </summary>
         /// <param name="records">List of records to file.</param>
-        private void FilePapers(params Record[] records) 
-            => Array.ForEach(records, rec => Add(rec));
+        private void FileRecord(Record record) => Add(record);
 
         /// <summary>
         /// Gets the current list of records from the TechnicianSubmission Table.
         /// </summary>
-        internal async Task GetData(Label lbl, Dispatcher UIThread)
+        internal async Task GetData(Label lbl, Dispatcher UIThread, string _query = "")
         {
             var recs = new List<Record>();
             var numRows = 0;
 
-            await Task.Factory.StartNew(() =>
+            if (string.IsNullOrEmpty(_query)) _query = "SELECT * FROM [Repair].[dbo].[TechnicianSubmission]";
+
+            await Task.Factory.StartNew(async () =>
             {
                 using (var conn = new SqlConnection(csObjectHolder.csObjectHolder.ObjectHolderInstance().RepairConnectionString))
                 {
                     conn.Open();
-                    using (var reader = new SqlCommand("SELECT * FROM [Repair].[dbo].[TechnicianSubmission]", conn).ExecuteReader())
+                    using (var reader = new SqlCommand(_query, conn).ExecuteReader())
                     {
                         while (reader.Read())
                         {
                             object[] rowVals = new object[reader.VisibleFieldCount];
                             var dum_num = reader.GetValues(rowVals);
+                            var new_Record = (Record)rowVals;
 
-                            recs.Add((Record)rowVals);
-                            UIThread.Invoke(() => lbl.Content = $"Loading... ({++numRows}) loaded so far{new string('.', numRows % 3)}");
+                            recs.Add(new_Record);
+                            UIThread.Invoke(() => lbl.Content = $"Loading... ({++numRows}) loaded so far{new string('.', numRows % 6)}");
+                            await UIThread.BeginInvoke(DispatcherPriority.Background, new PushRecord(FileRecord), new_Record);
                         }
                     }
                 }
             });
 
-            UIThread.Invoke(() => lbl.Content = $"Loading Complete! Adding rows to user table... \n\n\nMay take a few minutes.");
-            System.Threading.Thread.Sleep(250);
+            UIThread.Invoke(() => lbl.Content = $"Loading Complete!");
+        }
 
-            // Put all the records into the acutal data grid
-            await UIThread.BeginInvoke(DispatcherPriority.ApplicationIdle, new PushPapers(FilePapers), recs.ToArray());
+        /// <summary>
+        /// Gets the most recent records from today.
+        /// </summary>
+        internal async Task AppendData(Label lbl, Dispatcher UIThread, string _query = "")
+        {
+            var recs = new List<Record>();
+            var numRows = 0;
+
+            if (string.IsNullOrEmpty(_query)) _query = "SELECT * FROM [Repair].[dbo].[TechnicianSubmission] WHERE [DateReceived] >= CURRENT_TIMESTAMP-1";
+
+            await Task.Factory.StartNew(async () =>
+            {
+                using (var conn = new SqlConnection(csObjectHolder.csObjectHolder.ObjectHolderInstance().RepairConnectionString))
+                {
+                    conn.Open();
+                    using (var reader = new SqlCommand(_query, conn).ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            object[] rowVals = new object[reader.VisibleFieldCount];
+                            var dum_num = reader.GetValues(rowVals);
+                            var new_Record = (Record)rowVals;
+
+                            recs.Add(new_Record);
+                            UIThread.Invoke(() => lbl.Content = $"Updating... ({++numRows}) new rows so far{new string('.', numRows % 6)}");
+                            await UIThread.BeginInvoke(DispatcherPriority.Background, new PushRecord(FileRecord), new_Record);
+                        }
+                    }
+                }
+            });
+
+            UIThread.Invoke(() => lbl.Content = $"Update Complete!");
+        }
+
+        /// <summary>
+        /// Iterates through the list of records to find the given record.
+        /// </summary>
+        protected bool ContainsByID(Record rec)
+        {
+            foreach(var r in this.Where(_r => _r.DateReceived >= DateTime.Now.AddDays(-1.0)))
+            {
+                if (r.ID == rec.ID) return true;
+            }
+            return false;
         }
     }
 

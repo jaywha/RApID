@@ -3,6 +3,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:behaviors="clr-namespace:WPFTextBoxAutoComplete;assembly=WPFTextBoxAutoComplete"
         xmlns:rapid_project_wpf="clr-namespace:RApID_Project_WPF"
+        xmlns:uc="clr-namespace:RApID_Project_WPF.UserControls"
         Title="Repair" Width="1104" Height="815" MinWidth="300" MinHeight="300" WindowStartupLocation="CenterScreen" Loaded="Window_Loaded" Closing="Window_Closing" Background="#FF808285" WindowState="Maximized">
     <Window.Resources>
         <Style x:Key="TextboxBaseStyle" TargetType="{x:Type TextBox}">
@@ -458,6 +459,17 @@
 
                     </Grid>
                 </TabItem>
+
+                <TabItem Header="ucEOL Test">
+                    <uc:ucEOLTab x:Name="ucEOLTab" SerialNumber="{Binding Path=Text, ElementName=txtBarcode, Mode=TwoWay}" PartSeries="{Binding Path=Text, ElementName=txtSeries, Mode=TwoWay}"
+                                 VerticalAlignment="Top" HorizontalAlignment="Left"/>
+                </TabItem>
+
+                <TabItem Header="ucAOI">
+                    <uc:ucAOITab x:Name="ucAOITab" SerialNumber="{Binding Path=Text, ElementName=txtBarcode, Mode=TwoWay}"
+                                 VerticalAlignment="Top" HorizontalAlignment="Left"/>
+                </TabItem>
+
             </TabControl>
 
 
@@ -475,6 +487,8 @@
                 <Label Name="tbStopBits" Content="Stop Bits:" Height="34" ToolBar.OverflowMode="Never" VerticalAlignment="Top" HorizontalAlignment="Left" Padding="5,7,15,0" />
                 <Separator />
                 <Button Name="btnRebootSP" Content="Reboot" Height="29" Width="50" ToolBar.OverflowMode="Never" VerticalAlignment="Top" HorizontalAlignment="Left" Padding="0,1,0,0" BorderBrush="{DynamicResource {x:Static SystemColors.ActiveCaptionTextBrushKey}}" Background="{DynamicResource {x:Static SystemColors.GradientInactiveCaptionBrushKey}}" Click="btnRebootSP_Click" />
+                <Separator />
+                <ProgressBar x:Name="progMapper" Height="20" VerticalAlignment="Center" HorizontalAlignment="Right" Width="100" IsIndeterminate="True" Visibility="Collapsed"/>
             </ToolBar>
         </Grid>
     </Viewbox>

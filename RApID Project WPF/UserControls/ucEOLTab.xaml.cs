@@ -44,9 +44,9 @@ namespace RApID_Project_WPF.UserControls
         /// <summary>
         /// Fills the EOL Data Tab with all of the information related to the serial number.
         /// </summary>
-        internal void fillEOLData()
+        internal void Fill()
         {
-            resetEOL();
+            Reset();
             string query = $"SELECT TestID FROM tblEOL WHERE PCBSerial = '{SerialNumber}';";
             cbEOLTestID.FillFromQuery(query);
 
@@ -73,7 +73,7 @@ namespace RApID_Project_WPF.UserControls
         /// <summary>
         /// Resets the EOL Test Tab
         /// </summary>
-        internal void resetEOL()
+        internal void Reset()
         {
             cbEOLTestID.Items.Clear();
             cbPRETestID.Items.Clear();

@@ -235,8 +235,8 @@ namespace RApID_Project_WPF
             lblPOST.Content = "Post Burn-In";
 
             resetUnitIssues();
-            resetEOL(); ucEOLTab.resetEOL();
-            resetAOI(); ucAOITab.resetAOI();
+            resetEOL(); ucEOLTab.Reset();
+            resetAOI(); ucAOITab.Reset();
 
             txtSerialNumber.Focus();
         }
@@ -621,8 +621,8 @@ namespace RApID_Project_WPF
                 sVar.LogHandler.CreateLogAction("**** This is a Production Log ****", csLogging.LogState.NOTE);
                 sVar.LogHandler.CreateLogAction("The Serial Number related to this log is: " + txtSerialNumber.Text.TrimEnd(), csLogging.LogState.NOTE);
                 fillDataLog();
-                fillEOLData(); ucEOLTab.fillEOLData();
-                fillAOIData(); ucAOITab.fillAOIData();
+                fillEOLData(); ucEOLTab.Fill();
+                fillAOIData(); ucAOITab.Fill();
             }
         }
 
@@ -1848,6 +1848,7 @@ namespace RApID_Project_WPF
             tSPChecker = null;
 
             sVar.resetStaticVars();
+            csSplashScreenHelper.Close();
         }
 
         private void refDesIndexChanged(object sender, SelectionChangedEventArgs e)

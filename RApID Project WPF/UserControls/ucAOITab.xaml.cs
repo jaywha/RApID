@@ -41,16 +41,16 @@ namespace RApID_Project_WPF.UserControls
         /// <summary>
         /// Fills the AOI Tab with all fo the information related to the serial number.
         /// </summary>
-        internal void fillAOIData()
+        internal void Fill()
         {
-            resetAOI();
+            Reset();
             csCrossClassInteraction.AOIQuery(dgAOI, dgDefectCodes, SerialNumber);
         }
 
         /// <summary>
         /// Resets the AOI Tab
         /// </summary>
-        internal void resetAOI()
+        internal void Reset()
         {
             dgAOI.Items.Clear();
             dgDefectCodes.Items.Clear();

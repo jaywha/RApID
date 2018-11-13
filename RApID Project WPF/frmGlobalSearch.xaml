@@ -3,7 +3,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:local="clr-namespace:RApID_Project_WPF"
         xmlns:scm="clr-namespace:System.ComponentModel;assembly=WindowsBase"
-        Title="Global Ticket Search" Height="542.914" Width="1005.359" Loaded="wndMain_Loaded" Closing="wndMain_Closing">
+        Title="Global Ticket Search" Height="618.696" Width="1005.359" Loaded="wndMain_Loaded" Closing="wndMain_Closing">
     <Window.Resources>
         <local:RecordList x:Key="records"/>
         <CollectionViewSource x:Key="cvsRecords" Source="{StaticResource records}">
@@ -23,34 +23,71 @@
         <Grid.ColumnDefinitions>
             <ColumnDefinition/>
         </Grid.ColumnDefinitions>
-        <DataGrid x:Name="dgSubmissions" ItemsSource="{Binding Source={StaticResource cvsRecords}}" Margin="199,10,10,10" CanUserAddRows="False"/>
-        <Label x:Name="lblPN" Content="Part Number:" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top"/>
-        <TextBox x:Name="txtPartNumber" HorizontalAlignment="Left" Height="23" Margin="10,41,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="168"
-                GotFocus="textBoxGotFocus" LostFocus="textBoxLostFocus" KeyDown="textBoxKeyDown"/>
-        <Label x:Name="lblON" Content="Order Number:" HorizontalAlignment="Left" Margin="10,69,0,0" VerticalAlignment="Top"/>
-        <TextBox x:Name="txtOrderNumber" HorizontalAlignment="Left" Height="23" Margin="10,100,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="168"
-                GotFocus="textBoxGotFocus" LostFocus="textBoxLostFocus" TextChanged="textBoxNumericInput" KeyDown="textBoxKeyDown"/>
-        <Label x:Name="lblSN" Content="Serial Number:" HorizontalAlignment="Left" Margin="10,128,0,0" VerticalAlignment="Top"/>
-        <TextBox x:Name="txtSerialNumber" HorizontalAlignment="Left" Height="23" Margin="10,159,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="168"
-                GotFocus="textBoxGotFocus" LostFocus="textBoxLostFocus" TextChanged="textBoxNumericInput" KeyDown="textBoxKeyDown"/>
-        <Label x:Name="lblCN" Content="Customer Number:" HorizontalAlignment="Left" Margin="10,187,0,0" VerticalAlignment="Top"/>
-        <TextBox x:Name="txtCutomerNumber" HorizontalAlignment="Left" Height="23" Margin="10,218,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="168"
-                GotFocus="textBoxGotFocus" LostFocus="textBoxLostFocus" KeyDown="textBoxKeyDown"/>
-        <Label x:Name="lblLoadingIndicator" Content="Loading..." HorizontalAlignment="Left" VerticalAlignment="Top" Height="100" Margin="452,244,0,0" Width="300"/>
-        <ProgressBar x:Name="progData" HorizontalAlignment="Left" VerticalAlignment="Top" Width="299" Height="20" Margin="453,270,0,0" IsIndeterminate="True"/>
-        <DatePicker x:Name="dpDisplayDateStart" HorizontalAlignment="Left" Margin="76,256,0,0" VerticalAlignment="Top" Width="108"/>
-        <DatePicker x:Name="dpDisplayDateEnd" HorizontalAlignment="Left" Margin="76,285,0,0" VerticalAlignment="Top" Width="108"/>
-        <Label x:Name="lblDateRangeStart" Content="Start Date:" HorizontalAlignment="Left" Margin="10,256,0,0" VerticalAlignment="Top"/>
-        <Label x:Name="lblDateRangeEnd" Content="End Date:" HorizontalAlignment="Left" Margin="10,283,0,0" VerticalAlignment="Top"/>
-        <Button x:Name="btnClearFilters" Content="Clear Filters ✘" HorizontalAlignment="Left" Margin="10,443,0,0" VerticalAlignment="Top" Width="174" Height="60" FontFamily="Plantagenet Cherokee" FontSize="16" Click="btnClearFilters_Click">
-            <Button.Background>
-                <LinearGradientBrush EndPoint="0,1" StartPoint="0,0">
-                    <GradientStop Color="#FFC9A3A3" Offset="0"/>
-                    <GradientStop Color="#FFD4BFBF" Offset="0.37"/>
-                    <GradientStop Color="#FFBB8D8D" Offset="0.683"/>
-                    <GradientStop Color="#FF722C2C" Offset="1"/>
+        <DataGrid x:Name="dgSubmissions" ItemsSource="{Binding Source={StaticResource cvsRecords}}" Margin="199,10,10,10" CanUserAddRows="False"
+                  CanUserResizeColumns="True" CanUserReorderColumns="True" CanUserDeleteRows="False" CanUserSortColumns="True"
+                  MinColumnWidth="28" MaxColumnWidth="250" MinRowHeight="35"/>
+        <StackPanel x:Name="stkPnlFilters" Orientation="Vertical" Margin="10,10,813,161">
+            <Label x:Name="lblPN" Content="Part Number:" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+            <TextBox x:Name="txtPartNumber" HorizontalAlignment="Left" Height="23" TextWrapping="Wrap" VerticalAlignment="Top" Width="168"
+                GotFocus="textBoxGotFocus" LostFocus="textBoxLostFocus"/>
+            <Label x:Name="lblON" Content="Order Number:" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+            <TextBox x:Name="txtOrderNumber" HorizontalAlignment="Left" Height="23" TextWrapping="Wrap" VerticalAlignment="Top" Width="168"
+                GotFocus="textBoxGotFocus" LostFocus="textBoxLostFocus" TextChanged="textBoxNumericInput"/>
+            <Label x:Name="lblSN" Content="Serial Number:" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+            <TextBox x:Name="txtSerialNumber" HorizontalAlignment="Left" Height="23" TextWrapping="Wrap" VerticalAlignment="Top" Width="168"
+                GotFocus="textBoxGotFocus" LostFocus="textBoxLostFocus" TextChanged="textBoxNumericInput"/>
+            <Label x:Name="lblCN" Content="Customer Number:" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+            <TextBox x:Name="txtCutomerNumber" HorizontalAlignment="Left" Height="23" TextWrapping="Wrap" VerticalAlignment="Top" Width="168"
+                GotFocus="textBoxGotFocus" LostFocus="textBoxLostFocus"/>
+            <Label x:Name="lblDateRangeStart" Content="Start Date:" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+            <DatePicker x:Name="dpStartDate" HorizontalAlignment="Left" VerticalAlignment="Top" Width="108"/>
+            <Label x:Name="lblDateRangeEnd" Content="End Date:" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+            <DatePicker x:Name="dpEndDate" HorizontalAlignment="Left" VerticalAlignment="Top" Width="108"/>
+        </StackPanel>
+        <Label x:Name="lblLoadingIndicator" Content="Loading..." HorizontalAlignment="Left" VerticalAlignment="Top" Height="69" Margin="9,510,0,0" Width="175"/>
+        <ProgressBar x:Name="progData" HorizontalAlignment="Left" VerticalAlignment="Top" Width="174" Height="32" Margin="10,547,0,0" IsIndeterminate="True"/>
+        <Border BorderThickness="2" Margin="10,319,0,0" HorizontalAlignment="Left" Width="174" Height="184" VerticalAlignment="Top">
+            <Border.BorderBrush>
+                <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                    <GradientStop Color="#FF072132" Offset="0"/>
+                    <GradientStop Color="#FF9BBCD3" Offset="1"/>
                 </LinearGradientBrush>
-            </Button.Background>
-        </Button>
+            </Border.BorderBrush>
+            <StackPanel x:Name="stkPnlButtons" Orientation="Vertical" VerticalAlignment="Center">
+                <Button x:Name="btnGetRecentRecords" Content="Update Table ☁" HorizontalAlignment="Center" VerticalAlignment="Top" Width="174" Height="60" FontFamily="Plantagenet Cherokee" FontSize="16" Click="GetLatestRecords" Visibility="Collapsed">
+                    <Button.Background>
+                        <LinearGradientBrush EndPoint="0,1" StartPoint="0,0">
+                            <GradientStop Color="#FFCBDEE4" Offset="0"/>
+                            <GradientStop Color="#FF4C98AE" Offset="0.576"/>
+                            <GradientStop Color="#FF88BCCB" Offset="0.305"/>
+                            <GradientStop Color="#FF154D5F" Offset="1"/>
+                            <GradientStop Color="#FF28809B" Offset="0.798"/>
+                        </LinearGradientBrush>
+                    </Button.Background>
+                </Button>
+                <Separator Width="{Binding Path=Width,ElementName=stckPnlButtons}" Visibility="Collapsed"/>
+                <Button x:Name="btnApplyFilters" Content="Apply Filters ✓" HorizontalAlignment="Center" VerticalAlignment="Center" Width="174" Height="60" FontFamily="Plantagenet Cherokee" FontSize="16" Click="ApplyFilters">
+                    <Button.Background>
+                        <LinearGradientBrush EndPoint="0,1" StartPoint="0,0">
+                            <GradientStop Color="#FF98B885" Offset="0"/>
+                            <GradientStop Color="#FF709759" Offset="0.691"/>
+                            <GradientStop Color="#FFA4BB97" Offset="0.366"/>
+                            <GradientStop Color="#FF31591A" Offset="1"/>
+                        </LinearGradientBrush>
+                    </Button.Background>
+                </Button>
+                <Separator Width="{Binding Path=Width,ElementName=stckPnlButtons}"/>
+                <Button x:Name="btnClearFilters" Content="Clear Filters ✘" HorizontalAlignment="Center" VerticalAlignment="Bottom" Width="174" Height="60" FontFamily="Plantagenet Cherokee" FontSize="16" Click="btnClearFilters_Click">
+                    <Button.Background>
+                        <LinearGradientBrush EndPoint="0,1" StartPoint="0,0">
+                            <GradientStop Color="#FFC9A3A3" Offset="0"/>
+                            <GradientStop Color="#FFD4BFBF" Offset="0.37"/>
+                            <GradientStop Color="#FFBB8D8D" Offset="0.683"/>
+                            <GradientStop Color="#FF722C2C" Offset="1"/>
+                        </LinearGradientBrush>
+                    </Button.Background>
+                </Button>
+            </StackPanel>
+        </Border>
     </Grid>
 </Window>

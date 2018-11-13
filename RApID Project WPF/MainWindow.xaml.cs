@@ -41,15 +41,13 @@ namespace RApID_Project_WPF
                         Hide();
                         var fpr = new frmProduction { Owner = this };
                         fpr.ShowDialog();
-                        Show();
-                        Activate();
+                        MakeFocus();
                         break;
                     case "btnRepair":
                         Hide();
                         var rpr = new Repair(false) { Owner = this };
                         rpr.ShowDialog();
-                        Show();
-                        Activate();
+                        MakeFocus();
                         break;
                     case "btnReportViewer":
                         System.Diagnostics.Process.Start(Properties.Settings.Default.DefaultReportManagerLink);
@@ -58,22 +56,19 @@ namespace RApID_Project_WPF
                         Hide();
                         var fQC = new frmQCDQE { Owner = this };
                         fQC.ShowDialog();
-                        Show();
-                        Activate();
+                        MakeFocus();
                         break;
                     case "btnSettings":
                         Hide();
                         var fSettings = new frmSettings { Owner = this };
                         fSettings.ShowDialog();
-                        Show();
-                        Activate();
+                        MakeFocus();
                         break;
                     case "btnTicketLookup":
                         Hide();
                         frmGlobalSearch.Instance.Owner = this;
                         frmGlobalSearch.Instance.Show();
-                        Show();
-                        Activate();
+                        MakeFocus();
                         break;
                 }
             }
@@ -85,23 +80,51 @@ namespace RApID_Project_WPF
 
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
-            try {
-                csSplashScreenHelper.StopTokenSource.Cancel();
-            } catch (Exception ex) {
-                csExceptionLogger.csExceptionLogger.Write("WindowClosing_ThreadStillRunning", ex);
-            }
-
             notifyRapid = null; // Ensure GC collects notify icon
+            try
+            {
+                csSplashScreenHelper.thread_Show?.Abort();
+                csSplashScreenHelper.thread_Hide?.Abort();
+                csSplashScreenHelper.thread_Close?.Abort();
+            }
+            catch (Exception ex)
+            when (ex is System.Security.SecurityException || ex is System.Threading.ThreadStateException
+                || ex is System.Threading.ThreadAbortException)
+            {
+                csExceptionLogger.csExceptionLogger.Write("MainWindow_ThreadedClosingIssues", ex);
+            }
+        }
+
+
+
+        private void wndMain_Closed(object sender, EventArgs e)
+        {
+            try
+            {
+                /*Wide net to catch rouge threads...*/
+                EricStabileLibrary.InitSplash.thread_Splash?.Abort();
+            }
+            catch (System.Threading.Tasks.TaskCanceledException tce)
+            {
+                Console.WriteLine($"Task ID: {tce.Task.Id} | CanBeCanceled = {tce.CancellationToken.CanBeCanceled}\n\tSource -> {tce.Source}");
+            }
         }
 
         private void btnShow_Click(object sender, RoutedEventArgs e)
         {
             WindowState = WindowState.Normal;
+            MakeFocus();
+        }
+
+        private void MakeFocus()
+        {
             Show();
             BringIntoView();
             Activate();
         }
 
         private void btnExit_Click(object sender, RoutedEventArgs e) => Close();
+
+        
     }
 }

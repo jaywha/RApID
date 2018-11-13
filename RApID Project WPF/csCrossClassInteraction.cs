@@ -9,6 +9,7 @@ using System.Data.SqlClient;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Threading;
 using System.Windows.Controls;
 using System.Windows.Data;
 using ExcelDataReader;
@@ -1172,32 +1173,5 @@ namespace RApID_Project_WPF
         /// <param name="cbox">Target Combobox</param>
         public static void SelectAll(this ComboBox cbox)
             => (cbox.Template.FindName("PART_EditableTextBox", cbox) as TextBox).SelectAll();
-
-        #region Not In Use Anymore
-        //public static List<ProductionMultipleUnitIssues> GetProductionUnitIssues(string ID)
-        //{
-        //    List<ProductionMultipleUnitIssues> lRMI = new List<ProductionMultipleUnitIssues>();
-
-        //    string query = "SELECT TestResult, TestResultAbort, Issue, Item, Problem, PartsReplaced, RefDesignator, PartsReplacedPartDescription FROM TechnicianUnitIssues WHERE ID = '" + ID + "'";
-        //    SqlConnection conn = new SqlConnection(holder.RepairConnectionString);
-        //    SqlCommand cmd = new SqlCommand(query, conn);
-
-        //    try
-        //    {
-        //        conn.Open();
-        //        conn.Close();
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        if (conn != null)
-        //            conn.Close();
-
-        //        System.Windows.Forms.MessageBox.Show("Error loading the Production Unit Issues.\nError Message: " + ex.Message, "Repair Unit Issues Load Error", System.Windows.Forms.MessageBoxButtons.OK, System.Windows.Forms.MessageBoxIcon.Error);
-        //    }
-
-
-        //    return lRMI;
-        //}
-        #endregion
     }
 }
