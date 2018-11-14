@@ -17,6 +17,8 @@ namespace RApID_Project_WPF
         {
             InitializeComponent();
             _records = (RecordList)Resources["records"];
+            _records.ToggleButtonControls = ToggleButtonsEnabled;
+            _records.ToggleFilterControls = ToggleFiltersEnabled;
 
             ToggleFiltersEnabled(false);
             ToggleButtonsEnabled(false);
@@ -24,25 +26,8 @@ namespace RApID_Project_WPF
 
         public static frmGlobalSearch Instance { get; } = new frmGlobalSearch();
 
-        private async void wndMain_Loaded(object sender, RoutedEventArgs e)
-        {
-            await _records.GetData(lblLoadingIndicator, dgSubmissions.Dispatcher)
-            .ContinueWith((_) =>
-            {
-                Console.WriteLine("[INFO]: Number of rows in data grid (" + dgSubmissions.Items.Count + ").");
-
-                lblLoadingIndicator.Dispatcher.Invoke(() =>
-                    lblLoadingIndicator.Visibility = Visibility.Collapsed
-                );
-
-                progData.Dispatcher.Invoke(() =>
-                    progData.Visibility = Visibility.Collapsed
-                );
-
-                stkPnlFilters.Dispatcher.Invoke(() => ToggleFiltersEnabled(true));
-                stkPnlButtons.Dispatcher.Invoke(() => ToggleButtonsEnabled(true));
-            });
-        }
+        private async void wndMain_Loaded(object sender, RoutedEventArgs e) 
+            => await _records.GetData(lblLoadingIndicator, progData, dgSubmissions.Dispatcher);
 
         private void wndMain_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {

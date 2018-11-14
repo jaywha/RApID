@@ -6,6 +6,7 @@ using System.Data.SqlClient;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Threading;
 
@@ -23,6 +24,16 @@ namespace RApID_Project_WPF
         private delegate void PushRecord(Record record);
 
         /// <summary>
+        /// Entry point for <see cref="frmGlobalSearch.ToggleButtonsEnabled(bool)"/> method.
+        /// </summary>
+        public Action<bool> ToggleButtonControls;
+
+        /// <summary>
+        /// Entry point for the <see cref="frmGlobalSearch.ToggleFiltersEnabled(bool)"/> method.
+        /// </summary>
+        public Action<bool> ToggleFilterControls;
+
+        /// <summary>
         /// Default constructor
         /// </summary>
         public RecordList() : base() { }
@@ -36,7 +47,7 @@ namespace RApID_Project_WPF
         /// <summary>
         /// Gets the current list of records from the TechnicianSubmission Table.
         /// </summary>
-        internal async Task GetData(Label lbl, Dispatcher UIThread, string _query = "")
+        internal async Task GetData(Label lbl,ProgressBar prog, Dispatcher UIThread, string _query = "")
         {
             var recs = new List<Record>();
             var numRows = 0;
@@ -62,9 +73,26 @@ namespace RApID_Project_WPF
                         }
                     }
                 }
-            });
 
-            UIThread.Invoke(() => lbl.Content = $"Loading Complete!");
+                lbl.Dispatcher.Invoke(() => {
+                    lbl.Content = $"Loading Complete!";
+                    lbl.Visibility = Visibility.Collapsed;
+                });
+
+                prog.Dispatcher.Invoke(() =>
+                    prog.Visibility = Visibility.Collapsed
+                );
+
+                UIThread.Invoke(() => ToggleButtonControls.Invoke(true));
+                UIThread.Invoke(() => ToggleFilterControls.Invoke(true));
+
+            MainWindow.Notify.Dispatcher.Invoke(() =>
+                MainWindow.Notify.ShowBalloonTip("RApID - Global Search Complete!", "Global Search window has completed loading all of" +
+                " the records currently in the database.", Hardcodet.Wpf.TaskbarNotification.BalloonIcon.Info)
+                );
+
+                Console.WriteLine("[INFO]: Number of rows in data grid (" + Count + ").");
+            });
         }
 
         /// <summary>

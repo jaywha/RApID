@@ -2,6 +2,7 @@
 using System.IO;
 using System.Windows;
 using System.Windows.Controls;
+using Hardcodet.Wpf.TaskbarNotification;
 
 namespace RApID_Project_WPF
 {
@@ -13,6 +14,8 @@ namespace RApID_Project_WPF
         csObjectHolder.csObjectHolder holder = csObjectHolder.csObjectHolder.ObjectHolderInstance();
         StaticVars sVars = StaticVars.StaticVarsInstance();
 
+        public static TaskbarIcon Notify;
+
         public MainWindow()
         {
             holder.vGetServerName("");
@@ -21,6 +24,7 @@ namespace RApID_Project_WPF
             if (!Directory.Exists(csExceptionLogger.csExceptionLogger.DefaultLogLocation))
                 Directory.CreateDirectory(csExceptionLogger.csExceptionLogger.DefaultLogLocation);
             InitializeComponent();
+            Notify = notifyRapid;
         }
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
