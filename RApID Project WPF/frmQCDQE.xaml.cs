@@ -266,6 +266,17 @@ namespace RApID_Project_WPF
             }
         }
 
+        /// <summary>
+        /// Fills txtSWVersion based on the given Serial Number
+        /// </summary>
+        private void fillSoftwareVersion()
+        {
+            string query = $"SELECT TOP(5) SoftwareVersion FROM tblPost WHERE PCBSerial = '{txtRepairBarcode.Text.TrimEnd()}' ORDER BY [DateAndTime] DESC";
+            sVars.LogHandler.CreateLogAction("Attempting to fill the Software Version.", csLogging.LogState.NOTE);
+            csCrossClassInteraction.txtFillFromQuery(query, txtSWVersion);
+            txtSWVersion.Text = txtSWVersion.Text.Split(',')[0];
+        }
+
         private void fillDataLog()
         {
             string sRefDesignator = string.Empty;
@@ -278,8 +289,7 @@ namespace RApID_Project_WPF
             {
                 cbxScanSwitch.IsChecked = true;
                 cbxScanSwitch_Click(null, null);
-            }                
-            
+            }
 
             if((bool)cbxScanSwitch.IsChecked)
             {
@@ -341,7 +351,9 @@ namespace RApID_Project_WPF
 
                 populateFormWithData();
 
-                if(!string.IsNullOrEmpty(txtSN.Text))
+                fillSoftwareVersion();
+
+                if (!string.IsNullOrEmpty(txtSN.Text))
                     QueryTechReport();
 
                 rtbQCDQEComments.Focus();

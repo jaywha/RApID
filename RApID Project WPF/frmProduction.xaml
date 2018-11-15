@@ -366,6 +366,7 @@
                 <Label Name="tbStopBits" Content="Stop Bits:" Height="34" ToolBar.OverflowMode="Never" VerticalAlignment="Top" HorizontalAlignment="Left" Padding="5,7,15,0" />
                 <Separator />
                 <Button Name="btnRebootSP" Content="Reboot" Height="29" Width="50" ToolBar.OverflowMode="Never" VerticalAlignment="Top" HorizontalAlignment="Left" Padding="0,1,0,0" BorderBrush="{DynamicResource {x:Static SystemColors.ActiveCaptionTextBrushKey}}" Background="{DynamicResource {x:Static SystemColors.GradientInactiveCaptionBrushKey}}" Click="btnRebootSP_Click" />
+                <ProgressBar Name="progMapper" Height="20" VerticalAlignment="Center" HorizontalAlignment="Right" Width="100" IsIndeterminate="True" Visibility="Collapsed"/>
             </ToolBar>
 
         </Grid>

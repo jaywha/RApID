@@ -178,7 +178,7 @@
                         <Label Name="lblHOU" Content="Hours on Unit:" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="6,388,0,0" />
                         <TextBox Name="txtHOU" HorizontalAlignment="Left" VerticalAlignment="Top" TextWrapping="Wrap" Width="100" Height="23" Margin="6,413,0,0" GotFocus="txtGotFocus" LostFocus="txtLostFocus"/>
 
-                        <TabControl HorizontalAlignment="Left" VerticalAlignment="Top" Width="300" Height="616" Margin="300,11,0,0">
+                        <TabControl x:Name="tabcUnitIssues" HorizontalAlignment="Left" VerticalAlignment="Top" Width="300" Height="616" Margin="300,11,0,0">
                             <TabItem Name="tiUI1" Header="Unit Issue #1">
                                 <Grid Name="gridUI1" Background="#FFE5E5E5">
                                     <Label Content="Reported Issue:" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10,10,0,0" />
@@ -197,9 +197,11 @@
                                     <ComboBox Name="cbReplacement" Margin="10,275,0,0" DropDownClosed="cbDDClosed" Style="{StaticResource Combobox}" />
                                     
                                     <Label Content="Ref Designator" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10,310,0,0" />
-                                    <ComboBox x:Name="txtRefDes" IsTextSearchEnabled="False" IsEditable="True" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10,335,0,0" VerticalContentAlignment="Center" Width="100" Height="23"
-                                              SelectionChanged="refDesIndexChanged" GotFocus="txtGotFocus" LostFocus="txtLostFocus" KeyUp="txtMultiRefKeyUp"/>
-                                    
+                                    <Border x:Name="brdRefDes" Margin="10,335,180,226" >
+                                        <ComboBox x:Name="txtRefDes" IsTextSearchEnabled="False" IsEditable="True" HorizontalAlignment="Left" VerticalAlignment="Top" VerticalContentAlignment="Center" Width="100" Height="23"
+                                                SelectionChanged="refDesIndexChanged" GotFocus="txtGotFocus" LostFocus="txtLostFocus" KeyUp="txtMultiRefKeyUp"/>
+                                    </Border>
+
                                     <Label Content="Part Replaced" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="115,310,0,0" />
                                     <ComboBox x:Name="txtPartReplaced" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="115,335,0,0" VerticalContentAlignment="Center" Width="100" Height="23" GotFocus="txtGotFocus" LostFocus="txtLostFocus" />
                                     <Button Name="btnAddMultiParts" Content="Add" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="220,335,0,0" Width="65" Height="23" Click="btnAddMultiParts_Click" />

@@ -14,6 +14,8 @@ using System.Windows.Controls;
 using System.Windows.Data;
 using ExcelDataReader;
 using DesginatorPair = System.Tuple<System.Windows.Controls.Control, System.Windows.Controls.Control>;
+using System.Threading.Tasks;
+using System.Windows;
 
 namespace RApID_Project_WPF
 {
@@ -125,47 +127,53 @@ namespace RApID_Project_WPF
         /// </summary>
         /// <param name="filePath">Path to the Excel file - normally the BoM file.</param>
         /// <param name="designators">A list of reference and part number designators to give autocompletion.</param>
-        public static void DoExcelOperations(string filePath, params DesginatorPair[] designators)
+        public static async void DoExcelOperations(string filePath, ProgressBar progData = null, params DesginatorPair[] designators)
         {
             var refs = new List<string>();
             var invs = new List<string>();
 
             try
             {
-                using (var stream = File.Open(filePath, FileMode.Open, FileAccess.Read))
+                await Task.Factory.StartNew(new Action(() =>
                 {
-                    using (var reader = ExcelReaderFactory.CreateReader(stream))
-                    {
-                        while (reader.NextResult() && reader.Name != null && !reader.Name.Equals("JUKI"))
-                        { /*spin until JUKI sheet*/ }
+                    if (progData != null) progData.Dispatcher.Invoke(() => progData.Visibility = Visibility.Visible);
 
-                        while (reader.Read() && !string.IsNullOrEmpty(reader.GetValue(0)?.ToString())
-                                             && !string.IsNullOrEmpty(reader.GetValue(4)?.ToString()))
+                    using (var stream = File.Open(filePath, FileMode.Open, FileAccess.Read))
+                    {
+                        using (var reader = ExcelReaderFactory.CreateReader(stream))
                         {
-                            refs.Add(reader.GetValue(0).ToString());
-                            invs.Add(reader.GetValue(4).ToString());
+                            while (reader.NextResult() && reader.Name != null && !reader.Name.Equals("JUKI"))
+                            { /*spin until JUKI sheet*/ }
+
+                            while (reader.Read() && !string.IsNullOrEmpty(reader.GetValue(0)?.ToString())
+                                                 && !string.IsNullOrEmpty(reader.GetValue(4)?.ToString()))
+                            {
+                                refs.Add(reader.GetValue(0).ToString());
+                                invs.Add(reader.GetValue(4).ToString());
+                            }
                         }
                     }
-                }
 
-                foreach (var designator in designators)
-                {
-                    var reference = designator.Item1;
-                    var partnumber = designator.Item2;
-
-                    if (reference is ComboBox refbox)
+                    foreach (var designator in designators)
                     {
-                        refbox.ItemsSource = refs;
+                        var reference = designator.Item1;
+                        var partnumber = designator.Item2;
+
+                        if (reference is ComboBox refbox)
+                        {
+                            refbox.Dispatcher.Invoke(() => refbox.ItemsSource = refs);
+                        }
+
+                        if (partnumber is ComboBox invbox)
+                        {
+                            invbox.Dispatcher.Invoke(() => invbox.ItemsSource = invs);
+                        }
                     }
 
-                    if (partnumber is ComboBox invbox)
-                    {
-                        invbox.ItemsSource = invs;
-                    }
-                }
+                    while (Process.GetProcessesByName("EXCEL").Any()) { Process.GetProcessesByName("EXCEL")[0].Kill(); }
 
-                while (Process.GetProcessesByName("EXCEL").Any()) { Process.GetProcessesByName("EXCEL")[0].Kill(); }
-
+                    if(progData != null) progData.Dispatcher.Invoke(() => progData.Visibility = Visibility.Hidden);
+                }));
             }
             catch (IOException ioe)
             {

@@ -1,0 +1,22 @@
+﻿<UserControl x:Class="RApID_Project_WPF.UserControls.ucProgressControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:RApID_Project_WPF.UserControls"
+             mc:Ignorable="d"
+             x:Name="uccProgresControl" Height="62.632" Width="260.631">
+    <UserControl.Resources>
+        <local:HeightToHeightConverter x:Key="HeightConverter"/>
+    </UserControl.Resources>
+    <Grid>
+        <Label x:Name="lblLoadingIndicator" HorizontalAlignment="Left" VerticalAlignment="Top"
+               Width="{Binding Path=Width,ElementName=uccProgresControl}"
+               Height="{Binding Path=Height,ElementName=uccProgresControl}"
+               Content="{Binding Path=LabelText,ElementName=uccProgresControl}"/>
+        <ProgressBar x:Name="progData" HorizontalAlignment="Left" VerticalAlignment="Bottom"
+                     IsIndeterminate="{Binding Path=Marquee,ElementName=uccProgresControl}"
+                     Width="{Binding Path=Width,ElementName=uccProgresControl}"
+                     Height="{Binding Path=Height,ElementName=uccProgresControl,Converter={StaticResource HeightConverter}}"/>
+    </Grid>
+</UserControl>

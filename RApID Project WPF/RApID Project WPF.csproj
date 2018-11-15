@@ -187,6 +187,10 @@
     </Compile>
     <Compile Include="Settings.cs" />
     <Compile Include="StaticVars.cs" />
+    <Compile Include="UserControls\HeightToHeightConverter.cs" />
+    <Compile Include="UserControls\ucProgressControl.xaml.cs">
+      <DependentUpon>ucProgressControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="UserControls\ucAOITab.xaml.cs">
       <DependentUpon>ucAOITab.xaml</DependentUpon>
     </Compile>
@@ -273,6 +277,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="UserControls\ucProgressControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="UserControls\ucAOITab.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -322,7 +330,12 @@
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <ProjectReference Include="..\RApID Service\RApID Service.csproj">
+      <Project>{33aa9307-a983-4518-b855-21412a946cc2}</Project>
+      <Name>RApID Service</Name>
+    </ProjectReference>
+  </ItemGroup>
   <ItemGroup>
     <WCFMetadata Include="Service References\" />
   </ItemGroup>

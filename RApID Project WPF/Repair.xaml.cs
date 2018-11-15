@@ -731,7 +731,7 @@ namespace RApID_Project_WPF
             if (cbEOLTestID.Items.Count > 0)
             {
                 var testName = "";
-                testName = lblRPNumber.Content.ToString().Replace("RP Number: ", "").StartsWith("SV")
+                testName = (repairLabel.HasValue && repairLabel.Value)
                 || txtSeries.Text.Contains("XDR") ? "Bench" : "EOL";
                 cbBEAMSTestType.Items.Add(testName);
             }
@@ -742,7 +742,7 @@ namespace RApID_Project_WPF
             if (cbPOSTTestID.Items.Count > 0)
             {
                 var testName = "";
-                testName = lblRPNumber.Content.ToString().Replace("RP Number: ", "").StartsWith("SV")
+                testName = (repairLabel.HasValue && repairLabel.Value)
                 || txtSeries.Text.Contains("XDR") ? "Final" : "POST";
                 cbBEAMSTestType.Items.Add(testName);
             }
@@ -1405,20 +1405,18 @@ namespace RApID_Project_WPF
 
         private async void MapRefDesToPartNum()
         {
-            progMapper.Visibility = Visibility.Visible;
-
             using (var mapper = csSerialNumberMapper.Instance)
             {
                 await Task.Factory.StartNew(new Action(() =>
                 {
-                    Dispatcher.Invoke(delegate // perform actions on dispatched thread
+                    tabcUnitIssues.Dispatcher.BeginInvoke(new Action(() => // perform actions on dispatched thread
                     {
                         if (!mapper.GetData(txtBarcode.Text))
                             throw new InvalidOperationException("Couldn't find data for this barcode!");
                         else
                         {
                             var result = mapper.FindFile(".xls");
-                            csCrossClassInteraction.DoExcelOperations(result.Item1,
+                            csCrossClassInteraction.DoExcelOperations(result.Item1, progMapper,
                             new Tuple<Control, Control>(txtRefDes, txtPartReplaced),
                             new Tuple<Control, Control>(txtRefDes_2, txtPartReplaced_2),
                             new Tuple<Control, Control>(txtRefDes_3, txtPartReplaced_3));
@@ -1426,9 +1424,8 @@ namespace RApID_Project_WPF
                             OrigRefSource = (List<string>)txtRefDes.ItemsSource;
                             OrigPartSource = (List<string>)txtPartReplaced.ItemsSource;
                         }
-                    });
-                })).ContinueWith((_) => 
-                progMapper.Dispatcher.Invoke(() => progMapper.Visibility = Visibility.Hidden));
+                    }), DispatcherPriority.Background);
+                }));
             }
         }
 
@@ -2126,6 +2123,17 @@ namespace RApID_Project_WPF
                 {
                     sVar.LogHandler.CreateLogAction((Button)sender, csLogging.LogState.CLICK);
 
+                    if(!txtPartReplaced.Items.Contains(txtPartReplaced.Text))
+                    {
+                        brdRefDes.BorderBrush = Brushes.Red;
+                        brdRefDes.BorderThickness = new Thickness(1.0);
+                        MessageBox.Show("Invalid Ref Designator",$"{txtRefDes.Text} is not a valid designator!",MessageBoxButton.OK,MessageBoxImage.Warning);
+                    } else
+                    {
+                        brdRefDes.BorderBrush = null;
+                        brdRefDes.BorderThickness = new Thickness(0.0);
+                    }
+
                     string _sPRPD = getPartReplacedPartDescription(txtPartReplaced.Text);
 
                     if (string.IsNullOrEmpty(_sPRPD) && !string.IsNullOrEmpty(txtPartReplaced.Text))
@@ -2144,7 +2152,7 @@ namespace RApID_Project_WPF
                         else if (!string.IsNullOrEmpty(mpr.PartReplaced) && string.IsNullOrEmpty(mpr.RefDesignator))
                             sVar.LogHandler.CreateLogAction($"Adding Part Replaced '{mpr.PartReplaced}' to dgMultipleParts. Ref Designator is empty.", csLogging.LogState.NOTE);
                         else sVar.LogHandler.CreateLogAction($"Adding Part Replaced '{mpr.PartReplaced}' and Ref Designator '{mpr.RefDesignator}' to dgMultipleParts.", csLogging.LogState.NOTE);
-
+                                                
                         dgMultipleParts.Items.Add(mpr);
                         txtPartReplaced.Text = txtRefDes.Text = string.Empty;
                     }

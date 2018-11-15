@@ -596,7 +596,7 @@ namespace RApID_Project_WPF
                         else
                         {
                             var result = mapper.FindFile(".xls");
-                            csCrossClassInteraction.DoExcelOperations(result.Item1,
+                            csCrossClassInteraction.DoExcelOperations(result.Item1, progMapper,
                             new Tuple<Control, Control>(txtMultiRefDes, txtMultiPartNum),
                             new Tuple<Control, Control>(txtMultiRefDes_2, txtMultiPartNum_2),
                             new Tuple<Control, Control>(txtMultiRefDes_3, txtMultiPartNum_3));

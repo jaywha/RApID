@@ -2,8 +2,10 @@
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:local="clr-namespace:RApID_Project_WPF"
+        xmlns:uc="clr-namespace:RApID_Project_WPF.UserControls"
         xmlns:scm="clr-namespace:System.ComponentModel;assembly=WindowsBase"
-        Title="Global Ticket Search" Height="618.696" Width="1005.359" Loaded="wndMain_Loaded" Closing="wndMain_Closing">
+        Title="Global Ticket Search" Height="618.696" Width="1005.359" Loaded="wndMain_Loaded" Closing="wndMain_Closing"
+        MinWidth="1010" MinHeight="615">
     <Window.Resources>
         <local:RecordList x:Key="records"/>
         <CollectionViewSource x:Key="cvsRecords" Source="{StaticResource records}">
@@ -23,25 +25,29 @@
         <Grid.ColumnDefinitions>
             <ColumnDefinition/>
         </Grid.ColumnDefinitions>
-        <DataGrid x:Name="dgSubmissions" ItemsSource="{Binding Source={StaticResource cvsRecords}}" Margin="199,10,10,10" CanUserAddRows="False"
+        <DataGrid x:Name="dgSubmissions" Margin="199,10,10,10" CanUserAddRows="False" ItemsSource="{Binding Source={StaticResource cvsRecords}}"
                   CanUserResizeColumns="True" CanUserReorderColumns="True" CanUserDeleteRows="False" CanUserSortColumns="True"
-                  MinColumnWidth="28" MaxColumnWidth="250" MinRowHeight="35"/>
+                  MinColumnWidth="28" MaxColumnWidth="300" MinRowHeight="35" EnableColumnVirtualization="True" EnableRowVirtualization="True">
+            <DataGrid.ContextMenu>
+                <ContextMenu>
+                    <MenuItem Header="Production..." Click="OpenProduction"></MenuItem>
+                    <MenuItem Header="Repair..." Click="OpenRepair"></MenuItem>
+                    <MenuItem Header="QC/DQE..." Click="OpenDQE"></MenuItem>
+                </ContextMenu>
+            </DataGrid.ContextMenu>
+        </DataGrid>
         <StackPanel x:Name="stkPnlFilters" Orientation="Vertical" Margin="10,10,813,161">
             <Label x:Name="lblPN" Content="Part Number:" HorizontalAlignment="Left" VerticalAlignment="Top"/>
-            <TextBox x:Name="txtPartNumber" HorizontalAlignment="Left" Height="23" TextWrapping="Wrap" VerticalAlignment="Top" Width="168"
-                GotFocus="textBoxGotFocus" LostFocus="textBoxLostFocus"/>
+            <TextBox x:Name="txtPartNumber" HorizontalAlignment="Left" Height="23" TextWrapping="Wrap" VerticalAlignment="Top" Width="168" />
             <Label x:Name="lblON" Content="Order Number:" HorizontalAlignment="Left" VerticalAlignment="Top"/>
-            <TextBox x:Name="txtOrderNumber" HorizontalAlignment="Left" Height="23" TextWrapping="Wrap" VerticalAlignment="Top" Width="168"
-                GotFocus="textBoxGotFocus" LostFocus="textBoxLostFocus" TextChanged="textBoxNumericInput"/>
+            <TextBox x:Name="txtOrderNumber" HorizontalAlignment="Left" Height="23" TextWrapping="Wrap" VerticalAlignment="Top" Width="168" TextChanged="textBoxNumericInput"/>
             <Label x:Name="lblSN" Content="Serial Number:" HorizontalAlignment="Left" VerticalAlignment="Top"/>
-            <TextBox x:Name="txtSerialNumber" HorizontalAlignment="Left" Height="23" TextWrapping="Wrap" VerticalAlignment="Top" Width="168"
-                GotFocus="textBoxGotFocus" LostFocus="textBoxLostFocus" TextChanged="textBoxNumericInput"/>
+            <TextBox x:Name="txtSerialNumber" HorizontalAlignment="Left" Height="23" TextWrapping="Wrap" VerticalAlignment="Top" Width="168" TextChanged="textBoxNumericInput"/>
             <Label x:Name="lblCN" Content="Customer Number:" HorizontalAlignment="Left" VerticalAlignment="Top"/>
-            <TextBox x:Name="txtCutomerNumber" HorizontalAlignment="Left" Height="23" TextWrapping="Wrap" VerticalAlignment="Top" Width="168"
-                GotFocus="textBoxGotFocus" LostFocus="textBoxLostFocus"/>
-            <Label x:Name="lblDateRangeStart" Content="Start Date:" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+            <TextBox x:Name="txtCustomerNumber" HorizontalAlignment="Left" Height="23" TextWrapping="Wrap" VerticalAlignment="Top" Width="168" />
+            <Label x:Name="lblDateRangeStart" Content="Start Date:" HorizontalAlignment="Left" VerticalAlignment="Top" ToolTip="Date Received"/>
             <DatePicker x:Name="dpStartDate" HorizontalAlignment="Left" VerticalAlignment="Top" Width="108"/>
-            <Label x:Name="lblDateRangeEnd" Content="End Date:" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+            <Label x:Name="lblDateRangeEnd" Content="End Date:" HorizontalAlignment="Left" VerticalAlignment="Top" ToolTip="Date Received"/>
             <DatePicker x:Name="dpEndDate" HorizontalAlignment="Left" VerticalAlignment="Top" Width="108"/>
         </StackPanel>
         <Label x:Name="lblLoadingIndicator" Content="Loading..." HorizontalAlignment="Left" VerticalAlignment="Top" Height="69" Margin="9,510,0,0" Width="175"/>
@@ -54,7 +60,8 @@
                 </LinearGradientBrush>
             </Border.BorderBrush>
             <StackPanel x:Name="stkPnlButtons" Orientation="Vertical" VerticalAlignment="Center">
-                <Button x:Name="btnGetRecentRecords" Content="Update Table ☁" HorizontalAlignment="Center" VerticalAlignment="Top" Width="174" Height="60" FontFamily="Plantagenet Cherokee" FontSize="16" Click="GetLatestRecords" Visibility="Collapsed">
+                <Button x:Name="btnUpdateTable" Content="Update Table ☁" HorizontalAlignment="Center" VerticalAlignment="Top" Width="174" Height="60" FontFamily="Plantagenet Cherokee" FontSize="16" Click="GetNewRecords"
+                        ToolTip="Get new data using filters.">
                     <Button.Background>
                         <LinearGradientBrush EndPoint="0,1" StartPoint="0,0">
                             <GradientStop Color="#FFCBDEE4" Offset="0"/>
@@ -66,7 +73,8 @@
                     </Button.Background>
                 </Button>
                 <Separator Width="{Binding Path=Width,ElementName=stckPnlButtons}" Visibility="Collapsed"/>
-                <Button x:Name="btnApplyFilters" Content="Apply Filters ✓" HorizontalAlignment="Center" VerticalAlignment="Center" Width="174" Height="60" FontFamily="Plantagenet Cherokee" FontSize="16" Click="ApplyFilters">
+                <Button x:Name="btnApplyFilters" Content="Apply Filters ✓" HorizontalAlignment="Center" VerticalAlignment="Center" Width="174" Height="60" FontFamily="Plantagenet Cherokee" FontSize="16" Click="ApplyFilters"
+                        ToolTip="Find rows in current data.">
                     <Button.Background>
                         <LinearGradientBrush EndPoint="0,1" StartPoint="0,0">
                             <GradientStop Color="#FF98B885" Offset="0"/>
@@ -77,7 +85,8 @@
                     </Button.Background>
                 </Button>
                 <Separator Width="{Binding Path=Width,ElementName=stckPnlButtons}"/>
-                <Button x:Name="btnClearFilters" Content="Clear Filters ✘" HorizontalAlignment="Center" VerticalAlignment="Bottom" Width="174" Height="60" FontFamily="Plantagenet Cherokee" FontSize="16" Click="btnClearFilters_Click">
+                <Button x:Name="btnClearFilters" Content="Clear Filters ✘" HorizontalAlignment="Center" VerticalAlignment="Bottom" Width="174" Height="60" FontFamily="Plantagenet Cherokee" FontSize="16" Click="btnClearFilters_Click"
+                        ToolTip="Clear all filters from current data.">
                     <Button.Background>
                         <LinearGradientBrush EndPoint="0,1" StartPoint="0,0">
                             <GradientStop Color="#FFC9A3A3" Offset="0"/>

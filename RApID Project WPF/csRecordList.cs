@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Collections.Specialized;
 using System.ComponentModel;
+using System.Data;
 using System.Data.SqlClient;
-using System.Linq;
 using System.Runtime.CompilerServices;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -15,14 +17,8 @@ namespace RApID_Project_WPF
     /// <summary>
     /// <see cref="Record"/> model controller for <see cref="frmGlobalSearch"/>'s data grid.
     /// </summary>
-    public class RecordList : ObservableCollection<Record>
+    public class RecordList : RangeObservableCollection<Record>
     {
-        /// <summary>
-        /// Delegate record submission to asynchronously update data grid parallel to UI thread.
-        /// </summary>
-        /// <param name="records">List of records to process.</param>
-        private delegate void PushRecord(Record record);
-
         /// <summary>
         /// Entry point for <see cref="frmGlobalSearch.ToggleButtonsEnabled(bool)"/> method.
         /// </summary>
@@ -39,43 +35,42 @@ namespace RApID_Project_WPF
         public RecordList() : base() { }
 
         /// <summary>
-        /// Implementation of the delegated method <see cref="PushRecord"/>.
+        /// Gets the current list of records from the TechnicianSubmission Table, possibly based off of filters.
         /// </summary>
-        /// <param name="records">List of records to file.</param>
-        private void FileRecord(Record record) => Add(record);
-
-        /// <summary>
-        /// Gets the current list of records from the TechnicianSubmission Table.
-        /// </summary>
-        internal async Task GetData(Label lbl,ProgressBar prog, Dispatcher UIThread, string _query = "")
+        internal async Task GetData(CancellationToken cancelation, Label lbl, ProgressBar prog, Dispatcher UIThread, string _query = "",
+            string lblMsg ="", string notifyTitle = "", string notifyMsg = "")
         {
             var recs = new List<Record>();
-            var numRows = 0;
+            if (string.IsNullOrEmpty(_query)) _query = $"SELECT * FROM [Repair].[dbo].[TechnicianSubmission]";
 
-            if (string.IsNullOrEmpty(_query)) _query = "SELECT * FROM [Repair].[dbo].[TechnicianSubmission]";
+            int numRecs = 0;
 
-            await Task.Factory.StartNew(async () =>
+            await Task.Factory.StartNew(() =>
             {
                 using (var conn = new SqlConnection(csObjectHolder.csObjectHolder.ObjectHolderInstance().RepairConnectionString))
                 {
                     conn.Open();
+                    #region SqlDataReader
                     using (var reader = new SqlCommand(_query, conn).ExecuteReader())
                     {
                         while (reader.Read())
                         {
                             object[] rowVals = new object[reader.VisibleFieldCount];
-                            var dum_num = reader.GetValues(rowVals);
-                            var new_Record = (Record)rowVals;
+                            reader.GetValues(rowVals);
+                            Record new_record = rowVals;
 
-                            recs.Add(new_Record);
-                            UIThread.Invoke(() => lbl.Content = $"Loading... ({++numRows}) loaded so far{new string('.', numRows % 6)}");
-                            await UIThread.BeginInvoke(DispatcherPriority.Background, new PushRecord(FileRecord), new_Record);
+                            recs.Add(new_record);
+                            numRecs++;
                         }
+
+                        UIThread.Invoke(() => AddRange(recs), DispatcherPriority.Background);
                     }
+                    #endregion
                 }
 
-                lbl.Dispatcher.Invoke(() => {
-                    lbl.Content = $"Loading Complete!";
+                lbl.Dispatcher.Invoke(() =>
+                {
+                    lbl.Content = !string.IsNullOrEmpty(lblMsg) ? lblMsg :  "Loading Complete!";
                     lbl.Visibility = Visibility.Collapsed;
                 });
 
@@ -83,69 +78,56 @@ namespace RApID_Project_WPF
                     prog.Visibility = Visibility.Collapsed
                 );
 
-                UIThread.Invoke(() => ToggleButtonControls.Invoke(true));
-                UIThread.Invoke(() => ToggleFilterControls.Invoke(true));
+                UIThread.BeginInvoke(new Action(() => ToggleButtonControls.Invoke(true)));
+                UIThread.BeginInvoke(new Action(() => ToggleFilterControls.Invoke(true)));
 
-            MainWindow.Notify.Dispatcher.Invoke(() =>
-                MainWindow.Notify.ShowBalloonTip("RApID - Global Search Complete!", "Global Search window has completed loading all of" +
-                " the records currently in the database.", Hardcodet.Wpf.TaskbarNotification.BalloonIcon.Info)
+                MainWindow.Notify.Dispatcher.Invoke(() =>
+                    MainWindow.Notify.ShowBalloonTip(!string.IsNullOrEmpty(notifyTitle) ? notifyTitle : "RApID - Global Search Complete!", 
+                    !string.IsNullOrEmpty(notifyMsg) ? notifyMsg : ("Global Search window has completed loading all of" +
+                    " the records currently in the database."), Hardcodet.Wpf.TaskbarNotification.BalloonIcon.Info)
                 );
 
-                Console.WriteLine("[INFO]: Number of rows in data grid (" + Count + ").");
-            });
+                Console.WriteLine("[INFO]: Number of rows in data grid (" + numRecs + ").");
+            }, cancelation);
+        }
+    }
+
+    /// <summary>
+    /// Should help with too many event listeners
+    /// <para/>
+    /// https://peteohanlon.wordpress.com/2008/10/22/bulk-loading-in-observablecollection/
+    /// </summary>
+    /// <typeparam name="T">Typically <see cref="Record"/></typeparam>
+    public class RangeObservableCollection<T> : ObservableCollection<T>
+    {
+        private bool _suppressNotification = false;
+
+        protected override void OnCollectionChanged(NotifyCollectionChangedEventArgs e)
+        {
+            if (!_suppressNotification)
+                base.OnCollectionChanged(e);
         }
 
-        /// <summary>
-        /// Gets the most recent records from today.
-        /// </summary>
-        internal async Task AppendData(Label lbl, Dispatcher UIThread, string _query = "")
+        public void AddRange(IEnumerable<T> list)
         {
-            var recs = new List<Record>();
-            var numRows = 0;
+            if (list == null)
+                throw new ArgumentNullException("[ROC.AddRange]: List to add was null");
 
-            if (string.IsNullOrEmpty(_query)) _query = "SELECT * FROM [Repair].[dbo].[TechnicianSubmission] WHERE [DateReceived] >= CURRENT_TIMESTAMP-1";
+            _suppressNotification = true;
 
-            await Task.Factory.StartNew(async () =>
+            foreach (T item in list)
             {
-                using (var conn = new SqlConnection(csObjectHolder.csObjectHolder.ObjectHolderInstance().RepairConnectionString))
-                {
-                    conn.Open();
-                    using (var reader = new SqlCommand(_query, conn).ExecuteReader())
-                    {
-                        while (reader.Read())
-                        {
-                            object[] rowVals = new object[reader.VisibleFieldCount];
-                            var dum_num = reader.GetValues(rowVals);
-                            var new_Record = (Record)rowVals;
-
-                            recs.Add(new_Record);
-                            UIThread.Invoke(() => lbl.Content = $"Updating... ({++numRows}) new rows so far{new string('.', numRows % 6)}");
-                            await UIThread.BeginInvoke(DispatcherPriority.Background, new PushRecord(FileRecord), new_Record);
-                        }
-                    }
-                }
-            });
-
-            UIThread.Invoke(() => lbl.Content = $"Update Complete!");
-        }
-
-        /// <summary>
-        /// Iterates through the list of records to find the given record.
-        /// </summary>
-        protected bool ContainsByID(Record rec)
-        {
-            foreach(var r in this.Where(_r => _r.DateReceived >= DateTime.Now.AddDays(-1.0)))
-            {
-                if (r.ID == rec.ID) return true;
+                Add(item);
             }
-            return false;
+            _suppressNotification = false;
+            OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset));
         }
     }
 
     /// <summary>
     /// Model for a row in the TechnicianSubmission Table.
     /// </summary>
-    public class Record : INotifyPropertyChanged, IEditableObject
+    public class Record : INotifyPropertyChanged
     {
         #region Fields
         public int _ID;
@@ -617,142 +599,106 @@ namespace RApID_Project_WPF
         public event PropertyChangedEventHandler PropertyChanged;
         public void OnPropertyChanged([CallerMemberName] string propName = "")
             => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propName));
-
-        private Record temp_record = null;
-        private bool IsEditing = false;
-
-        public void BeginEdit()
-        {
-            if (!IsEditing)
-            {
-                temp_record = this.MemberwiseClone() as Record;
-                IsEditing = true;
-            }
-        }
-
-        public void CancelEdit()
-        {
-            if (IsEditing)
-            {
-                this.ID = temp_record.ID;
-                this.Technician = temp_record.Technician;
-                this.DateReceived = temp_record.DateReceived;
-                this.PartName = temp_record.PartName;
-                this.PartNumber = temp_record.PartNumber;
-                this.CommoditySubClass = temp_record.CommoditySubClass;
-                this.Quantity = temp_record.Quantity;
-                this.SoftwareVersion = temp_record.SoftwareVersion;
-                this.Scrap = temp_record.Scrap;
-                this.TypeOfReturn = temp_record.TypeOfReturn;
-                this.TypeOfFailure = temp_record.TypeOfFailure;
-                this.HoursOnUnit = temp_record.HoursOnUnit;
-                this.ReportedIssue = temp_record.ReportedIssue;
-                this.TestResult = temp_record.TestResult;
-                this.TestResultAbort = temp_record.TestResultAbort;
-                this.Cause = temp_record.Cause;
-                this.Replacement = temp_record.Replacement;
-                this.PartsReplaced = temp_record.PartsReplaced;
-                this.RefDesignator = temp_record.RefDesignator;
-                this.AdditionalComments = temp_record.AdditionalComments;
-                this.CustomerNumber = temp_record.CustomerNumber;
-                this.SerialNumber = temp_record.SerialNumber;
-                this.DateSubmitted = temp_record.DateSubmitted;
-                this.SubmissionStatus = temp_record.SubmissionStatus;
-                this.Quality = temp_record.Quality;
-                this.RP = temp_record.RP;
-                this.TechAct1 = temp_record.TechAct1;
-                this.TechAct2 = temp_record.TechAct2;
-                this.TechAct3 = temp_record.TechAct3;
-                this.QCDQEComments = temp_record.QCDQEComments;
-                this.OrderNumber = temp_record.OrderNumber;
-                this.ProblemCode1 = temp_record.ProblemCode1;
-                this.ProblemCode2 = temp_record.ProblemCode2;
-                this.RepairCode = temp_record.RepairCode;
-                this.TechComments = temp_record.TechComments;
-                this.LineNumber = temp_record.LineNumber;
-                this.ProcessedFlag = temp_record.ProcessedFlag;
-                this.ProcessedDateTime = temp_record.ProcessedDateTime;
-                this.Series = temp_record.Series;
-                this.FromArea = temp_record.FromArea;
-                this.SaveID = temp_record.SaveID;
-                this.QCDQEDateSubmitted = temp_record.QCDQEDateSubmitted;
-                this.Issue = temp_record.Issue;
-                this.Item = temp_record.Item;
-                this.Problem = temp_record.Problem;
-                this.LogID = temp_record.LogID;
-                IsEditing = false;
-            }
-        }
-
-        public void EndEdit()
-        {
-            if (IsEditing)
-            {
-                temp_record = null;
-                IsEditing = false;
-            }
-        }
         #endregion
 
-        public static explicit operator Record(object[] vals)
+        public static implicit operator Record(object[] vals)
         {
-            int index = 0;
-            foreach(var val in vals)
-            {
-                if(val == DBNull.Value)
-                {
-                    vals[index] = default;
-                } index++;
-            }
+            int vindex = 0;
 
             var newRecord = new Record();
 
-            newRecord.ID = int.TryParse(vals[0]?.ToString(), out int id_res) ? id_res : 0;
-            newRecord.Technician = vals[1]?.ToString() ?? "";
-            newRecord.DateReceived = DateTime.TryParse(vals[2]?.ToString(), out DateTime drec_res) ? drec_res : DateTime.Now.AddYears(-100);
-            newRecord.PartName = vals[3]?.ToString() ?? "";
-            newRecord.PartNumber = vals[4]?.ToString() ?? "";
-            newRecord.CommoditySubClass = vals[5]?.ToString() ?? "";
-            newRecord.Quantity = int.TryParse(vals[6]?.ToString(), out int q_res) ? q_res : 0;
-            newRecord.SoftwareVersion = vals[7]?.ToString() ?? "";
-            newRecord.Scrap = vals[8]?.ToString().Equals("1") ?? false;
-            newRecord.TypeOfReturn = vals[9]?.ToString() ?? "";
-            newRecord.TypeOfFailure = vals[10]?.ToString() ?? "";
-            newRecord.HoursOnUnit = vals[11]?.ToString() ?? "";
-            newRecord.ReportedIssue = vals[12]?.ToString() ?? "";
-            newRecord.TestResult = vals[13]?.ToString() ?? "";
-            newRecord.TestResultAbort = vals[14]?.ToString() ?? "";
-            newRecord.Cause = vals[15]?.ToString() ?? "";
-            newRecord.Replacement = vals[16]?.ToString() ?? "";
-            newRecord.PartsReplaced = vals[17]?.ToString() ?? "";
-            newRecord.RefDesignator = vals[18]?.ToString() ?? "";
-            newRecord.AdditionalComments = vals[19]?.ToString() ?? "";
-            newRecord.CustomerNumber = int.TryParse(vals[20]?.ToString(), out int cust_res) ? cust_res : 0;
-            newRecord.SerialNumber = vals[21]?.ToString() ?? "";
-            newRecord.DateSubmitted = DateTime.TryParse(vals[22]?.ToString(), out DateTime dsub_res) ? drec_res : DateTime.Now.AddYears(-50);
-            newRecord.SubmissionStatus = vals[23]?.ToString() ?? "";
-            newRecord.Quality = vals[24]?.ToString() ?? "";
-            newRecord.RP = vals[25]?.ToString() ?? "";
-            newRecord.TechAct1 = vals[26]?.ToString() ?? "";
-            newRecord.TechAct2 = vals[27]?.ToString() ?? "";
-            newRecord.TechAct3 = vals[28]?.ToString() ?? "";
-            newRecord.QCDQEComments = vals[29]?.ToString() ?? "";
-            newRecord.OrderNumber = vals[30]?.ToString() ?? "";
-            newRecord.ProblemCode1 = vals[31]?.ToString() ?? "";
-            newRecord.ProblemCode2 = vals[32]?.ToString() ?? "";
-            newRecord.RepairCode = vals[33]?.ToString() ?? "";
-            newRecord.TechComments = vals[34]?.ToString() ?? "";
-            newRecord.LineNumber = decimal.TryParse(vals[35]?.ToString(), out decimal line_res) ? line_res : 0.0m;
-            newRecord.ProcessedFlag = char.TryParse(vals[36]?.ToString(), out char c_res) ? c_res : ' ';
-            newRecord.ProcessedDateTime = DateTime.TryParse(vals[37]?.ToString(), out DateTime dpro_res) ? dpro_res : DateTime.Now.AddYears(-25);
-            newRecord.Series = vals[38]?.ToString() ?? "";
-            newRecord.FromArea = vals[39]?.ToString() ?? "";
-            newRecord.SaveID = vals[40]?.ToString() ?? "";
-            newRecord.QCDQEDateSubmitted = DateTime.TryParse(vals[41]?.ToString(), out DateTime ddqe_res) ? ddqe_res : DateTime.Now.AddYears(-5);
-            newRecord.Issue = vals[42]?.ToString() ?? "";
-            newRecord.Item = vals[43]?.ToString() ?? "";
-            newRecord.Problem = vals[44]?.ToString() ?? "";
-            newRecord.LogID = long.TryParse(vals[45]?.ToString(), out long id_log) ? id_log : 0L;
+            if (vals[vindex] == null || vals[vindex] == DBNull.Value) { vals[vindex] = default; }
+            newRecord.ID = int.TryParse(vals[vindex]?.ToString(), out int id_res) ? id_res : 0; vindex++;
+            if (vals[vindex] == null || vals[vindex] == DBNull.Value) { vals[vindex] = default; }
+            newRecord.Technician = vals[vindex]?.ToString() ?? ""; vindex++;
+            if (vals[vindex] == null || vals[vindex] == DBNull.Value) { vals[vindex] = default; }
+            newRecord.DateReceived = DateTime.TryParse(vals[vindex]?.ToString(), out DateTime drec_res) ? drec_res : DateTime.Now.AddYears(-100); vindex++;
+            if (vals[vindex] == null || vals[vindex] == DBNull.Value) { vals[vindex] = default; }
+            newRecord.PartName = vals[vindex]?.ToString() ?? ""; vindex++;
+            if (vals[vindex] == null || vals[vindex] == DBNull.Value) { vals[vindex] = default; }
+            newRecord.PartNumber = vals[vindex]?.ToString() ?? ""; vindex++;
+            if (vals[vindex] == null || vals[vindex] == DBNull.Value) { vals[vindex] = default; }
+            newRecord.CommoditySubClass = vals[vindex]?.ToString() ?? ""; vindex++;
+            if (vals[vindex] == null || vals[vindex] == DBNull.Value) { vals[vindex] = default; }
+            newRecord.Quantity = int.TryParse(vals[vindex]?.ToString(), out int q_res) ? q_res : 0; vindex++;
+            if (vals[vindex] == null || vals[vindex] == DBNull.Value) { vals[vindex] = default; }
+            newRecord.SoftwareVersion = vals[vindex]?.ToString() ?? ""; vindex++;
+            if (vals[vindex] == null || vals[vindex] == DBNull.Value) { vals[vindex] = default; }
+            newRecord.Scrap = vals[vindex]?.ToString().Equals("1") ?? false; vindex++;
+            if (vals[vindex] == null || vals[vindex] == DBNull.Value) { vals[vindex] = default; }
+            newRecord.TypeOfReturn = vals[vindex]?.ToString() ?? ""; vindex++;
+            if (vals[vindex] == null || vals[vindex] == DBNull.Value) { vals[vindex] = default; }
+            newRecord.TypeOfFailure = vals[vindex]?.ToString() ?? ""; vindex++;
+            if (vals[vindex] == null || vals[vindex] == DBNull.Value) { vals[vindex] = default; }
+            newRecord.HoursOnUnit = vals[vindex]?.ToString() ?? ""; vindex++;
+            if (vals[vindex] == null || vals[vindex] == DBNull.Value) { vals[vindex] = default; }
+            newRecord.ReportedIssue = vals[vindex]?.ToString() ?? ""; vindex++;
+            if (vals[vindex] == null || vals[vindex] == DBNull.Value) { vals[vindex] = default; }
+            newRecord.TestResult = vals[vindex]?.ToString() ?? ""; vindex++;
+            if (vals[vindex] == null || vals[vindex] == DBNull.Value) { vals[vindex] = default; }
+            newRecord.TestResultAbort = vals[vindex]?.ToString() ?? ""; vindex++;
+            if (vals[vindex] == null || vals[vindex] == DBNull.Value) { vals[vindex] = default; }
+            newRecord.Cause = vals[vindex]?.ToString() ?? ""; vindex++;
+            if (vals[vindex] == null || vals[vindex] == DBNull.Value) { vals[vindex] = default; }
+            newRecord.Replacement = vals[vindex]?.ToString() ?? ""; vindex++;
+            if (vals[vindex] == null || vals[vindex] == DBNull.Value) { vals[vindex] = default; }
+            newRecord.PartsReplaced = vals[vindex]?.ToString() ?? ""; vindex++;
+            if (vals[vindex] == null || vals[vindex] == DBNull.Value) { vals[vindex] = default; }
+            newRecord.RefDesignator = vals[vindex]?.ToString() ?? ""; vindex++;
+            if (vals[vindex] == null || vals[vindex] == DBNull.Value) { vals[vindex] = default; }
+            newRecord.AdditionalComments = vals[vindex]?.ToString() ?? ""; vindex++;
+            if (vals[vindex] == null || vals[vindex] == DBNull.Value) { vals[vindex] = default; }
+            newRecord.CustomerNumber = int.TryParse(vals[vindex]?.ToString(), out int cust_res) ? cust_res : 0; vindex++;
+            if (vals[vindex] == null || vals[vindex] == DBNull.Value) { vals[vindex] = default; }
+            newRecord.SerialNumber = vals[vindex]?.ToString() ?? ""; vindex++;
+            if (vals[vindex] == null || vals[vindex] == DBNull.Value) { vals[vindex] = default; }
+            newRecord.DateSubmitted = DateTime.TryParse(vals[vindex]?.ToString(), out DateTime dsub_res) ? dsub_res : DateTime.Now.AddYears(-50); vindex++;
+            if (vals[vindex] == null || vals[vindex] == DBNull.Value) { vals[vindex] = default; }
+            newRecord.SubmissionStatus = vals[vindex]?.ToString() ?? ""; vindex++;
+            if (vals[vindex] == null || vals[vindex] == DBNull.Value) { vals[vindex] = default; }
+            newRecord.Quality = vals[vindex]?.ToString() ?? ""; vindex++;
+            if (vals[vindex] == null || vals[vindex] == DBNull.Value) { vals[vindex] = default; }
+            newRecord.RP = vals[vindex]?.ToString() ?? ""; vindex++;
+            if (vals[vindex] == null || vals[vindex] == DBNull.Value) { vals[vindex] = default; }
+            newRecord.TechAct1 = vals[vindex]?.ToString() ?? ""; vindex++;
+            if (vals[vindex] == null || vals[vindex] == DBNull.Value) { vals[vindex] = default; }
+            newRecord.TechAct2 = vals[vindex]?.ToString() ?? ""; vindex++;
+            if (vals[vindex] == null || vals[vindex] == DBNull.Value) { vals[vindex] = default; }
+            newRecord.TechAct3 = vals[vindex]?.ToString() ?? ""; vindex++;
+            if (vals[vindex] == null || vals[vindex] == DBNull.Value) { vals[vindex] = default; }
+            newRecord.QCDQEComments = vals[vindex]?.ToString() ?? ""; vindex++;
+            if (vals[vindex] == null || vals[vindex] == DBNull.Value) { vals[vindex] = default; }
+            newRecord.OrderNumber = vals[vindex]?.ToString() ?? ""; vindex++;
+            if (vals[vindex] == null || vals[vindex] == DBNull.Value) { vals[vindex] = default; }
+            newRecord.ProblemCode1 = vals[vindex]?.ToString() ?? ""; vindex++;
+            if (vals[vindex] == null || vals[vindex] == DBNull.Value) { vals[vindex] = default; }
+            newRecord.ProblemCode2 = vals[vindex]?.ToString() ?? ""; vindex++;
+            if (vals[vindex] == null || vals[vindex] == DBNull.Value) { vals[vindex] = default; }
+            newRecord.RepairCode = vals[vindex]?.ToString() ?? ""; vindex++;
+            if (vals[vindex] == null || vals[vindex] == DBNull.Value) { vals[vindex] = default; }
+            newRecord.TechComments = vals[vindex]?.ToString() ?? ""; vindex++;
+            if (vals[vindex] == null || vals[vindex] == DBNull.Value) { vals[vindex] = default; }
+            newRecord.LineNumber = decimal.TryParse(vals[vindex]?.ToString(), out decimal line_res) ? line_res : 0.0m; vindex++;
+            if (vals[vindex] == null || vals[vindex] == DBNull.Value) { vals[vindex] = default; }
+            newRecord.ProcessedFlag = char.TryParse(vals[vindex]?.ToString(), out char c_res) ? c_res : ' '; vindex++;
+            if (vals[vindex] == null || vals[vindex] == DBNull.Value) { vals[vindex] = default; }
+            newRecord.ProcessedDateTime = DateTime.TryParse(vals[vindex]?.ToString(), out DateTime dpro_res) ? dpro_res : DateTime.Now.AddYears(-25); vindex++;
+            if (vals[vindex] == null || vals[vindex] == DBNull.Value) { vals[vindex] = default; }
+            newRecord.Series = vals[vindex]?.ToString() ?? ""; vindex++;
+            if (vals[vindex] == null || vals[vindex] == DBNull.Value) { vals[vindex] = default; }
+            newRecord.FromArea = vals[vindex]?.ToString() ?? ""; vindex++;
+            if (vals[vindex] == null || vals[vindex] == DBNull.Value) { vals[vindex] = default; }
+            newRecord.SaveID = vals[vindex]?.ToString() ?? ""; vindex++;
+            if (vals[vindex] == null || vals[vindex] == DBNull.Value) { vals[vindex] = default; }
+            newRecord.QCDQEDateSubmitted = DateTime.TryParse(vals[vindex]?.ToString(), out DateTime ddqe_res) ? ddqe_res : DateTime.Now.AddYears(-5); vindex++;
+            if (vals[vindex] == null || vals[vindex] == DBNull.Value) { vals[vindex] = default; }
+            newRecord.Issue = vals[vindex]?.ToString() ?? ""; vindex++;
+            if (vals[vindex] == null || vals[vindex] == DBNull.Value) { vals[vindex] = default; }
+            newRecord.Item = vals[vindex]?.ToString() ?? ""; vindex++;
+            if (vals[vindex] == null || vals[vindex] == DBNull.Value) { vals[vindex] = default; }
+            newRecord.Problem = vals[vindex]?.ToString() ?? ""; vindex++;
+            if (vals[vindex] == null || vals[vindex] == DBNull.Value) { vals[vindex] = default; }
+            newRecord.LogID = long.TryParse(vals[vindex]?.ToString(), out long id_log) ? id_log : 0L;
 
             return newRecord;
         }
