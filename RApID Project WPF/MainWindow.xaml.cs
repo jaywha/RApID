@@ -39,7 +39,7 @@ namespace RApID_Project_WPF
 
             await WelcomeUser();
 
-            await HookService();
+            //await HookService();
         }
 
         protected internal async Task WelcomeUser()
@@ -147,7 +147,7 @@ namespace RApID_Project_WPF
                 Notify = null;
                 notifyRapid = null;
 
-                ServiceManager.StopService("RApID Service");
+                //ServiceManager.StopService("RApID Service");
             }
             catch (System.Threading.Tasks.TaskCanceledException tce)
             {
