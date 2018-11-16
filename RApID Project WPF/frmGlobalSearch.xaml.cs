@@ -1,8 +1,10 @@
 ﻿using System;
+using System.Text.RegularExpressions;
 using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
+using System.Windows.Input;
 
 namespace RApID_Project_WPF
 {
@@ -32,10 +34,12 @@ namespace RApID_Project_WPF
 
         public static frmGlobalSearch Instance { get; } = new frmGlobalSearch();
 
-        private async void wndMain_Loaded(object sender, RoutedEventArgs e)
-        {
-            await _records.GetData(GlobalCancelToken, lblLoadingIndicator, progData, dgSubmissions.Dispatcher);
-            dgSubmissions.UpdateLayout();
+        private void wndMain_Loaded(object sender, RoutedEventArgs e)
+        {            
+            ToggleButtonsEnabled(true);
+            ToggleFiltersEnabled(true);
+            lblLoadingIndicator.Visibility = Visibility.Collapsed;
+            progData.Visibility = Visibility.Collapsed;
         }
 
         private void wndMain_Closing(object sender, System.ComponentModel.CancelEventArgs e)
@@ -44,11 +48,17 @@ namespace RApID_Project_WPF
             e.Cancel = true;
         }
 
-        private void textBoxNumericInput(object sender, TextChangedEventArgs e)
+        private void textBoxNumericInput(object sender, TextCompositionEventArgs e)
         {
-            if (sender is TextBox txt && (txt.Text[0] > 57 || txt.Text[0] < 48))
+            try
             {
-                txt.Text = txt.Text.Substring(0, txt.Text.Length - 1);
+                if (sender is TextBox txt)
+                {
+                    e.Handled = Regex.IsMatch(e.Text, "[^0-9-]+");
+                }
+            } catch (IndexOutOfRangeException ioore)
+            {
+                csExceptionLogger.csExceptionLogger.Write("NumericInput_Error", ioore);
             }
         }
 
@@ -76,20 +86,22 @@ namespace RApID_Project_WPF
             {
                 CommandText =
                 "SELECT * FROM [Repair].[dbo].[TechnicianSubmission] WHERE " +
-                $"([PartNumber] = '{(!string.IsNullOrEmpty(txtPartNumber.Text.Trim()) ? txtPartNumber.Text.Trim() : "")}' " +
-                $"OR [OrderNumber] = '{(!string.IsNullOrEmpty(txtOrderNumber.Text.Trim()) ? txtOrderNumber.Text.Trim() : "")}' " +
-                $"OR [SerialNumber] = '{(!string.IsNullOrEmpty(txtSerialNumber.Text.Trim()) ? txtSerialNumber.Text.Trim() : "")}' " +
-                $"OR [CustomerNumber] = '{(!string.IsNullOrEmpty(txtCustomerNumber.Text.Trim()) ? txtCustomerNumber.Text.Trim() : "")}') " +
-                $"AND (([DateReceived] >= '{(!string.IsNullOrEmpty(dpStartDate.Text.Trim()) ? dpStartDate.Text.Trim() : "")}' " +
-                $"OR '{(!string.IsNullOrEmpty(dpStartDate.Text.Trim()) ? dpStartDate.Text.Trim() : "")}' IS NULL) " +
-                $"AND ([DateReceived] <= '{(!string.IsNullOrEmpty(dpEndDate.Text.Trim()) ? dpEndDate.Text.Trim() : "")}' " +
-                $"OR '{(!string.IsNullOrEmpty(dpEndDate.Text.Trim()) ? dpEndDate.Text.Trim() : "")}' IS NULL)) " +
+                (!string.IsNullOrEmpty(txtPartNumber.Text.Trim()) ? $"[PartNumber] LIKE '%{txtPartNumber.Text.Trim()}%' AND " : "") +
+                (!string.IsNullOrEmpty(txtOrderNumber.Text.Trim()) ? $"[OrderNumber] LIKE '%{txtOrderNumber.Text.Trim()}%' AND " : "") +
+                (!string.IsNullOrEmpty(txtSerialNumber.Text.Trim()) ? $"[SerialNumber] LIKE '%{txtSerialNumber.Text.Trim()}%' AND " : "") +
+                (!string.IsNullOrEmpty(txtCustomerNumber.Text.Trim()) ? $"[CustomerNumber] LIKE '%{txtCustomerNumber.Text.Trim()}%' AND " : "") +
+                (!string.IsNullOrEmpty(dpStartDate.Text.Trim()) ? $"[DateReceived] >= '{dpStartDate.Text.Trim()}' AND " : "") +
+                (!string.IsNullOrEmpty(dpEndDate.Text.Trim()) ? $"[DateReceived] <= '{dpEndDate.Text.Trim()}' " : "") +
                 $"ORDER BY [DateReceived] DESC"
             };
 
+            newSqlQuery.CommandText = newSqlQuery.CommandText.Replace("AND ORDER", "ORDER");
+            newSqlQuery.CommandText = newSqlQuery.CommandText.Replace("WHERE ORDER", "ORDER");
+
+            //Console.WriteLine(newSqlQuery.CommandText);
+
             await _records.GetData(GlobalCancelToken, lblLoadingIndicator, progData,
-                dgSubmissions.Dispatcher, newSqlQuery.CommandText, "Update Complete!",
-                "RApID - Global Search Update!", "Updates completed based on filters.");
+                dgSubmissions.Dispatcher, newSqlQuery.CommandText);
         }
 
         private void ApplyFilters(object sender, RoutedEventArgs e)

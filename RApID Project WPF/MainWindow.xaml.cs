@@ -1,8 +1,11 @@
 ﻿using System;
+using System.Diagnostics;
 using System.IO;
 using System.Windows;
 using System.Windows.Controls;
 using Hardcodet.Wpf.TaskbarNotification;
+using System.DirectoryServices.AccountManagement;
+using System.Threading.Tasks;
 
 namespace RApID_Project_WPF
 {
@@ -27,12 +30,46 @@ namespace RApID_Project_WPF
             Notify = notifyRapid;
         }
 
-        private void Window_Loaded(object sender, RoutedEventArgs e)
+        private async void Window_Loaded(object sender, RoutedEventArgs e)
         {
             sVars.initStaticVars();
 
             var s = ((decimal)sVars.VersionControl.CurrentVersion).ToString();
             Title = "RApID: v." + s;
+
+            await WelcomeUser();
+
+            await HookService();
+        }
+
+        protected internal async Task WelcomeUser()
+        {
+            string msgTitle = "";
+            string msgWelcome = $"Important updates related to RApID will show up here.";
+
+            if(DateTime.Now.Hour >= 4 && DateTime.Now.Hour < 12)
+            {
+                msgTitle = "Good Morning";
+            } else if (DateTime.Now.ToLocalTime().Hour >= 12 && DateTime.Now.ToLocalTime().Hour < 17)
+            {
+                msgTitle = "Good Afternoon";
+            } else // DateTime.Now is between 17 and 4
+            {
+                msgTitle = "Good Evening";
+            }
+
+            await Task.Factory.StartNew(new Action(() => {
+                var uName = UserPrincipal.Current.DisplayName.Trim().Split(',');
+
+                Notify.ShowBalloonTip(msgTitle + $", {uName[1].Trim()} {uName[0].Trim()}!", msgWelcome, BalloonIcon.Info);
+            }));            
+        }
+
+        protected internal async Task HookService()
+        {
+            await Task.Factory.StartNew(new Action(() => {
+                ServiceManager.InstallAndStart("RApID Service", "RApID Reporting Service", "RApID Service.exe");
+            }));
         }
 
         private void btnClicks(object sender, RoutedEventArgs e)
@@ -43,34 +80,34 @@ namespace RApID_Project_WPF
                 {
                     case "btnRework":
                         Hide();
-                        var fpr = new frmProduction { Owner = this };
+                        var fpr = new frmProduction { Owner = this, WindowStartupLocation = Owner.WindowStartupLocation };
                         fpr.ShowDialog();
                         MakeFocus();
                         break;
                     case "btnRepair":
                         Hide();
-                        var rpr = new Repair(false) { Owner = this };
+                        var rpr = new Repair(false) { Owner = this, WindowStartupLocation = Owner.WindowStartupLocation };
                         rpr.ShowDialog();
                         MakeFocus();
                         break;
                     case "btnReportViewer":
-                        System.Diagnostics.Process.Start(Properties.Settings.Default.DefaultReportManagerLink);
+                        Process.Start(Properties.Settings.Default.DefaultReportManagerLink);
                         break;
                     case "btnQCDQE":
                         Hide();
-                        var fQC = new frmQCDQE { Owner = this };
+                        var fQC = new frmQCDQE { Owner = this, WindowStartupLocation = Owner.WindowStartupLocation };
                         fQC.ShowDialog();
                         MakeFocus();
                         break;
                     case "btnSettings":
                         Hide();
-                        var fSettings = new frmSettings { Owner = this };
+                        var fSettings = new frmSettings { Owner = this, WindowStartupLocation = Owner.WindowStartupLocation };
                         fSettings.ShowDialog();
                         MakeFocus();
                         break;
                     case "btnTicketLookup":
                         Hide();
-                        frmGlobalSearch.Instance.Owner = this;
+                        frmGlobalSearch.Instance.WindowStartupLocation = WindowStartupLocation;
                         frmGlobalSearch.Instance.Show();
                         MakeFocus();
                         break;
@@ -107,6 +144,10 @@ namespace RApID_Project_WPF
             {
                 /*Wide net to catch rouge threads...*/
                 EricStabileLibrary.InitSplash.thread_Splash?.Abort();
+                Notify = null;
+                notifyRapid = null;
+
+                ServiceManager.StopService("RApID Service");
             }
             catch (System.Threading.Tasks.TaskCanceledException tce)
             {
@@ -129,6 +170,9 @@ namespace RApID_Project_WPF
 
         private void btnExit_Click(object sender, RoutedEventArgs e) => Close();
 
-        
+        private void btnReset_Click(object sender, RoutedEventArgs e)
+        {
+            //TODO: Use service to start a new instance.
+        }
     }
 }

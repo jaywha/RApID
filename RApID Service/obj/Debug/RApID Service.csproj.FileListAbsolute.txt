@@ -7,3 +7,4 @@ C:\Visual Studio Projects\RApID\RApID Service\obj\Debug\RApID Service.csproj.Gen
 C:\Visual Studio Projects\RApID\RApID Service\obj\Debug\RApID Service.csproj.CoreCompileInputs.cache
 C:\Visual Studio Projects\RApID\RApID Service\obj\Debug\RApID Service.exe
 C:\Visual Studio Projects\RApID\RApID Service\obj\Debug\RApID Service.pdb
+C:\Visual Studio Projects\RApID\RApID Service\obj\Debug\RApID Service.csprojAssemblyReference.cache

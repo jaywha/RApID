@@ -38,13 +38,13 @@
         </DataGrid>
         <StackPanel x:Name="stkPnlFilters" Orientation="Vertical" Margin="10,10,813,161">
             <Label x:Name="lblPN" Content="Part Number:" HorizontalAlignment="Left" VerticalAlignment="Top"/>
-            <TextBox x:Name="txtPartNumber" HorizontalAlignment="Left" Height="23" TextWrapping="Wrap" VerticalAlignment="Top" Width="168" />
+            <TextBox x:Name="txtPartNumber" HorizontalAlignment="Left" Height="23" TextWrapping="Wrap" VerticalAlignment="Top" Width="168" PreviewTextInput="textBoxNumericInput"/>
             <Label x:Name="lblON" Content="Order Number:" HorizontalAlignment="Left" VerticalAlignment="Top"/>
-            <TextBox x:Name="txtOrderNumber" HorizontalAlignment="Left" Height="23" TextWrapping="Wrap" VerticalAlignment="Top" Width="168" TextChanged="textBoxNumericInput"/>
+            <TextBox x:Name="txtOrderNumber" HorizontalAlignment="Left" Height="23" TextWrapping="Wrap" VerticalAlignment="Top" Width="168" PreviewTextInput="textBoxNumericInput"/>
             <Label x:Name="lblSN" Content="Serial Number:" HorizontalAlignment="Left" VerticalAlignment="Top"/>
-            <TextBox x:Name="txtSerialNumber" HorizontalAlignment="Left" Height="23" TextWrapping="Wrap" VerticalAlignment="Top" Width="168" TextChanged="textBoxNumericInput"/>
+            <TextBox x:Name="txtSerialNumber" HorizontalAlignment="Left" Height="23" TextWrapping="Wrap" VerticalAlignment="Top" Width="168" PreviewTextInput="textBoxNumericInput"/>
             <Label x:Name="lblCN" Content="Customer Number:" HorizontalAlignment="Left" VerticalAlignment="Top"/>
-            <TextBox x:Name="txtCustomerNumber" HorizontalAlignment="Left" Height="23" TextWrapping="Wrap" VerticalAlignment="Top" Width="168" />
+            <TextBox x:Name="txtCustomerNumber" HorizontalAlignment="Left" Height="23" TextWrapping="Wrap" VerticalAlignment="Top" Width="168" PreviewTextInput="textBoxNumericInput"/>
             <Label x:Name="lblDateRangeStart" Content="Start Date:" HorizontalAlignment="Left" VerticalAlignment="Top" ToolTip="Date Received"/>
             <DatePicker x:Name="dpStartDate" HorizontalAlignment="Left" VerticalAlignment="Top" Width="108"/>
             <Label x:Name="lblDateRangeEnd" Content="End Date:" HorizontalAlignment="Left" VerticalAlignment="Top" ToolTip="Date Received"/>
@@ -72,9 +72,9 @@
                         </LinearGradientBrush>
                     </Button.Background>
                 </Button>
-                <Separator Width="{Binding Path=Width,ElementName=stckPnlButtons}" Visibility="Collapsed"/>
+                <Separator Width="{Binding Path=Width,ElementName=stkPnlButtons}" Visibility="Collapsed"/>
                 <Button x:Name="btnApplyFilters" Content="Apply Filters ✓" HorizontalAlignment="Center" VerticalAlignment="Center" Width="174" Height="60" FontFamily="Plantagenet Cherokee" FontSize="16" Click="ApplyFilters"
-                        ToolTip="Find rows in current data.">
+                        ToolTip="Find rows in current data." Visibility="Collapsed">
                     <Button.Background>
                         <LinearGradientBrush EndPoint="0,1" StartPoint="0,0">
                             <GradientStop Color="#FF98B885" Offset="0"/>
@@ -84,9 +84,9 @@
                         </LinearGradientBrush>
                     </Button.Background>
                 </Button>
-                <Separator Width="{Binding Path=Width,ElementName=stckPnlButtons}"/>
+                <Separator Width="{Binding Path=Width,ElementName=stkPnlButtons}"/>
                 <Button x:Name="btnClearFilters" Content="Clear Filters ✘" HorizontalAlignment="Center" VerticalAlignment="Bottom" Width="174" Height="60" FontFamily="Plantagenet Cherokee" FontSize="16" Click="btnClearFilters_Click"
-                        ToolTip="Clear all filters from current data.">
+                        ToolTip="Clear all filters from current data." Visibility="Collapsed">
                     <Button.Background>
                         <LinearGradientBrush EndPoint="0,1" StartPoint="0,0">
                             <GradientStop Color="#FFC9A3A3" Offset="0"/>

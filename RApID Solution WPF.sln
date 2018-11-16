@@ -6,6 +6,9 @@ MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RApID Project WPF", "RApID Project WPF\RApID Project WPF.csproj", "{C696C176-ECD3-4498-845E-10BD0CBCF374}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RApIDStarter", "RApIDStarter\RApIDStarter.csproj", "{FF161F79-9F81-4749-87BF-8887518F9007}"
+	ProjectSection(ProjectDependencies) = postProject
+		{C696C176-ECD3-4498-845E-10BD0CBCF374} = {C696C176-ECD3-4498-845E-10BD0CBCF374}
+	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RApID Service", "RApID Service\RApID Service.csproj", "{33AA9307-A983-4518-B855-21412A946CC2}"
 EndProject

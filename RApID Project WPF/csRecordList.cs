@@ -41,7 +41,9 @@ namespace RApID_Project_WPF
             string lblMsg ="", string notifyTitle = "", string notifyMsg = "")
         {
             var recs = new List<Record>();
-            if (string.IsNullOrEmpty(_query)) _query = $"SELECT * FROM [Repair].[dbo].[TechnicianSubmission]";
+            if (string.IsNullOrEmpty(_query)) {
+                _query = $"SELECT * FROM [Repair].[dbo].[TechnicianSubmission]";
+            }
 
             int numRecs = 0;
 
@@ -81,11 +83,11 @@ namespace RApID_Project_WPF
                 UIThread.BeginInvoke(new Action(() => ToggleButtonControls.Invoke(true)));
                 UIThread.BeginInvoke(new Action(() => ToggleFilterControls.Invoke(true)));
 
-                MainWindow.Notify.Dispatcher.Invoke(() =>
+                /*MainWindow.Notify.Dispatcher.Invoke(() =>
                     MainWindow.Notify.ShowBalloonTip(!string.IsNullOrEmpty(notifyTitle) ? notifyTitle : "RApID - Global Search Complete!", 
                     !string.IsNullOrEmpty(notifyMsg) ? notifyMsg : ("Global Search window has completed loading all of" +
                     " the records currently in the database."), Hardcodet.Wpf.TaskbarNotification.BalloonIcon.Info)
-                );
+                );*/
 
                 Console.WriteLine("[INFO]: Number of rows in data grid (" + numRecs + ").");
             }, cancelation);

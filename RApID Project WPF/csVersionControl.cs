@@ -30,8 +30,8 @@ namespace RApID_Project_WPF
                     string sVer = reader.ReadLine();
                     double dVer = Convert.ToDouble(sVer);
                     if (dVer < CurrentVersion)
-                        MessageBox.Show($"You are running an old version of RApID ({CurrentVersion}). Please completely restart RApID to update to the newest version ({dVer}).",
-                            "OLD VERSION", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                        MainWindow.Notify.ShowBalloonTip("OLD VERSION", $"You are running an old version of RApID ({CurrentVersion}). Please completely restart RApID to update to the newest version ({dVer})."
+                            , Hardcodet.Wpf.TaskbarNotification.BalloonIcon.Warning);
                 }
             }
             catch { }

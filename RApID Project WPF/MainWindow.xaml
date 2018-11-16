@@ -96,7 +96,10 @@
                         MenuActivation="RightClick">
             <tb:TaskbarIcon.ContextMenu>
                 <ContextMenu x:Name="cxmnu">
+                    <MenuItem Header="RApID Menu" IsEnabled="False"/>
+                    <Separator/>
                     <MenuItem Header="Show" ToolTip="Brings the main window to the front." Click="btnShow_Click"/>
+                    <MenuItem Header="Restart" ToolTip="Will completely restart the RApID program" Click="btnReset_Click" Visibility="Collapsed"/>
                     <MenuItem Header="Exit" ToolTip="Exits the RApID system." Click="btnExit_Click"/>
                 </ContextMenu>
             </tb:TaskbarIcon.ContextMenu>
