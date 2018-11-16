@@ -80,13 +80,13 @@ namespace RApID_Project_WPF
                 {
                     case "btnRework":
                         Hide();
-                        var fpr = new frmProduction { Owner = this, WindowStartupLocation = Owner.WindowStartupLocation };
+                        var fpr = new frmProduction { Owner = this, WindowStartupLocation = WindowStartupLocation.CenterOwner };
                         fpr.ShowDialog();
                         MakeFocus();
                         break;
                     case "btnRepair":
                         Hide();
-                        var rpr = new Repair(false) { Owner = this, WindowStartupLocation = Owner.WindowStartupLocation };
+                        var rpr = new Repair(false) { Owner = this, WindowStartupLocation = WindowStartupLocation.CenterOwner };
                         rpr.ShowDialog();
                         MakeFocus();
                         break;
@@ -95,19 +95,19 @@ namespace RApID_Project_WPF
                         break;
                     case "btnQCDQE":
                         Hide();
-                        var fQC = new frmQCDQE { Owner = this, WindowStartupLocation = Owner.WindowStartupLocation };
+                        var fQC = new frmQCDQE { Owner = this, WindowStartupLocation = WindowStartupLocation.CenterOwner };
                         fQC.ShowDialog();
                         MakeFocus();
                         break;
                     case "btnSettings":
                         Hide();
-                        var fSettings = new frmSettings { Owner = this, WindowStartupLocation = Owner.WindowStartupLocation };
+                        var fSettings = new frmSettings { Owner = this, WindowStartupLocation = WindowStartupLocation.CenterOwner };
                         fSettings.ShowDialog();
                         MakeFocus();
                         break;
                     case "btnTicketLookup":
                         Hide();
-                        frmGlobalSearch.Instance.WindowStartupLocation = WindowStartupLocation;
+                        frmGlobalSearch.Instance.WindowStartupLocation = WindowStartupLocation.CenterOwner;
                         frmGlobalSearch.Instance.Show();
                         MakeFocus();
                         break;
