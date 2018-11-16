@@ -4,10 +4,12 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:RApID_Project_WPF.UserControls"
+             xmlns:sys="clr-namespace:System;assembly=mscorlib"
              mc:Ignorable="d"
              x:Name="uccProgresControl" Height="62.632" Width="260.631">
     <UserControl.Resources>
         <local:HeightToHeightConverter x:Key="HeightConverter"/>
+        
     </UserControl.Resources>
     <Grid>
         <Label x:Name="lblLoadingIndicator" HorizontalAlignment="Left" VerticalAlignment="Top"
@@ -16,7 +18,14 @@
                Content="{Binding Path=LabelText,ElementName=uccProgresControl}"/>
         <ProgressBar x:Name="progData" HorizontalAlignment="Left" VerticalAlignment="Bottom"
                      IsIndeterminate="{Binding Path=Marquee,ElementName=uccProgresControl}"
-                     Width="{Binding Path=Width,ElementName=uccProgresControl}"
-                     Height="{Binding Path=Height,ElementName=uccProgresControl,Converter={StaticResource HeightConverter}}"/>
+                     Width="{Binding Path=Width,ElementName=uccProgresControl}">
+            <ProgressBar.Height>
+                <Binding Path="Height" ElementName="uccProgressControl" Converter="{StaticResource HeightConverter}">
+                    <Binding.ConverterParameter>
+                        <sys:Int32>2</sys:Int32>
+                    </Binding.ConverterParameter>
+                </Binding>
+            </ProgressBar.Height>
+        </ProgressBar>
     </Grid>
 </UserControl>

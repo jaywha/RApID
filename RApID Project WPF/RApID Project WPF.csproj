@@ -223,6 +223,9 @@
     <Compile Include="UserControls\ucLogActionView.xaml.cs">
       <DependentUpon>ucLogActionView.xaml</DependentUpon>
     </Compile>
+    <Compile Include="UserControls\ucUnitIssues.xaml.cs">
+      <DependentUpon>ucUnitIssues.xaml</DependentUpon>
+    </Compile>
     <Compile Include="ViewModelBase.cs" />
     <Compile Include="VMB\ViewModelBase.cs" />
     <Page Include="frmFullCustomerInformation.xaml">
@@ -314,6 +317,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="UserControls\ucLogActionView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UserControls\ucUnitIssues.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

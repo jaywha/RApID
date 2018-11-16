@@ -1822,11 +1822,11 @@ namespace RApID_Project_WPF
         {
             if (sender is ComboBox cbox)
             {
-                if (cbox.Name.Contains("Ref"))
+                if (cbox.Name.Contains("Ref") && OrigRefSource != null)
                 {
                     cbox.ItemsSource = OrigRefSource.Where((p) => p.Contains(cbox.Text));
                 }
-                else if (cbox.Name.Contains("Part"))
+                else if (cbox.Name.Contains("Part") && OrigPartSource != null)
                 {
                     cbox.ItemsSource = OrigPartSource.Where((p) => p.Contains(cbox.Text));
                 }
@@ -2123,11 +2123,12 @@ namespace RApID_Project_WPF
                 {
                     sVar.LogHandler.CreateLogAction((Button)sender, csLogging.LogState.CLICK);
 
-                    if(!txtPartReplaced.Items.Contains(txtPartReplaced.Text))
+                    if(!txtRefDes.Items.Contains(txtRefDes.Text))
                     {
                         brdRefDes.BorderBrush = Brushes.Red;
                         brdRefDes.BorderThickness = new Thickness(1.0);
                         MessageBox.Show("Invalid Ref Designator",$"{txtRefDes.Text} is not a valid designator!",MessageBoxButton.OK,MessageBoxImage.Warning);
+                        return;
                     } else
                     {
                         brdRefDes.BorderBrush = null;

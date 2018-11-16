@@ -56,3 +56,5 @@ C:\Visual Studio Projects\RApID\RApID Project WPF\obj\x86\Debug\UserControls\ucA
 C:\Visual Studio Projects\RApID\RApID Project WPF\obj\x86\Debug\RApID Project WPF.csprojAssemblyReference.cache
 C:\Visual Studio Projects\RApID\RApID Project WPF\obj\x86\Debug\UserControls\ucProgressControl.g.cs
 C:\Visual Studio Projects\RApID\RApID Project WPF\obj\x86\Debug\UserControls\ucProgressControl.baml
+C:\Visual Studio Projects\RApID\RApID Project WPF\obj\x86\Debug\UserControls\ucUnitIssues.g.cs
+C:\Visual Studio Projects\RApID\RApID Project WPF\obj\x86\Debug\UserControls\ucUnitIssues.baml
