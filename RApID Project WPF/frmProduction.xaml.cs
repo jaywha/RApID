@@ -966,21 +966,21 @@ namespace RApID_Project_WPF
                 cmd.Parameters.AddWithValue("@partNumber", txtPartNumber.Text.TrimEnd());
                 cmd.Parameters.AddWithValue("@partSeries", txtPartSeries.Text.TrimEnd());
                 cmd.Parameters.AddWithValue("@commoditySubClass", txtCommSubClass.Text.TrimEnd());
-                cmd.Parameters.AddWithValue("@softwareVersion", csCrossClassInteraction.dbValSubmit(txtSWVersion.Text));
+                cmd.Parameters.AddWithValue("@softwareVersion", csCrossClassInteraction.EmptyIfNull(txtSWVersion.Text));
                 cmd.Parameters.AddWithValue("@typeOfReturn", "Production"); //--Will always be 'Production'
-                cmd.Parameters.AddWithValue("@fromArea", csCrossClassInteraction.dbValSubmit(cbFromArea.Text));
+                cmd.Parameters.AddWithValue("@fromArea", csCrossClassInteraction.EmptyIfNull(cbFromArea.Text));
                 cmd.Parameters.AddWithValue("@scrap", cbxScrap.IsChecked);
 
                 #region Unit Issues
                 ProductionMultipleUnitIssues lUI = getUnitIssueString(0);
                 cmd.Parameters.AddWithValue("@reportedIssue", lUI.ReportedIssue);
-                cmd.Parameters.AddWithValue("@testResult", csCrossClassInteraction.dbValSubmit(lUI.TestResult));
-                cmd.Parameters.AddWithValue("@testResultAbort", csCrossClassInteraction.dbValSubmit(lUI.TestResultAbort));
-                cmd.Parameters.AddWithValue("@issue", csCrossClassInteraction.dbValSubmit(lUI.Issue));
-                cmd.Parameters.AddWithValue("@item", csCrossClassInteraction.dbValSubmit(lUI.Item));
-                cmd.Parameters.AddWithValue("@problem", csCrossClassInteraction.dbValSubmit(lUI.Problem));
-                cmd.Parameters.AddWithValue("@refDesignator", csCrossClassInteraction.dbValSubmit(lUI.MultiPartsReplaced[0].RefDesignator));
-                cmd.Parameters.AddWithValue("@partsReplaced", csCrossClassInteraction.dbValSubmit(lUI.MultiPartsReplaced[0].PartReplaced));
+                cmd.Parameters.AddWithValue("@testResult", csCrossClassInteraction.EmptyIfNull(lUI.TestResult));
+                cmd.Parameters.AddWithValue("@testResultAbort", csCrossClassInteraction.EmptyIfNull(lUI.TestResultAbort));
+                cmd.Parameters.AddWithValue("@issue", csCrossClassInteraction.EmptyIfNull(lUI.Issue));
+                cmd.Parameters.AddWithValue("@item", csCrossClassInteraction.EmptyIfNull(lUI.Item));
+                cmd.Parameters.AddWithValue("@problem", csCrossClassInteraction.EmptyIfNull(lUI.Problem));
+                cmd.Parameters.AddWithValue("@refDesignator", csCrossClassInteraction.EmptyIfNull(lUI.MultiPartsReplaced[0].RefDesignator));
+                cmd.Parameters.AddWithValue("@partsReplaced", csCrossClassInteraction.EmptyIfNull(lUI.MultiPartsReplaced[0].PartReplaced));
                 #endregion
 
                 cmd.Parameters.AddWithValue("@additionalComments", new TextRange(rtbAdditionalComments.Document.ContentStart, rtbAdditionalComments.Document.ContentEnd).Text.ToString());
@@ -1277,7 +1277,7 @@ namespace RApID_Project_WPF
                 cbReportedIssue_3.Text = cb.Text;
         }
 
-        private string getPartReplacedPartDescription(string _sPartReplaced)
+        internal static string getPartReplacedPartDescription(string _sPartReplaced)
         {
             if (string.IsNullOrEmpty(_sPartReplaced))
                 return string.Empty;
@@ -1480,7 +1480,7 @@ namespace RApID_Project_WPF
                 {
                     Owner = this
                 };
-                pri.ShowDialog();
+                pri.Show();
                 //PrevRepairInfo pri = new PrevRepairInfo((PreviousRepairInformation)dgPrevRepairInfo.SelectedItem);
                 //pri.ShowDialog();
                 Activate();
@@ -1849,6 +1849,7 @@ namespace RApID_Project_WPF
 
             sVar.resetStaticVars();
             csSplashScreenHelper.Close();
+            InitSplash.thread_Splash.Abort();
         }
 
         private void refDesIndexChanged(object sender, SelectionChangedEventArgs e)

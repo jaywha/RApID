@@ -1050,16 +1050,16 @@ namespace RApID_Project_WPF
                     cmd.Parameters.AddWithValue("@HoursOnUnit", DBNull.Value);
                 else cmd.Parameters.AddWithValue("@HoursOnUnit", Convert.ToInt32(txtHOU.Text));
 
-                cmd.Parameters.AddWithValue("@ReportedIssue", csCrossClassInteraction.dbValSubmit(cbReportedIssue.Text));
+                cmd.Parameters.AddWithValue("@ReportedIssue", csCrossClassInteraction.EmptyIfNull(cbReportedIssue.Text));
 
                 #region Unit Issues
                 RepairMultipleIssues lUI = getUnitIssueString(0);
-                cmd.Parameters.AddWithValue("@TestResult", csCrossClassInteraction.dbValSubmit(lUI.TestResult));
-                cmd.Parameters.AddWithValue("@TestResultAbort", csCrossClassInteraction.dbValSubmit(lUI.TestResultAbort));
-                cmd.Parameters.AddWithValue("@Cause", csCrossClassInteraction.dbValSubmit(lUI.Cause));
-                cmd.Parameters.AddWithValue("@Replacement", csCrossClassInteraction.dbValSubmit(lUI.Replacement));
-                cmd.Parameters.AddWithValue("@PartsReplaced", csCrossClassInteraction.dbValSubmit(lUI.MultiPartsReplaced[0].PartReplaced));
-                cmd.Parameters.AddWithValue("@RefDesignator", csCrossClassInteraction.dbValSubmit(lUI.MultiPartsReplaced[0].RefDesignator));
+                cmd.Parameters.AddWithValue("@TestResult", csCrossClassInteraction.EmptyIfNull(lUI.TestResult));
+                cmd.Parameters.AddWithValue("@TestResultAbort", csCrossClassInteraction.EmptyIfNull(lUI.TestResultAbort));
+                cmd.Parameters.AddWithValue("@Cause", csCrossClassInteraction.EmptyIfNull(lUI.Cause));
+                cmd.Parameters.AddWithValue("@Replacement", csCrossClassInteraction.EmptyIfNull(lUI.Replacement));
+                cmd.Parameters.AddWithValue("@PartsReplaced", csCrossClassInteraction.EmptyIfNull(lUI.MultiPartsReplaced[0].PartReplaced));
+                cmd.Parameters.AddWithValue("@RefDesignator", csCrossClassInteraction.EmptyIfNull(lUI.MultiPartsReplaced[0].RefDesignator));
                 #endregion
 
                 cmd.Parameters.AddWithValue("@AdditionalComments", new TextRange(rtbAdditionalComments.Document.ContentStart, rtbAdditionalComments.Document.ContentEnd).Text.ToString());

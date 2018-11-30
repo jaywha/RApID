@@ -869,7 +869,7 @@ namespace RApID_Project_WPF
         /// </summary>
         /// <param name="valToTest">Value that needs to be checked.</param>
         /// <returns>Returns String.Empty if the value is null or DBNull; otherwise, return the value passed in.</returns>
-        public static string dbValSubmit(string valToTest) 
+        public static string EmptyIfNull(this string valToTest) 
             => string.IsNullOrEmpty(valToTest) || ((object)valToTest) == DBNull.Value ? string.Empty : valToTest;
 
         public static string unitIssuesValSubmit(ComboBox cbToCheck)
@@ -1141,15 +1141,15 @@ namespace RApID_Project_WPF
                     {
                         lRMI.Add(new RepairMultipleIssues()
                         {
-                            TestResult = dbValSubmit(reader[0].ToString()),
-                            TestResultAbort = dbValSubmit(reader[1].ToString()),
-                            Cause = dbValSubmit(reader[2].ToString()),
-                            Replacement = dbValSubmit(reader[3].ToString()),
+                            TestResult = EmptyIfNull(reader[0].ToString()),
+                            TestResultAbort = EmptyIfNull(reader[1].ToString()),
+                            Cause = EmptyIfNull(reader[2].ToString()),
+                            Replacement = EmptyIfNull(reader[3].ToString()),
                             SinglePartReplaced = new MultiplePartsReplaced()
                             {
-                                PartReplaced = dbValSubmit(reader[4].ToString()),
-                                RefDesignator = dbValSubmit(reader[5].ToString()),
-                                PartsReplacedPartDescription = dbValSubmit(reader[6].ToString())
+                                PartReplaced = EmptyIfNull(reader[4].ToString()),
+                                RefDesignator = EmptyIfNull(reader[5].ToString()),
+                                PartsReplacedPartDescription = EmptyIfNull(reader[6].ToString())
                             }
                         });
                     }

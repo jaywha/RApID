@@ -53,8 +53,10 @@ C:\Visual Studio Projects\RApID\RApID Project WPF\obj\x86\Debug\UserControls\ucS
 C:\Visual Studio Projects\RApID\RApID Project WPF\obj\x86\Debug\UserControls\ucLogActionView.baml
 C:\Visual Studio Projects\RApID\RApID Project WPF\obj\x86\Debug\UserControls\ucAOITab.g.cs
 C:\Visual Studio Projects\RApID\RApID Project WPF\obj\x86\Debug\UserControls\ucAOITab.baml
-C:\Visual Studio Projects\RApID\RApID Project WPF\obj\x86\Debug\RApID Project WPF.csprojAssemblyReference.cache
 C:\Visual Studio Projects\RApID\RApID Project WPF\obj\x86\Debug\UserControls\ucProgressControl.g.cs
 C:\Visual Studio Projects\RApID\RApID Project WPF\obj\x86\Debug\UserControls\ucProgressControl.baml
-C:\Visual Studio Projects\RApID\RApID Project WPF\obj\x86\Debug\UserControls\ucUnitIssues.g.cs
-C:\Visual Studio Projects\RApID\RApID Project WPF\obj\x86\Debug\UserControls\ucUnitIssues.baml
+C:\Visual Studio Projects\RApID\RApID Project WPF\obj\x86\Debug\UserControls\ucIssueTabControl.g.cs
+C:\Visual Studio Projects\RApID\RApID Project WPF\obj\x86\Debug\UserControls\ucUnitIssue.g.cs
+C:\Visual Studio Projects\RApID\RApID Project WPF\obj\x86\Debug\UserControls\ucUnitIssue.baml
+C:\Visual Studio Projects\RApID\RApID Project WPF\obj\x86\Debug\UserControls\ucIssueTabControl.baml
+C:\Visual Studio Projects\RApID\RApID Project WPF\obj\x86\Debug\RApID Project WPF.csprojAssemblyReference.cache

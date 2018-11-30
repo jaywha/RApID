@@ -2,6 +2,8 @@
 using System.Windows;
 using System.Data.SqlClient;
 using EricStabileLibrary;
+using RApID_Project_WPF.UserControls;
+using System.Linq;
 
 namespace RApID_Project_WPF
 {
@@ -13,7 +15,6 @@ namespace RApID_Project_WPF
         PreviousRepairInformation PRI;
         csObjectHolder.csObjectHolder holder = csObjectHolder.csObjectHolder.ObjectHolderInstance();
 
-
         public frmProductionPRI(PreviousRepairInformation _pri)
         {
             InitializeComponent();
@@ -22,11 +23,41 @@ namespace RApID_Project_WPF
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
-            if (PRI == null)
-                Close();
+            if (PRI == null || !loadPRI()) { Close(); }
+        }
 
-            if (!loadPRI())
-                Close();
+        /// <summary>
+        /// Fills the user control with the data from the given array.
+        /// </summary>
+        /// <param name="issue">The target <see cref="ucUnitIssue"/> to fill with data.</param>
+        /// <param name="values"><see cref="string"/> values ordered by visual appearance in the control.</param>
+        protected void FillUnitIssue(ucUnitIssue issue, params string[] values)
+        {
+            var vi = 0;
+
+            issue.ReportedIssue = values[vi++];
+            issue.TestResult = values[vi++];
+            issue.AbortResult = values[vi++];
+            issue.Cause = values[vi++];
+            issue.Replacement = values[vi++];
+            issue.Issue = values[vi++];
+            issue.Item = values[vi++];
+            issue.Problem = values[vi++];
+
+            var partnums = values[vi++].Split(',');
+            var refids = values[vi++].Split(',');
+            var parts = refids.Zip(partnums,
+                (rid, pnum) => new MultiplePartsReplaced()
+                {
+                    RefDesignator = rid,
+                    PartReplaced = pnum,
+                    PartsReplacedPartDescription = frmProduction.getPartReplacedPartDescription(pnum)
+                });
+            issue.PartsReplaced = new System.Collections.Generic.List<MultiplePartsReplaced>();
+            foreach (var part in parts)
+            {
+                issue.PartsReplaced.Add(part);
+            }
         }
 
         private bool loadPRI()
@@ -36,10 +67,12 @@ namespace RApID_Project_WPF
             string query = "SELECT * FROM TechnicianSubmission WHERE ID = '" + PRI.ID + "'";
             string logQuery = "SELECT * FROM TechLogs WHERE ID = @logID";
             string actionQuery = "SELECT * FROM TechLogActions WHERE ActionID = @aid";
+            string unitIssueQuery = $"SELECT * FROM TechnicianUnitIssues WHERE ID = '{PRI.ID}'";
 
             var cmd = new SqlCommand(query, conn);
             var logCmd = new SqlCommand(logQuery, conn); logCmd.Parameters.Add("@logID", System.Data.SqlDbType.Int);
             var actionCmd = new SqlCommand(actionQuery, conn); actionCmd.Parameters.Add("@aid", System.Data.SqlDbType.Int);
+            var unitIssueCmd = new SqlCommand(unitIssueQuery, conn);
 
             try
             {
@@ -49,22 +82,43 @@ namespace RApID_Project_WPF
                 {
                     while (reader.Read())
                     {
-                        txtTechName.Text = csCrossClassInteraction.dbValSubmit(reader["Technician"].ToString());
-                        txtDateReceived.Text = csCrossClassInteraction.dbValSubmit(reader["DateReceived"].ToString());
-                        txtDateSubmitted.Text = csCrossClassInteraction.dbValSubmit(reader["DateSubmitted"].ToString());
-                        txtPartName.Text = csCrossClassInteraction.dbValSubmit(reader["PartName"].ToString());
-                        txtPartNumber.Text = csCrossClassInteraction.dbValSubmit(reader["PartNumber"].ToString());
-                        txtPartSeries.Text = csCrossClassInteraction.dbValSubmit(reader["Series"].ToString());
-                        txtCommSubClass.Text = csCrossClassInteraction.dbValSubmit(reader["CommoditySubClass"].ToString());
-                        txtSW.Text = csCrossClassInteraction.dbValSubmit(reader["SoftwareVersion"].ToString());
-                        txtTOR.Text = csCrossClassInteraction.dbValSubmit(reader["TypeOfReturn"].ToString());
-                        txtFromArea.Text = csCrossClassInteraction.dbValSubmit(reader["FromArea"].ToString());
+                        txtTechName.Text = reader["Technician"].ToString().EmptyIfNull();
+                        txtDateReceived.Text = reader["DateReceived"].ToString().EmptyIfNull();
+                        txtDateSubmitted.Text = reader["DateSubmitted"].ToString().EmptyIfNull();
+                        txtPartName.Text = reader["PartName"].ToString().EmptyIfNull();
+                        txtPartNumber.Text = reader["PartNumber"].ToString().EmptyIfNull();
+                        txtPartSeries.Text = reader["Series"].ToString().EmptyIfNull();
+                        txtCommSubClass.Text = reader["CommoditySubClass"].ToString().EmptyIfNull();
+                        txtSW.Text = reader["SoftwareVersion"].ToString().EmptyIfNull();
+                        txtTOR.Text = reader["TypeOfReturn"].ToString().EmptyIfNull();
+                        txtFromArea.Text = reader["FromArea"].ToString().EmptyIfNull();
 
-                        if(reader["LogID"] != DBNull.Value)
+                        if (reader["LogID"] != DBNull.Value)
                             logCmd.Parameters.AddWithValue("@logID",
-                                int.Parse(csCrossClassInteraction.dbValSubmit(reader["LogID"].ToString())));
+                                int.Parse(reader["LogID"].ToString().EmptyIfNull()));
 
-                        rtbAddComm.AppendText(csCrossClassInteraction.dbValSubmit(reader["AdditionalComments"]?.ToString() ?? ""));
+                        //TODO: Add other issues if multiple rows exist
+                        for (int index = 0; index < ucIssues.Count; index++)
+                        {
+                            var issue = ucIssues[index];
+                            if (issue != null)
+                            {
+                                FillUnitIssue(issue,
+                                    reader["ReportedIssue"].ToString().EmptyIfNull(),
+                                    reader["TestResult"].ToString().EmptyIfNull(),
+                                    reader["TestResultAbort"].ToString().EmptyIfNull(),
+                                    reader["Cause"].ToString().EmptyIfNull(),
+                                    reader["Replacement"].ToString().EmptyIfNull(),
+                                    reader["Issue"].ToString().EmptyIfNull(),
+                                    reader["Item"].ToString().EmptyIfNull(),
+                                    reader["Problem"].ToString().EmptyIfNull(),
+                                    reader["PartsReplaced"].ToString(),
+                                    reader["RefDesignator"].ToString()
+                                );
+                            }
+                        }
+
+                        rtbAddComm.AppendText((reader["AdditionalComments"]?.ToString() ?? "").EmptyIfNull());
                     }
                 }
 
@@ -74,16 +128,16 @@ namespace RApID_Project_WPF
                     return true;
                 }
 
-                using(var reader = logCmd.ExecuteReader())
+                using (var reader = logCmd.ExecuteReader())
                 {
                     reader.Read(); // only one record
 
-                    actionCmd.Parameters.AddWithValue("@aid", csCrossClassInteraction.dbValSubmit(reader["ActionID"].ToString()));
+                    actionCmd.Parameters.AddWithValue("@aid", csCrossClassInteraction.EmptyIfNull(reader["ActionID"].ToString()));
 
-                    uclaTechActions.LogToView = new csLog() {                        
-                        Tech = csCrossClassInteraction.dbValSubmit(reader["Tech"].ToString()),
-                        LogCreationTime = DateTime.Parse(csCrossClassInteraction.dbValSubmit(reader["LogCreationTime"].ToString())),
-                        LogSubmitTime = DateTime.Parse(csCrossClassInteraction.dbValSubmit(reader["LogSubmitTime"].ToString()))
+                    ucTechActions.LogToView = new csLog() {                        
+                        Tech = csCrossClassInteraction.EmptyIfNull(reader["Tech"].ToString()),
+                        LogCreationTime = DateTime.Parse(csCrossClassInteraction.EmptyIfNull(reader["LogCreationTime"].ToString())),
+                        LogSubmitTime = DateTime.Parse(csCrossClassInteraction.EmptyIfNull(reader["LogSubmitTime"].ToString()))
                     };
                 }
 
@@ -93,23 +147,23 @@ namespace RApID_Project_WPF
                     {
                         var @action = new csLogAction()
                         {
-                            ControlType = csCrossClassInteraction.dbValSubmit(reader["ControlType"].ToString()),
-                            ControlName = csCrossClassInteraction.dbValSubmit(reader["ControlName"].ToString()),
-                            ControlContent = csCrossClassInteraction.dbValSubmit(reader["ControlContent"].ToString()),
+                            ControlType = csCrossClassInteraction.EmptyIfNull(reader["ControlType"].ToString()),
+                            ControlName = csCrossClassInteraction.EmptyIfNull(reader["ControlName"].ToString()),
+                            ControlContent = csCrossClassInteraction.EmptyIfNull(reader["ControlContent"].ToString()),
                             EventType = (csLogging.LogState) Enum.Parse(typeof(csLogging.LogState),
-                                csCrossClassInteraction.dbValSubmit(reader["LogState"].ToString())),
-                            EventTiming = DateTime.Parse(csCrossClassInteraction.dbValSubmit(reader["EventTiming"].ToString())),
-                            LogNote = csCrossClassInteraction.dbValSubmit(reader["LogNote"].ToString()),
+                                csCrossClassInteraction.EmptyIfNull(reader["LogState"].ToString())),
+                            EventTiming = DateTime.Parse(csCrossClassInteraction.EmptyIfNull(reader["EventTiming"].ToString())),
+                            LogNote = csCrossClassInteraction.EmptyIfNull(reader["LogNote"].ToString()),
                             LogError = reader.GetBoolean(reader.GetOrdinal("LogError"))
                         };
 
-                        uclaTechActions.LogToView.lActions.Add(@action);
+                        ucTechActions.LogToView.lActions.Add(@action);
                     }
                 }
 
                 conn.Close();
 
-                uclaTechActions.InitView();
+                ucTechActions.InitView();
 
                 return true;
             }

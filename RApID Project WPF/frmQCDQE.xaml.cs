@@ -313,28 +313,28 @@ namespace RApID_Project_WPF
                         ScannedUnitInformation.QCandDQEComments = new QCDQETechComments();
 
                         ScannedUnitInformation.ID = Convert.ToInt32(reader["ID"].ToString());
-                        ScannedUnitInformation.Technician = csCrossClassInteraction.dbValSubmit(reader["Technician"].ToString());
-                        ScannedUnitInformation.PartName = csCrossClassInteraction.dbValSubmit(reader["PartName"].ToString());
-                        ScannedUnitInformation.PartNumber = csCrossClassInteraction.dbValSubmit(reader["PartNumber"].ToString());
-                        ScannedUnitInformation.PartSeries = csCrossClassInteraction.dbValSubmit(reader["Series"].ToString());
-                        ScannedUnitInformation.CommoditySubClass = csCrossClassInteraction.dbValSubmit(reader["CommoditySubClass"].ToString());
-                        ScannedUnitInformation.SoftwareVersion = csCrossClassInteraction.dbValSubmit(reader["SoftwareVersion"].ToString());
-                        ScannedUnitInformation.Quantity = csCrossClassInteraction.dbValSubmit(reader["Quantity"].ToString());
+                        ScannedUnitInformation.Technician = csCrossClassInteraction.EmptyIfNull(reader["Technician"].ToString());
+                        ScannedUnitInformation.PartName = csCrossClassInteraction.EmptyIfNull(reader["PartName"].ToString());
+                        ScannedUnitInformation.PartNumber = csCrossClassInteraction.EmptyIfNull(reader["PartNumber"].ToString());
+                        ScannedUnitInformation.PartSeries = csCrossClassInteraction.EmptyIfNull(reader["Series"].ToString());
+                        ScannedUnitInformation.CommoditySubClass = csCrossClassInteraction.EmptyIfNull(reader["CommoditySubClass"].ToString());
+                        ScannedUnitInformation.SoftwareVersion = csCrossClassInteraction.EmptyIfNull(reader["SoftwareVersion"].ToString());
+                        ScannedUnitInformation.Quantity = csCrossClassInteraction.EmptyIfNull(reader["Quantity"].ToString());
                         
                         if (!reader["DateReceived"].Equals(DBNull.Value))
                             ScannedUnitInformation.DateReceived = Convert.ToDateTime(reader["DateReceived"].ToString());
                         
-                        ScannedUnitInformation.SerialNumber = csCrossClassInteraction.dbValSubmit(reader["SerialNumber"].ToString());
-                        ScannedUnitInformation.TypeOfReturn = csCrossClassInteraction.dbValSubmit(reader["TypeOfReturn"].ToString());
-                        ScannedUnitInformation.TypeOfFailure = csCrossClassInteraction.dbValSubmit(reader["TypeOfFailure"].ToString());
-                        ScannedUnitInformation.HoursOnUnit = csCrossClassInteraction.dbValSubmit(reader["HoursOnUnit"].ToString());
-                        ScannedUnitInformation.AdditionalComments = csCrossClassInteraction.dbValSubmit(reader["AdditionalComments"].ToString());
-                        ScannedUnitInformation.TechAction1 = csCrossClassInteraction.dbValSubmit(reader["TechAct1"].ToString());
-                        ScannedUnitInformation.TechAction2 = csCrossClassInteraction.dbValSubmit(reader["TechAct2"].ToString());
-                        ScannedUnitInformation.TechAction3 = csCrossClassInteraction.dbValSubmit(reader["TechAct3"].ToString());
-                        ScannedUnitInformation.CustomerInformation.CustomerNumber = csCrossClassInteraction.dbValSubmit(reader["CustomerNumber"].ToString());
-                        ScannedUnitInformation.QCandDQEComments.FullTechList = csCrossClassInteraction.dbValSubmit(reader["Quality"].ToString());
-                        ScannedUnitInformation.QCandDQEComments.FullTechComments = csCrossClassInteraction.dbValSubmit(reader["QCDQEComments"].ToString());
+                        ScannedUnitInformation.SerialNumber = csCrossClassInteraction.EmptyIfNull(reader["SerialNumber"].ToString());
+                        ScannedUnitInformation.TypeOfReturn = csCrossClassInteraction.EmptyIfNull(reader["TypeOfReturn"].ToString());
+                        ScannedUnitInformation.TypeOfFailure = csCrossClassInteraction.EmptyIfNull(reader["TypeOfFailure"].ToString());
+                        ScannedUnitInformation.HoursOnUnit = csCrossClassInteraction.EmptyIfNull(reader["HoursOnUnit"].ToString());
+                        ScannedUnitInformation.AdditionalComments = csCrossClassInteraction.EmptyIfNull(reader["AdditionalComments"].ToString());
+                        ScannedUnitInformation.TechAction1 = csCrossClassInteraction.EmptyIfNull(reader["TechAct1"].ToString());
+                        ScannedUnitInformation.TechAction2 = csCrossClassInteraction.EmptyIfNull(reader["TechAct2"].ToString());
+                        ScannedUnitInformation.TechAction3 = csCrossClassInteraction.EmptyIfNull(reader["TechAct3"].ToString());
+                        ScannedUnitInformation.CustomerInformation.CustomerNumber = csCrossClassInteraction.EmptyIfNull(reader["CustomerNumber"].ToString());
+                        ScannedUnitInformation.QCandDQEComments.FullTechList = csCrossClassInteraction.EmptyIfNull(reader["Quality"].ToString());
+                        ScannedUnitInformation.QCandDQEComments.FullTechComments = csCrossClassInteraction.EmptyIfNull(reader["QCDQEComments"].ToString());
                         ScannedUnitInformation.LoadSuccessful = true;
                         break;
                     }
@@ -413,18 +413,18 @@ namespace RApID_Project_WPF
 
         private void populateFormWithData()
         {
-            txtTechName.Text = csCrossClassInteraction.dbValSubmit(ScannedUnitInformation.Technician);
-            dtpDateReceived.Text = csCrossClassInteraction.dbValSubmit(ScannedUnitInformation.DateReceived.ToString("MM/dd/yyyy"));
-            txtSN.Text = csCrossClassInteraction.dbValSubmit(ScannedUnitInformation.SerialNumber);
-            txtPartName.Text = csCrossClassInteraction.dbValSubmit(ScannedUnitInformation.PartName);
-            txtPartNumber.Text = csCrossClassInteraction.dbValSubmit(ScannedUnitInformation.PartNumber);
-            txtPartSeries.Text = csCrossClassInteraction.dbValSubmit(ScannedUnitInformation.PartSeries);
-            txtCommSubClass.Text = csCrossClassInteraction.dbValSubmit(ScannedUnitInformation.CommoditySubClass);
-            txtSWVersion.Text = csCrossClassInteraction.dbValSubmit(ScannedUnitInformation.SoftwareVersion);
-            txtQTY.Text = csCrossClassInteraction.dbValSubmit(ScannedUnitInformation.Quantity);
-            txtTOR.Text = csCrossClassInteraction.dbValSubmit(ScannedUnitInformation.TypeOfReturn);
-            txtTOF.Text = csCrossClassInteraction.dbValSubmit(ScannedUnitInformation.TypeOfFailure);
-            txtHOU.Text = csCrossClassInteraction.dbValSubmit(ScannedUnitInformation.HoursOnUnit);
+            txtTechName.Text = csCrossClassInteraction.EmptyIfNull(ScannedUnitInformation.Technician);
+            dtpDateReceived.Text = csCrossClassInteraction.EmptyIfNull(ScannedUnitInformation.DateReceived.ToString("MM/dd/yyyy"));
+            txtSN.Text = csCrossClassInteraction.EmptyIfNull(ScannedUnitInformation.SerialNumber);
+            txtPartName.Text = csCrossClassInteraction.EmptyIfNull(ScannedUnitInformation.PartName);
+            txtPartNumber.Text = csCrossClassInteraction.EmptyIfNull(ScannedUnitInformation.PartNumber);
+            txtPartSeries.Text = csCrossClassInteraction.EmptyIfNull(ScannedUnitInformation.PartSeries);
+            txtCommSubClass.Text = csCrossClassInteraction.EmptyIfNull(ScannedUnitInformation.CommoditySubClass);
+            txtSWVersion.Text = csCrossClassInteraction.EmptyIfNull(ScannedUnitInformation.SoftwareVersion);
+            txtQTY.Text = csCrossClassInteraction.EmptyIfNull(ScannedUnitInformation.Quantity);
+            txtTOR.Text = csCrossClassInteraction.EmptyIfNull(ScannedUnitInformation.TypeOfReturn);
+            txtTOF.Text = csCrossClassInteraction.EmptyIfNull(ScannedUnitInformation.TypeOfFailure);
+            txtHOU.Text = csCrossClassInteraction.EmptyIfNull(ScannedUnitInformation.HoursOnUnit);
 
             if (ScannedUnitInformation.UnitIssues.Count > 0)
             {
@@ -445,14 +445,14 @@ namespace RApID_Project_WPF
                 }
             }
 
-            txtTechAct1.Text = csCrossClassInteraction.dbValSubmit(ScannedUnitInformation.TechAction1);
-            txtTechAct2.Text = csCrossClassInteraction.dbValSubmit(ScannedUnitInformation.TechAction2);
-            txtTechAct3.Text = csCrossClassInteraction.dbValSubmit(ScannedUnitInformation.TechAction3);
+            txtTechAct1.Text = csCrossClassInteraction.EmptyIfNull(ScannedUnitInformation.TechAction1);
+            txtTechAct2.Text = csCrossClassInteraction.EmptyIfNull(ScannedUnitInformation.TechAction2);
+            txtTechAct3.Text = csCrossClassInteraction.EmptyIfNull(ScannedUnitInformation.TechAction3);
 
             if (ScannedUnitInformation.CustomerInformation != null)
             {
-                txtCustomerNumber.Text = csCrossClassInteraction.dbValSubmit(ScannedUnitInformation.CustomerInformation.CustomerNumber);
-                txtCustomerName.Text = csCrossClassInteraction.dbValSubmit(ScannedUnitInformation.CustomerInformation.CustomerName);
+                txtCustomerNumber.Text = csCrossClassInteraction.EmptyIfNull(ScannedUnitInformation.CustomerInformation.CustomerNumber);
+                txtCustomerName.Text = csCrossClassInteraction.EmptyIfNull(ScannedUnitInformation.CustomerInformation.CustomerName);
             }
 
             if(ScannedUnitInformation.QCandDQEComments != null && !string.IsNullOrEmpty(ScannedUnitInformation.QCandDQEComments.FullTechComments))

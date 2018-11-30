@@ -190,17 +190,15 @@ namespace RApID_Project_WPF
 
             #region Find ComponentNumber (or PartNumber)
             var searchWoList = new SqlCommand("SELECT TOP(1) [ComponentNumber],[ItemNumber] FROM [HummingBird].[dbo].[WorkOrderPartsList] " +
-                                                     "WHERE(RTRIM(LTRIM([ItemNumber])) = RTRIM(LTRIM(@PN)) OR RTRIM(LTRIM([WONumber])) = RTRIM(LTRIM(@WO)) " +
+                                                     "WHERE (RTRIM(LTRIM([ItemNumber])) = RTRIM(LTRIM(@PN)) " +
                                                      "OR RTRIM(LTRIM([ComponentNumber])) = RTRIM(LTRIM(@CN)))" +
-                                                     "AND ComponentDescription LIKE '%P%C%B%' " +
-                                                     "AND ComponentLineNumber IN (2.0, 5.0, 6.0)", hummingConn); searchWoList.Parameters.AddWithValue("@PN", PartNumber);
+                                                     "AND ComponentDescription LIKE 'P%C%B%' ", hummingConn); searchWoList.Parameters.AddWithValue("@PN", PartNumber);
             searchWoList.Parameters.AddWithValue("@WO", WorkNumber);
             searchWoList.Parameters.AddWithValue("@CN", ComponentNumber);
             var searchWoListBackup = new SqlCommand("SELECT TOP(1) [ComponentNumber],[ItemNumber] FROM [HummingBird].[dbo].[WorkOrderPartsListBackup] " +
-                                                     "WHERE(RTRIM(LTRIM([ItemNumber])) = RTRIM(LTRIM(@PN)) OR RTRIM(LTRIM([WONumber])) = RTRIM(LTRIM(@WO)) " +
+                                                     "WHERE (RTRIM(LTRIM([ItemNumber])) = RTRIM(LTRIM(@PN)) " +
                                                      "OR RTRIM(LTRIM([ComponentNumber])) = RTRIM(LTRIM(@CN)))" +
-                                                     "AND ComponentDescription LIKE '%P%C%B%' " +
-                                                     "AND ComponentLineNumber IN (2.0, 5.0, 6.0)", hummingConn); searchWoListBackup.Parameters.AddWithValue("@PN", PartNumber);
+                                                     "AND ComponentDescription LIKE 'P%C%B%' ", hummingConn); searchWoListBackup.Parameters.AddWithValue("@PN", PartNumber);
             searchWoListBackup.Parameters.AddWithValue("@WO", WorkNumber);
             searchWoListBackup.Parameters.AddWithValue("@CN", ComponentNumber);
 

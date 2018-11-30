@@ -12,10 +12,13 @@
             <Label Name="lblCreateDate" Content="{Binding Path=CreateDate, ElementName=ucLogActionViewer}" Background="AntiqueWhite"/>
             <Label Name="lblSubmitDate" Content="{Binding Path=SubmitDate, ElementName=ucLogActionViewer}" Background="GhostWhite"/>
         </StackPanel>
-        <RichTextBox Name="rtbLogBox" AllowDrop="False" IsTabStop="False" Height="200">
+        <RichTextBox Name="rtbLogBox" AllowDrop="False" IsTabStop="False" Height="200" IsReadOnly="True">
             <FlowDocument>
                 <Paragraph>
-                    <Run Text="Technician Submission Details Would Appear Here if a LogID is associated with this record."/>
+                    <Run Text="Technician submission details would appear here if a Database LogID was associated with this record."/>
+                    <LineBreak/>
+                    <LineBreak/>
+                    <Run Text="If this is an error, please inform Jay W."/>
                 </Paragraph>
             </FlowDocument>
         </RichTextBox>

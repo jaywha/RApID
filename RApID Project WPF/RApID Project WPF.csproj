@@ -207,7 +207,11 @@
     <Compile Include="ServiceManager.cs" />
     <Compile Include="Settings.cs" />
     <Compile Include="StaticVars.cs" />
+    <Compile Include="UserControls\BoolToVisibilityConverter.cs" />
     <Compile Include="UserControls\HeightToHeightConverter.cs" />
+    <Compile Include="UserControls\ucIssueTabControl.xaml.cs">
+      <DependentUpon>ucIssueTabControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="UserControls\ucProgressControl.xaml.cs">
       <DependentUpon>ucProgressControl.xaml</DependentUpon>
     </Compile>
@@ -223,8 +227,8 @@
     <Compile Include="UserControls\ucLogActionView.xaml.cs">
       <DependentUpon>ucLogActionView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="UserControls\ucUnitIssues.xaml.cs">
-      <DependentUpon>ucUnitIssues.xaml</DependentUpon>
+    <Compile Include="UserControls\ucUnitIssue.xaml.cs">
+      <DependentUpon>ucUnitIssue.xaml</DependentUpon>
     </Compile>
     <Compile Include="ViewModelBase.cs" />
     <Compile Include="VMB\ViewModelBase.cs" />
@@ -300,6 +304,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="UserControls\ucIssueTabControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="UserControls\ucProgressControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -320,7 +328,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="UserControls\ucUnitIssues.xaml">
+    <Page Include="UserControls\ucUnitIssue.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -358,15 +366,10 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\RApID Service\RApID Service.csproj">
-      <Project>{33aa9307-a983-4518-b855-21412a946cc2}</Project>
-      <Name>RApID Service</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
     <WCFMetadata Include="Service References\" />
   </ItemGroup>
   <ItemGroup>
+    <Resource Include="Resources\close.png" />
     <Resource Include="RApID.ico" />
     <None Include="FodyWeavers.xml" />
     <Content Include="Resources\BarcodeLib.dll" />

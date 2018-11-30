@@ -59,30 +59,30 @@ namespace RApID_Project_WPF
                 {
                     while(reader.Read())
                     {
-                        sUnitID = csCrossClassInteraction.dbValSubmit(reader["ID"].ToString());
+                        sUnitID = csCrossClassInteraction.EmptyIfNull(reader["ID"].ToString());
 
-                        txtTechName.Text = csCrossClassInteraction.dbValSubmit(reader["Technician"].ToString());
-                        txtDateReceived.Text = csCrossClassInteraction.dbValSubmit(reader["DateReceived"].ToString());
-                        txtDateSubmitted.Text = csCrossClassInteraction.dbValSubmit(reader["DateSubmitted"].ToString());
-                        txtPartName.Text = csCrossClassInteraction.dbValSubmit(reader["PartName"].ToString());
-                        txtPartNumber.Text = csCrossClassInteraction.dbValSubmit(reader["PartNumber"].ToString());
-                        txtPartSeries.Text = csCrossClassInteraction.dbValSubmit(reader["Series"].ToString());
-                        txtCommSubClass.Text = csCrossClassInteraction.dbValSubmit(reader["CommoditySubClass"].ToString());
-                        txtSW.Text = csCrossClassInteraction.dbValSubmit(reader["SoftwareVersion"].ToString());
-                        txtTOR.Text = csCrossClassInteraction.dbValSubmit(reader["TypeOfReturn"].ToString());
-                        txtTOF.Text = csCrossClassInteraction.dbValSubmit(reader["TypeOfFailure"].ToString());
-                        txtHOU.Text = csCrossClassInteraction.dbValSubmit(reader["HoursOnUnit"].ToString());
+                        txtTechName.Text = csCrossClassInteraction.EmptyIfNull(reader["Technician"].ToString());
+                        txtDateReceived.Text = csCrossClassInteraction.EmptyIfNull(reader["DateReceived"].ToString());
+                        txtDateSubmitted.Text = csCrossClassInteraction.EmptyIfNull(reader["DateSubmitted"].ToString());
+                        txtPartName.Text = csCrossClassInteraction.EmptyIfNull(reader["PartName"].ToString());
+                        txtPartNumber.Text = csCrossClassInteraction.EmptyIfNull(reader["PartNumber"].ToString());
+                        txtPartSeries.Text = csCrossClassInteraction.EmptyIfNull(reader["Series"].ToString());
+                        txtCommSubClass.Text = csCrossClassInteraction.EmptyIfNull(reader["CommoditySubClass"].ToString());
+                        txtSW.Text = csCrossClassInteraction.EmptyIfNull(reader["SoftwareVersion"].ToString());
+                        txtTOR.Text = csCrossClassInteraction.EmptyIfNull(reader["TypeOfReturn"].ToString());
+                        txtTOF.Text = csCrossClassInteraction.EmptyIfNull(reader["TypeOfFailure"].ToString());
+                        txtHOU.Text = csCrossClassInteraction.EmptyIfNull(reader["HoursOnUnit"].ToString());
 
-                        rtbAddComm.AppendText(csCrossClassInteraction.dbValSubmit(reader["AdditionalComments"].ToString()));
-                        txtTechAct1.Text = csCrossClassInteraction.dbValSubmit(reader["TechAct1"].ToString());
-                        txtTechAct2.Text = csCrossClassInteraction.dbValSubmit(reader["TechAct2"].ToString());
-                        txtTechAct3.Text = csCrossClassInteraction.dbValSubmit(reader["TechAct3"].ToString());
+                        rtbAddComm.AppendText(csCrossClassInteraction.EmptyIfNull(reader["AdditionalComments"].ToString()));
+                        txtTechAct1.Text = csCrossClassInteraction.EmptyIfNull(reader["TechAct1"].ToString());
+                        txtTechAct2.Text = csCrossClassInteraction.EmptyIfNull(reader["TechAct2"].ToString());
+                        txtTechAct3.Text = csCrossClassInteraction.EmptyIfNull(reader["TechAct3"].ToString());
 
-                        txtCustNum.Text = csCrossClassInteraction.dbValSubmit(reader["CustomerNumber"].ToString());
+                        txtCustNum.Text = csCrossClassInteraction.EmptyIfNull(reader["CustomerNumber"].ToString());
                         if(!string.IsNullOrEmpty(txtCustNum.Text))
                             customerCmd.Parameters.AddWithValue("@CustNum", int.Parse(txtCustNum.Text));
 
-                        rtbQCDQEComments.AppendText(csCrossClassInteraction.dbValSubmit(reader["QCDQEComments"].ToString()));
+                        rtbQCDQEComments.AppendText(csCrossClassInteraction.EmptyIfNull(reader["QCDQEComments"].ToString()));
                     }
                 }
 
@@ -95,16 +95,16 @@ namespace RApID_Project_WPF
                             txtCustName.Text = customerReader["CustomerName"].ToString();
                             CurrentCustomer = new CustomerInformation()
                             {
-                                CustomerNumber = csCrossClassInteraction.dbValSubmit(customerReader["CustomerNumber"].ToString()),
-                                CustomerName = csCrossClassInteraction.dbValSubmit(customerReader["CustomerName"].ToString()),
-                                CustomerAddy1 = csCrossClassInteraction.dbValSubmit(customerReader["CustomerAddressLine1"].ToString()),
-                                CustomerAddy2 = csCrossClassInteraction.dbValSubmit(customerReader["CustomerAddressLine2"].ToString()),
-                                CustomerAddy3 = csCrossClassInteraction.dbValSubmit(customerReader["CustomerAddressLine3"].ToString()),
-                                CustomerAddy4 = csCrossClassInteraction.dbValSubmit(customerReader["CustomerAddressLine4"].ToString()),
-                                CustomerCity = csCrossClassInteraction.dbValSubmit(customerReader["CustomerCity"].ToString()),
-                                CustomerState = csCrossClassInteraction.dbValSubmit(customerReader["CustomerState"].ToString()),
-                                CustomerPostalCode = csCrossClassInteraction.dbValSubmit(customerReader["CustomerPostalCode"].ToString()),
-                                CustomerCountryCode = csCrossClassInteraction.dbValSubmit(customerReader["CustomerCountryCode"].ToString())
+                                CustomerNumber = csCrossClassInteraction.EmptyIfNull(customerReader["CustomerNumber"].ToString()),
+                                CustomerName = csCrossClassInteraction.EmptyIfNull(customerReader["CustomerName"].ToString()),
+                                CustomerAddy1 = csCrossClassInteraction.EmptyIfNull(customerReader["CustomerAddressLine1"].ToString()),
+                                CustomerAddy2 = csCrossClassInteraction.EmptyIfNull(customerReader["CustomerAddressLine2"].ToString()),
+                                CustomerAddy3 = csCrossClassInteraction.EmptyIfNull(customerReader["CustomerAddressLine3"].ToString()),
+                                CustomerAddy4 = csCrossClassInteraction.EmptyIfNull(customerReader["CustomerAddressLine4"].ToString()),
+                                CustomerCity = csCrossClassInteraction.EmptyIfNull(customerReader["CustomerCity"].ToString()),
+                                CustomerState = csCrossClassInteraction.EmptyIfNull(customerReader["CustomerState"].ToString()),
+                                CustomerPostalCode = csCrossClassInteraction.EmptyIfNull(customerReader["CustomerPostalCode"].ToString()),
+                                CustomerCountryCode = csCrossClassInteraction.EmptyIfNull(customerReader["CustomerCountryCode"].ToString())
                             };
                         }
                     }

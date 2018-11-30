@@ -6,6 +6,7 @@ using System.Windows.Controls;
 using Hardcodet.Wpf.TaskbarNotification;
 using System.DirectoryServices.AccountManagement;
 using System.Threading.Tasks;
+using System.Security.Permissions;
 
 namespace RApID_Project_WPF
 {
@@ -19,6 +20,7 @@ namespace RApID_Project_WPF
 
         public static TaskbarIcon Notify;
 
+        [SecurityPermission(SecurityAction.Demand, Flags = SecurityPermissionFlag.ControlAppDomain)]
         public MainWindow()
         {
             holder.vGetServerName("");
@@ -28,6 +30,32 @@ namespace RApID_Project_WPF
                 Directory.CreateDirectory(csExceptionLogger.csExceptionLogger.DefaultLogLocation);
             InitializeComponent();
             Notify = notifyRapid;
+
+            // fixes visual studio exception on stopping debugging
+            AppDomain.CurrentDomain.UnhandledException += new UnhandledExceptionEventHandler(
+                delegate (object sender, UnhandledExceptionEventArgs args) {
+                    var e = ((Exception)args.ExceptionObject);
+                    Console.WriteLine(
+                        $"[UEHandler]: {e.Message}\n" +
+                        $"(Stack Trace)\n{new string('-', 20)}\n\n{e.StackTrace}\n\n{new string('-', 20)}\n" +
+                        $"Will runtime terminate now? -> \'{(args.IsTerminating ? "Yes" : "No")}\'"
+                    ); if (e is TaskCanceledException) return;
+                    #if !DEBUG
+                        csExceptionLogger.csExceptionLogger.Write("Unhandled_Exception", e);
+                    #endif
+                });
+            AppDomain.CurrentDomain.FirstChanceException += new EventHandler<System.Runtime.ExceptionServices.FirstChanceExceptionEventArgs>(
+                delegate (object sender, System.Runtime.ExceptionServices.FirstChanceExceptionEventArgs args)
+                {
+                    var e = args.Exception;
+                    Console.WriteLine(
+                        $"[UEHandler]: {e.Message}\n" +
+                        $"(Stack Trace)\n{new string('-', 20)}\n\n{e.StackTrace}\n"
+                    ); if (e is TaskCanceledException) return;
+                    #if !DEBUG
+                        csExceptionLogger.csExceptionLogger.Write("Unhandled_Exception", e);
+                    #endif
+                });
         }
 
         private async void Window_Loaded(object sender, RoutedEventArgs e)
@@ -81,14 +109,12 @@ namespace RApID_Project_WPF
                     case "btnRework":
                         Hide();
                         var fpr = new frmProduction { Owner = this, WindowStartupLocation = WindowStartupLocation.CenterOwner };
-                        fpr.ShowDialog();
-                        MakeFocus();
+                        fpr.ShowDialog();                        
                         break;
                     case "btnRepair":
                         Hide();
                         var rpr = new Repair(false) { Owner = this, WindowStartupLocation = WindowStartupLocation.CenterOwner };
                         rpr.ShowDialog();
-                        MakeFocus();
                         break;
                     case "btnReportViewer":
                         Process.Start(Properties.Settings.Default.DefaultReportManagerLink);
@@ -97,25 +123,26 @@ namespace RApID_Project_WPF
                         Hide();
                         var fQC = new frmQCDQE { Owner = this, WindowStartupLocation = WindowStartupLocation.CenterOwner };
                         fQC.ShowDialog();
-                        MakeFocus();
                         break;
                     case "btnSettings":
                         Hide();
                         var fSettings = new frmSettings { Owner = this, WindowStartupLocation = WindowStartupLocation.CenterOwner };
                         fSettings.ShowDialog();
-                        MakeFocus();
                         break;
                     case "btnTicketLookup":
                         Hide();
                         frmGlobalSearch.Instance.WindowStartupLocation = WindowStartupLocation.CenterOwner;
                         frmGlobalSearch.Instance.Show();
-                        MakeFocus();
                         break;
                 }
             }
             catch (Exception ex)
             {
                 csExceptionLogger.csExceptionLogger.Write("MainWindow_btnClicks", ex);
+            }
+            finally
+            {
+                MakeFocus();
             }
         }
 
@@ -124,9 +151,7 @@ namespace RApID_Project_WPF
             notifyRapid = null; // Ensure GC collects notify icon
             try
             {
-                csSplashScreenHelper.thread_Show?.Abort();
-                csSplashScreenHelper.thread_Hide?.Abort();
-                csSplashScreenHelper.thread_Close?.Abort();
+                //csSplashScreenHelper.StopTokenSource.Cancel();                
             }
             catch (Exception ex)
             when (ex is System.Security.SecurityException || ex is System.Threading.ThreadStateException
@@ -143,29 +168,29 @@ namespace RApID_Project_WPF
             try
             {
                 /*Wide net to catch rouge threads...*/
-                EricStabileLibrary.InitSplash.thread_Splash?.Abort();
                 Notify = null;
-                notifyRapid = null;
 
                 //ServiceManager.StopService("RApID Service");
             }
-            catch (System.Threading.Tasks.TaskCanceledException tce)
+            catch (TaskCanceledException tce)
             {
                 Console.WriteLine($"Task ID: {tce.Task.Id} | CanBeCanceled = {tce.CancellationToken.CanBeCanceled}\n\tSource -> {tce.Source}");
             }
+            finally
+            {
+                Environment.Exit(0);
+            }
         }
 
-        private void btnShow_Click(object sender, RoutedEventArgs e)
-        {
-            WindowState = WindowState.Normal;
-            MakeFocus();
-        }
+        private void btnShow_Click(object sender, RoutedEventArgs e) => MakeFocus();
 
         private void MakeFocus()
         {
+            WindowState = WindowState.Normal;
             Show();
             BringIntoView();
             Activate();
+            Focus();
         }
 
         private void btnExit_Click(object sender, RoutedEventArgs e) => Close();
