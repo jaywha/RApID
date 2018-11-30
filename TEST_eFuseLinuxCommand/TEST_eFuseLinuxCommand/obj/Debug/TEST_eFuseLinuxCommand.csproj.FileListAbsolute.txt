@@ -1,9 +1,0 @@
-C:\Visual Studio Projects\TEST_eFuseLinuxCommand\TEST_eFuseLinuxCommand\bin\Debug\TEST_eFuseLinuxCommand.exe.config
-C:\Visual Studio Projects\TEST_eFuseLinuxCommand\TEST_eFuseLinuxCommand\bin\Debug\TEST_eFuseLinuxCommand.exe
-C:\Visual Studio Projects\TEST_eFuseLinuxCommand\TEST_eFuseLinuxCommand\bin\Debug\TEST_eFuseLinuxCommand.pdb
-C:\Visual Studio Projects\TEST_eFuseLinuxCommand\TEST_eFuseLinuxCommand\obj\Debug\TEST_eFuseLinuxCommand.csprojResolveAssemblyReference.cache
-C:\Visual Studio Projects\TEST_eFuseLinuxCommand\TEST_eFuseLinuxCommand\obj\Debug\TEST_eFuseLinuxCommand.Form1.resources
-C:\Visual Studio Projects\TEST_eFuseLinuxCommand\TEST_eFuseLinuxCommand\obj\Debug\TEST_eFuseLinuxCommand.Properties.Resources.resources
-C:\Visual Studio Projects\TEST_eFuseLinuxCommand\TEST_eFuseLinuxCommand\obj\Debug\TEST_eFuseLinuxCommand.csproj.GenerateResource.Cache
-C:\Visual Studio Projects\TEST_eFuseLinuxCommand\TEST_eFuseLinuxCommand\obj\Debug\TEST_eFuseLinuxCommand.exe
-C:\Visual Studio Projects\TEST_eFuseLinuxCommand\TEST_eFuseLinuxCommand\obj\Debug\TEST_eFuseLinuxCommand.pdb
