@@ -75,8 +75,7 @@
             <Label Content="From Area:" Margin="0,450,0,0" Style="{StaticResource LabelBaseStyle}" />
             <TextBox x:Name="txtFromArea" Margin="0,475,0,0" Style="{StaticResource TextboxBaseStyle}" />
 
-            <uc:ucIssueTabControl x:Name="ucIssues" Margin="202,23,270,27" DesignHeight="495" DesignWidth="345" ReadOnly="True"/>
-
+            <uc:ucIssueTabControl x:Name="ucIssues" Margin="202,23,286.458,26.625" DesignHeight="495" DesignWidth="345" ReadOnly="True"/>
 
             <Label Content="Additional Comments:" Margin="560,23,0,0" Style="{StaticResource LabelBaseStyle}" Width="144" Height="23" />
             <RichTextBox x:Name="rtbAddComm" Margin="560,51,0,0" Style="{StaticResource RTBBaseStyle}" Width="245" Height="225" />

@@ -484,7 +484,7 @@ namespace EricStabileLibrary
         public void InitSplash1(string sLoadText)
         {
             try
-            {
+            {                
                 thread_Splash = new Thread(new ThreadStart(
                     delegate ()
                     {

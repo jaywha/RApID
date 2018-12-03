@@ -68,7 +68,7 @@ namespace RApID_Project_WPF.UserControls
                 InitializeComponent();
 
                 _tabItems = new List<TabItem> { tiNewTab };
-
+                               
                 AddTabItem();
 
                 tcTabs.DataContext = _tabItems;
@@ -85,7 +85,7 @@ namespace RApID_Project_WPF.UserControls
             _backupNewTab = tiNewTab;
         }
 
-        private TabItem AddTabItem()
+        internal TabItem AddTabItem()
         {
             int count = _tabItems.Count;
 
@@ -110,6 +110,11 @@ namespace RApID_Project_WPF.UserControls
 
         private void btnDelete_Click(object sender, RoutedEventArgs e)
         {
+            if (ReadOnly) {
+                MessageBox.Show("Can't remove tabs in read-only control.");
+                return;
+            }
+
             var tabName = (sender as Button).CommandParameter.ToString();
 
             if ((from i in tcTabs.Items.Cast<TabItem>()

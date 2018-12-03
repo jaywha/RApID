@@ -12,6 +12,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RApIDStarter", "RApIDStarte
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RApID Service", "RApID Service\RApID Service.csproj", "{33AA9307-A983-4518-B855-21412A946CC2}"
 EndProject
+Project("{930C7802-8A8C-48F9-8165-68863BCCD9DD}") = "RApIDInstaller", "RApIDInstaller\RApIDInstaller.wixproj", "{A381F37D-1564-4C39-93DC-3D2B08F79FDA}"
+EndProject
+Project("{930C7802-8A8C-48F9-8165-68863BCCD9DD}") = "HB-PIPE", "HB-PIPE\HB-PIPE.wixproj", "{A95F0C6C-DCFB-4B98-B7BC-F04EAFD5C57E}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -44,6 +48,18 @@ Global
 		{33AA9307-A983-4518-B855-21412A946CC2}.Release|Any CPU.Build.0 = Release|Any CPU
 		{33AA9307-A983-4518-B855-21412A946CC2}.Release|x86.ActiveCfg = Release|Any CPU
 		{33AA9307-A983-4518-B855-21412A946CC2}.Release|x86.Build.0 = Release|Any CPU
+		{A381F37D-1564-4C39-93DC-3D2B08F79FDA}.Debug|Any CPU.ActiveCfg = Debug|x86
+		{A381F37D-1564-4C39-93DC-3D2B08F79FDA}.Debug|x86.ActiveCfg = Debug|x86
+		{A381F37D-1564-4C39-93DC-3D2B08F79FDA}.Debug|x86.Build.0 = Debug|x86
+		{A381F37D-1564-4C39-93DC-3D2B08F79FDA}.Release|Any CPU.ActiveCfg = Release|x86
+		{A381F37D-1564-4C39-93DC-3D2B08F79FDA}.Release|x86.ActiveCfg = Release|x86
+		{A381F37D-1564-4C39-93DC-3D2B08F79FDA}.Release|x86.Build.0 = Release|x86
+		{A95F0C6C-DCFB-4B98-B7BC-F04EAFD5C57E}.Debug|Any CPU.ActiveCfg = Debug|x86
+		{A95F0C6C-DCFB-4B98-B7BC-F04EAFD5C57E}.Debug|x86.ActiveCfg = Debug|x86
+		{A95F0C6C-DCFB-4B98-B7BC-F04EAFD5C57E}.Debug|x86.Build.0 = Debug|x86
+		{A95F0C6C-DCFB-4B98-B7BC-F04EAFD5C57E}.Release|Any CPU.ActiveCfg = Release|x86
+		{A95F0C6C-DCFB-4B98-B7BC-F04EAFD5C57E}.Release|x86.ActiveCfg = Release|x86
+		{A95F0C6C-DCFB-4B98-B7BC-F04EAFD5C57E}.Release|x86.Build.0 = Release|x86
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -61,7 +61,7 @@ namespace RApID_Project_WPF
             initSQLQuery();
             csSplashScreenHelper.ShowText("Building Serial Port...");
             handleInitSerialPort();
-            csSplashScreenHelper.ShowText("Iniializing Logging...");
+            csSplashScreenHelper.ShowText("Initializing Logging...");
             setupLogging();
 
             GC.Collect();
@@ -80,8 +80,8 @@ namespace RApID_Project_WPF
             dgMultipleParts.dgBuildView("MULTIPLEPARTS");
             dgMultipleParts_2.dgBuildView("MULTIPLEPARTS");
             dgMultipleParts_3.dgBuildView("MULTIPLEPARTS");
-            dgvAOI.dgBuildView("AOI");
-            dgvDefectCodes.dgBuildView("DEFECTCODES");
+            ucAOITab.dgAOI.dgBuildView("AOI");
+            ucAOITab.dgDefectCodes.dgBuildView("DEFECTCODES");
             dgPrevRepairInfo.dgBuildView("PREVREPAIRINFO");
         }
 
@@ -351,13 +351,13 @@ namespace RApID_Project_WPF
 
             dgPrevRepairInfo.Items.Clear();
 
-            lblEOL.Content = "End of Line";
-            lblPOST.Content = "Post Burn In";
+            ucEOLTab.lblEOL.Content = "End of Line";
+            ucEOLTab.lblPOST.Content = "Post Burn In";
 
             cbReportedIssue.SelectedIndex = -1;
             resetUnitIssues();
-            resetEOLTab(); ucEOLTab.Reset();
-            resetAOITab(); ucAOITab.Reset();
+            ucEOLTab.Reset();
+            ucAOITab.Reset();
             cbTechAction1.SelectedIndex = -1;
             cbTechAction2.SelectedIndex = -1;
             cbTechAction3.SelectedIndex = -1;
@@ -508,33 +508,6 @@ namespace RApID_Project_WPF
                     tb.Text = string.Empty;
                 }
             }
-        }
-
-        /// <summary>
-        /// Reset all of the data in the EOL Tab
-        /// </summary>
-        private void resetEOLTab()
-        {
-            cbEOLTestID.Items.Clear();
-            cbPRETestID.Items.Clear();
-            cbPOSTTestID.Items.Clear();
-            cbBEAMSTestType.Items.Clear();
-            cbBEAMSTestID.Items.Clear();
-            cbBEAMSBeamNum.Items.Clear();
-
-            lsvEOL.Items.Clear();
-            lsvPreBurnIn.Items.Clear();
-            lsvPostBurnIn.Items.Clear();
-            lsvBeamTestId.Items.Clear();
-        }
-
-        /// <summary>
-        /// Reset all of the data in the AOI Tab
-        /// </summary>
-        private void resetAOITab()
-        {
-            dgvAOI.Items.Clear();
-            dgvDefectCodes.Items.Clear();
         }
         #endregion
 
@@ -704,61 +677,6 @@ namespace RApID_Project_WPF
         }
 
         /// <summary>
-        /// Fills EOL Test section of the form with the data associated to the scanned/typed barcode
-        /// </summary>
-        private void fillEOLData()
-        {
-            resetEOLTab();
-
-            string query = "";
-
-            var repairLabel = (lblRPNumber.Content?.ToString().Replace("RP Number: ", "").StartsWith("SV"));
-            if ((repairLabel.HasValue && repairLabel.Value)
-                || txtSeries.Text.Contains("XDR")) // this is a transducer so lets do something different
-                query = "SELECT DISTINCT TestID FROM tblXducerTestResultsBenchTest WHERE SerialNumber = '" + txtBarcode.Text + "';";
-            else query = "SELECT TestID FROM tblEOL WHERE PCBSerial = '" + txtBarcode.Text + "';";
-            cbEOLTestID.FillFromQuery(query);
-
-            query = "SELECT TestID FROM tblPRE WHERE PCBSerial = '" + txtBarcode.Text + "';";
-            cbPRETestID.FillFromQuery(query);
-
-            if ((repairLabel.HasValue && repairLabel.Value)
-                || txtSeries.Text.Contains("XDR")) // this is a transducer so lets do something different
-                query = "SELECT DISTINCT TestID FROM tblXducerTestResults WHERE SerialNumber = '" + txtBarcode.Text + "';";
-            else query = "SELECT TestID FROM tblPOST WHERE PCBSerial = '" + txtBarcode.Text + "';";
-            cbPOSTTestID.FillFromQuery(query);
-
-            if (cbEOLTestID.Items.Count > 0)
-            {
-                var testName = "";
-                testName = (repairLabel.HasValue && repairLabel.Value)
-                || txtSeries.Text.Contains("XDR") ? "Bench" : "EOL";
-                cbBEAMSTestType.Items.Add(testName);
-            }
-
-            if (cbPRETestID.Items.Count > 0)
-                cbBEAMSTestType.Items.Add("PRE");
-
-            if (cbPOSTTestID.Items.Count > 0)
-            {
-                var testName = "";
-                testName = (repairLabel.HasValue && repairLabel.Value)
-                || txtSeries.Text.Contains("XDR") ? "Final" : "POST";
-                cbBEAMSTestType.Items.Add(testName);
-            }
-
-        }
-
-        /// <summary>
-        /// Fills the AOI Section with data associated to the scanned/typed barcode
-        /// </summary>
-        private void fillAOIData()
-        {
-            resetAOITab();
-            csCrossClassInteraction.AOIQuery(dgvAOI, dgvDefectCodes, txtBarcode.Text);
-        }
-
-        /// <summary>
         /// Fills txtCommSubClass based on the given Part Number
         /// </summary>
         private void fillCommoditySubClass()
@@ -769,10 +687,10 @@ namespace RApID_Project_WPF
 
             if (txtSeries.Text.Contains("XDR"))
             {
-                lblEOL.Content = "Bench Test";
-                lblPOST.Content = "Final Test";
+                ucEOLTab.lblEOL.Content = "Bench Test";
+                ucEOLTab.lblPOST.Content = "Final Test";
 
-                fillEOLData();
+                ucEOLTab.Fill();
             }
         }
 
@@ -1443,8 +1361,8 @@ namespace RApID_Project_WPF
                 sVar.LogHandler.CreateLogAction("**** This is a Repair Log ****", csLogging.LogState.NOTE);
                 sVar.LogHandler.CreateLogAction("The Serial Number related to this log is: " + txtBarcode.Text.TrimEnd(), csLogging.LogState.NOTE);
                 fillDataLog();
-                fillEOLData(); ucEOLTab.Fill();
-                fillAOIData(); ucAOITab.Fill();
+                ucEOLTab.Fill();
+                ucAOITab.Fill();
             }
         }
 
@@ -1841,109 +1759,6 @@ namespace RApID_Project_WPF
             }
         }
 
-        private void cbEOLTestID_DropDownClosed(object sender, EventArgs e)
-        {
-            if (!string.IsNullOrEmpty(cbEOLTestID.Text))
-            {
-                var repairLabel = (lblRPNumber.Content?.ToString().Replace("RP Number: ", "").StartsWith("SV"));
-                if ((repairLabel.HasValue && repairLabel.Value)
-                    || txtSeries.Text.Contains("XDR"))
-                { // this is a transducer so lets do something different
-                    initS.InitSplash1("Loading Bench Data...");
-                    csCrossClassInteraction.lsvFillFromQuery(holder.HummingBirdConnectionString,
-                        $"SELECT DISTINCT * FROM tblXducerTestResultsBenchTest WHERE TestID = '{cbEOLTestID.Text}';", lsvEOL);
-                }
-                else
-                {
-                    initS.InitSplash1("Loading EOL Data...");
-                    csCrossClassInteraction.lsvFillFromQuery(holder.HummingBirdConnectionString,
-                        $"SELECT * FROM tblEOL WHERE TestID = '{cbEOLTestID.Text}';", lsvEOL);
-                }
-                csSplashScreenHelper.ShowText("Done...");
-                csSplashScreenHelper.Hide();
-            }
-        }
-
-        private void cbPRETestID_DropDownClosed(object sender, EventArgs e)
-        {
-            if (!string.IsNullOrEmpty(cbPRETestID.Text))
-            {
-                initS.InitSplash1("Loading PRE Data...");
-                csCrossClassInteraction.lsvFillFromQuery(holder.HummingBirdConnectionString, "SELECT * FROM tblPRE WHERE TestID = '" + cbPRETestID.Text + "';", lsvPreBurnIn);
-                csSplashScreenHelper.ShowText("Done...");
-                csSplashScreenHelper.Hide();
-            }
-        }
-
-        private void cbPOSTTestID_DropDownClosed(object sender, EventArgs e)
-        {
-            if (!string.IsNullOrEmpty(cbPOSTTestID.Text))
-            {
-                var repairLabel = (lblRPNumber.Content?.ToString().Replace("RP Number: ", "").StartsWith("SV"));
-                if ((repairLabel.HasValue && repairLabel.Value)
-                    || txtSeries.Text.Contains("XDR"))
-                { // this is a transducer so lets do something different
-                    initS.InitSplash1("Loading Final Data...");
-                    csCrossClassInteraction.lsvFillFromQuery(holder.HummingBirdConnectionString,
-                        $"SELECT DISTINCT * FROM tblXducerTestResults WHERE TestID = '{cbPOSTTestID.Text}';", lsvPostBurnIn);
-                }
-                else
-                {
-                    initS.InitSplash1("Loading POST Data...");
-                    csCrossClassInteraction.lsvFillFromQuery(holder.HummingBirdConnectionString,
-                        $"SELECT * FROM tblPOST WHERE TestID = '{cbPOSTTestID.Text}';", lsvPostBurnIn);
-                }
-                csSplashScreenHelper.ShowText("Done...");
-                csSplashScreenHelper.Hide();
-            }
-        }
-
-        private void cbBEAMSTestType_DropDownClosed(object sender, EventArgs e)
-        {
-            switch (cbBEAMSTestType.Text)
-            {
-                case "EOL":
-                case "Bench":
-                    csCrossClassInteraction.FillBeamTestIDFromType(cbEOLTestID, cbBEAMSTestID, lsvBeamTestId, cbBEAMSBeamNum);
-                    break;
-                case "PRE":
-                    csCrossClassInteraction.FillBeamTestIDFromType(cbPRETestID, cbBEAMSTestID, lsvBeamTestId, cbBEAMSBeamNum);
-                    break;
-                case "POST":
-                case "Final":
-                    csCrossClassInteraction.FillBeamTestIDFromType(cbPOSTTestID, cbBEAMSTestID, lsvBeamTestId, cbBEAMSBeamNum);
-                    break;
-                default:
-                    break;
-            }
-        }
-
-        private void cbBEAMSTestID_DropDownClosed(object sender, EventArgs e)
-        {
-            if (!string.IsNullOrEmpty(cbBEAMSTestID.Text))
-            {
-                initS.InitSplash1("Generating Beams...");
-                csCrossClassInteraction.BeamsQuery(txtBarcode.Text, cbBEAMSBeamNum, lsvBeamTestId, txtSeries.Text.Contains("XDR"));
-                csSplashScreenHelper.ShowText("Done...");
-                csSplashScreenHelper.Hide();
-            }
-        }
-
-        private void cbBEAMSBeamNum_DropDownClosed(object sender, EventArgs e)
-        {
-            if (!string.IsNullOrEmpty(cbBEAMSTestType.Text) && !string.IsNullOrEmpty(cbBEAMSTestID.Text) && !string.IsNullOrEmpty(cbBEAMSBeamNum.Text))
-            {
-                initS.InitSplash1("Loading Beam Data...");
-                var tableName = txtSeries.Text.Contains("XDR") ? "tblXducerTestResults" : "Beams";
-                var serialName = txtSeries.Text.Contains("XDR") ? "SerialNumber" : "PCBSerial";
-                var _query = $"SELECT * FROM {tableName} WHERE TestID = '{cbBEAMSTestID.Text}' AND {serialName} = '{txtBarcode.Text}' " +
-                    $"AND BeamNumber = '{csCrossClassInteraction.GetSpecificBeamNumber(cbBEAMSBeamNum.Text)}';";
-                csCrossClassInteraction.BeamsQuery(_query, lsvBeamTestId, serialName);
-                csSplashScreenHelper.ShowText("Done...");
-                csSplashScreenHelper.Hide();
-            }
-        }
-
         private bool getCRStatus(string s)
         {
             if (s.Equals("CR"))
@@ -2232,18 +2047,8 @@ namespace RApID_Project_WPF
         {
             if (dgPrevRepairInfo.SelectedItem != null)
             {
-#if DEBUG
-                //TODO: new form that is not working yet
-                var pri = new repairPRI((PreviousRepairInformation)dgPrevRepairInfo.SelectedItem)
-                {
-                    Owner = this
-                };
+                var pri = new frmRepairPRI((PreviousRepairInformation)dgPrevRepairInfo.SelectedItem);
                 pri.ShowDialog();
-#else
-                // Working form with only one issue that can be displayed
-                PrevRepairInfo pri = new PrevRepairInfo((PreviousRepairInformation)dgPrevRepairInfo.SelectedItem);
-                pri.ShowDialog();
-#endif
             }
         }
 
@@ -2511,6 +2316,7 @@ namespace RApID_Project_WPF
             tSPChecker = null;
 
             sVar.resetStaticVars();
+            csSplashScreenHelper.Close();
         }
 
         private void vSleep(int iSleepTime)

@@ -59,7 +59,7 @@ namespace RApID_Project_WPF
             csSplashScreenHelper.Hide();
             this.Activate();
 #if DEBUG
-            txtSerialNumber.Text = "180405030127";
+            txtSerialNumber.Text = "160815030117";
 #endif
 
         }
@@ -70,8 +70,8 @@ namespace RApID_Project_WPF
             dgMultipleParts.dgBuildView("MULTIPLEPARTS");
             dgMultipleParts_2.dgBuildView("MULTIPLEPARTS");
             dgMultipleParts_3.dgBuildView("MULTIPLEPARTS");
-            dgAOI.dgBuildView("AOI");
-            dgDefectCodes.dgBuildView("DEFECTCODES");
+            ucAOITab.dgAOI.dgBuildView("AOI");
+            ucAOITab.dgDefectCodes.dgBuildView("DEFECTCODES");
             dgPrevRepairInfo.dgBuildView("PREVREPAIRINFO");
         }
 
@@ -231,12 +231,12 @@ namespace RApID_Project_WPF
             dgPrevRepairInfo.Items.Clear();
             rtbAdditionalComments.Document.Blocks.Clear();
 
-            lblEOL.Content = "End of Line";
-            lblPOST.Content = "Post Burn-In";
+            ucEOLTab.lblEOL.Content = "End of Line";
+            ucEOLTab.lblPOST.Content = "Post Burn-In";
 
             resetUnitIssues();
-            resetEOL(); ucEOLTab.Reset();
-            resetAOI(); ucAOITab.Reset();
+            ucEOLTab.Reset();
+            ucAOITab.Reset();
 
             txtSerialNumber.Focus();
         }
@@ -391,33 +391,6 @@ namespace RApID_Project_WPF
                 }
             }
             return false;
-        }
-
-        /// <summary>
-        /// Resets the EOL Test Tab
-        /// </summary>
-        private void resetEOL()
-        {
-            cbEOLTestID.Items.Clear();
-            cbPRETestID.Items.Clear();
-            cbPOSTTestID.Items.Clear();
-            cbBEAMSTestType.Items.Clear();
-            cbBEAMSTestID.Items.Clear();
-            cbBEAMSBeamNum.Items.Clear();
-
-            lsvEOL.Items.Clear();
-            lsvPreBurnIn.Items.Clear();
-            lsvPostBurnIn.Items.Clear();
-            lsvBeamTestId.Items.Clear();
-        }
-
-        /// <summary>
-        /// Resets the AOI Tab
-        /// </summary>
-        private void resetAOI()
-        {
-            dgAOI.Items.Clear();
-            dgDefectCodes.Items.Clear();
         }
         #endregion
 
@@ -621,8 +594,8 @@ namespace RApID_Project_WPF
                 sVar.LogHandler.CreateLogAction("**** This is a Production Log ****", csLogging.LogState.NOTE);
                 sVar.LogHandler.CreateLogAction("The Serial Number related to this log is: " + txtSerialNumber.Text.TrimEnd(), csLogging.LogState.NOTE);
                 fillDataLog();
-                fillEOLData(); ucEOLTab.Fill();
-                fillAOIData(); ucAOITab.Fill();
+                ucEOLTab.Fill();
+                ucAOITab.Fill();
             }
         }
 
@@ -697,44 +670,6 @@ namespace RApID_Project_WPF
                 txtPartName.Text = sItemMasterQueryResults;
                 sVar.LogHandler.CreateLogAction("txtPartName's value has been set to " + txtPartName.Text + ".", csLogging.LogState.NOTE);
             }
-        }
-
-        /// <summary>
-        /// Fills the EOL Data Tab with all of the information related to the serial number.
-        /// </summary>
-        private void fillEOLData()
-        {
-            resetEOL();
-            string query = "SELECT TestID FROM tblEOL WHERE PCBSerial = '" + txtSerialNumber.Text + "';";            
-            cbEOLTestID.FillFromQuery(query);
-
-            query = "SELECT TestID FROM tblPre WHERE PCBSerial = '" + txtSerialNumber.Text + "';";
-            cbPRETestID.FillFromQuery(query);
-
-            query =  "SELECT TestID FROM tblPost WHERE PCBSerial = '" + txtSerialNumber.Text + "';";
-            cbPOSTTestID.FillFromQuery(query);
-
-            if (cbEOLTestID.Items.Count > 0)
-            {
-                cbBEAMSTestType.Items.Add("EOL");
-            }
-
-            if (cbPRETestID.Items.Count > 0)
-                cbBEAMSTestType.Items.Add("PRE");
-
-            if (cbPOSTTestID.Items.Count > 0)
-            {
-                cbBEAMSTestType.Items.Add("POST");
-            }
-        }
-
-        /// <summary>
-        /// Fills the AOI Tab with all fo the information related to the serial number.
-        /// </summary>
-        private void fillAOIData()
-        {
-            resetAOI();
-            csCrossClassInteraction.AOIQuery(dgAOI, dgDefectCodes, txtSerialNumber.Text);
         }
 
         /// <summary>
@@ -1356,10 +1291,20 @@ namespace RApID_Project_WPF
             {
                 if (((Control)sender).Name.EndsWith("2"))
                 {
-                    if (string.IsNullOrEmpty(txtMultiRefDes_2.Text) && string.IsNullOrEmpty(txtMultiPartNum_2.Text)) { return; }
+                    if (string.IsNullOrEmpty(txtMultiRefDes_2.Text) || string.IsNullOrEmpty(txtMultiPartNum_2.Text)) { return; }
                     else
                     {
                         sVar.LogHandler.CreateLogAction((Button)sender, csLogging.LogState.CLICK);
+
+                        if (!txtMultiRefDes_2.Items.Contains(txtMultiRefDes_2.Text)) {
+                            string sWarning = string.Format($"The Reference Designator entered ( {txtMultiRefDes_2.Text} ) does not exist.\n" +
+                                "Please verify the Part Number and try again.");
+                            sVar.LogHandler.CreateLogAction(sWarning, csLogging.LogState.WARNING);
+                            MessageBox.Show(sWarning, "Part Replaced Reference Designator Issue", MessageBoxButton.OK, MessageBoxImage.Warning);
+                            txtMultiRefDes_2.Focus();
+                            txtMultiRefDes_2.SelectAll();
+                            return;
+                        }
 
                         string _sPRPD = getPartReplacedPartDescription(txtMultiPartNum_2.Text);
 
@@ -1368,8 +1313,8 @@ namespace RApID_Project_WPF
                             string sWarning = string.Format("The Part Replaced entered ( {0} ) does not exist. Please verify the Part Number and try again.", txtMultiPartNum_2.Text);
                             sVar.LogHandler.CreateLogAction(sWarning, csLogging.LogState.WARNING);
                             MessageBox.Show(sWarning, "Part Replaced Description Issue", MessageBoxButton.OK, MessageBoxImage.Warning);
-                            txtMultiPartNum_2.Focus();
-                            txtMultiPartNum_2.SelectAll();
+                            txtMultiRefDes_2.Focus();
+                            txtMultiRefDes_2.SelectAll();
                         }
                         else
                         {
@@ -1387,10 +1332,21 @@ namespace RApID_Project_WPF
                 }
                 else if (((Control)sender).Name.EndsWith("3"))
                 {
-                    if (string.IsNullOrEmpty(txtMultiRefDes_3.Text) && string.IsNullOrEmpty(txtMultiPartNum_3.Text)) { return; }
+                    if (string.IsNullOrEmpty(txtMultiRefDes_3.Text) || string.IsNullOrEmpty(txtMultiPartNum_3.Text)) { return; }
                     else
                     {
                         sVar.LogHandler.CreateLogAction((Button)sender, csLogging.LogState.CLICK);
+
+                        if (!txtMultiRefDes_3.Items.Contains(txtMultiRefDes_3.Text))
+                        {
+                            string sWarning = string.Format($"The Reference Designator entered ( {txtMultiRefDes_3.Text} ) does not exist.\n" +
+                                "Please verify the Part Number and try again.");
+                            sVar.LogHandler.CreateLogAction(sWarning, csLogging.LogState.WARNING);
+                            MessageBox.Show(sWarning, "Part Replaced Reference Designator Issue", MessageBoxButton.OK, MessageBoxImage.Warning);
+                            txtMultiRefDes_3.Focus();
+                            txtMultiRefDes_3.SelectAll();
+                            return;
+                        }
 
                         string _sPRPD = getPartReplacedPartDescription(txtMultiPartNum_3.Text);
 
@@ -1399,8 +1355,8 @@ namespace RApID_Project_WPF
                             string sWarning = string.Format("The Part Replaced entered ( {0} ) does not exist. Please verify the Part Number and try again.", txtMultiPartNum_3.Text);
                             sVar.LogHandler.CreateLogAction(sWarning, csLogging.LogState.WARNING);
                             MessageBox.Show(sWarning, "Part Replaced Description Issue", MessageBoxButton.OK, MessageBoxImage.Warning);
-                            txtMultiPartNum_3.Focus();
-                            txtMultiPartNum_3.SelectAll();
+                            txtMultiRefDes_3.Focus();
+                            txtMultiRefDes_3.SelectAll();
                         }
                         else
                         {
@@ -1419,10 +1375,21 @@ namespace RApID_Project_WPF
             }
             else
             {
-                if (string.IsNullOrEmpty(txtMultiRefDes.Text) && string.IsNullOrEmpty(txtMultiPartNum.Text)) { return; }
+                if (string.IsNullOrEmpty(txtMultiRefDes.Text) || string.IsNullOrEmpty(txtMultiPartNum.Text)) { return; }
                 else
                 {
                     sVar.LogHandler.CreateLogAction((Button)sender, csLogging.LogState.CLICK);
+
+                    if (!txtMultiRefDes.Items.Contains(txtMultiRefDes.Text))
+                    {
+                        string sWarning = string.Format($"The Reference Designator entered ( {txtMultiRefDes.Text} ) does not exist.\n" +
+                            "Please verify the Part Number and try again.");
+                        sVar.LogHandler.CreateLogAction(sWarning, csLogging.LogState.WARNING);
+                        MessageBox.Show(sWarning, "Part Replaced Reference Designator Issue", MessageBoxButton.OK, MessageBoxImage.Warning);
+                        txtMultiRefDes.Focus();
+                        txtMultiRefDes.SelectAll();
+                        return;
+                    }
 
                     string _sPRPD = getPartReplacedPartDescription(txtMultiPartNum.Text);
 
@@ -1431,8 +1398,8 @@ namespace RApID_Project_WPF
                         string sWarning = string.Format("The Part Replaced entered ( {0} ) does not exist. Please verify the Part Number and try again.", txtMultiPartNum.Text);
                         sVar.LogHandler.CreateLogAction(sWarning, csLogging.LogState.WARNING);
                         MessageBox.Show(sWarning, "Part Replaced Description Issue", MessageBoxButton.OK, MessageBoxImage.Warning);
-                        txtMultiPartNum.Focus();
-                        txtMultiPartNum.SelectAll();
+                        txtMultiRefDes.Focus();
+                        txtMultiRefDes.SelectAll();
                     }
                     else
                     {
@@ -1751,87 +1718,6 @@ namespace RApID_Project_WPF
                 }
             }
         }
-
-        private void cbEOLTestID_DropDownClosed(object sender, EventArgs e)
-        {
-            if (!string.IsNullOrEmpty(cbEOLTestID.Text))
-            {
-                initS.InitSplash1("Loading EOL Data...");
-                csCrossClassInteraction.lsvFillFromQuery(holder.HummingBirdConnectionString,
-                    "SELECT * FROM tblEOL WHERE TestID = '" + cbEOLTestID.Text + "';", lsvEOL);
-                csSplashScreenHelper.ShowText("Done...");
-                csSplashScreenHelper.Hide();
-            }
-        }
-
-        private void cbPRETestID_DropDownClosed(object sender, EventArgs e)
-        {
-            if (!string.IsNullOrEmpty(cbPRETestID.Text))
-            {
-                initS.InitSplash1("Loading PRE Data...");
-                csCrossClassInteraction.lsvFillFromQuery(holder.HummingBirdConnectionString,
-                    "SELECT * FROM tblPRE WHERE TestID = '" + cbPRETestID.Text + "';", lsvPreBurnIn);
-                csSplashScreenHelper.ShowText("Done...");
-                csSplashScreenHelper.Hide();
-            }
-        }
-
-        private void cbPOSTTestID_DropDownClosed(object sender, EventArgs e)
-        {
-            if (!string.IsNullOrEmpty(cbPOSTTestID.Text))
-            {
-                initS.InitSplash1("Loading POST Data...");
-                csCrossClassInteraction.lsvFillFromQuery(holder.HummingBirdConnectionString,
-                    "SELECT * FROM tblPOST WHERE TestID = '" + cbPOSTTestID.Text + "';", lsvPostBurnIn);
-                csSplashScreenHelper.ShowText("Done...");
-                csSplashScreenHelper.Hide();
-            }
-        }
-
-        private void cbBEAMSTestType_DropDownClosed(object sender, EventArgs e)
-        {
-            switch (cbBEAMSTestType.Text)
-            {
-                case "EOL":
-                    csCrossClassInteraction.FillBeamTestIDFromType(cbEOLTestID, cbBEAMSTestID, lsvBeamTestId, cbBEAMSBeamNum);
-                    break;
-                case "PRE":
-                    csCrossClassInteraction.FillBeamTestIDFromType(cbPRETestID, cbBEAMSTestID, lsvBeamTestId, cbBEAMSBeamNum);
-                    break;
-                case "POST":
-                    csCrossClassInteraction.FillBeamTestIDFromType(cbPOSTTestID, cbBEAMSTestID, lsvBeamTestId, cbBEAMSBeamNum);
-                    break;
-                default:
-                    break;
-            }
-        }
-
-        private void cbBEAMSTestID_DropDownClosed(object sender, EventArgs e)
-        {
-            if (!string.IsNullOrEmpty(cbBEAMSTestID.Text))
-            {
-                initS.InitSplash1("Generating Beams...");
-                csCrossClassInteraction.BeamsQuery(txtSerialNumber.Text, cbBEAMSBeamNum,
-                    lsvBeamTestId, txtPartSeries.Text.Contains("XDR"));
-                csSplashScreenHelper.ShowText("Done...");
-                csSplashScreenHelper.Hide();
-            }
-        }
-
-        private void cbBEAMSBeamNum_DropDownClosed(object sender, EventArgs e)
-        {
-            if (!string.IsNullOrEmpty(cbBEAMSTestType.Text) && !string.IsNullOrEmpty(cbBEAMSTestID.Text) && !string.IsNullOrEmpty(cbBEAMSBeamNum.Text))
-            {
-                initS.InitSplash1("Loading Beam Data...");
-                var tableName = txtPartSeries.Text.Contains("XDR") ? "tblXducerTestResults" : "Beams";
-                var serialName = txtPartSeries.Text.Contains("XDR") ? "SerialNumber" : "PCBSerial";
-                var _query = $"SELECT * FROM {tableName} WHERE TestID = '{cbBEAMSTestID.Text}' AND {serialName} = '{txtSerialNumber.Text}' " +
-                    $"AND BeamNumber = '{csCrossClassInteraction.GetSpecificBeamNumber(cbBEAMSBeamNum.Text)}';";
-                csCrossClassInteraction.BeamsQuery(_query, lsvBeamTestId, serialName);
-                csSplashScreenHelper.ShowText("Done...");
-                csSplashScreenHelper.Hide();
-            }
-        }
         #endregion
 
 
@@ -1849,7 +1735,6 @@ namespace RApID_Project_WPF
 
             sVar.resetStaticVars();
             csSplashScreenHelper.Close();
-            InitSplash.thread_Splash.Abort();
         }
 
         private void refDesIndexChanged(object sender, SelectionChangedEventArgs e)

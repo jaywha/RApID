@@ -195,9 +195,6 @@
       <DependentUpon>frmViewMultipleIssues.xaml</DependentUpon>
     </Compile>
     <Compile Include="csRecordList.cs" />
-    <Compile Include="PrevRepairInfo.xaml.cs">
-      <DependentUpon>PrevRepairInfo.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Repair.xaml.cs">
       <DependentUpon>Repair.xaml</DependentUpon>
     </Compile>
@@ -292,10 +289,6 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Page Include="PrevRepairInfo.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
     <Page Include="Repair.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

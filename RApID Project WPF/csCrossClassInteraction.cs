@@ -16,6 +16,7 @@ using ExcelDataReader;
 using DesginatorPair = System.Tuple<System.Windows.Controls.Control, System.Windows.Controls.Control>;
 using System.Threading.Tasks;
 using System.Windows;
+using RApID_Project_WPF.UserControls;
 
 namespace RApID_Project_WPF
 {
@@ -1181,5 +1182,44 @@ namespace RApID_Project_WPF
         /// <param name="cbox">Target Combobox</param>
         public static void SelectAll(this ComboBox cbox)
             => (cbox.Template.FindName("PART_EditableTextBox", cbox) as TextBox).SelectAll();
+
+        /// <summary>
+        /// Fills the specified <see cref="ucUnitIssue"/> with the data from the given <see cref="string"/>array.
+        /// </summary>
+        /// <param name="issue">The target <see cref="ucUnitIssue"/> to fill with data.</param>
+        /// <param name="values"><see cref="string"/> values ordered by visual appearance in the control.</param>
+        public static void FillUnitIssue(this ucUnitIssue issue, List<MultiplePartsReplaced> replacedParts = null, params string[] values)
+        {
+            var vi = 0;
+
+            issue.ReportedIssue = values[vi++];
+            issue.TestResult = values[vi++];
+            issue.AbortResult = values[vi++];
+            issue.Cause = values[vi++];
+            issue.Replacement = values[vi++];
+            issue.Issue = values[vi++];
+            issue.Item = values[vi++];
+            issue.Problem = values[vi++];
+
+            if (replacedParts != null)
+                issue.PartsReplaced = replacedParts;
+            else
+            {
+                var partnums = values[vi++].Split(',');
+                var refids = values[vi++].Split(',');
+                var parts = refids.Zip(partnums,
+                    (rid, pnum) => new MultiplePartsReplaced()
+                    {
+                        RefDesignator = rid,
+                        PartReplaced = pnum,
+                        PartsReplacedPartDescription = frmProduction.getPartReplacedPartDescription(pnum)
+                    });
+                issue.PartsReplaced = new System.Collections.Generic.List<MultiplePartsReplaced>();
+                foreach (var part in parts)
+                {
+                    issue.PartsReplaced.Add(part);
+                }
+            }
+        }
     }
 }

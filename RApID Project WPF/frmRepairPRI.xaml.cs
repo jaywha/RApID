@@ -18,14 +18,14 @@ namespace RApID_Project_WPF
     /// <summary>
     /// Interaction logic for repairPRI.xaml
     /// </summary>
-    public partial class repairPRI : Window
+    public partial class frmRepairPRI : Window
     {
         PreviousRepairInformation PRI;
         csObjectHolder.csObjectHolder holder = csObjectHolder.csObjectHolder.ObjectHolderInstance();
         CustomerInformation CurrentCustomer;
 
 
-        public repairPRI(PreviousRepairInformation _pri)
+        public frmRepairPRI(PreviousRepairInformation _pri)
         {
             InitializeComponent();
             PRI = _pri;
@@ -115,32 +115,19 @@ namespace RApID_Project_WPF
                 if (!string.IsNullOrEmpty(sUnitID)) {
                     List<RepairMultipleIssues> lRMI = csCrossClassInteraction.GetRepairUnitIssues(sUnitID);
 
-                    if (lRMI.Count < 1) return true;
-
-                    txtReportedIssue.Text = lRMI[0].ReportedIssue;
-                    txtTestResult.Text = lRMI[0].TestResult;
-                    txtTestResultAbort.Text = lRMI[0].TestResultAbort;
-                    txtCause.Text = lRMI[0].Cause;
-                    txtReplacement.Text = lRMI[0].Replacement;
-                    dgMultipleParts.ItemsSource = lRMI[0].MultiPartsReplaced;
-
-                    if (lRMI.Count < 2) return true;
-
-                    txtReportedIssue2.Text = lRMI[1].ReportedIssue;
-                    txtTestResult2.Text = lRMI[1].TestResult;
-                    txtTestResultAbort2.Text = lRMI[1].TestResultAbort;
-                    txtCause2.Text = lRMI[1].Cause;
-                    txtReplacement2.Text = lRMI[1].Replacement;
-                    dgMultipleParts2.ItemsSource = lRMI[1].MultiPartsReplaced;
-
-                    if (lRMI.Count < 3) return true;
-
-                    txtReportedIssue3.Text = lRMI[2].ReportedIssue;
-                    txtTestResult3.Text = lRMI[2].TestResult;
-                    txtTestResultAbort3.Text = lRMI[2].TestResultAbort;
-                    txtCause3.Text = lRMI[2].Cause;
-                    txtReplacement3.Text = lRMI[2].Replacement;
-                    dgMultipleParts3.ItemsSource = lRMI[2].MultiPartsReplaced;
+                    int ucIndex = 0;
+                    foreach (var issue in lRMI)
+                    {
+                        ucIssues[ucIndex].FillUnitIssue(
+                            issue.MultiPartsReplaced,
+                            issue.ReportedIssue,
+                            issue.TestResult,
+                            issue.TestResultAbort,
+                            issue.Cause,
+                            issue.Replacement                            
+                        );
+                        if (lRMI.Count > ucIndex) ucIssues.AddTabItem();
+                    }
                 }
                 
 

@@ -26,40 +26,6 @@ namespace RApID_Project_WPF
             if (PRI == null || !loadPRI()) { Close(); }
         }
 
-        /// <summary>
-        /// Fills the user control with the data from the given array.
-        /// </summary>
-        /// <param name="issue">The target <see cref="ucUnitIssue"/> to fill with data.</param>
-        /// <param name="values"><see cref="string"/> values ordered by visual appearance in the control.</param>
-        protected void FillUnitIssue(ucUnitIssue issue, params string[] values)
-        {
-            var vi = 0;
-
-            issue.ReportedIssue = values[vi++];
-            issue.TestResult = values[vi++];
-            issue.AbortResult = values[vi++];
-            issue.Cause = values[vi++];
-            issue.Replacement = values[vi++];
-            issue.Issue = values[vi++];
-            issue.Item = values[vi++];
-            issue.Problem = values[vi++];
-
-            var partnums = values[vi++].Split(',');
-            var refids = values[vi++].Split(',');
-            var parts = refids.Zip(partnums,
-                (rid, pnum) => new MultiplePartsReplaced()
-                {
-                    RefDesignator = rid,
-                    PartReplaced = pnum,
-                    PartsReplacedPartDescription = frmProduction.getPartReplacedPartDescription(pnum)
-                });
-            issue.PartsReplaced = new System.Collections.Generic.List<MultiplePartsReplaced>();
-            foreach (var part in parts)
-            {
-                issue.PartsReplaced.Add(part);
-            }
-        }
-
         private bool loadPRI()
         {
             var conn = new SqlConnection(holder.RepairConnectionString);
@@ -96,29 +62,46 @@ namespace RApID_Project_WPF
                         if (reader["LogID"] != DBNull.Value)
                             logCmd.Parameters.AddWithValue("@logID",
                                 int.Parse(reader["LogID"].ToString().EmptyIfNull()));
-
-                        //TODO: Add other issues if multiple rows exist
-                        for (int index = 0; index < ucIssues.Count; index++)
+                                                
+                        var issue = ucIssues[0];
+                        if (issue != null)
                         {
-                            var issue = ucIssues[index];
-                            if (issue != null)
-                            {
-                                FillUnitIssue(issue,
-                                    reader["ReportedIssue"].ToString().EmptyIfNull(),
-                                    reader["TestResult"].ToString().EmptyIfNull(),
-                                    reader["TestResultAbort"].ToString().EmptyIfNull(),
-                                    reader["Cause"].ToString().EmptyIfNull(),
-                                    reader["Replacement"].ToString().EmptyIfNull(),
-                                    reader["Issue"].ToString().EmptyIfNull(),
-                                    reader["Item"].ToString().EmptyIfNull(),
-                                    reader["Problem"].ToString().EmptyIfNull(),
-                                    reader["PartsReplaced"].ToString(),
-                                    reader["RefDesignator"].ToString()
-                                );
-                            }
+                            issue.FillUnitIssue(null,
+                                reader["ReportedIssue"].ToString().EmptyIfNull(),
+                                reader["TestResult"].ToString().EmptyIfNull(),
+                                reader["TestResultAbort"].ToString().EmptyIfNull(),
+                                reader["Cause"].ToString().EmptyIfNull(),
+                                reader["Replacement"].ToString().EmptyIfNull(),
+                                reader["Issue"].ToString().EmptyIfNull(),
+                                reader["Item"].ToString().EmptyIfNull(),
+                                reader["Problem"].ToString().EmptyIfNull(),
+                                reader["PartsReplaced"].ToString(),
+                                reader["RefDesignator"].ToString()
+                            );
                         }
 
                         rtbAddComm.AppendText((reader["AdditionalComments"]?.ToString() ?? "").EmptyIfNull());
+                    }
+                }
+
+                using(var reader = unitIssueCmd.ExecuteReader())
+                {
+                    int index = 1;
+                    while(reader.Read())
+                    {
+                        ucIssues.AddTabItem();
+                        ucIssues[index++].FillUnitIssue(null,
+                            reader["ReportedIssue"].ToString().EmptyIfNull(),
+                            reader["TestResult"].ToString().EmptyIfNull(),
+                            reader["TestResultAbort"].ToString().EmptyIfNull(),
+                            reader["Cause"].ToString().EmptyIfNull(),
+                            reader["Replacement"].ToString().EmptyIfNull(),
+                            reader["Issue"].ToString().EmptyIfNull(),
+                            reader["Item"].ToString().EmptyIfNull(),
+                            reader["Problem"].ToString().EmptyIfNull(),
+                            reader["PartsReplaced"].ToString(),
+                            reader["RefDesignator"].ToString()
+                        );
                     }
                 }
 

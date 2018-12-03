@@ -16,8 +16,12 @@ namespace RApID_Project_WPF
         public static Thread thread_Hide;
         public static Thread thread_Show;
         public static Thread thread_Close;
+        /// <summary> Stop Token generator for controlling when splash class threads should close. </summary>
         public static CancellationTokenSource StopTokenSource = new CancellationTokenSource(TimeSpan.FromSeconds(2.0));
+        /// <summary> Stop Token tied to the splash class threads. </summary>
+        [Obsolete("Not in use. Kept for legacy and debug purposes.")]
         public static CancellationToken StopToken = StopTokenSource.Token;
+        public static readonly int TIMEOUT = 500; // in miliseconds
 
         /// <summary>
         /// Display Splash Screen
@@ -39,17 +43,17 @@ namespace RApID_Project_WPF
 
                 if (!SplashScreen.Dispatcher.CheckAccess())
                 {
-                    thread_Hide = new Thread(new System.Threading.ThreadStart(delegate ()
+                    thread_Hide = new Thread(new ThreadStart(async delegate ()
                         {
-                            SplashScreen.Dispatcher.Invoke(new Action(delegate ()
+                            await SplashScreen.Dispatcher.BeginInvoke(DispatcherPriority.Background, new Action(delegate ()
                                 {
-                                    Thread.Sleep(1000);
+                                    Thread.Sleep(TIMEOUT);
                                     try
                                     {
                                         SplashScreen.Hide();
                                     }
                                     catch { }
-                                }), DispatcherPriority.Normal, StopToken);
+                                }));
                         }));
                     thread_Hide.Name = "RApID_Hide";
                     thread_Hide.SetApartmentState(ApartmentState.STA);
@@ -80,13 +84,12 @@ namespace RApID_Project_WPF
 
                 if (!SplashScreen.Dispatcher.CheckAccess())
                 {
-                    thread_Show = new Thread(new ThreadStart(delegate ()
+                    thread_Show = new Thread(new ThreadStart(async delegate ()
                     {
-                        SplashScreen.Dispatcher.Invoke(new Action(delegate ()
+                        await SplashScreen.Dispatcher.BeginInvoke(DispatcherPriority.Background, new Action(delegate ()
                         {
                             ((SplashScreenVM)SplashScreen.DataContext).SplashText = text;
-                        }), DispatcherPriority.Normal, StopToken);
-                        SplashScreen.Dispatcher.Invoke(DispatcherPriority.ApplicationIdle, new Action(() => { }));
+                        }));
                     }));
                     thread_Show.Name = "RApID_Show";
                     thread_Show.SetApartmentState(ApartmentState.STA);
@@ -117,17 +120,21 @@ namespace RApID_Project_WPF
 
                 if (!SplashScreen.Dispatcher.CheckAccess())
                 {
-                    thread_Close = new Thread(new ThreadStart(delegate ()
+                    thread_Close = new Thread(new ThreadStart(async delegate ()
                     {
-                        SplashScreen.Dispatcher.Invoke(new Action(delegate ()
+                        await SplashScreen.Dispatcher.BeginInvoke(DispatcherPriority.Background, new Action(delegate ()
                         {
-                            Thread.Sleep(1000);
+                            Thread.Sleep(TIMEOUT);
                             try
                             {
                                 SplashScreen.Close();
+                                SplashScreen = null;
                             }
-                            catch { }
-                        }), DispatcherPriority.Normal, StopToken);
+                            catch (InvalidOperationException ioe)
+                            {
+                                csExceptionLogger.csExceptionLogger.Write("SplashScreenHelper_CloseAsyncCatch", ioe);
+                            }
+                        }));
                     }));
                     thread_Close.Name = "RApID_Close";
                     thread_Close.SetApartmentState(ApartmentState.STA);

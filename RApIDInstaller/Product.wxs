@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
+	<Product Id="b6abd8c8-63a8-4c15-8841-4f03e1be3ab5" Name="RApIDInstaller" Language="1033" Version="1.0.0.0" Manufacturer="Humminbird" UpgradeCode="61a5e3a9-54b1-47ce-a20b-5dfbe31daa83">
+		<Package InstallerVersion="200" Compressed="yes" InstallScope="perMachine" />
+
+    <UIRef Id="WixUI_Mondo"/>
+    <UIRef Id="WixUI_ErrorProgressText"/>
+    <Property Id="WIXUI_INSTALLDIR" Value="INSTALLDIR"/>
+    <WixVariable Id="WixUILicenseRtf" Value="\\joi\EU\Collaboration\EEPT\Universal Installer Files\License.rtf"/>
+    <WixVariable Id="WixUIBannerBmp" Value="\\joi\EU\Collaboration\EEPT\Universal Installer Files\RecurrentBanner.bmp"/>
+		<MajorUpgrade DowngradeErrorMessage="A newer version of RApID is already installed." />
+		<MediaTemplate />
+
+		<Feature Id="ProductFeature" Title="RApIDInstaller" Level="1">
+			<ComponentGroupRef Id="ProductComponents" />
+		</Feature>
+  </Product>
+
+  <Fragment>
+    <Component Id="RApIDService" Guid="33aa9307-a983-4518-b855-21412a946cc2" Directory="INSTALLDIR"
+               SharedDllRefCount="no" KeyPath="no" NeverOverwrite="no" Permanent="no" Transitive="no"
+               Win64="no" Location="either">
+      <File Id="RApIDServiceFile" Name="RApID Service.exe" Source="$(var.RApID Service.TargetPath)"
+            ReadOnly="no" Compressed="yes" KeyPath="yes" Vital="yes" Hidden="no" System="no"
+            Checksum="no"/>
+      <ServiceInstall Id="RApIDServiceInstall" DisplayName="RApID Reporting Service" Name="RApID Service" 
+                      ErrorControl="normal" Start="auto" Type="ownProcess" Vital="yes"/>
+      <ServiceControl Id="RApIDServiceControl" Name="RApID Service"
+                      Start="install" Stop="uninstall" Remove="uninstall"/>
+    </Component>
+  </Fragment>
+  
+	<Fragment>
+		<Directory Id="TARGETDIR" Name="SourceDir">
+			<Directory Id="ProgramFilesFolder">
+				<Directory Id="INSTALLFOLDER" Name="RApIDInstaller" />
+			</Directory>
+		</Directory>
+	</Fragment>
+
+	<Fragment>
+		<ComponentGroup Id="ProductComponents" Directory="INSTALLFOLDER">
+			 <Component Id="ProductComponent"> 
+				 <File Source="$(var.RApID Project WPF.TargetPath)"/>
+			 </Component> 
+		</ComponentGroup>
+	</Fragment>
+</Wix>

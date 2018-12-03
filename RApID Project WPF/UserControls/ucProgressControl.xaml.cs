@@ -21,7 +21,7 @@ namespace RApID_Project_WPF.UserControls
     public partial class ucProgressControl : UserControl
     {
         private DependencyProperty _lblText = DependencyProperty.Register("LabelText", typeof(string), typeof(ucProgressControl), new PropertyMetadata("Loading..."));
-        private DependencyProperty _pbar = DependencyProperty.Register("Marquee", typeof(bool), typeof(ucProgressControl));
+        private DependencyProperty _pbar = DependencyProperty.Register("Marquee", typeof(bool), typeof(ucProgressControl), new PropertyMetadata(true));
 
         public string LabelText
         {
@@ -41,6 +41,8 @@ namespace RApID_Project_WPF.UserControls
         public ucProgressControl()
         {
             InitializeComponent();
+
+            LabelText = "Sample Text";
 
             progBar = progData;
             lblDesc = lblLoadingIndicator;
