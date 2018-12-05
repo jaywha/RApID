@@ -46,6 +46,7 @@ namespace RApID_Project_WPF
         {
             Hide();
             e.Cancel = true;
+            MainWindow.GlobalInstance.MakeFocus();
         }
 
         private void textBoxNumericInput(object sender, TextCompositionEventArgs e)

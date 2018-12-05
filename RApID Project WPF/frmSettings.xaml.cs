@@ -580,6 +580,8 @@ namespace RApID_Project_WPF
                 sp.Close();
                 sp = null;
             }
+
+            MainWindow.GlobalInstance.MakeFocus();
         }
     }
 }

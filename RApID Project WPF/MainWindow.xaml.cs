@@ -7,6 +7,7 @@ using Hardcodet.Wpf.TaskbarNotification;
 using System.DirectoryServices.AccountManagement;
 using System.Threading.Tasks;
 using System.Security.Permissions;
+using System.Windows.Controls.Primitives;
 
 namespace RApID_Project_WPF
 {
@@ -19,6 +20,7 @@ namespace RApID_Project_WPF
         StaticVars sVars = StaticVars.StaticVarsInstance();
 
         public static TaskbarIcon Notify;
+        public static MainWindow GlobalInstance;
 
         [SecurityPermission(SecurityAction.Demand, Flags = SecurityPermissionFlag.ControlAppDomain)]
         public MainWindow()
@@ -28,8 +30,11 @@ namespace RApID_Project_WPF
                 = $@"\\joi\EU\Public\_Error Logs\{AppDomain.CurrentDomain.FriendlyName.Replace(".exe", "")}\{DateTime.Now:yyyy-MM-dd}";
             if (!Directory.Exists(csExceptionLogger.csExceptionLogger.DefaultLogLocation))
                 Directory.CreateDirectory(csExceptionLogger.csExceptionLogger.DefaultLogLocation);
+
             InitializeComponent();
+
             Notify = notifyRapid;
+            GlobalInstance = this;
 
             // fixes visual studio exception on stopping debugging
             AppDomain.CurrentDomain.UnhandledException += new UnhandledExceptionEventHandler(
@@ -40,9 +45,9 @@ namespace RApID_Project_WPF
                         $"(Stack Trace)\n{new string('-', 20)}\n\n{e.StackTrace}\n\n{new string('-', 20)}\n" +
                         $"Will runtime terminate now? -> \'{(args.IsTerminating ? "Yes" : "No")}\'"
                     ); if (e is TaskCanceledException) return;
-                    #if !DEBUG
+#if !DEBUG
                         csExceptionLogger.csExceptionLogger.Write("Unhandled_Exception", e);
-                    #endif
+#endif
                 });
             AppDomain.CurrentDomain.FirstChanceException += new EventHandler<System.Runtime.ExceptionServices.FirstChanceExceptionEventArgs>(
                 delegate (object sender, System.Runtime.ExceptionServices.FirstChanceExceptionEventArgs args)
@@ -52,9 +57,9 @@ namespace RApID_Project_WPF
                         $"[UEHandler]: {e.Message}\n" +
                         $"(Stack Trace)\n{new string('-', 20)}\n\n{e.StackTrace}\n"
                     ); if (e is TaskCanceledException) return;
-                    #if !DEBUG
+#if !DEBUG
                         csExceptionLogger.csExceptionLogger.Write("Unhandled_Exception", e);
-                    #endif
+#endif
                 });
         }
 
@@ -75,7 +80,7 @@ namespace RApID_Project_WPF
             string msgTitle = "";
             string msgWelcome = $"Important updates related to RApID will show up here.";
 
-            if(DateTime.Now.Hour >= 4 && DateTime.Now.Hour < 12)
+            if (DateTime.Now.Hour >= 4 && DateTime.Now.Hour < 12)
             {
                 msgTitle = "Good Morning";
             } else if (DateTime.Now.ToLocalTime().Hour >= 12 && DateTime.Now.ToLocalTime().Hour < 17)
@@ -90,7 +95,7 @@ namespace RApID_Project_WPF
                 var uName = UserPrincipal.Current.DisplayName.Trim().Split(',');
 
                 Notify.ShowBalloonTip(msgTitle + $", {uName[1].Trim()} {uName[0].Trim()}!", msgWelcome, BalloonIcon.Info);
-            }));            
+            }));
         }
 
         protected internal async Task HookService()
@@ -107,51 +112,59 @@ namespace RApID_Project_WPF
                 switch (((Control)sender).Name.ToString())
                 {
                     case "btnRework":
-                        Hide();
                         var fpr = new frmProduction { Owner = this, WindowStartupLocation = WindowStartupLocation.CenterOwner };
-                        fpr.ShowDialog();                        
+                        fpr.Show();
+                        Hide();
                         break;
                     case "btnRepair":
+                        var rpr = new frmRepair(false) { Owner = this, WindowStartupLocation = WindowStartupLocation.CenterOwner };
+                        rpr.Show();
                         Hide();
-                        var rpr = new Repair(false) { Owner = this, WindowStartupLocation = WindowStartupLocation.CenterOwner };
-                        rpr.ShowDialog();
                         break;
                     case "btnReportViewer":
                         Process.Start(Properties.Settings.Default.DefaultReportManagerLink);
                         break;
                     case "btnQCDQE":
-                        Hide();
                         var fQC = new frmQCDQE { Owner = this, WindowStartupLocation = WindowStartupLocation.CenterOwner };
-                        fQC.ShowDialog();
+                        fQC.Show();
+                        Hide();
                         break;
                     case "btnSettings":
-                        Hide();
                         var fSettings = new frmSettings { Owner = this, WindowStartupLocation = WindowStartupLocation.CenterOwner };
-                        fSettings.ShowDialog();
+                        fSettings.Show();
+                        Hide();
                         break;
                     case "btnTicketLookup":
-                        Hide();
+                        frmGlobalSearch.Instance.Owner = this;
                         frmGlobalSearch.Instance.WindowStartupLocation = WindowStartupLocation.CenterOwner;
                         frmGlobalSearch.Instance.Show();
+                        Hide();
                         break;
                 }
             }
             catch (Exception ex)
             {
                 csExceptionLogger.csExceptionLogger.Write("MainWindow_btnClicks", ex);
+                Show();
             }
-            finally
-            {
-                MakeFocus();
-            }
+        }
+
+        protected internal void MakeFocus()
+        {
+            WindowState = WindowState.Normal;
+            Show();
+            BringIntoView();
+            Activate();
+            Focus();
         }
 
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
-            notifyRapid = null; // Ensure GC collects notify icon
             try
             {
-                //csSplashScreenHelper.StopTokenSource.Cancel();                
+                //csSplashScreenHelper.StopTokenSource.Cancel();
+                Notify = null;
+                notifyRapid.Dispose(); // Ensure GC collects notify icon
             }
             catch (Exception ex)
             when (ex is System.Security.SecurityException || ex is System.Threading.ThreadStateException
@@ -160,8 +173,6 @@ namespace RApID_Project_WPF
                 csExceptionLogger.csExceptionLogger.Write("MainWindow_ThreadedClosingIssues", ex);
             }
         }
-
-
 
         private void wndMain_Closed(object sender, EventArgs e)
         {
@@ -182,22 +193,14 @@ namespace RApID_Project_WPF
             }
         }
 
-        private void btnShow_Click(object sender, RoutedEventArgs e) => MakeFocus();
-
-        private void MakeFocus()
-        {
-            WindowState = WindowState.Normal;
-            Show();
-            BringIntoView();
-            Activate();
-            Focus();
+        private void btnShow_Click(object sender, RoutedEventArgs e) {
+            MakeFocus();
+            btnShake.RaiseEvent(new RoutedEventArgs(ButtonBase.ClickEvent));
         }
-
         private void btnExit_Click(object sender, RoutedEventArgs e) => Close();
-
         private void btnReset_Click(object sender, RoutedEventArgs e)
         {
-            //TODO: Use service to start a new instance.
+            //-TODO: Use service to start a new instance.
         }
     }
 }

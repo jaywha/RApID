@@ -9,7 +9,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>RApID_Project_WPF</RootNamespace>
     <AssemblyName>RApID Project WPF</AssemblyName>
-    <TargetFrameworkVersion>v4.7.1</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <WarningLevel>4</WarningLevel>
@@ -125,6 +125,9 @@
     <Reference Include="System.Xaml">
       <RequiredTargetFramework>4.0</RequiredTargetFramework>
     </Reference>
+    <Reference Include="TriggersTools.FileFind, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\TriggersTools.FileFind.1.0.0\lib\net40\TriggersTools.FileFind.dll</HintPath>
+    </Reference>
     <Reference Include="WindowsBase" />
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
@@ -195,8 +198,8 @@
       <DependentUpon>frmViewMultipleIssues.xaml</DependentUpon>
     </Compile>
     <Compile Include="csRecordList.cs" />
-    <Compile Include="Repair.xaml.cs">
-      <DependentUpon>Repair.xaml</DependentUpon>
+    <Compile Include="frmRepair.xaml.cs">
+      <DependentUpon>frmRepair.xaml</DependentUpon>
     </Compile>
     <Compile Include="frmRepairPRI.xaml.cs">
       <DependentUpon>frmRepairPRI.xaml</DependentUpon>
@@ -289,7 +292,7 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Page Include="Repair.xaml">
+    <Page Include="frmRepair.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

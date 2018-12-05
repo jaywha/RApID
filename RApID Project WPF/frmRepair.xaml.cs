@@ -20,7 +20,7 @@ namespace RApID_Project_WPF
     /// <summary>
     /// Interaction logic for Repair.xaml
     /// </summary>
-    public partial class Repair : Window
+    public partial class frmRepair : Window
     {
         #region Variables
         private enum SubmissionStatus { COMPLETE, SENDTOQC, SENDTODQE };
@@ -46,7 +46,7 @@ namespace RApID_Project_WPF
         InitSplash initS = new InitSplash();
         #endregion
 
-        public Repair(bool bRework)
+        public frmRepair(bool bRework)
         {
             InitializeComponent();
         }
@@ -1327,13 +1327,13 @@ namespace RApID_Project_WPF
             {
                 await Task.Factory.StartNew(new Action(() =>
                 {
-                    tabcUnitIssues.Dispatcher.BeginInvoke(new Action(() => // perform actions on dispatched thread
+                    tabcUnitIssues.Dispatcher.BeginInvoke(new Action( async () => // perform actions on dispatched thread
                     {
                         if (!mapper.GetData(txtBarcode.Text))
                             throw new InvalidOperationException("Couldn't find data for this barcode!");
                         else
                         {
-                            var result = mapper.FindFile(".xls");
+                            var result = await mapper.FindFileAsync(".xls");
                             csCrossClassInteraction.DoExcelOperations(result.Item1, progMapper,
                             new Tuple<Control, Control>(txtRefDes, txtPartReplaced),
                             new Tuple<Control, Control>(txtRefDes_2, txtPartReplaced_2),
@@ -2317,6 +2317,7 @@ namespace RApID_Project_WPF
 
             sVar.resetStaticVars();
             csSplashScreenHelper.Close();
+            MainWindow.GlobalInstance.MakeFocus();
         }
 
         private void vSleep(int iSleepTime)

@@ -1,12 +1,17 @@
-﻿using System;
+﻿using ExcelDataReader;
+using System;
 using System.Data.SqlClient;
 using System.IO;
+using System.Linq;
+using System.Threading.Tasks;
 using System.Windows;
+using TriggersTools.IO.Windows;
 
 namespace RApID_Project_WPF
 {
     public class csSerialNumberMapper : IDisposable
     {
+        #region Singleton Instance
         /// <summary>
         /// The mapper instance
         /// </summary>
@@ -22,7 +27,9 @@ namespace RApID_Project_WPF
         /// The instance.
         /// </value>
         public static csSerialNumberMapper Instance => _mapperInstance ?? new csSerialNumberMapper();
+        #endregion
 
+        #region Properties
         /// <summary>
         /// Gets or sets the barcode number.
         /// </summary>
@@ -63,18 +70,13 @@ namespace RApID_Project_WPF
         /// The firebase PDF.
         /// </value>
         public string FirebasePdf { get; private set; } = "";
+        #endregion
 
+        #region Fields
         /// <summary>
         /// The schematic path
         /// </summary>
-        private const string SchemaPath = @"\\joi\EU\application\EngDocumentation\Design\Electrical\";
-
-        /*
-                /// <summary>
-                /// The local path
-                /// </summary>
-                private string _localPath = Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory) + @"\RetestDocs\";
-        */
+        private const string SchemaPath = @"L:\EngDocumentation\Design\Electrical\";
 
         /// <summary>
         /// Boolean for the Ice Flasher case
@@ -85,6 +87,7 @@ namespace RApID_Project_WPF
         /// Boolean for the NMEA 2K Case
         /// </summary>
         public bool BIsNMEA;
+        #endregion
 
         /// <summary>
         /// Gets the component number for the scanned barcode.
@@ -251,10 +254,24 @@ namespace RApID_Project_WPF
         /// </summary>
         /// <param name="ext">The file extension of the target</param>
         /// <returns>A Tuple consisting of the filename and <c>true</c> if it was found</returns>
+        [Obsolete("Legacy Extension method. Use FindFileAsync.")]
         public Tuple<string, bool> FindFile(string ext)
         {
+            return FindFileAsync(ext).Result;
+        }
+
+        /// <summary>
+        /// Finds the file.
+        /// </summary>
+        /// <param name="ext">The file extension of the target</param>
+        /// <returns>A Task resulting in a Tuple consisting of the filename and <c>true</c> if it was found</returns>        
+        public async Task<Tuple<string, bool>> FindFileAsync(string ext)
+        {
+            //TODO: Build a list of possible excel files for ops to test each one for JUKI tab
             var filename = "";
             var found = false;
+
+            Console.WriteLine("Running find...");
 
             if (BIsIce && ext.Equals(".pdf"))
             {
@@ -267,118 +284,68 @@ namespace RApID_Project_WPF
                 return new Tuple<string, bool>(filename, true);
             }
 
-            // if (!Directory.Exists(LOCAL_PATH + ComponentNumber)) Directory.CreateDirectory(LOCAL_PATH + ComponentNumber);
-
-            /*if (File.Exists(Path.Combine(LOCAL_PATH + ComponentNumber) + "\\" + PartNumber + "-PCB-Assembly"+ext))
+            try
             {
-                filename = Path.Combine(LOCAL_PATH + ComponentNumber) + "\\" + PartNumber + "-PCB-Assembly"+ext;
-                found = true;
-            }
-            else
-            {*/
-            foreach (var dir in Directory.GetDirectories(SchemaPath, @"*" + ComponentNumber + @"*", SearchOption.TopDirectoryOnly))
-            {
-                var dirstatus = $"Using {dir} as parent directory...";
-                var subdirstatus = $"Using {0} as direct child...";
-                Console.WriteLine(dirstatus);
-
-                if (ext.Equals(".pdf"))
+                await Task.Factory.StartNew(new Action(() =>
                 {
-                    if (Directory.GetFiles(dir, PartNumber + "*ASSY*").Length > 0)
+                    foreach (var file in FileFind.EnumerateFiles(Directory.GetDirectories(SchemaPath, $@"*{ComponentNumber}*", SearchOption.TopDirectoryOnly)[0],
+                        $@"*{ComponentNumber}*{ext}*", SearchOrder.AllDirectories).Where(f => !f.Contains("Archive")))
                     {
-                        FirebasePdf = Directory.GetFiles(dir, PartNumber + "*ASSY*")[0];
-                    }
+                        var dirstatus = $"Checking {file} as possible file...";
+                        Console.WriteLine(dirstatus);
 
-                    filename = dir;
-                    found = true;
-                    if (!string.IsNullOrEmpty(FirebasePdf)) break; // stop from processing further...
-                }
-                else if (ext.Equals(".xls"))
-                {
-                    #region Search for XLS File (in parent DIR)
-                    foreach (var file in Directory.GetFiles(dir, "*" + PartNumber + "*xls*"))
-                    {
-                        if (string.IsNullOrEmpty(file)) { }
-                        else
+                        if (ext.Equals(".pdf"))
                         {
-                            filename = file;
-                            found = true;
-                            break; // from file loop
-                        }
-                    }
-
-                    if (!found)
-                    {
-                        foreach (var file in Directory.GetFiles(dir, "*" + ComponentNumber + "*xls*"))
-                        {
-                            if (string.IsNullOrEmpty(file)) { }
-                            else
+                            if (file.Length > 0 && file.Contains("ASSY"))
                             {
+                                FirebasePdf = file;
                                 filename = file;
                                 found = true;
-                                break; // from file loop
                             }
                         }
-                    }
-                    #endregion
-                    if (found) break; // from dir preindex
-                }
-
-
-                foreach (string subdir in Directory.GetDirectories(dir, @"*" + PartNumber + @"*"))
-                {
-                    Console.WriteLine(subdirstatus, subdir.Remove(0, dir.Length + 1));
-                    if (string.IsNullOrEmpty(subdir)) { }
-                    else
-                    {
-                        if (ext.Equals(".pdf") && string.IsNullOrEmpty(FirebasePdf))
+                        else if (ext.Equals(".xls"))
                         {
-                            foreach (var file in Directory.GetFiles(subdir, ComponentNumber + "*ASSY*"))
+                            if (file.Length > 0)
                             {
-                                if (string.IsNullOrEmpty(file)) { }
-                                else
+                                //Ensure file has JUKI sheet
+                                using (var stream = File.Open(file, FileMode.Open, FileAccess.Read))
                                 {
-                                    FirebasePdf = file;
-                                    break; // from file loop
-                                }
-                            }
-                        }
-                        else
-                        {
-                            #region Search for XLS File (in subdirs)
-                            foreach (var file in Directory.GetFiles(subdir, "*" + PartNumber + "*xls*"))
-                            {
-                                if (string.IsNullOrEmpty(file)) { }
-                                else
-                                {
-                                    filename = file;
-                                    found = true;
-                                    break; // from file loop
-                                }
-                            }
-
-                            if (!found)
-                            {
-                                foreach (var file in Directory.GetFiles(subdir, "*" + ComponentNumber + "*xls*"))
-                                {
-                                    if (string.IsNullOrEmpty(file)) { }
-                                    else
+                                    using (var reader = ExcelReaderFactory.CreateReader(stream))
                                     {
-                                        filename = file;
-                                        found = true;
-                                        break; // from file loop
+                                        DateTime start = DateTime.Now;
+                                        while (reader.NextResult() && reader.Name != null)
+                                        {
+                                            found = reader.Name.Equals("JUKI");
+                                            if (found || start.AddSeconds(5) == DateTime.Now) break;
+                                        }
                                     }
                                 }
+
+                                if (found) filename = file;
                             }
-                            #endregion
                         }
 
-                        if (found && (ext.Equals("pdf") || !string.IsNullOrEmpty(FirebasePdf))) break; // from subdir loop
+                        if (found) {
+                            RoutedEventHandler OpenDirectory = delegate {
+                                System.Diagnostics.Process.Start(filename.Substring(0, filename.LastIndexOf('\\')));
+                            };
+
+                            MainWindow.Notify.Dispatcher.Invoke(() => {
+                                MainWindow.Notify.TrayBalloonTipClicked += OpenDirectory;
+                                MainWindow.Notify.TrayBalloonTipClosed += delegate {
+                                    MainWindow.Notify.TrayBalloonTipClicked -= OpenDirectory;
+                                };
+                                MainWindow.Notify.ShowBalloonTip($"BOM Parts Pulled for [{PartNumber}]",
+                                $"The file is stored here: {filename}", Hardcodet.Wpf.TaskbarNotification.BalloonIcon.Info);
+                            });
+                            break;
+                        }
                     }
-                }
-                if (found) break; // from dir loop
+                }));
+            } catch(Exception e)
+            {
+                csExceptionLogger.csExceptionLogger.Write("BarcodeMapper_FindFileError",e);
             }
-            //}
 
             return new Tuple<string, bool>(filename, found);
         }

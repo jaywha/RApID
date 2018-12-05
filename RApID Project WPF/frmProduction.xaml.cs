@@ -563,12 +563,12 @@ namespace RApID_Project_WPF
             using (var mapper = csSerialNumberMapper.Instance)
             {
                 await Task.Factory.StartNew(new Action(() => { // in new task
-                    Dispatcher.BeginInvoke(new Action(() => {// perform dispatched UI actions
+                    Dispatcher.BeginInvoke(new Action(async () => {// perform dispatched UI actions
                         if (!mapper.GetData(txtSerialNumber.Text))
                             throw new InvalidOperationException("Couldn't find data for this barcode!");
                         else
                         {
-                            var result = mapper.FindFile(".xls");
+                            var result = await mapper.FindFileAsync(".xls");
                             csCrossClassInteraction.DoExcelOperations(result.Item1, progMapper,
                             new Tuple<Control, Control>(txtMultiRefDes, txtMultiPartNum),
                             new Tuple<Control, Control>(txtMultiRefDes_2, txtMultiPartNum_2),
@@ -1735,6 +1735,7 @@ namespace RApID_Project_WPF
 
             sVar.resetStaticVars();
             csSplashScreenHelper.Close();
+            MainWindow.GlobalInstance.MakeFocus();
         }
 
         private void refDesIndexChanged(object sender, SelectionChangedEventArgs e)

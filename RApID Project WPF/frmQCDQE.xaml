@@ -1,7 +1,7 @@
 ﻿<Window x:Class="RApID_Project_WPF.frmQCDQE"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Title="QC/DQE" Height="772" Width="1125" MinWidth="300" MinHeight="300" WindowStartupLocation="CenterScreen" Loaded="Window_Loaded" Closing="Window_Closing" Background="#FF808285" WindowState="Maximized">
+        Title="QC/DQE" Height="772" Width="1125" MinWidth="300" MinHeight="300" Loaded="Window_Loaded" Closing="Window_Closing" Background="#FF808285" WindowState="Maximized">
     <Window.Resources>
         <Style x:Key="TextboxBaseStyle" TargetType="{x:Type TextBox}">
             <Setter Property="Width" Value="195"/>

@@ -65,7 +65,7 @@ namespace RApID_Service
 
         public void OnTimer(object sender, System.Timers.ElapsedEventArgs args)
         {
-            //TODO: Insert monitoring things here.
+            //-TODO: Insert monitoring things here.
             eventLogger.WriteEntry("RApID: Monitoring started...", EventLogEntryType.Information, eventId++);
         }
 
