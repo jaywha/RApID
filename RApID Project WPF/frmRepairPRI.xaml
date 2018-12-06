@@ -66,75 +66,78 @@
             <Setter Property="Height" Value="50" />
         </Style>
     </Window.Resources>
-    
+
     <Viewbox Stretch="Uniform">
         <Grid Width="900" Height="575" Background="#FFDCD7D7">
             <Label Content="Technician Name:" Margin="0,0,0,0" Style="{StaticResource LabelBaseStyle}" />
             <TextBox Name="txtTechName" Margin="0,25,0,0" Style="{StaticResource TextboxBaseStyle}" />
-        
+
             <Label Content="Date Received:" Margin="0,50,0,0" Style="{StaticResource LabelBaseStyle}" />
             <TextBox Name="txtDateReceived" Margin="0,75,0,0" Style="{StaticResource TextboxBaseStyle}" />
-        
+
             <Label Content="Date Submitted:" Margin="0,100,0,0" Style="{StaticResource LabelBaseStyle}" />
             <TextBox Name="txtDateSubmitted" Margin="0,125,0,0" Style="{StaticResource TextboxBaseStyle}" />
-        
+
             <Label Content="Part Name:" Margin="0,150,0,0" Style="{StaticResource LabelBaseStyle}" />
             <TextBox Name="txtPartName" Margin="0,175,0,0" Style="{StaticResource TextboxBaseStyle}" />
-            
+
             <Label Content="Part Number:" Margin="0,200,0,0" Style="{StaticResource LabelBaseStyle}" />
             <TextBox Name="txtPartNumber" Margin="0,225,0,0" Style="{StaticResource TextboxBaseStyle}" />
-            
+
             <Label Content="Part Series:" Margin="0,250,0,0" Style="{StaticResource LabelBaseStyle}" />
             <TextBox Name="txtPartSeries" Margin="0,275,0,0" Style="{StaticResource TextboxBaseStyle}" />
-            
+
             <Label Content="Commodity Sub-Class:" Margin="0,300,0,0" Style="{StaticResource LabelBaseStyle}" />
             <TextBox Name="txtCommSubClass" Margin="0,325,0,0" Style="{StaticResource TextboxBaseStyle}" />
-            
+
             <Label Content="Software Version:" Margin="0,350,0,0" Style="{StaticResource LabelBaseStyle}" />
             <TextBox Name="txtSW" Margin="0,375,0,0" Style="{StaticResource TextboxBaseStyle}" />
-            
+
             <Label Content="Type of Return:" Margin="0,400,0,0" Style="{StaticResource LabelBaseStyle}" />
             <TextBox Name="txtTOR" Margin="0,425,0,0" Style="{StaticResource TextboxBaseStyle}" />
-            
+
             <Label Content="Type of Failure:" Margin="0,450,0,0" Style="{StaticResource LabelBaseStyle}" />
             <TextBox Name="txtTOF" Margin="0,475,0,0" Style="{StaticResource TextboxBaseStyle}" />
-            
+
             <Label Content="Hours on Unit:" Margin="0,500,0,0" Style="{StaticResource LabelBaseStyle}" />
             <TextBox Name="txtHOU" Margin="0,525,0,0" Style="{StaticResource TextboxBaseStyle}" />
 
-            <uc:ucIssueTabControl x:Name="ucIssues" Margin="202,23,450,125" DesignHeight="495" DesignWidth="345" ReadOnly="True"/>
+            <uc:ucIssueTabControl x:Name="ucIssues" Margin="202,23,374,125" DesignHeight="495" DesignWidth="345" ReadOnly="True"/>
 
             <Label Content="Additional Comments:" Margin="200,450,0,0" Style="{StaticResource LabelBaseStyle}" />
-            <RichTextBox Name="rtbAddComm" Margin="200,475,0,0" Style="{StaticResource RTBBaseStyle}" />
-            
-            <GroupBox Name="gbTechActions" Margin="460,5,0,0" Header="Technician Actions" Style="{StaticResource GBBaseStyle}">
-                <Grid>
-                    <Label Content="Technician Action #1:" Margin="0,0,0,0" Style="{StaticResource LabelBaseStyle}" />
-                    <TextBox Name="txtTechAct1" Margin="0,25,0,0" Style="{StaticResource TextboxBaseStyle}" />
-                    
-                    <Label Content="Technician Action #2:" Margin="0,50,0,0" Style="{StaticResource LabelBaseStyle}" />
-                    <TextBox Name="txtTechAct2" Margin="0,75,0,0" Style="{StaticResource TextboxBaseStyle}" />
-                    
-                    <Label Content="Technician Action #3:" Margin="0,100,0,0" Style="{StaticResource LabelBaseStyle}" />
-                    <TextBox Name="txtTechAct3" Margin="0,125,0,0" Style="{StaticResource TextboxBaseStyle}" />
-                </Grid>
+            <RichTextBox Name="rtbAddComm" Margin="200,475,0,0" Style="{StaticResource RTBBaseStyle}" Width="326" />
+
+            <GroupBox Name="gbTechActions" Margin="675,10,0,0" Header="Technician Actions" Style="{StaticResource GBBaseStyle}" Height="180" Width="215">
+                <ScrollViewer VerticalScrollBarVisibility="Auto">
+                    <Grid>
+                        <Label Content="Technician Action #1:" Margin="0,0,0,0" Style="{StaticResource LabelBaseStyle}" />
+                        <TextBox Name="txtTechAct1" Margin="0,25,0,0" Style="{StaticResource TextboxBaseStyle}" />
+
+                        <Label Content="Technician Action #2:" Margin="0,50,0,0" Style="{StaticResource LabelBaseStyle}" />
+                        <TextBox Name="txtTechAct2" Margin="0,75,0,0" Style="{StaticResource TextboxBaseStyle}" />
+
+                        <Label Content="Technician Action #3:" Margin="0,100,0,0" Style="{StaticResource LabelBaseStyle}" />
+                        <TextBox Name="txtTechAct3" Margin="0,125,0,0" Style="{StaticResource TextboxBaseStyle}" />
+                    </Grid>
+                </ScrollViewer>
             </GroupBox>
-            
-            <GroupBox Name="gbCustomerInfo" Header="Customer Information" Margin="680,5,0,0" Style="{StaticResource GBBaseStyle}">
+
+            <GroupBox Name="gbCustomerInfo" Margin="675,195,0,0" Style="{StaticResource GBBaseStyle}" PreviewMouseDoubleClick="gbCustomerInfo_PreviewMouseDoubleClick"
+                      MouseEnter="gbCustomerInfo_MouseEnter" MouseLeave="gbCustomerInfo_MouseLeave" Height="131" Background="LightGray">
+                <GroupBox.Header>
+                    <Run FontStyle="Italic">Customer Information</Run>
+                </GroupBox.Header>
                 <Grid>
                     <Label Content="Customer Number:" Margin="0,0,0,0" Style="{StaticResource LabelBaseStyle}" />
                     <TextBox Name="txtCustNum" Margin="0,25,0,0" Style="{StaticResource TextboxBaseStyle}" />
-                    
+
                     <Label Content="Customer Name:" Margin="0,50,0,0" Style="{StaticResource LabelBaseStyle}" />
                     <TextBox Name="txtCustName" Margin="0,75,0,0" Style="{StaticResource TextboxBaseStyle}" />
-                    
-                    <Button Name="btnViewCustInfo" Content="View Full Customer Info" Margin="0,105,0,0" Style="{StaticResource ButtonBaseStyle}" Click="btnViewCustInfo_Click"
-                            />
                 </Grid>
             </GroupBox>
-            
-            <Label Content="Full QC/DQE Comments:" Margin="455,190,0,0" Style="{StaticResource LabelBaseStyle}" />
-            <RichTextBox Name="rtbQCDQEComments" Margin="455,221,0,0" Style="{StaticResource QCDQERTB}" />
+
+            <Label Content="Full QC/DQE Comments:" Margin="531,325,0,0" Style="{StaticResource LabelBaseStyle}" />
+            <RichTextBox Name="rtbQCDQEComments" Margin="531,350,0,0" Style="{StaticResource QCDQERTB}" Width="359" Height="200" />
         </Grid>
     </Viewbox>
 </Window>

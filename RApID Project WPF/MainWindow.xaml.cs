@@ -8,6 +8,7 @@ using System.DirectoryServices.AccountManagement;
 using System.Threading.Tasks;
 using System.Security.Permissions;
 using System.Windows.Controls.Primitives;
+using System.Collections.Generic;
 
 namespace RApID_Project_WPF
 {
@@ -21,6 +22,8 @@ namespace RApID_Project_WPF
 
         public static TaskbarIcon Notify;
         public static MainWindow GlobalInstance;
+
+        public List<string> Suggestions = new List<string>() { "Test", "Another Test" };
 
         [SecurityPermission(SecurityAction.Demand, Flags = SecurityPermissionFlag.ControlAppDomain)]
         public MainWindow()
@@ -112,12 +115,14 @@ namespace RApID_Project_WPF
                 switch (((Control)sender).Name.ToString())
                 {
                     case "btnRework":
-                        var fpr = new frmProduction { Owner = this, WindowStartupLocation = WindowStartupLocation.CenterOwner };
+                        var fpr = new frmProduction { Owner = GlobalInstance, WindowStartupLocation = WindowStartupLocation.CenterOwner };
+                        fpr.CenterWindow();
                         fpr.Show();
                         Hide();
                         break;
                     case "btnRepair":
-                        var rpr = new frmRepair(false) { Owner = this, WindowStartupLocation = WindowStartupLocation.CenterOwner };
+                        var rpr = new frmRepair(false) { Owner = GlobalInstance, WindowStartupLocation = WindowStartupLocation.CenterOwner };
+                        rpr.CenterWindow();
                         rpr.Show();
                         Hide();
                         break;
@@ -125,18 +130,20 @@ namespace RApID_Project_WPF
                         Process.Start(Properties.Settings.Default.DefaultReportManagerLink);
                         break;
                     case "btnQCDQE":
-                        var fQC = new frmQCDQE { Owner = this, WindowStartupLocation = WindowStartupLocation.CenterOwner };
+                        var fQC = new frmQCDQE { Owner = GlobalInstance, WindowStartupLocation = WindowStartupLocation.CenterOwner };
+                        fQC.CenterWindow();
                         fQC.Show();
                         Hide();
                         break;
                     case "btnSettings":
-                        var fSettings = new frmSettings { Owner = this, WindowStartupLocation = WindowStartupLocation.CenterOwner };
+                        var fSettings = new frmSettings { Owner = GlobalInstance, WindowStartupLocation = WindowStartupLocation.CenterOwner };
                         fSettings.Show();
                         Hide();
                         break;
                     case "btnTicketLookup":
-                        frmGlobalSearch.Instance.Owner = this;
+                        frmGlobalSearch.Instance.Owner = GlobalInstance;
                         frmGlobalSearch.Instance.WindowStartupLocation = WindowStartupLocation.CenterOwner;
+                        frmGlobalSearch.Instance.CenterWindow();
                         frmGlobalSearch.Instance.Show();
                         Hide();
                         break;

@@ -17,6 +17,7 @@ using DesginatorPair = System.Tuple<System.Windows.Controls.Control, System.Wind
 using System.Threading.Tasks;
 using System.Windows;
 using RApID_Project_WPF.UserControls;
+using System.Drawing;
 
 namespace RApID_Project_WPF
 {
@@ -121,6 +122,29 @@ namespace RApID_Project_WPF
                 tbox.Text = val as string;
             else if (c is Label lbl)
                 lbl.Content = val as string;
+        }
+
+        /// <summary>
+        /// Force window to center of current screen.
+        /// </summary>
+        /// <param name="w">The current calling window</param>
+        public static void CenterWindow(this Window w)
+        {
+            //get the current monitor
+            var currentMonitor = System.Windows.Forms.Screen.FromHandle(new System.Windows.Interop.WindowInteropHelper(w).Handle);
+
+            //find out if our app is being scaled by the monitor
+            var source = PresentationSource.FromVisual(w);
+            double dpiScaling = (source != null && source.CompositionTarget != null ? source.CompositionTarget.TransformFromDevice.M11 : 1);
+
+            //get the available area of the monitor
+            Rectangle workArea = currentMonitor.WorkingArea;
+            var workAreaWidth = (int)Math.Floor(workArea.Width * dpiScaling);
+            var workAreaHeight = (int)Math.Floor(workArea.Height * dpiScaling);
+
+            //move to the centre
+            w.Left = (((workAreaWidth - (w.Width * dpiScaling)) / 2) + (workArea.Left * dpiScaling));
+            w.Top = (((workAreaHeight - (w.Height * dpiScaling)) / 2) + (workArea.Top * dpiScaling));
         }
 
         /// <summary>
@@ -1129,7 +1153,7 @@ namespace RApID_Project_WPF
         {
             var lRMI = new List<RepairMultipleIssues>();
 
-            string query = "SELECT TestResult, TestResultAbort, Cause, Replacement, PartsReplaced, RefDesignator, PartsReplacedPartDescription FROM TechnicianUnitIssues WHERE ID = '" + ID + "'";
+            string query = "SELECT * FROM TechnicianUnitIssues WHERE ID = '" + ID + "'";
             var conn = new SqlConnection(holder.RepairConnectionString);
             var cmd = new SqlCommand(query, conn);
 
@@ -1142,15 +1166,17 @@ namespace RApID_Project_WPF
                     {
                         lRMI.Add(new RepairMultipleIssues()
                         {
-                            TestResult = EmptyIfNull(reader[0].ToString()),
-                            TestResultAbort = EmptyIfNull(reader[1].ToString()),
-                            Cause = EmptyIfNull(reader[2].ToString()),
-                            Replacement = EmptyIfNull(reader[3].ToString()),
+                            ID = int.TryParse(reader["ID"].ToString().EmptyIfNull(), out int _id) ? _id : 0,
+                            ReportedIssue = reader["ReportedIssue"].ToString().EmptyIfNull(),
+                            TestResult = reader["TestResult"].ToString().EmptyIfNull(),
+                            TestResultAbort = reader["TestResultAbort"].ToString().EmptyIfNull(),
+                            Cause = reader["Cause"].ToString().EmptyIfNull(),
+                            Replacement = reader["Replacement"].ToString().EmptyIfNull(),
                             SinglePartReplaced = new MultiplePartsReplaced()
                             {
-                                PartReplaced = EmptyIfNull(reader[4].ToString()),
-                                RefDesignator = EmptyIfNull(reader[5].ToString()),
-                                PartsReplacedPartDescription = EmptyIfNull(reader[6].ToString())
+                                PartReplaced = reader["PartsReplaced"].ToString().EmptyIfNull(),
+                                RefDesignator = reader["RefDesignator"].ToString().EmptyIfNull(),
+                                PartsReplacedPartDescription = reader["PartsReplacedPartDescription"].ToString().EmptyIfNull()
                             }
                         });
                     }
@@ -1181,7 +1207,24 @@ namespace RApID_Project_WPF
         /// </summary>
         /// <param name="cbox">Target Combobox</param>
         public static void SelectAll(this ComboBox cbox)
-            => (cbox.Template.FindName("PART_EditableTextBox", cbox) as TextBox).SelectAll();
+        {
+            try
+            {
+                (cbox.Template.FindName("PART_EditableTextBox", cbox) as TextBox).SelectAll();
+            } catch(Exception e)
+            {
+                csExceptionLogger.csExceptionLogger.Write("ComboBox_SelectAll", e);
+
+                try
+                {
+                    cbox.Focus();
+                    cbox.RaiseEvent(new RoutedEventArgs(Control.MouseDoubleClickEvent));
+                } catch(Exception ie)
+                {
+                    csExceptionLogger.csExceptionLogger.Write("ComboBox_SelectFail", ie);
+                }
+            }
+        }
 
         /// <summary>
         /// Fills the specified <see cref="ucUnitIssue"/> with the data from the given <see cref="string"/>array.

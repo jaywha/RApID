@@ -130,5 +130,12 @@
             </tb:TaskbarIcon.ContextMenu>
         </tb:TaskbarIcon>
         <Button x:Name="btnShake" Content="Hello" HorizontalAlignment="Left" Margin="10,325,0,0" VerticalAlignment="Top" Width="75" Visibility="Collapsed"/>
+        <!--<uc:ucSuggestBox Width="100" Margin="10,10,334,279" LabelText="Test" Owner="{Binding ElementName=wndMain, Mode=OneWay}">
+            <uc:ucSuggestBox.AutoCompleteSource>
+                <System:String>Example</System:String>
+                <System:String>Ejemplo</System:String>
+                <System:String>Wow</System:String>
+            </uc:ucSuggestBox.AutoCompleteSource>
+        </uc:ucSuggestBox>-->
     </Grid>
 </Window>

@@ -57,7 +57,7 @@ namespace RApID_Project_WPF
             GC.Collect();
             csSplashScreenHelper.ShowText("Done!");
             csSplashScreenHelper.Hide();
-            this.Activate();
+            this.Activate();            
 #if DEBUG
             txtSerialNumber.Text = "160815030117";
 #endif

@@ -810,13 +810,13 @@ namespace RApID_Project_WPF
                 {
                     Task.Factory.StartNew(new Action(() =>
                     {
-                        Dispatcher.Invoke(delegate // perform actions on dispatched thread
+                        Dispatcher.Invoke(async delegate // perform actions on dispatched thread
                         {
                             if (!mapper.GetData(txtSN.Text))
                                 throw new InvalidOperationException("Couldn't find data for this barcode!");
                             else
                             {
-                                var result = mapper.FindFile(".xls");
+                                var result = await mapper.FindFileAsync(".xls");
                                 //TODO: Make User Control for BOM Matcher (2 cmbx: Ref Des. -> Part Number)
                             }
                         });

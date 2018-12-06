@@ -440,6 +440,7 @@ namespace RApID_Project_WPF
                         {
                             var cb = (ComboBox)uie;
                             cb.SelectedIndex = -1;
+                            cb.Text = "";
                         }
                         if (uie.GetType().Name.Equals("TextBox"))
                         {
@@ -460,6 +461,7 @@ namespace RApID_Project_WPF
                         {
                             var cb = (ComboBox)uie;
                             cb.SelectedIndex = -1;
+                            cb.Text = "";
                         }
                         if (uie.GetType().Name.Equals("TextBox"))
                         {
@@ -480,6 +482,7 @@ namespace RApID_Project_WPF
                         {
                             var cb = (ComboBox)uie;
                             cb.SelectedIndex = -1;
+                            cb.Text = "";
                         }
                         if (uie.GetType().Name.Equals("TextBox"))
                         {
@@ -2048,7 +2051,7 @@ namespace RApID_Project_WPF
             if (dgPrevRepairInfo.SelectedItem != null)
             {
                 var pri = new frmRepairPRI((PreviousRepairInformation)dgPrevRepairInfo.SelectedItem);
-                pri.ShowDialog();
+                pri.Show();
             }
         }
 

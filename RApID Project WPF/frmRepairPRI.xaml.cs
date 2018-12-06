@@ -119,12 +119,15 @@ namespace RApID_Project_WPF
                     foreach (var issue in lRMI)
                     {
                         ucIssues[ucIndex].FillUnitIssue(
-                            issue.MultiPartsReplaced,
+                            new List<MultiplePartsReplaced>() { issue.SinglePartReplaced },
                             issue.ReportedIssue,
                             issue.TestResult,
                             issue.TestResultAbort,
+                            "",
                             issue.Cause,
-                            issue.Replacement                            
+                            issue.Replacement,
+                            "",
+                            ""                        
                         );
                         if (lRMI.Count > ucIndex) ucIssues.AddTabItem();
                     }
@@ -144,12 +147,24 @@ namespace RApID_Project_WPF
             }
         }
 
-        private void btnViewCustInfo_Click(object sender, RoutedEventArgs e)
+        private void gbCustomerInfo_PreviewMouseDoubleClick(object sender, MouseButtonEventArgs e)
         {
             var fullInfo = new frmFullCustomerInformation(CurrentCustomer);
-            fullInfo.Closed += delegate { btnViewCustInfo.IsEnabled = true; };
+            fullInfo.Closed += delegate { gbCustomerInfo.IsEnabled = true; };
             fullInfo.Show();
-            btnViewCustInfo.IsEnabled = false;
+            gbCustomerInfo.IsEnabled = false;
+        }
+
+        private void gbCustomerInfo_MouseEnter(object sender, MouseEventArgs e)
+        {
+            gbCustomerInfo.Header = "Double Click for more information.";
+            gbCustomerInfo.Background = Brushes.PeachPuff;
+        }
+
+        private void gbCustomerInfo_MouseLeave(object sender, MouseEventArgs e)
+        {
+            gbCustomerInfo.Header = "Customer Information";
+            gbCustomerInfo.Background = Brushes.LightGray;
         }
     }
 }

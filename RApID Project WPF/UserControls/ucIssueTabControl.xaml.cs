@@ -92,8 +92,16 @@ namespace RApID_Project_WPF.UserControls
             var newTab = new TabItem() {
                 Header = $"Unit Issue #{count}",
                 Name = $"tiUnitIssue{count}",
-                Content = new ucUnitIssue(count) { Name = $"otherIssue{count}" },
-                HeaderTemplate = tcTabs.FindResource(ReadOnly ? "ROTabHeader" : "TabHeader") as DataTemplate
+                Content = new ucUnitIssue(count) {
+                    Name = $"otherIssue{count}",
+                    HorizontalAlignment = HorizontalAlignment.Center,
+                    VerticalAlignment = VerticalAlignment.Top,
+                    Width = (double)GetValue(DesignWidthProperty) - 10,
+                    Height = (double)GetValue(DesignHeightProperty) - 10
+                },
+                HeaderTemplate = tcTabs.FindResource(ReadOnly ? "ROTabHeader" : "TabHeader") as DataTemplate,
+                HorizontalAlignment = HorizontalAlignment.Left,
+                VerticalAlignment = VerticalAlignment.Top
             };
 
             _tabItems.Insert(count - 1, newTab);
