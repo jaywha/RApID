@@ -10,6 +10,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Documents;
 using System.Windows.Input;
+using System.Windows.Media;
 using System.Windows.Threading;
 using EricStabileLibrary;
 
@@ -43,6 +44,7 @@ namespace RApID_Project_WPF
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
+            Hide();
             initS.InitSplash1("Initializing Form..."); //--Initialize the Splash Screen.
             buildDG();
             csSplashScreenHelper.ShowText("Loading DataLog...");
@@ -57,11 +59,12 @@ namespace RApID_Project_WPF
             GC.Collect();
             csSplashScreenHelper.ShowText("Done!");
             csSplashScreenHelper.Hide();
-            this.Activate();            
+            this.Activate();      
 #if DEBUG
             txtSerialNumber.Text = "160815030117";
 #endif
-
+            WindowState = WindowState.Maximized;
+            Show();
         }
 
         #region Initialize Form
@@ -283,21 +286,24 @@ namespace RApID_Project_WPF
                     txtMultiRefDes.Text = txtMultiPartNum.Text = string.Empty;
                     dgMultipleParts.Items.Clear();
                     cbItem.IsEnabled = cbProblem.IsEnabled = false;
-                    lblRefDes.Visibility = lblPartNum.Visibility = txtMultiRefDes.Visibility = txtMultiPartNum.Visibility = btnAddRefPart.Visibility = dgMultipleParts.Visibility = System.Windows.Visibility.Hidden;
+                    lblRefDes.Visibility = lblPartNum.Visibility = txtMultiRefDes.Visibility = txtMultiPartNum.Visibility = btnAddRefPart.Visibility = dgMultipleParts.Visibility = Visibility.Hidden;
+                    brdRefDes.BorderThickness = new Thickness(0.0);
                     break;
                 case 2:
                     cbReportedIssue_2.SelectedIndex = cbTestResult_2.SelectedIndex = cbTestResultAbort_2.SelectedIndex = cbIssue_2.SelectedIndex = cbItem_2.SelectedIndex = cbProblem_2.SelectedIndex = -1;
                     txtMultiRefDes_2.Text = txtMultiPartNum_2.Text = string.Empty;
                     dgMultipleParts_2.Items.Clear();
                     cbItem_2.IsEnabled = cbProblem_2.IsEnabled = false;
-                    lblRefDes_2.Visibility = lblPartNum_2.Visibility = txtMultiRefDes_2.Visibility = txtMultiPartNum_2.Visibility = btnAddRefPart_2.Visibility = dgMultipleParts_2.Visibility = System.Windows.Visibility.Hidden;
+                    lblRefDes_2.Visibility = lblPartNum_2.Visibility = txtMultiRefDes_2.Visibility = txtMultiPartNum_2.Visibility = btnAddRefPart_2.Visibility = dgMultipleParts_2.Visibility = Visibility.Hidden;
+                    brdRefDes_2.BorderThickness = new Thickness(0.0);
                     break;
                 case 3:
                     cbReportedIssue_3.SelectedIndex = cbTestResult_3.SelectedIndex = cbTestResultAbort_3.SelectedIndex = cbIssue_3.SelectedIndex = cbItem_3.SelectedIndex = cbProblem_3.SelectedIndex = -1;
                     txtMultiRefDes_3.Text = txtMultiPartNum_3.Text = string.Empty;
                     dgMultipleParts_3.Items.Clear();
                     cbItem_3.IsEnabled = cbProblem_3.IsEnabled = false;
-                    lblRefDes_3.Visibility = lblPartNum_3.Visibility = txtMultiRefDes_3.Visibility = txtMultiPartNum_3.Visibility = btnAddRefPart_3.Visibility = dgMultipleParts_3.Visibility = System.Windows.Visibility.Hidden;
+                    lblRefDes_3.Visibility = lblPartNum_3.Visibility = txtMultiRefDes_3.Visibility = txtMultiPartNum_3.Visibility = btnAddRefPart_3.Visibility = dgMultipleParts_3.Visibility = Visibility.Hidden;
+                    brdRefDes_3.BorderThickness = new Thickness(0.0);
                     break;
             }
         }
@@ -483,11 +489,11 @@ namespace RApID_Project_WPF
         private void fillProblemCB(List<IssueItemProblemCombinations> lNarrowedDownList, ComboBox cbProblemEdit)
         {
             if (!cbProblemEdit.Name.Contains("_"))
-                resetIIPItems(false, cbItem, cbProblem, txtMultiRefDes, lblRefDes, txtMultiPartNum, lblPartNum, btnAddRefPart, dgMultipleParts);
+                resetIIPItems(false, cbItem, cbProblem, txtMultiRefDes, lblRefDes, txtMultiPartNum, lblPartNum, btnAddRefPart, dgMultipleParts, brdRefDes);
             else if (cbProblemEdit.Name.EndsWith("2"))
-                resetIIPItems(false, cbItem_2, cbProblem_2, txtMultiRefDes_2, lblRefDes_2, txtMultiPartNum_2, lblPartNum_2, btnAddRefPart_2, dgMultipleParts_2);
+                resetIIPItems(false, cbItem_2, cbProblem_2, txtMultiRefDes_2, lblRefDes_2, txtMultiPartNum_2, lblPartNum_2, btnAddRefPart_2, dgMultipleParts_2, brdRefDes_2);
             else if (cbProblemEdit.Name.EndsWith("3"))
-                resetIIPItems(false, cbItem_3, cbProblem_3, txtMultiRefDes_3, lblRefDes_3, txtMultiPartNum_3, lblPartNum_3, btnAddRefPart_3, dgMultipleParts_3);
+                resetIIPItems(false, cbItem_3, cbProblem_3, txtMultiRefDes_3, lblRefDes_3, txtMultiPartNum_3, lblPartNum_3, btnAddRefPart_3, dgMultipleParts_3, brdRefDes_3);
 
             for (int i = 0; i < lNarrowedDownList.Count; i++)
             {
@@ -498,7 +504,7 @@ namespace RApID_Project_WPF
             cbProblemEdit.IsEnabled = true;
         }
 
-        private void resetIIPItems(bool bResetAll, ComboBox cbItemReset, ComboBox cbProblemReset, Control txtRefReset, Label lblRefReset, Control txtPartReset, Label lblPartReset, Button btnAddReset, DataGrid dgReset)
+        private void resetIIPItems(bool bResetAll, ComboBox cbItemReset, ComboBox cbProblemReset, Control txtRefReset, Label lblRefReset, Control txtPartReset, Label lblPartReset, Button btnAddReset, DataGrid dgReset, Border borderError)
         {
             if (bResetAll)
             {
@@ -508,6 +514,7 @@ namespace RApID_Project_WPF
                 txtRefReset.SetContent(string.Empty);
                 lblRefReset.Visibility = Visibility.Hidden;
                 txtRefReset.Visibility = Visibility.Hidden;
+                borderError.Visibility = Visibility.Hidden;
             }
 
             cbProblemReset.Items.Clear();
@@ -521,18 +528,20 @@ namespace RApID_Project_WPF
             dgReset.Visibility = Visibility.Hidden;
         }
 
-        private void dispIIPElements(Label lblRefToDisp, Control txtRefToDisp, Label lblPartToDisp, Control txtPartToDisp, ComboBox cbItemToCompare, ComboBox cbProblemToCompare, DataGrid dgToEdit, Button btnAddToDG)
+        private void dispIIPElements(Label lblRefToDisp, Control txtRefToDisp, Label lblPartToDisp, Control txtPartToDisp, ComboBox cbItemToCompare, ComboBox cbProblemToCompare, DataGrid dgToEdit, Button btnAddToDG, Border borderError)
         {
             bool bDispAll = false;
 
             if (cbItemToCompare.Text.Equals("Ref Designator Code"))
             {
+                borderError.Visibility = Visibility.Visible;
                 lblRefToDisp.Visibility = Visibility.Visible;
                 txtRefToDisp.Visibility = Visibility.Visible;
                 bDispAll = true;
             }
             else
             {
+                borderError.Visibility = Visibility.Hidden;
                 lblRefToDisp.Visibility = Visibility.Hidden;
                 txtRefToDisp.Visibility = Visibility.Hidden;
             }
@@ -1296,6 +1305,22 @@ namespace RApID_Project_WPF
                     {
                         sVar.LogHandler.CreateLogAction((Button)sender, csLogging.LogState.CLICK);
 
+                        if (!txtMultiRefDes_2.Items.Contains(txtMultiRefDes_2.Text)
+                        || dgMultipleParts_2.Items
+                        .OfType<MultiplePartsReplaced>()
+                        .Where(mpr => mpr.RefDesignator.Equals(txtMultiRefDes_2.Text)).Count() > 0)
+                        {
+                            brdRefDes_2.BorderBrush = Brushes.Red;
+                            brdRefDes_2.BorderThickness = new Thickness(1.0);
+                            MessageBox.Show("Invalid Ref Designator", $"{txtMultiRefDes_2.Text} is not a valid designator!", MessageBoxButton.OK, MessageBoxImage.Warning);
+                            return;
+                        }
+                        else
+                        {
+                            brdRefDes_2.BorderBrush = null;
+                            brdRefDes_2.BorderThickness = new Thickness(0.0);
+                        }
+
                         if (!txtMultiRefDes_2.Items.Contains(txtMultiRefDes_2.Text)) {
                             string sWarning = string.Format($"The Reference Designator entered ( {txtMultiRefDes_2.Text} ) does not exist.\n" +
                                 "Please verify the Part Number and try again.");
@@ -1336,6 +1361,22 @@ namespace RApID_Project_WPF
                     else
                     {
                         sVar.LogHandler.CreateLogAction((Button)sender, csLogging.LogState.CLICK);
+
+                        if (!txtMultiRefDes_3.Items.Contains(txtMultiRefDes_3.Text)
+                        || dgMultipleParts_3.Items
+                        .OfType<MultiplePartsReplaced>()
+                        .Where(mpr => mpr.RefDesignator.Equals(txtMultiRefDes_3.Text)).Count() > 0)
+                        {
+                            brdRefDes_3.BorderBrush = Brushes.Red;
+                            brdRefDes_3.BorderThickness = new Thickness(1.0);
+                            MessageBox.Show("Invalid Ref Designator", $"{txtMultiRefDes_3.Text} is not a valid designator!", MessageBoxButton.OK, MessageBoxImage.Warning);
+                            return;
+                        }
+                        else
+                        {
+                            brdRefDes_3.BorderBrush = null;
+                            brdRefDes_3.BorderThickness = new Thickness(0.0);
+                        }
 
                         if (!txtMultiRefDes_3.Items.Contains(txtMultiRefDes_3.Text))
                         {
@@ -1379,6 +1420,22 @@ namespace RApID_Project_WPF
                 else
                 {
                     sVar.LogHandler.CreateLogAction((Button)sender, csLogging.LogState.CLICK);
+
+                    if (!txtMultiRefDes.Items.Contains(txtMultiRefDes.Text) 
+                        || dgMultipleParts.Items
+                        .OfType<MultiplePartsReplaced>()
+                        .Where(mpr => mpr.RefDesignator.Equals(txtMultiRefDes.Text)).Count() > 0)
+                    {
+                        brdRefDes.BorderBrush = Brushes.Red;
+                        brdRefDes.BorderThickness = new Thickness(1.0);
+                        MessageBox.Show("Invalid Ref Designator", $"{txtMultiRefDes.Text} is not a valid designator!", MessageBoxButton.OK, MessageBoxImage.Warning);
+                        return;
+                    }
+                    else
+                    {
+                        brdRefDes.BorderBrush = null;
+                        brdRefDes.BorderThickness = new Thickness(0.0);
+                    }
 
                     if (!txtMultiRefDes.Items.Contains(txtMultiRefDes.Text))
                     {
@@ -1658,17 +1715,17 @@ namespace RApID_Project_WPF
             {
                 if (!chosenOption.Contains("_"))
                 {
-                    resetIIPItems(true, cbItem, cbProblem, txtMultiRefDes, lblRefDes, txtMultiPartNum, lblPartNum, btnAddRefPart, dgMultipleParts);
+                    resetIIPItems(true, cbItem, cbProblem, txtMultiRefDes, lblRefDes, txtMultiPartNum, lblPartNum, btnAddRefPart, dgMultipleParts, brdRefDes);
                     fillItemCB(cbIssue, cbItem, cbProblem);
                 }
                 else if (chosenOption.EndsWith("2"))
                 {
-                    resetIIPItems(true, cbItem_2, cbProblem_2, txtMultiRefDes_2, lblRefDes_2, txtMultiPartNum_2, lblPartNum_2, btnAddRefPart_2, dgMultipleParts_2);
+                    resetIIPItems(true, cbItem_2, cbProblem_2, txtMultiRefDes_2, lblRefDes_2, txtMultiPartNum_2, lblPartNum_2, btnAddRefPart_2, dgMultipleParts_2, brdRefDes_2);
                     fillItemCB(cbIssue_2, cbItem_2, cbProblem_2);
                 }
                 else if (chosenOption.EndsWith("3"))
                 {
-                    resetIIPItems(true, cbItem_3, cbProblem_3, txtMultiRefDes_3, lblRefDes_3, txtMultiPartNum_3, lblPartNum_3, btnAddRefPart_3, dgMultipleParts_3);
+                    resetIIPItems(true, cbItem_3, cbProblem_3, txtMultiRefDes_3, lblRefDes_3, txtMultiPartNum_3, lblPartNum_3, btnAddRefPart_3, dgMultipleParts_3, brdRefDes_3);
                     fillItemCB(cbIssue_3, cbItem_3, cbProblem_3);
                 }
             }
@@ -1678,27 +1735,27 @@ namespace RApID_Project_WPF
                 {
                     if (!string.IsNullOrEmpty(cbItem.Text))
                     {
-                        resetIIPItems(false, cbItem, cbProblem, txtMultiRefDes, lblRefDes, txtMultiPartNum, lblPartNum, btnAddRefPart, dgMultipleParts);
+                        resetIIPItems(false, cbItem, cbProblem, txtMultiRefDes, lblRefDes, txtMultiPartNum, lblPartNum, btnAddRefPart, dgMultipleParts, brdRefDes);
                         fillProblemCB(cbIssue, cbItem, cbProblem);
-                        dispIIPElements(lblRefDes, txtMultiRefDes, lblPartNum, txtMultiPartNum, cbItem, cbProblem, dgMultipleParts, btnAddRefPart);
+                        dispIIPElements(lblRefDes, txtMultiRefDes, lblPartNum, txtMultiPartNum, cbItem, cbProblem, dgMultipleParts, btnAddRefPart, brdRefDes);
                     }
                 }
                 else if (chosenOption.EndsWith("2"))
                 {
                     if (!string.IsNullOrEmpty(cbItem_2.Text))
                     {
-                        resetIIPItems(false, cbItem_2, cbProblem_2, txtMultiRefDes_2, lblRefDes_2, txtMultiPartNum_2, lblPartNum_2, btnAddRefPart_2, dgMultipleParts_2);
+                        resetIIPItems(false, cbItem_2, cbProblem_2, txtMultiRefDes_2, lblRefDes_2, txtMultiPartNum_2, lblPartNum_2, btnAddRefPart_2, dgMultipleParts_2, brdRefDes_2);
                         fillProblemCB(cbIssue_2, cbItem_2, cbProblem_2);
-                        dispIIPElements(lblRefDes_2, txtMultiRefDes_2, lblPartNum_2, txtMultiPartNum_2, cbItem_2, cbProblem_2, dgMultipleParts_2, btnAddRefPart_2);
+                        dispIIPElements(lblRefDes_2, txtMultiRefDes_2, lblPartNum_2, txtMultiPartNum_2, cbItem_2, cbProblem_2, dgMultipleParts_2, btnAddRefPart_2, brdRefDes_2);
                     }
                 }
                 else if (chosenOption.EndsWith("3"))
                 {
                     if (!string.IsNullOrEmpty(cbItem_3.Text))
                     {
-                        resetIIPItems(false, cbItem_3, cbProblem_3, txtMultiRefDes_3, lblRefDes_3, txtMultiPartNum_3, lblPartNum_3, btnAddRefPart_3, dgMultipleParts_3);
+                        resetIIPItems(false, cbItem_3, cbProblem_3, txtMultiRefDes_3, lblRefDes_3, txtMultiPartNum_3, lblPartNum_3, btnAddRefPart_3, dgMultipleParts_3, brdRefDes_3);
                         fillProblemCB(cbIssue_3, cbItem_3, cbProblem_3);
-                        dispIIPElements(lblRefDes_3, txtMultiRefDes_3, lblPartNum_3, txtMultiPartNum_3, cbItem_3, cbProblem_3, dgMultipleParts_3, btnAddRefPart_3);
+                        dispIIPElements(lblRefDes_3, txtMultiRefDes_3, lblPartNum_3, txtMultiPartNum_3, cbItem_3, cbProblem_3, dgMultipleParts_3, btnAddRefPart_3, brdRefDes_3);
                     }
                 }
             }
@@ -1706,15 +1763,15 @@ namespace RApID_Project_WPF
             {
                 if (!chosenOption.Contains("_"))
                 {
-                    dispIIPElements(lblRefDes, txtMultiRefDes, lblPartNum, txtMultiPartNum, cbItem, cbProblem, dgMultipleParts, btnAddRefPart);
+                    dispIIPElements(lblRefDes, txtMultiRefDes, lblPartNum, txtMultiPartNum, cbItem, cbProblem, dgMultipleParts, btnAddRefPart, brdRefDes);
                 }
                 else if (chosenOption.EndsWith("2"))
                 {
-                    dispIIPElements(lblRefDes_2, txtMultiRefDes_2, lblPartNum_2, txtMultiPartNum_2, cbItem_2, cbProblem_2, dgMultipleParts_2, btnAddRefPart_2);
+                    dispIIPElements(lblRefDes_2, txtMultiRefDes_2, lblPartNum_2, txtMultiPartNum_2, cbItem_2, cbProblem_2, dgMultipleParts_2, btnAddRefPart_2, brdRefDes_2);
                 }
                 else if (chosenOption.EndsWith("3"))
                 {
-                    dispIIPElements(lblRefDes_3, txtMultiRefDes_3, lblPartNum_3, txtMultiPartNum_3, cbItem_3, cbProblem_3, dgMultipleParts_3, btnAddRefPart_3);
+                    dispIIPElements(lblRefDes_3, txtMultiRefDes_3, lblPartNum_3, txtMultiPartNum_3, cbItem_3, cbProblem_3, dgMultipleParts_3, btnAddRefPart_3, brdRefDes_3);
                 }
             }
         }

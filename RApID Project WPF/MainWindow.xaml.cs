@@ -115,14 +115,12 @@ namespace RApID_Project_WPF
                 switch (((Control)sender).Name.ToString())
                 {
                     case "btnRework":
-                        var fpr = new frmProduction { Owner = GlobalInstance, WindowStartupLocation = WindowStartupLocation.CenterOwner };
-                        fpr.CenterWindow();
+                        var fpr = new frmProduction { Owner = this, WindowStartupLocation = WindowStartupLocation.CenterOwner };                        
                         fpr.Show();
                         Hide();
                         break;
                     case "btnRepair":
-                        var rpr = new frmRepair(false) { Owner = GlobalInstance, WindowStartupLocation = WindowStartupLocation.CenterOwner };
-                        rpr.CenterWindow();
+                        var rpr = new frmRepair(false) { Owner = this, WindowStartupLocation = WindowStartupLocation.CenterOwner };
                         rpr.Show();
                         Hide();
                         break;
@@ -130,13 +128,12 @@ namespace RApID_Project_WPF
                         Process.Start(Properties.Settings.Default.DefaultReportManagerLink);
                         break;
                     case "btnQCDQE":
-                        var fQC = new frmQCDQE { Owner = GlobalInstance, WindowStartupLocation = WindowStartupLocation.CenterOwner };
-                        fQC.CenterWindow();
+                        var fQC = new frmQCDQE { Owner = this, WindowStartupLocation = WindowStartupLocation.CenterOwner };
                         fQC.Show();
                         Hide();
                         break;
                     case "btnSettings":
-                        var fSettings = new frmSettings { Owner = GlobalInstance, WindowStartupLocation = WindowStartupLocation.CenterOwner };
+                        var fSettings = new frmSettings { Owner = this, WindowStartupLocation = WindowStartupLocation.CenterOwner  };
                         fSettings.Show();
                         Hide();
                         break;

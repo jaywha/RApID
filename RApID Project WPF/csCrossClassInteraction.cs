@@ -1217,7 +1217,7 @@ namespace RApID_Project_WPF
 
                 try
                 {
-                    cbox.Focus();
+                    cbox.Focus();                    
                     cbox.RaiseEvent(new RoutedEventArgs(Control.MouseDoubleClickEvent));
                 } catch(Exception ie)
                 {

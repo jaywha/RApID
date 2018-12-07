@@ -53,6 +53,7 @@ namespace RApID_Project_WPF
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
+            Hide();
             initS.InitSplash1("Initializing Form...");
             buildDGViews();
             csSplashScreenHelper.ShowText("Loading DataLog...");
@@ -71,6 +72,8 @@ namespace RApID_Project_WPF
 #if DEBUG
             //txtBarcode.Text = "131119030211";
 #endif
+            WindowState = WindowState.Maximized;
+            Show();
         }
 
 
@@ -332,6 +335,10 @@ namespace RApID_Project_WPF
             txtPartNumber.Text = string.Empty;
             txtSeries.Text = string.Empty;
             txtCommSubClass.Text = string.Empty;
+
+            brdRefDes.BorderThickness = new Thickness(0.0);
+            brdRefDes_2.BorderThickness = new Thickness(0.0);
+            brdRefDes_3.BorderThickness = new Thickness(0.0);
 
             txtQTY.Text = string.Empty;
             lblQTY.Visibility = Visibility.Hidden;
@@ -1878,6 +1885,22 @@ namespace RApID_Project_WPF
                     {
                         sVar.LogHandler.CreateLogAction((Button)sender, csLogging.LogState.CLICK);
 
+                        if (!txtRefDes_2.Items.Contains(txtRefDes_2.Text)
+                            || dgMultipleParts_2.Items
+                        .OfType<MultiplePartsReplaced>()
+                        .Where(mpr => mpr.RefDesignator.Equals(txtRefDes_2.Text)).Count() > 0)
+                        {
+                            brdRefDes_2.BorderBrush = Brushes.Red;
+                            brdRefDes_2.BorderThickness = new Thickness(1.0);
+                            MessageBox.Show("Invalid Ref Designator", $"{txtRefDes_2.Text} is not a valid designator!", MessageBoxButton.OK, MessageBoxImage.Warning);
+                            return;
+                        }
+                        else
+                        {
+                            brdRefDes_2.BorderBrush = null;
+                            brdRefDes_2.BorderThickness = new Thickness(0.0);
+                        }
+
                         string _sPRPD = getPartReplacedPartDescription(txtPartReplaced_2.Text);
 
                         if (string.IsNullOrEmpty(_sPRPD) && !string.IsNullOrEmpty(txtPartReplaced_2.Text))
@@ -1908,6 +1931,22 @@ namespace RApID_Project_WPF
                     else
                     {
                         sVar.LogHandler.CreateLogAction((Button)sender, csLogging.LogState.CLICK);
+
+                        if (!txtRefDes_3.Items.Contains(txtRefDes_3.Text)
+                            || dgMultipleParts_3.Items
+                        .OfType<MultiplePartsReplaced>()
+                        .Where(mpr => mpr.RefDesignator.Equals(txtRefDes_3.Text)).Count() > 0)
+                        {
+                            brdRefDes_3.BorderBrush = Brushes.Red;
+                            brdRefDes_3.BorderThickness = new Thickness(1.0);
+                            MessageBox.Show("Invalid Ref Designator", $"{txtRefDes_3.Text} is not a valid designator!", MessageBoxButton.OK, MessageBoxImage.Warning);
+                            return;
+                        }
+                        else
+                        {
+                            brdRefDes_3.BorderBrush = null;
+                            brdRefDes_3.BorderThickness = new Thickness(0.0);
+                        }
 
                         string _sPRPD = getPartReplacedPartDescription(txtPartReplaced_3.Text);
 
@@ -1941,7 +1980,10 @@ namespace RApID_Project_WPF
                 {
                     sVar.LogHandler.CreateLogAction((Button)sender, csLogging.LogState.CLICK);
 
-                    if(!txtRefDes.Items.Contains(txtRefDes.Text))
+                    if(!txtRefDes.Items.Contains(txtRefDes.Text)
+                        || dgMultipleParts.Items
+                        .OfType<MultiplePartsReplaced>()
+                        .Where(mpr => mpr.RefDesignator.Equals(txtRefDes.Text)).Count() > 0)
                     {
                         brdRefDes.BorderBrush = Brushes.Red;
                         brdRefDes.BorderThickness = new Thickness(1.0);

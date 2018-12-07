@@ -40,6 +40,7 @@ namespace RApID_Project_WPF
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
+            Hide();
             initS.InitSplash1("Initializing form...");
             buildDGViews();
             csSplashScreenHelper.ShowText("Handling Serial Port...");
@@ -59,7 +60,8 @@ namespace RApID_Project_WPF
             #if DEBUG
                 txtRepairBarcode.Text = "123456";
             #endif
-            
+            WindowState = WindowState.Maximized;
+            Show();
         }
 
         private void setupLogging()

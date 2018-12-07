@@ -3,7 +3,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:rapid_project_wpf="clr-namespace:RApID_Project_WPF"
         xmlns:uc="clr-namespace:RApID_Project_WPF.UserControls"
-        Title="Production" Width="1104" Height="815" MinWidth="300" MinHeight="300" WindowState="Maximized" Background="#FF808285" Loaded="Window_Loaded" Closing="Window_Closing">
+        Title="Production" Width="1104" Height="815" MinWidth="300" MinHeight="300" Background="#FF808285" Loaded="Window_Loaded" Closing="Window_Closing">
     <Window.Resources>
         <Style x:Key="TextboxBaseStyle" TargetType="{x:Type TextBox}">
             <Setter Property="Width" Value="195" />
@@ -176,7 +176,9 @@
                                     <ComboBox Name="cbProblem" Margin="150,275,0,0" DropDownClosed="cbDDClosed" Style="{StaticResource Combobox}"  Width="137" IsEnabled="False"/>
 
                                     <Label Name="lblRefDes" Content="Ref Designator" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10,310,0,0" Visibility="Hidden"/>
-                                    <ComboBox x:Name="txtMultiRefDes" IsEditable="True" Margin="10,335,0,0" Style="{StaticResource Combobox}" IsReadOnly="False" Width="100" Visibility="Hidden" KeyUp="txtMultiRefKeyUp" SelectionChanged="refDesIndexChanged"/>
+                                    <Border x:Name="brdRefDes" Margin="10,335,180,226">
+                                        <ComboBox x:Name="txtMultiRefDes" IsEditable="True" Style="{StaticResource Combobox}" IsReadOnly="False" Width="100" Visibility="Hidden" KeyUp="txtMultiRefKeyUp" SelectionChanged="refDesIndexChanged"/>
+                                    </Border>
 
                                     <Label Name="lblPartNum" Content="Part Number" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="150,310,0,0" Visibility="Hidden"/>
                                     <ComboBox x:Name="txtMultiPartNum" Margin="150,335,0,0" Style="{StaticResource Combobox}" IsReadOnly="True" Width="100" Visibility="Hidden" IsEnabled="False"/>
@@ -208,7 +210,9 @@
                                     <ComboBox Name="cbProblem_2" Margin="150,275,0,0" DropDownClosed="cbDDClosed" Style="{StaticResource Combobox}"  Width="137" IsEnabled="False"/>
 
                                     <Label Name="lblRefDes_2" Content="Ref Designator" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10,310,0,0" Visibility="Hidden"/>
-                                    <ComboBox x:Name="txtMultiRefDes_2" IsEditable="True" Margin="10,335,0,0" Style="{StaticResource Combobox}" IsReadOnly="False" Width="100" Visibility="Hidden" KeyUp="txtMultiRefKeyUp" SelectionChanged="refDesIndexChanged"/>
+                                    <Border x:Name="brdRefDes_2" Margin="10,335,180,226">
+                                        <ComboBox x:Name="txtMultiRefDes_2" IsEditable="True" Style="{StaticResource Combobox}" IsReadOnly="False" Width="100" Visibility="Hidden" KeyUp="txtMultiRefKeyUp" SelectionChanged="refDesIndexChanged"/>
+                                    </Border>
 
                                     <Label Name="lblPartNum_2" Content="Part Number" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="150,310,0,0" Visibility="Hidden"/>
                                     <ComboBox x:Name="txtMultiPartNum_2" Margin="150,335,0,0" Style="{StaticResource Combobox}" IsReadOnly="True" Width="100" Visibility="Hidden" IsEnabled="False"/>
@@ -240,7 +244,9 @@
                                     <ComboBox Name="cbProblem_3" Margin="150,275,0,0" DropDownClosed="cbDDClosed" Style="{StaticResource Combobox}"  Width="137" IsEnabled="False"/>
 
                                     <Label Name="lblRefDes_3" Content="Ref Designator" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10,310,0,0" Visibility="Hidden"/>
-                                    <ComboBox x:Name="txtMultiRefDes_3" IsEditable="True" Margin="10,335,0,0" Style="{StaticResource Combobox}" IsReadOnly="False" Width="100" Visibility="Hidden" KeyUp="txtMultiRefKeyUp" SelectionChanged="refDesIndexChanged"/>
+                                    <Border x:Name="brdRefDes_3" Margin="10,335,180,226">
+                                        <ComboBox x:Name="txtMultiRefDes_3" IsEditable="True" Style="{StaticResource Combobox}" IsReadOnly="False" Width="100" Visibility="Hidden" KeyUp="txtMultiRefKeyUp" SelectionChanged="refDesIndexChanged"/>
+                                    </Border>
 
                                     <Label Name="lblPartNum_3" Content="Part Number" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="150,310,0,0" Visibility="Hidden"/>
                                     <ComboBox x:Name="txtMultiPartNum_3" Margin="150,335,0,0" Style="{StaticResource Combobox}" IsReadOnly="True" Width="100" Visibility="Hidden" IsEnabled="False"/>

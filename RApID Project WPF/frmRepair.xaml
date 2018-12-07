@@ -4,7 +4,7 @@
         xmlns:behaviors="clr-namespace:WPFTextBoxAutoComplete;assembly=WPFTextBoxAutoComplete"
         xmlns:rapid_project_wpf="clr-namespace:RApID_Project_WPF"
         xmlns:uc="clr-namespace:RApID_Project_WPF.UserControls"
-        Title="Repair" Width="1104" Height="815" MinWidth="300" MinHeight="300" Loaded="Window_Loaded" Closing="Window_Closing" Background="#FF808285" WindowState="Maximized">
+        Title="Repair" Width="1104" Height="815" MinWidth="300" MinHeight="300" Loaded="Window_Loaded" Closing="Window_Closing" Background="#FF808285">
     <Window.Resources>
         <Style x:Key="TextboxBaseStyle" TargetType="{x:Type TextBox}">
             <Setter Property="Width" Value="195" />
@@ -229,8 +229,10 @@
                                     <ComboBox Name="cbReplacement_2" Margin="10,275,0,0" DropDownClosed="cbDDClosed" Style="{StaticResource Combobox}" />
 
                                     <Label Content="Ref Designator" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10,310,0,0" />
-                                    <ComboBox x:Name="txtRefDes_2" IsTextSearchEnabled="False" IsEditable="True" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10,335,0,0" VerticalContentAlignment="Center" Width="100" Height="23"
-                                              SelectionChanged="refDesIndexChanged" GotFocus="txtGotFocus" LostFocus="txtLostFocus" KeyUp="txtMultiRefKeyUp"/>
+                                    <Border x:Name="brdRefDes_2" Margin="10,335,180,226">
+                                        <ComboBox x:Name="txtRefDes_2" IsTextSearchEnabled="False" IsEditable="True" HorizontalAlignment="Left" VerticalAlignment="Top" VerticalContentAlignment="Center" Width="100" Height="23"
+                                                  SelectionChanged="refDesIndexChanged" GotFocus="txtGotFocus" LostFocus="txtLostFocus" KeyUp="txtMultiRefKeyUp"/>
+                                    </Border>
 
                                     <Label Content="Part Replaced" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="115,310,0,0" />
                                     <ComboBox x:Name="txtPartReplaced_2" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="115,335,0,0" VerticalContentAlignment="Center" Width="100" Height="23" IsReadOnly="True" IsEnabled="False" />
@@ -259,8 +261,10 @@
                                     <ComboBox Name="cbReplacement_3" Margin="10,275,0,0" DropDownClosed="cbDDClosed" Style="{StaticResource Combobox}" />
 
                                     <Label Content="Ref Designator" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10,310,0,0" />
-                                    <ComboBox x:Name="txtRefDes_3" IsTextSearchEnabled="False" IsEditable="True" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10,335,0,0" VerticalContentAlignment="Center" Width="100" Height="23"
+                                    <Border x:Name="brdRefDes_3" Margin="10,335,180,226">
+                                        <ComboBox x:Name="txtRefDes_3" IsTextSearchEnabled="False" IsEditable="True" HorizontalAlignment="Left" VerticalAlignment="Top" VerticalContentAlignment="Center" Width="100" Height="23"
                                               SelectionChanged="refDesIndexChanged" GotFocus="txtGotFocus" LostFocus="txtLostFocus" KeyUp="txtMultiRefKeyUp"/>
+                                    </Border>
 
                                     <Label Content="Part Replaced" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="115,310,0,0" />
                                     <ComboBox x:Name="txtPartReplaced_3" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="115,335,0,0" VerticalContentAlignment="Center" Width="100" Height="23" IsReadOnly="True" IsEnabled="False" />
