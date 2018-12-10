@@ -271,7 +271,7 @@ namespace RApID_Project_WPF
             var filename = "";
             var found = false;
 
-            Console.WriteLine("Running find...");
+            Console.WriteLine($"Running find... using data package {AsDataPackage()}");
 
             if (BIsIce && ext.Equals(".pdf"))
             {
@@ -289,7 +289,7 @@ namespace RApID_Project_WPF
                 await Task.Factory.StartNew(new Action(() =>
                 {
                     foreach (var file in FileFind.EnumerateFiles(Directory.GetDirectories(SchemaPath, $@"*{ComponentNumber}*", SearchOption.TopDirectoryOnly)[0],
-                        $@"*{ComponentNumber}*{ext}*", SearchOrder.AllDirectories).Where(f => !f.Contains("Archive")))
+                        $@"*{PartNumber}*{ext}*", SearchOrder.AllDirectories).Where(f => !f.Contains("Archive")))
                     {
                         var dirstatus = $"Checking {file} as possible file...";
                         Console.WriteLine(dirstatus);
@@ -356,5 +356,16 @@ namespace RApID_Project_WPF
         /// </summary>
         /// <exception cref="T:System.NotImplementedException"></exception>
         public void Dispose() => _mapperInstance = null;
+
+        /// <summary>
+        /// Helper function to get all property values as an aggregated <see cref="string"/>.
+        /// </summary>
+        /// <returns>A preformatted string of values.</returns>
+        public string AsDataPackage() => "{\n" +
+                $"\tBarcode Number: {BarcodeNumber}\n" +
+                $"\tPart Number: {PartNumber}\n" +
+                $"\tComponent Number: {ComponentNumber}\n" +
+                $"\tWork Order Number: {WorkNumber}\n" +
+                "}\n";
     }
 }

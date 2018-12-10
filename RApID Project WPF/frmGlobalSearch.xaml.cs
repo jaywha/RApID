@@ -32,8 +32,8 @@ namespace RApID_Project_WPF
             dpEndDate.SelectedDate = DateTime.Now;
         }
 
-        private static frmGlobalSearch _instance;
-        public static frmGlobalSearch Instance { get; } = _instance ?? new frmGlobalSearch();
+        private static frmGlobalSearch _instance = _instance ?? new frmGlobalSearch();
+        public static frmGlobalSearch Instance { get; }
 
         private void wndMain_Loaded(object sender, RoutedEventArgs e)
         {            

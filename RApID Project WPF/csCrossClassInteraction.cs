@@ -162,6 +162,12 @@ namespace RApID_Project_WPF
                 await Task.Factory.StartNew(new Action(() =>
                 {
                     if (progData != null) progData.Dispatcher.Invoke(() => progData.Visibility = Visibility.Visible);
+                    if (string.IsNullOrEmpty(filePath)) {
+                        MainWindow.Notify.ShowBalloonTip("Couldn't find BOM File",
+                            "The BOM file path was empty! There're no autocomplete or quick links available.\nPlease alert Dex or Jay.", 
+                            Hardcodet.Wpf.TaskbarNotification.BalloonIcon.Warning);
+                        return;
+                    }
 
                     using (var stream = File.Open(filePath, FileMode.Open, FileAccess.Read))
                     {
