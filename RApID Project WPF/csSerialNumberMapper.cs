@@ -288,7 +288,7 @@ namespace RApID_Project_WPF
             {
                 await Task.Factory.StartNew(new Action(() =>
                 {
-                    foreach (var file in FileFind.EnumerateFiles(Directory.GetDirectories(SchemaPath, $@"*{ComponentNumber}*", SearchOption.TopDirectoryOnly)[0],
+                    foreach (var file in FileFind.EnumerateFiles(Directory.GetDirectories(SchemaPath, $@"*{ComponentNumber}*", SearchOption.TopDirectoryOnly).Last(),
                         $@"*{PartNumber}*{ext}*", SearchOrder.AllDirectories).Where(f => !f.Contains("Archive")))
                     {
                         var dirstatus = $"Checking {file} as possible file...";
