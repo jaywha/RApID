@@ -609,100 +609,116 @@ namespace RApID_Project_WPF
 
             var newRecord = new Record();
 
-            if (vals[vindex] == null || vals[vindex] == DBNull.Value) { vals[vindex] = default; }
+            if (vals[vindex] == null || vals[vindex] == DBNull.Value) { vals[vindex] = Default.Value; }
             newRecord.ID = int.TryParse(vals[vindex]?.ToString(), out int id_res) ? id_res : 0; vindex++;
-            if (vals[vindex] == null || vals[vindex] == DBNull.Value) { vals[vindex] = default; }
+            if (vals[vindex] == null || vals[vindex] == DBNull.Value) { vals[vindex] = Default.Value; }
             newRecord.Technician = vals[vindex]?.ToString() ?? ""; vindex++;
-            if (vals[vindex] == null || vals[vindex] == DBNull.Value) { vals[vindex] = default; }
+            if (vals[vindex] == null || vals[vindex] == DBNull.Value) { vals[vindex] = Default.Value; }
             newRecord.DateReceived = DateTime.TryParse(vals[vindex]?.ToString(), out DateTime drec_res) ? drec_res : DateTime.Now.AddYears(-100); vindex++;
-            if (vals[vindex] == null || vals[vindex] == DBNull.Value) { vals[vindex] = default; }
+            if (vals[vindex] == null || vals[vindex] == DBNull.Value) { vals[vindex] = Default.Value; }
             newRecord.PartName = vals[vindex]?.ToString() ?? ""; vindex++;
-            if (vals[vindex] == null || vals[vindex] == DBNull.Value) { vals[vindex] = default; }
+            if (vals[vindex] == null || vals[vindex] == DBNull.Value) { vals[vindex] = Default.Value; }
             newRecord.PartNumber = vals[vindex]?.ToString() ?? ""; vindex++;
-            if (vals[vindex] == null || vals[vindex] == DBNull.Value) { vals[vindex] = default; }
+            if (vals[vindex] == null || vals[vindex] == DBNull.Value) { vals[vindex] = Default.Value; }
             newRecord.CommoditySubClass = vals[vindex]?.ToString() ?? ""; vindex++;
-            if (vals[vindex] == null || vals[vindex] == DBNull.Value) { vals[vindex] = default; }
+            if (vals[vindex] == null || vals[vindex] == DBNull.Value) { vals[vindex] = Default.Value; }
             newRecord.Quantity = int.TryParse(vals[vindex]?.ToString(), out int q_res) ? q_res : 0; vindex++;
-            if (vals[vindex] == null || vals[vindex] == DBNull.Value) { vals[vindex] = default; }
+            if (vals[vindex] == null || vals[vindex] == DBNull.Value) { vals[vindex] = Default.Value; }
             newRecord.SoftwareVersion = vals[vindex]?.ToString() ?? ""; vindex++;
-            if (vals[vindex] == null || vals[vindex] == DBNull.Value) { vals[vindex] = default; }
+            if (vals[vindex] == null || vals[vindex] == DBNull.Value) { vals[vindex] = Default.Value; }
             newRecord.Scrap = vals[vindex]?.ToString().Equals("1") ?? false; vindex++;
-            if (vals[vindex] == null || vals[vindex] == DBNull.Value) { vals[vindex] = default; }
+            if (vals[vindex] == null || vals[vindex] == DBNull.Value) { vals[vindex] = Default.Value; }
             newRecord.TypeOfReturn = vals[vindex]?.ToString() ?? ""; vindex++;
-            if (vals[vindex] == null || vals[vindex] == DBNull.Value) { vals[vindex] = default; }
+            if (vals[vindex] == null || vals[vindex] == DBNull.Value) { vals[vindex] = Default.Value; }
             newRecord.TypeOfFailure = vals[vindex]?.ToString() ?? ""; vindex++;
-            if (vals[vindex] == null || vals[vindex] == DBNull.Value) { vals[vindex] = default; }
+            if (vals[vindex] == null || vals[vindex] == DBNull.Value) { vals[vindex] = Default.Value; }
             newRecord.HoursOnUnit = vals[vindex]?.ToString() ?? ""; vindex++;
-            if (vals[vindex] == null || vals[vindex] == DBNull.Value) { vals[vindex] = default; }
+            if (vals[vindex] == null || vals[vindex] == DBNull.Value) { vals[vindex] = Default.Value; }
             newRecord.ReportedIssue = vals[vindex]?.ToString() ?? ""; vindex++;
-            if (vals[vindex] == null || vals[vindex] == DBNull.Value) { vals[vindex] = default; }
+            if (vals[vindex] == null || vals[vindex] == DBNull.Value) { vals[vindex] = Default.Value; }
             newRecord.TestResult = vals[vindex]?.ToString() ?? ""; vindex++;
-            if (vals[vindex] == null || vals[vindex] == DBNull.Value) { vals[vindex] = default; }
+            if (vals[vindex] == null || vals[vindex] == DBNull.Value) { vals[vindex] = Default.Value; }
             newRecord.TestResultAbort = vals[vindex]?.ToString() ?? ""; vindex++;
-            if (vals[vindex] == null || vals[vindex] == DBNull.Value) { vals[vindex] = default; }
+            if (vals[vindex] == null || vals[vindex] == DBNull.Value) { vals[vindex] = Default.Value; }
             newRecord.Cause = vals[vindex]?.ToString() ?? ""; vindex++;
-            if (vals[vindex] == null || vals[vindex] == DBNull.Value) { vals[vindex] = default; }
+            if (vals[vindex] == null || vals[vindex] == DBNull.Value) { vals[vindex] = Default.Value; }
             newRecord.Replacement = vals[vindex]?.ToString() ?? ""; vindex++;
-            if (vals[vindex] == null || vals[vindex] == DBNull.Value) { vals[vindex] = default; }
+            if (vals[vindex] == null || vals[vindex] == DBNull.Value) { vals[vindex] = Default.Value; }
             newRecord.PartsReplaced = vals[vindex]?.ToString() ?? ""; vindex++;
-            if (vals[vindex] == null || vals[vindex] == DBNull.Value) { vals[vindex] = default; }
+            if (vals[vindex] == null || vals[vindex] == DBNull.Value) { vals[vindex] = Default.Value; }
             newRecord.RefDesignator = vals[vindex]?.ToString() ?? ""; vindex++;
-            if (vals[vindex] == null || vals[vindex] == DBNull.Value) { vals[vindex] = default; }
+            if (vals[vindex] == null || vals[vindex] == DBNull.Value) { vals[vindex] = Default.Value; }
             newRecord.AdditionalComments = vals[vindex]?.ToString() ?? ""; vindex++;
-            if (vals[vindex] == null || vals[vindex] == DBNull.Value) { vals[vindex] = default; }
+            if (vals[vindex] == null || vals[vindex] == DBNull.Value) { vals[vindex] = Default.Value; }
             newRecord.CustomerNumber = int.TryParse(vals[vindex]?.ToString(), out int cust_res) ? cust_res : 0; vindex++;
-            if (vals[vindex] == null || vals[vindex] == DBNull.Value) { vals[vindex] = default; }
+            if (vals[vindex] == null || vals[vindex] == DBNull.Value) { vals[vindex] = Default.Value; }
             newRecord.SerialNumber = vals[vindex]?.ToString() ?? ""; vindex++;
-            if (vals[vindex] == null || vals[vindex] == DBNull.Value) { vals[vindex] = default; }
+            if (vals[vindex] == null || vals[vindex] == DBNull.Value) { vals[vindex] = Default.Value; }
             newRecord.DateSubmitted = DateTime.TryParse(vals[vindex]?.ToString(), out DateTime dsub_res) ? dsub_res : DateTime.Now.AddYears(-50); vindex++;
-            if (vals[vindex] == null || vals[vindex] == DBNull.Value) { vals[vindex] = default; }
+            if (vals[vindex] == null || vals[vindex] == DBNull.Value) { vals[vindex] = Default.Value; }
             newRecord.SubmissionStatus = vals[vindex]?.ToString() ?? ""; vindex++;
-            if (vals[vindex] == null || vals[vindex] == DBNull.Value) { vals[vindex] = default; }
+            if (vals[vindex] == null || vals[vindex] == DBNull.Value) { vals[vindex] = Default.Value; }
             newRecord.Quality = vals[vindex]?.ToString() ?? ""; vindex++;
-            if (vals[vindex] == null || vals[vindex] == DBNull.Value) { vals[vindex] = default; }
+            if (vals[vindex] == null || vals[vindex] == DBNull.Value) { vals[vindex] = Default.Value; }
             newRecord.RP = vals[vindex]?.ToString() ?? ""; vindex++;
-            if (vals[vindex] == null || vals[vindex] == DBNull.Value) { vals[vindex] = default; }
+            if (vals[vindex] == null || vals[vindex] == DBNull.Value) { vals[vindex] = Default.Value; }
             newRecord.TechAct1 = vals[vindex]?.ToString() ?? ""; vindex++;
-            if (vals[vindex] == null || vals[vindex] == DBNull.Value) { vals[vindex] = default; }
+            if (vals[vindex] == null || vals[vindex] == DBNull.Value) { vals[vindex] = Default.Value; }
             newRecord.TechAct2 = vals[vindex]?.ToString() ?? ""; vindex++;
-            if (vals[vindex] == null || vals[vindex] == DBNull.Value) { vals[vindex] = default; }
+            if (vals[vindex] == null || vals[vindex] == DBNull.Value) { vals[vindex] = Default.Value; }
             newRecord.TechAct3 = vals[vindex]?.ToString() ?? ""; vindex++;
-            if (vals[vindex] == null || vals[vindex] == DBNull.Value) { vals[vindex] = default; }
+            if (vals[vindex] == null || vals[vindex] == DBNull.Value) { vals[vindex] = Default.Value; }
             newRecord.QCDQEComments = vals[vindex]?.ToString() ?? ""; vindex++;
-            if (vals[vindex] == null || vals[vindex] == DBNull.Value) { vals[vindex] = default; }
+            if (vals[vindex] == null || vals[vindex] == DBNull.Value) { vals[vindex] = Default.Value; }
             newRecord.OrderNumber = vals[vindex]?.ToString() ?? ""; vindex++;
-            if (vals[vindex] == null || vals[vindex] == DBNull.Value) { vals[vindex] = default; }
+            if (vals[vindex] == null || vals[vindex] == DBNull.Value) { vals[vindex] = Default.Value; }
             newRecord.ProblemCode1 = vals[vindex]?.ToString() ?? ""; vindex++;
-            if (vals[vindex] == null || vals[vindex] == DBNull.Value) { vals[vindex] = default; }
+            if (vals[vindex] == null || vals[vindex] == DBNull.Value) { vals[vindex] = Default.Value; }
             newRecord.ProblemCode2 = vals[vindex]?.ToString() ?? ""; vindex++;
-            if (vals[vindex] == null || vals[vindex] == DBNull.Value) { vals[vindex] = default; }
+            if (vals[vindex] == null || vals[vindex] == DBNull.Value) { vals[vindex] = Default.Value; }
             newRecord.RepairCode = vals[vindex]?.ToString() ?? ""; vindex++;
-            if (vals[vindex] == null || vals[vindex] == DBNull.Value) { vals[vindex] = default; }
+            if (vals[vindex] == null || vals[vindex] == DBNull.Value) { vals[vindex] = Default.Value; }
             newRecord.TechComments = vals[vindex]?.ToString() ?? ""; vindex++;
-            if (vals[vindex] == null || vals[vindex] == DBNull.Value) { vals[vindex] = default; }
+            if (vals[vindex] == null || vals[vindex] == DBNull.Value) { vals[vindex] = Default.Value; }
             newRecord.LineNumber = decimal.TryParse(vals[vindex]?.ToString(), out decimal line_res) ? line_res : 0.0m; vindex++;
-            if (vals[vindex] == null || vals[vindex] == DBNull.Value) { vals[vindex] = default; }
+            if (vals[vindex] == null || vals[vindex] == DBNull.Value) { vals[vindex] = Default.Value; }
             newRecord.ProcessedFlag = char.TryParse(vals[vindex]?.ToString(), out char c_res) ? c_res : ' '; vindex++;
-            if (vals[vindex] == null || vals[vindex] == DBNull.Value) { vals[vindex] = default; }
+            if (vals[vindex] == null || vals[vindex] == DBNull.Value) { vals[vindex] = Default.Value; }
             newRecord.ProcessedDateTime = DateTime.TryParse(vals[vindex]?.ToString(), out DateTime dpro_res) ? dpro_res : DateTime.Now.AddYears(-25); vindex++;
-            if (vals[vindex] == null || vals[vindex] == DBNull.Value) { vals[vindex] = default; }
+            if (vals[vindex] == null || vals[vindex] == DBNull.Value) { vals[vindex] = Default.Value; }
             newRecord.Series = vals[vindex]?.ToString() ?? ""; vindex++;
-            if (vals[vindex] == null || vals[vindex] == DBNull.Value) { vals[vindex] = default; }
+            if (vals[vindex] == null || vals[vindex] == DBNull.Value) { vals[vindex] = Default.Value; }
             newRecord.FromArea = vals[vindex]?.ToString() ?? ""; vindex++;
-            if (vals[vindex] == null || vals[vindex] == DBNull.Value) { vals[vindex] = default; }
+            if (vals[vindex] == null || vals[vindex] == DBNull.Value) { vals[vindex] = Default.Value; }
             newRecord.SaveID = vals[vindex]?.ToString() ?? ""; vindex++;
-            if (vals[vindex] == null || vals[vindex] == DBNull.Value) { vals[vindex] = default; }
+            if (vals[vindex] == null || vals[vindex] == DBNull.Value) { vals[vindex] = Default.Value; }
             newRecord.QCDQEDateSubmitted = DateTime.TryParse(vals[vindex]?.ToString(), out DateTime ddqe_res) ? ddqe_res : DateTime.Now.AddYears(-5); vindex++;
-            if (vals[vindex] == null || vals[vindex] == DBNull.Value) { vals[vindex] = default; }
+            if (vals[vindex] == null || vals[vindex] == DBNull.Value) { vals[vindex] = Default.Value; }
             newRecord.Issue = vals[vindex]?.ToString() ?? ""; vindex++;
-            if (vals[vindex] == null || vals[vindex] == DBNull.Value) { vals[vindex] = default; }
+            if (vals[vindex] == null || vals[vindex] == DBNull.Value) { vals[vindex] = Default.Value; }
             newRecord.Item = vals[vindex]?.ToString() ?? ""; vindex++;
-            if (vals[vindex] == null || vals[vindex] == DBNull.Value) { vals[vindex] = default; }
+            if (vals[vindex] == null || vals[vindex] == DBNull.Value) { vals[vindex] = Default.Value; }
             newRecord.Problem = vals[vindex]?.ToString() ?? ""; vindex++;
-            if (vals[vindex] == null || vals[vindex] == DBNull.Value) { vals[vindex] = default; }
+            if (vals[vindex] == null || vals[vindex] == DBNull.Value) { vals[vindex] = Default.Value; }
             newRecord.LogID = long.TryParse(vals[vindex]?.ToString(), out long id_log) ? id_log : 0L;
 
             return newRecord;
         }
+    }
+
+    /// <summary>
+    /// Delegate class for the <see cref="default"/> literal only usable in C# 7.1 or greater.
+    /// </summary>
+    public class Default
+    {
+        /// <summary>
+        /// Placeholder null field - shouldn't ever really have a value.
+        /// </summary>
+        public static object Value = null;
+
+        public static implicit operator string(Default d) => string.Empty;
+        public static implicit operator int(Default d) => 0;
+        public static implicit operator long(Default d) => 0L;
+        public static implicit operator char(Default d) => '\0';
     }
 }
