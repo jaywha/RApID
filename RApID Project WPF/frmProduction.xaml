@@ -3,6 +3,8 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:rapid_project_wpf="clr-namespace:RApID_Project_WPF"
         xmlns:uc="clr-namespace:RApID_Project_WPF.UserControls"
+        xmlns:sys="clr-namespace:System;assembly=mscorlib"
+        x:Name="wndMain"
         Title="Production" Width="1104" Height="815" MinWidth="300" MinHeight="300" Background="#FF808285" Loaded="Window_Loaded" Closing="Window_Closing">
     <Window.Resources>
         <Style x:Key="TextboxBaseStyle" TargetType="{x:Type TextBox}">
@@ -102,6 +104,9 @@
             <Setter Property="Width" Value="55"/>
             <Setter Property="Height" Value="30"/>
         </Style>
+
+        <uc:BoolToNotBoolConverter x:Key="NegateBoolean"/>
+        <uc:BoolToStringConverter x:Key="StatusConv"/>
     </Window.Resources>
 
     <Viewbox Stretch="Uniform">
@@ -181,7 +186,10 @@
                                     </Border>
 
                                     <Label Name="lblPartNum" Content="Part Number" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="150,310,0,0" Visibility="Hidden"/>
-                                    <ComboBox x:Name="txtMultiPartNum" Margin="150,335,0,0" Style="{StaticResource Combobox}" IsReadOnly="True" Width="100" Visibility="Hidden" IsEnabled="False"/>
+                                    <ComboBox x:Name="txtMultiPartNum" Margin="150,335,0,0" Style="{StaticResource Combobox}" Width="100" Visibility="Hidden"
+                                              IsReadOnly="{Binding ElementName=wndMain, Path=BOMFileActive, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                              IsEditable="{Binding ElementName=wndMain, Path=BOMFileActive, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged,Converter={StaticResource NegateBoolean}}"
+                                              IsEnabled="{Binding ElementName=wndMain, Path=BOMFileActive, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged,Converter={StaticResource NegateBoolean}}"/>
                                     <Button Name="btnAddRefPart" Margin="255,335,0,0" Content="Add" HorizontalAlignment="Left" VerticalAlignment="Top" Width="35" Visibility="Hidden" Click="btnAddRefPart_Click"/>
 
                                     <DataGrid Name="dgMultipleParts" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10,370,0,0" Width="275" Height="180" IsReadOnly="True" BeginningEdit="dgBeginEdit" Visibility="Hidden" KeyUp="dataGrid_KeyUp"/>
@@ -215,7 +223,10 @@
                                     </Border>
 
                                     <Label Name="lblPartNum_2" Content="Part Number" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="150,310,0,0" Visibility="Hidden"/>
-                                    <ComboBox x:Name="txtMultiPartNum_2" Margin="150,335,0,0" Style="{StaticResource Combobox}" IsReadOnly="True" Width="100" Visibility="Hidden" IsEnabled="False"/>
+                                    <ComboBox x:Name="txtMultiPartNum_2" Margin="150,335,0,0" Style="{StaticResource Combobox}" Width="100" Visibility="Hidden"
+                                              IsReadOnly="{Binding ElementName=wndMain, Path=BOMFileActive, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
+                                              IsEditable="{Binding ElementName=wndMain, Path=BOMFileActive, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged,Converter={StaticResource NegateBoolean}}"
+                                              IsEnabled="{Binding ElementName=wndMain, Path=BOMFileActive, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged,Converter={StaticResource NegateBoolean}}"/>
                                     <Button Name="btnAddRefPart_2" Margin="255,335,0,0" Content="Add" HorizontalAlignment="Left" VerticalAlignment="Top" Width="35" Visibility="Hidden" Click="btnAddRefPart_Click"/>
 
                                     <DataGrid Name="dgMultipleParts_2" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10,370,0,0" Width="275" Height="180" IsReadOnly="True" BeginningEdit="dgBeginEdit" Visibility="Hidden" KeyUp="dataGrid_KeyUp"/>
@@ -249,7 +260,10 @@
                                     </Border>
 
                                     <Label Name="lblPartNum_3" Content="Part Number" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="150,310,0,0" Visibility="Hidden"/>
-                                    <ComboBox x:Name="txtMultiPartNum_3" Margin="150,335,0,0" Style="{StaticResource Combobox}" IsReadOnly="True" Width="100" Visibility="Hidden" IsEnabled="False"/>
+                                    <ComboBox x:Name="txtMultiPartNum_3" Margin="150,335,0,0" Style="{StaticResource Combobox}" Width="100" Visibility="Hidden" 
+                                              IsReadOnly="{Binding ElementName=wndMain, Path=BOMFileActive, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                              IsEditable="{Binding ElementName=wndMain, Path=BOMFileActive, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged,Converter={StaticResource NegateBoolean}}"
+                                              IsEnabled="{Binding ElementName=wndMain, Path=BOMFileActive, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged,Converter={StaticResource NegateBoolean}}"/>
                                     <Button Name="btnAddRefPart_3" Margin="255,335,0,0" Content="Add" HorizontalAlignment="Left" VerticalAlignment="Top" Width="35" Visibility="Hidden" Click="btnAddRefPart_Click"/>
 
                                     <DataGrid Name="dgMultipleParts_3" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10,370,0,0" Width="275" Height="180" IsReadOnly="True" BeginningEdit="dgBeginEdit" Visibility="Hidden" KeyUp="dataGrid_KeyUp"/>
@@ -295,7 +309,38 @@
                 <Label Name="tbStopBits" Content="Stop Bits:" Height="34" ToolBar.OverflowMode="Never" VerticalAlignment="Top" HorizontalAlignment="Left" Padding="5,7,15,0" />
                 <Separator />
                 <Button Name="btnRebootSP" Content="Reboot" Height="29" Width="50" ToolBar.OverflowMode="Never" VerticalAlignment="Top" HorizontalAlignment="Left" Padding="0,1,0,0" BorderBrush="{DynamicResource {x:Static SystemColors.ActiveCaptionTextBrushKey}}" Background="{DynamicResource {x:Static SystemColors.GradientInactiveCaptionBrushKey}}" Click="btnRebootSP_Click" />
-                <ProgressBar Name="progMapper" Height="20" VerticalAlignment="Center" HorizontalAlignment="Right" Width="100" IsIndeterminate="True" Visibility="Collapsed"/>
+                <Separator />
+                <Label x:Name="lblBOMFileFound" VerticalAlignment="Top" VerticalContentAlignment="Top" HorizontalAlignment="Left" HorizontalContentAlignment="Left" Height="34" MouseDoubleClick="LabelDoubleClick" Margin="0,0,0,-5">
+                    <StackPanel Orientation="Horizontal" VerticalAlignment="Top" HorizontalAlignment="Left"
+                                Width="{Binding ElementName=lblBOMFileFound,Path=Width,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
+                               Height="{Binding ElementName=lblBOMFileFound,Path=Height,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}">
+                        <Label Width="{Binding Width, ElementName=lblBOMFileFound, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                               Height="{Binding Height, ElementName=lblBOMFileFound, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                               VerticalAlignment="Top" HorizontalAlignment="Left" Content="Barcode Mapper Status:" Padding="0,0,5,0"/>
+                        <Label Width="{Binding Width, ElementName=lblBOMFileFound, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                               Height="{Binding Height, ElementName=lblBOMFileFound, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                              Padding="0">
+                            <Label.Content>
+                                <Binding Path="BOMFileActive" ElementName="wndMain" Mode="TwoWay" UpdateSourceTrigger="PropertyChanged" Converter="{StaticResource StatusConv}">
+                                    <Binding.ConverterParameter>
+                                        <x:Array Type="{x:Type sys:String}">
+                                            <sys:String>Found</sys:String>
+                                            <sys:String>Not Found</sys:String>                                            
+                                        </x:Array>
+                                    </Binding.ConverterParameter>
+                                </Binding>
+                            </Label.Content>
+                        </Label>
+                    </StackPanel>
+                </Label>
+                <ProgressBar x:Name="progMapper" Height="20" VerticalAlignment="Center" HorizontalAlignment="Right" Width="100" IsIndeterminate="True" Visibility="Collapsed"/>
+                <x:Code>
+                    <![CDATA[
+                        private void /*inline*/ LabelDoubleClick(object sender, System.Windows.RoutedEventArgs args) {
+                            System.Windows.MessageBox.Show($"Label {(sender as System.Windows.Controls.Label).Name} was double clicked.","Testing inline CSharp Code",System.Windows.MessageBoxButton.OK,System.Windows.MessageBoxImage.Information);
+                        }
+                    ]]>
+                </x:Code>
             </ToolBar>
 
         </Grid>

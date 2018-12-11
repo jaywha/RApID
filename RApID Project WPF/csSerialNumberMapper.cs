@@ -98,8 +98,26 @@ namespace RApID_Project_WPF
         {
             if (string.IsNullOrEmpty(barcode) || barcode.Equals("\0")) return false; // disconnected scanners emit \0 on reconnect
             BarcodeNumber = barcode;
-            var date = DateTime.Parse($"{BarcodeNumber.Substring(2, 2)}-{BarcodeNumber.Substring(4, 2)}-{BarcodeNumber.Substring(0, 2)}");
-            var success = $"Board SN [{BarcodeNumber}] on date {date} with PN {PartNumber} & WO# {WorkNumber}";
+            DateTime date = DateTime.Now;
+            try
+            {
+                date = DateTime.Parse($"{BarcodeNumber.Substring(2, 2)}-{BarcodeNumber.Substring(4, 2)}-{BarcodeNumber.Substring(0, 2)}");
+            } catch(FormatException fe)
+            {
+                csExceptionLogger.csExceptionLogger.Write("GetData_UnusualDate", fe);
+
+                try
+                {
+                    date = DateTime.Parse($"{BarcodeNumber.Substring(5, 2)}-{BarcodeNumber.Substring(7, 2)}-{BarcodeNumber.Substring(9, 2)}");
+                }
+                catch (Exception e)
+                {
+                    csExceptionLogger.csExceptionLogger.Write("GetData_NoDateAtAll", e);
+                    return false;
+                }
+            }
+
+            var success = $"Board SN [{BarcodeNumber}] from date {date} with PN {PartNumber} & WO# {WorkNumber}";
             const string errmsg = "There was an error during AOI/EOL SQL Execution.\nPlease inform EEPT.";
 
             var hummingConn = new SqlConnection(csObjectHolder.csObjectHolder.ObjectHolderInstance().HummingBirdConnectionString);

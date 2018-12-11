@@ -205,6 +205,8 @@
     <Compile Include="ServiceManager.cs" />
     <Compile Include="Settings.cs" />
     <Compile Include="StaticVars.cs" />
+    <Compile Include="UserControls\BoolToNotBoolConverter.cs" />
+    <Compile Include="UserControls\BoolToStringConverter.cs" />
     <Compile Include="UserControls\BoolToVisibilityConverter.cs" />
     <Compile Include="UserControls\HeightToHeightConverter.cs" />
     <Compile Include="UserControls\ucIssueTabControl.xaml.cs">

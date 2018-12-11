@@ -4,6 +4,7 @@
         xmlns:behaviors="clr-namespace:WPFTextBoxAutoComplete;assembly=WPFTextBoxAutoComplete"
         xmlns:rapid_project_wpf="clr-namespace:RApID_Project_WPF"
         xmlns:uc="clr-namespace:RApID_Project_WPF.UserControls"
+        x:Name="wndMain"
         Title="Repair" Width="1104" Height="815" MinWidth="300" MinHeight="300" Loaded="Window_Loaded" Closing="Window_Closing" Background="#FF808285">
     <Window.Resources>
         <Style x:Key="TextboxBaseStyle" TargetType="{x:Type TextBox}">
@@ -23,21 +24,21 @@
             <Setter Property="Width" Value="170"/>
             <Setter Property="Height" Value="23"/>
             <Setter Property="TextWrapping" Value="Wrap"/>
-            <Setter Property="IsReadOnly" Value="True"/>            
+            <Setter Property="IsReadOnly" Value="True"/>
         </Style>
-        
+
         <Style x:Key="ComboBoxBaseStyle" TargetType="{x:Type ComboBox}">
             <Setter Property="Width" Value="275" />
             <Setter Property="HorizontalAlignment" Value="Left" />
             <Setter Property="VerticalAlignment" Value="Top" />
         </Style>
-        
+
         <Style x:Key="EOLComboBox" TargetType="{x:Type ComboBox}">
             <Setter Property="Width" Value="120" />
             <Setter Property="HorizontalAlignment" Value="Left" />
             <Setter Property="VerticalAlignment" Value="Top" />
         </Style>
-        
+
         <Style x:Key="EOLListView" TargetType="{x:Type ListView}">
             <Setter Property="Width" Value="268" />
             <Setter Property="Height" Value="532" />
@@ -57,7 +58,7 @@
             <Setter Property="HorizontalAlignment" Value="Left" />
             <Setter Property="VerticalAlignment" Value="Top" />
         </Style>
-        
+
         <Style x:Key="RepairButtons" TargetType="Button">
             <Setter Property="Template">
                 <Setter.Value>
@@ -119,6 +120,7 @@
             <Setter Property="Height" Value="30"/>
         </Style>
 
+        <uc:BoolToNotBoolConverter x:Key="NegateBoolean"/>
     </Window.Resources>
     <Viewbox Stretch="Uniform">
         <Grid Background="#FF808285">
@@ -189,13 +191,13 @@
 
                                     <Label Content="Test Result (Abort Input):" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10,130,0,0" />
                                     <ComboBox Name="cbTestResultAbort" Margin="10,155,0,0" DropDownClosed="cbDDClosed" Style="{StaticResource Combobox}" />
-                                    
+
                                     <Label Content="Cause:" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10,190,0,0" />
                                     <ComboBox Name="cbCause" Margin="10,215,0,0" DropDownClosed="cbDDClosed" Style="{StaticResource Combobox}" />
-                                    
+
                                     <Label Content="Replacement:" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10,250,0,0" />
                                     <ComboBox Name="cbReplacement" Margin="10,275,0,0" DropDownClosed="cbDDClosed" Style="{StaticResource Combobox}" />
-                                    
+
                                     <Label Content="Ref Designator" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10,310,0,0" />
                                     <Border x:Name="brdRefDes" Margin="10,335,180,226" >
                                         <ComboBox x:Name="txtRefDes" IsTextSearchEnabled="False" IsEditable="True" HorizontalAlignment="Left" VerticalAlignment="Top" VerticalContentAlignment="Center" Width="100" Height="23"
@@ -203,9 +205,12 @@
                                     </Border>
 
                                     <Label Content="Part Replaced" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="115,310,0,0" />
-                                    <ComboBox x:Name="txtPartReplaced" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="115,335,0,0" VerticalContentAlignment="Center" Width="100" Height="23" IsReadOnly="True" IsEnabled="False"/>
+                                    <ComboBox x:Name="txtPartReplaced" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="115,335,0,0" VerticalContentAlignment="Center" Width="100" Height="23"
+                                              IsReadOnly="{Binding ElementName=wndMain, Path=BOMFileActive, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                              IsEditable="{Binding ElementName=wndMain, Path=BOMFileActive, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged,Converter={StaticResource NegateBoolean}}"
+                                              IsEnabled="{Binding ElementName=wndMain, Path=BOMFileActive, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged,Converter={StaticResource NegateBoolean}}"/>
                                     <Button Name="btnAddMultiParts" Content="Add" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="220,335,0,0" Width="65" Height="23" Click="btnAddMultiParts_Click" />
-                                    
+
                                     <DataGrid Name="dgMultipleParts" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10,370,0,0" Width="275" Height="180" IsReadOnly="True" BeginningEdit="dgBeginEdit" />
                                     <Button Name="btnReset" Content="Reset Unit Issue #1" Margin="10,555,0,0" Style="{StaticResource UnitIssueButtons}" Click="btnReset_Click" />
                                 </Grid>
@@ -235,7 +240,10 @@
                                     </Border>
 
                                     <Label Content="Part Replaced" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="115,310,0,0" />
-                                    <ComboBox x:Name="txtPartReplaced_2" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="115,335,0,0" VerticalContentAlignment="Center" Width="100" Height="23" IsReadOnly="True" IsEnabled="False" />
+                                    <ComboBox x:Name="txtPartReplaced_2" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="115,335,0,0" VerticalContentAlignment="Center" Width="100" Height="23" 
+                                              IsReadOnly="{Binding ElementName=wndMain, Path=BOMFileActive, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
+                                              IsEditable="{Binding ElementName=wndMain, Path=BOMFileActive, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged,Converter={StaticResource NegateBoolean}}"
+                                              IsEnabled="{Binding ElementName=wndMain, Path=BOMFileActive, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged,Converter={StaticResource NegateBoolean}}" />
                                     <Button Name="btnAddMultiParts_2" Content="Add" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="220,335,0,0" Width="65" Height="23" Click="btnAddMultiParts_Click" />
 
                                     <DataGrid Name="dgMultipleParts_2" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10,370,0,0" Width="275" Height="180" IsReadOnly="True" BeginningEdit="dgBeginEdit" />
@@ -267,7 +275,10 @@
                                     </Border>
 
                                     <Label Content="Part Replaced" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="115,310,0,0" />
-                                    <ComboBox x:Name="txtPartReplaced_3" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="115,335,0,0" VerticalContentAlignment="Center" Width="100" Height="23" IsReadOnly="True" IsEnabled="False" />
+                                    <ComboBox x:Name="txtPartReplaced_3" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="115,335,0,0" VerticalContentAlignment="Center" Width="100" Height="23" 
+                                              IsReadOnly="{Binding ElementName=wndMain, Path=BOMFileActive, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
+                                              IsEditable="{Binding ElementName=wndMain, Path=BOMFileActive, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged,Converter={StaticResource NegateBoolean}}"
+                                              IsEnabled="{Binding ElementName=wndMain, Path=BOMFileActive, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged,Converter={StaticResource NegateBoolean}}" />
                                     <Button Name="btnAddMultiParts_3" Content="Add" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="220,335,0,0" Width="65" Height="23" Click="btnAddMultiParts_Click" />
 
                                     <DataGrid Name="dgMultipleParts_3" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10,370,0,0" Width="275" Height="180" IsReadOnly="True" BeginningEdit="dgBeginEdit" />
@@ -275,7 +286,7 @@
                                 </Grid>
                             </TabItem>
                         </TabControl>
-                        
+
                         <!--<GroupBox Header="Unit Issues" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="299,11,0,0" Width="300" Height="616">
                             <Grid HorizontalAlignment="Left" VerticalAlignment="Top" Width="300" Height="594" Margin="0,0,-12,0">
 
@@ -343,28 +354,28 @@
 
                                 <Label Content="Customer Name:" HorizontalAlignment="Left" Margin="6,52,0,0" VerticalAlignment="Top"/>
                                 <TextBox Name="txtCustomerName" Margin="6,72,0,0" Style="{StaticResource CITextBox}"/>
-                                
+
                                 <Label Content="Customer Address Line 1:" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="6,102,0,0" />
                                 <TextBox Name="txtCustAddy1" Margin="6,122,0,0" Style="{StaticResource CITextBox}"/>
-                                
+
                                 <Label Content="Customer Address Line 2:" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="6,152,0,0" />
                                 <TextBox Name="txtCustAddy2" Margin="6,172,0,0" Style="{StaticResource CITextBox}" />
-                                
+
                                 <Label Content="Customer Address Line 3:" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="6,202,0,0" />
                                 <TextBox Name="txtCustAddy3" Margin="6,222,0,0" Style="{StaticResource CITextBox}" />
-                                
+
                                 <Label Content="Customer Address Line 4:" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="6,252,0,0" />
                                 <TextBox Name="txtCustAddy4" Margin="6,272,0,0" Style="{StaticResource CITextBox}" />
-                                
+
                                 <Label Content="Customer City:" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="6,302,0,0" />
                                 <TextBox Name="txtCustCity" Margin="6,322,0,0" Style="{StaticResource CITextBox}" />
-                                
+
                                 <Label Content="Customer State:" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="6,352,0,0"/>
                                 <TextBox Name="txtCustState" Margin="6,372,0,0" Style="{StaticResource CITextBox}" />
-                                
+
                                 <Label Content="Customer Postal Code:" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="6,402,0,0"/>
                                 <TextBox Name="txtCustPostal" Margin="6,422,0,0" Style="{StaticResource CITextBox}" />
-                                
+
                                 <Label Content="Customer Country Code:" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="6,452,0,0"/>
                                 <TextBox Name="txtCustCountryCode" Margin="6,472,0,0" Style="{StaticResource CITextBox}" />
 
@@ -417,7 +428,26 @@
                 <Separator />
                 <Button Name="btnRebootSP" Content="Reboot" Height="29" Width="50" ToolBar.OverflowMode="Never" VerticalAlignment="Top" HorizontalAlignment="Left" Padding="0,1,0,0" BorderBrush="{DynamicResource {x:Static SystemColors.ActiveCaptionTextBrushKey}}" Background="{DynamicResource {x:Static SystemColors.GradientInactiveCaptionBrushKey}}" Click="btnRebootSP_Click" />
                 <Separator />
+                <Label x:Name="lblBOMFileFound" VerticalAlignment="Top" VerticalContentAlignment="Top" HorizontalAlignment="Left" HorizontalContentAlignment="Left" Height="34" MouseDoubleClick="LabelDoubleClick" Margin="0,0,0,-5">
+                    <StackPanel Orientation="Horizontal" VerticalAlignment="Top" HorizontalAlignment="Left"
+                                Width="{Binding ElementName=lblBOMFileFound,Path=Width,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
+                               Height="{Binding ElementName=lblBOMFileFound,Path=Height,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}">
+                        <Label Width="{Binding Width, ElementName=lblBOMFileFound, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                               Height="{Binding Height, ElementName=lblBOMFileFound, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                               VerticalAlignment="Top" HorizontalAlignment="Left" Content="Barcode Mapper Status:" Padding="0,0,5,0"/>
+                        <Label Width="{Binding Width, ElementName=lblBOMFileFound, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                               Height="{Binding Height, ElementName=lblBOMFileFound, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                            Content="{Binding BOMFileActive, ElementName=wndMain, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Padding="0"/>
+                    </StackPanel>
+                </Label>
                 <ProgressBar x:Name="progMapper" Height="20" VerticalAlignment="Center" HorizontalAlignment="Right" Width="100" IsIndeterminate="True" Visibility="Collapsed"/>
+                <x:Code>
+                    <![CDATA[
+                        private void /*inline*/ LabelDoubleClick(object sender, System.Windows.RoutedEventArgs args) {
+                            System.Windows.MessageBox.Show($"Label {(sender as System.Windows.Controls.Label).Name} was double clicked.","Testing inline CSharp Code",System.Windows.MessageBoxButton.OK,System.Windows.MessageBoxImage.Information);
+                        }
+                    ]]>
+                </x:Code>
             </ToolBar>
         </Grid>
     </Viewbox>

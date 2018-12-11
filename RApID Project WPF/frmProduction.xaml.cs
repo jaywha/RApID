@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Data.SqlClient;
 using System.IO.Ports;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows;
@@ -19,7 +21,7 @@ namespace RApID_Project_WPF
     /// <summary>
     /// Interaction logic for frmProduction.xaml
     /// </summary>
-    public partial class frmProduction : Window
+    public partial class frmProduction : Window, INotifyPropertyChanged
     {
         #region Variables
         List<IssueItemProblemCombinations> lIIPC = new List<IssueItemProblemCombinations>();
@@ -35,7 +37,18 @@ namespace RApID_Project_WPF
 
         InitSplash initS = new InitSplash();
         csObjectHolder.csObjectHolder holder = csObjectHolder.csObjectHolder.ObjectHolderInstance();
+        public static readonly DependencyProperty BOMFileActiveProperty = DependencyProperty.Register("BOMFileActive",typeof(bool),typeof(frmProduction),new PropertyMetadata(false));
+        public bool BOMFileActive {
+            get => (bool)GetValue(BOMFileActiveProperty);
+            set {
+                SetValue(BOMFileActiveProperty, value);
+                OnPropertyChanged();
+            }
+        }
         #endregion
+
+        public event PropertyChangedEventHandler PropertyChanged;
+        private void OnPropertyChanged([CallerMemberName] string propName = "") => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propName));
 
         public frmProduction()
         {
@@ -223,6 +236,7 @@ namespace RApID_Project_WPF
         private void resetForm(bool bFullReset)
         {
             sVar.resetStaticVars();
+            BOMFileActive = false;
 
             if (bFullReset)
                 txtSerialNumber.Text = string.Empty;
@@ -569,22 +583,39 @@ namespace RApID_Project_WPF
 
         private async void MapRefDesToPartNum()
         {
-            using (var mapper = csSerialNumberMapper.Instance)
+            try
             {
-                await Task.Factory.StartNew(new Action(() => { // in new task
-                    Dispatcher.BeginInvoke(new Action(async () => {// perform dispatched UI actions
-                        if (!mapper.GetData(txtSerialNumber.Text))
-                            throw new InvalidOperationException("Couldn't find data for this barcode!");
-                        else
+                using (var mapper = csSerialNumberMapper.Instance)
+                {
+                    await Task.Factory.StartNew(new Action(() => // in new task
+                    { 
+                        Dispatcher.BeginInvoke(new Action(async () => // perform dispatched UI actions
                         {
-                            var result = await mapper.FindFileAsync(".xls");
-                            csCrossClassInteraction.DoExcelOperations(result.Item1, progMapper,
-                            new Tuple<Control, Control>(txtMultiRefDes, txtMultiPartNum),
-                            new Tuple<Control, Control>(txtMultiRefDes_2, txtMultiPartNum_2),
-                            new Tuple<Control, Control>(txtMultiRefDes_3, txtMultiPartNum_3));
-                        }
-                    }), DispatcherPriority.ApplicationIdle);
-                }));
+                            if (!mapper.GetData(txtSerialNumber.Text))
+                            {
+                                #if DEBUG
+                                    throw new InvalidOperationException("Couldn't find data for this barcode!");
+                                #else
+                                    MessageBox.Show("Couldn't find the barcode's entry in the database.\nPlease enter information manually.", 
+                                        "Soft Error - BOM Lookup", MessageBoxButton.OK, MessageBoxImage.Warning);
+                                #endif                            
+                            } else {
+                                var result = await mapper.FindFileAsync(".xls");
+                                csCrossClassInteraction.DoExcelOperations(result.Item1, progMapper,
+                                new Tuple<Control, Control>(txtMultiRefDes, txtMultiPartNum),
+                                new Tuple<Control, Control>(txtMultiRefDes_2, txtMultiPartNum_2),
+                                new Tuple<Control, Control>(txtMultiRefDes_3, txtMultiPartNum_3));
+                                                        
+                                BOMFileActive = true;
+                            }
+                        }), DispatcherPriority.Background);
+                    }));
+                }
+            }
+            catch (InvalidOperationException ioe)
+            {
+                csExceptionLogger.csExceptionLogger.Write("BadBarcode-MapRefDesToPartNum", ioe);
+                return;
             }
         }
 
@@ -1305,10 +1336,10 @@ namespace RApID_Project_WPF
                     {
                         sVar.LogHandler.CreateLogAction((Button)sender, csLogging.LogState.CLICK);
 
-                        if (!txtMultiRefDes_2.Items.Contains(txtMultiRefDes_2.Text)
+                        if (BOMFileActive && (!txtMultiRefDes_2.Items.Contains(txtMultiRefDes_2.Text)
                         || dgMultipleParts_2.Items
                         .OfType<MultiplePartsReplaced>()
-                        .Where(mpr => mpr.RefDesignator.Equals(txtMultiRefDes_2.Text)).Count() > 0)
+                        .Where(mpr => mpr.RefDesignator.Equals(txtMultiRefDes_2.Text)).Count() > 0))
                         {
                             brdRefDes_2.BorderBrush = Brushes.Red;
                             brdRefDes_2.BorderThickness = new Thickness(1.0);
@@ -1362,10 +1393,10 @@ namespace RApID_Project_WPF
                     {
                         sVar.LogHandler.CreateLogAction((Button)sender, csLogging.LogState.CLICK);
 
-                        if (!txtMultiRefDes_3.Items.Contains(txtMultiRefDes_3.Text)
+                        if (BOMFileActive && (!txtMultiRefDes_3.Items.Contains(txtMultiRefDes_3.Text)
                         || dgMultipleParts_3.Items
                         .OfType<MultiplePartsReplaced>()
-                        .Where(mpr => mpr.RefDesignator.Equals(txtMultiRefDes_3.Text)).Count() > 0)
+                        .Where(mpr => mpr.RefDesignator.Equals(txtMultiRefDes_3.Text)).Count() > 0))
                         {
                             brdRefDes_3.BorderBrush = Brushes.Red;
                             brdRefDes_3.BorderThickness = new Thickness(1.0);
@@ -1421,10 +1452,10 @@ namespace RApID_Project_WPF
                 {
                     sVar.LogHandler.CreateLogAction((Button)sender, csLogging.LogState.CLICK);
 
-                    if (!txtMultiRefDes.Items.Contains(txtMultiRefDes.Text) 
+                    if (BOMFileActive && (!txtMultiRefDes.Items.Contains(txtMultiRefDes.Text) 
                         || dgMultipleParts.Items
                         .OfType<MultiplePartsReplaced>()
-                        .Where(mpr => mpr.RefDesignator.Equals(txtMultiRefDes.Text)).Count() > 0)
+                        .Where(mpr => mpr.RefDesignator.Equals(txtMultiRefDes.Text)).Count() > 0))
                     {
                         brdRefDes.BorderBrush = Brushes.Red;
                         brdRefDes.BorderThickness = new Thickness(1.0);

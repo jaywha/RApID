@@ -42,6 +42,7 @@ namespace RApID_Project_WPF
         string sUserDepartmentNumber = "";
         string sDQE_DeptNum = "320900";
         double dLineNumber;
+        public bool BOMFileActive { get; set; } = false;
 
         InitSplash initS = new InitSplash();
         #endregion
@@ -53,7 +54,7 @@ namespace RApID_Project_WPF
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
-            Hide();
+            Hide();            
             initS.InitSplash1("Initializing Form...");
             buildDGViews();
             csSplashScreenHelper.ShowText("Loading DataLog...");
@@ -1331,18 +1332,26 @@ namespace RApID_Project_WPF
             }
         }
 
+        /// <summary> Makes calls to <see cref="csSerialNumberMapper"/> methods. </summary>
         private async void MapRefDesToPartNum()
         {
-            using (var mapper = csSerialNumberMapper.Instance)
+            try
             {
-                await Task.Factory.StartNew(new Action(() =>
+                using (var mapper = csSerialNumberMapper.Instance)
                 {
-                    tabcUnitIssues.Dispatcher.BeginInvoke(new Action( async () => // perform actions on dispatched thread
+                    await Task.Factory.StartNew(new Action(() =>
+                    {
+                        tabcUnitIssues.Dispatcher.BeginInvoke(new Action(async () => // perform actions on dispatched thread
                     {
                         if (!mapper.GetData(txtBarcode.Text))
-                            throw new InvalidOperationException("Couldn't find data for this barcode!");
-                        else
                         {
+#if DEBUG
+                                throw new InvalidOperationException("Couldn't find data for this barcode!");
+#else
+                            MessageBox.Show("Couldn't find the barcode's entry in the database.\nPlease enter information manually.", "Soft Error - BOM Lookup"
+                                , MessageBoxButton.OK, MessageBoxImage.Warning);
+#endif                            
+                        } else {
                             var result = await mapper.FindFileAsync(".xls");
                             csCrossClassInteraction.DoExcelOperations(result.Item1, progMapper,
                             new Tuple<Control, Control>(txtRefDes, txtPartReplaced),
@@ -1351,9 +1360,15 @@ namespace RApID_Project_WPF
 
                             OrigRefSource = (List<string>)txtRefDes.ItemsSource;
                             OrigPartSource = (List<string>)txtPartReplaced.ItemsSource;
+                            BOMFileActive = true;
                         }
-                    }), DispatcherPriority.Background);
-                }));
+                        }), DispatcherPriority.Background);
+                    }));
+                }
+            } catch(InvalidOperationException ioe)
+            {
+                csExceptionLogger.csExceptionLogger.Write("BadBarcode-MapRefDesToPartNum", ioe);
+                return;
             }
         }
 
@@ -1607,7 +1622,7 @@ namespace RApID_Project_WPF
             bool bExistingCustomer = false;
             bool bNoSearchError = true;
 
-            #region Check To See If Customer Exists
+#region Check To See If Customer Exists
 
             string query = "SELECT CustomerNumber FROM RepairCustomerInformation WHERE CustomerNumber = '" + cInfo.CustomerNumber + "'";
             var conn = new SqlConnection(holder.RepairConnectionString);
@@ -1637,7 +1652,7 @@ namespace RApID_Project_WPF
                 bNoSearchError = false;
             }
 
-            #endregion
+#endregion
 
             if (bNoSearchError)
             {
@@ -1776,7 +1791,7 @@ namespace RApID_Project_WPF
             else return false;
         }
 
-        #region Button Clicks
+#region Button Clicks
         private void btnComplete_Click(object sender, RoutedEventArgs e)
         {
             sVar.LogHandler.CreateLogAction((Button)sender, csLogging.LogState.CLICK);
@@ -1885,10 +1900,10 @@ namespace RApID_Project_WPF
                     {
                         sVar.LogHandler.CreateLogAction((Button)sender, csLogging.LogState.CLICK);
 
-                        if (!txtRefDes_2.Items.Contains(txtRefDes_2.Text)
+                        if (BOMFileActive && (!txtRefDes_2.Items.Contains(txtRefDes_2.Text)
                             || dgMultipleParts_2.Items
                         .OfType<MultiplePartsReplaced>()
-                        .Where(mpr => mpr.RefDesignator.Equals(txtRefDes_2.Text)).Count() > 0)
+                        .Where(mpr => mpr.RefDesignator.Equals(txtRefDes_2.Text)).Count() > 0))
                         {
                             brdRefDes_2.BorderBrush = Brushes.Red;
                             brdRefDes_2.BorderThickness = new Thickness(1.0);
@@ -1932,10 +1947,10 @@ namespace RApID_Project_WPF
                     {
                         sVar.LogHandler.CreateLogAction((Button)sender, csLogging.LogState.CLICK);
 
-                        if (!txtRefDes_3.Items.Contains(txtRefDes_3.Text)
+                        if (BOMFileActive && (!txtRefDes_3.Items.Contains(txtRefDes_3.Text)
                             || dgMultipleParts_3.Items
                         .OfType<MultiplePartsReplaced>()
-                        .Where(mpr => mpr.RefDesignator.Equals(txtRefDes_3.Text)).Count() > 0)
+                        .Where(mpr => mpr.RefDesignator.Equals(txtRefDes_3.Text)).Count() > 0))
                         {
                             brdRefDes_3.BorderBrush = Brushes.Red;
                             brdRefDes_3.BorderThickness = new Thickness(1.0);
@@ -1980,10 +1995,10 @@ namespace RApID_Project_WPF
                 {
                     sVar.LogHandler.CreateLogAction((Button)sender, csLogging.LogState.CLICK);
 
-                    if(!txtRefDes.Items.Contains(txtRefDes.Text)
+                    if(BOMFileActive && (!txtRefDes.Items.Contains(txtRefDes.Text)
                         || dgMultipleParts.Items
                         .OfType<MultiplePartsReplaced>()
-                        .Where(mpr => mpr.RefDesignator.Equals(txtRefDes.Text)).Count() > 0)
+                        .Where(mpr => mpr.RefDesignator.Equals(txtRefDes.Text)).Count() > 0))
                     {
                         brdRefDes.BorderBrush = Brushes.Red;
                         brdRefDes.BorderThickness = new Thickness(1.0);
@@ -2072,7 +2087,7 @@ namespace RApID_Project_WPF
             if (!string.IsNullOrEmpty(txtPartNumber.Text))
                 fillCommoditySubClass();
         }
-        #endregion
+#endregion
 
         private void cbxScrap_Click(object sender, RoutedEventArgs e)
         {
@@ -2122,7 +2137,7 @@ namespace RApID_Project_WPF
             e.Handled = regex.IsMatch(e.Text);
         }
 
-        #region Serial Port Actions
+#region Serial Port Actions
         private void serialPortStatusUpdate()
         {
             if (sp != null && sp.IsOpen)
@@ -2285,12 +2300,12 @@ namespace RApID_Project_WPF
             }
             catch { }
         }
-        #endregion
+#endregion
 
         private void dgBeginEdit(object sender, DataGridBeginningEditEventArgs e)
             => e.Cancel = true;
 
-        #region Log Actions
+#region Log Actions
         private void txtGotFocus(object sender, RoutedEventArgs e)
         {
             if (sender is ComboBox c)
@@ -2348,7 +2363,7 @@ namespace RApID_Project_WPF
                 }
             }
         }
-        #endregion
+#endregion
 
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
