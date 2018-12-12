@@ -362,6 +362,9 @@ namespace RApID_Project_WPF
             ucEOLTab.lblEOL.Content = "End of Line";
             ucEOLTab.lblPOST.Content = "Post Burn In";
 
+            OrigPartSource.Clear();
+            OrigRefSource.Clear();
+
             cbReportedIssue.SelectedIndex = -1;
             resetUnitIssues();
             ucEOLTab.Reset();
@@ -376,136 +379,45 @@ namespace RApID_Project_WPF
         /// </summary>
         private void resetUnitIssues()
         {
-            foreach (UIElement uie in gridUI1.Children)
-            {
-                if (uie.GetType().Name.Equals("ComboBox"))
-                {
-                    var cb = (ComboBox)uie;
-                    cb.SelectedIndex = -1;
-                }
-                if (uie.GetType().Name.Equals("TextBox"))
-                {
-                    var tb = (TextBox)uie;
-                    tb.Text = string.Empty;
-                }
-                if (uie.GetType().Name.Equals("DataGrid"))
-                {
-                    var dg = (DataGrid)uie;
-                    dg.Items.Clear();
-                }
-            }
-
-            foreach (UIElement uie in gridUI2.Children)
-            {
-                if (uie.GetType().Name.Equals("ComboBox"))
-                {
-                    var cb = (ComboBox)uie;
-                    cb.SelectedIndex = -1;
-                }
-                if (uie.GetType().Name.Equals("TextBox"))
-                {
-                    var tb = (TextBox)uie;
-                    tb.Text = string.Empty;
-                }
-                if (uie.GetType().Name.Equals("DataGrid"))
-                {
-                    var dg = (DataGrid)uie;
-                    dg.Items.Clear();
-                }
-            }
-
-            foreach (UIElement uie in gridUI3.Children)
-            {
-                if (uie.GetType().Name.Equals("ComboBox"))
-                {
-                    var cb = (ComboBox)uie;
-                    cb.SelectedIndex = -1;
-                }
-                if (uie.GetType().Name.Equals("TextBox"))
-                {
-                    var tb = (TextBox)uie;
-                    tb.Text = string.Empty;
-                }
-                if (uie.GetType().Name.Equals("DataGrid"))
-                {
-                    var dg = (DataGrid)uie;
-                    dg.Items.Clear();
-                }
-            }
+            resetUnitIssues(1);
+            resetUnitIssues(2);
+            resetUnitIssues(3);
 
             tiUI2.IsEnabled = tiUI3.IsEnabled = false;
             tiUI1.Focus();
         }
 
+        /// <summary>
+        /// Will reset a specifc unit issue.
+        /// </summary>
+        /// <param name="iUReset">The unit issue number from <see cref="tabcUnitIssues"/>, in order. </param>
         private void resetUnitIssues(int iUReset)
         {
-            switch (iUReset)
+            var grid = (iUReset == 1 ? gridUI1 : (
+                        iUReset == 2 ? gridUI2 : (
+                        iUReset == 3 ? gridUI3 : null)));
+
+            if (grid == null) throw new ArgumentOutOfRangeException($"frmRepair.resetUnitIssues(int) -> No grid found with id {iUReset}!");
+
+            foreach (UIElement uie in grid.Children)
             {
-                case 1:
-                    foreach (UIElement uie in gridUI1.Children)
-                    {
-                        if (uie.GetType().Name.Equals("ComboBox"))
-                        {
-                            var cb = (ComboBox)uie;
-                            cb.SelectedIndex = -1;
-                            cb.Text = "";
-                        }
-                        if (uie.GetType().Name.Equals("TextBox"))
-                        {
-                            var tb = (TextBox)uie;
-                            tb.Text = string.Empty;
-                        }
-                        if (uie.GetType().Name.Equals("DataGrid"))
-                        {
-                            var dg = (DataGrid)uie;
-                            dg.Items.Clear();
-                        }
-                    }
-                    break;
-                case 2:
-                    foreach (UIElement uie in gridUI2.Children)
-                    {
-                        if (uie.GetType().Name.Equals("ComboBox"))
-                        {
-                            var cb = (ComboBox)uie;
-                            cb.SelectedIndex = -1;
-                            cb.Text = "";
-                        }
-                        if (uie.GetType().Name.Equals("TextBox"))
-                        {
-                            var tb = (TextBox)uie;
-                            tb.Text = string.Empty;
-                        }
-                        if (uie.GetType().Name.Equals("DataGrid"))
-                        {
-                            var dg = (DataGrid)uie;
-                            dg.Items.Clear();
-                        }
-                    }
-                    break;
-                case 3:
-                    foreach (UIElement uie in gridUI3.Children)
-                    {
-                        if (uie.GetType().Name.Equals("ComboBox"))
-                        {
-                            var cb = (ComboBox)uie;
-                            cb.SelectedIndex = -1;
-                            cb.Text = "";
-                        }
-                        if (uie.GetType().Name.Equals("TextBox"))
-                        {
-                            var tb = (TextBox)uie;
-                            tb.Text = string.Empty;
-                        }
-                        if (uie.GetType().Name.Equals("DataGrid"))
-                        {
-                            var dg = (DataGrid)uie;
-                            dg.Items.Clear();
-                        }
-                    }
-                    break;
-                default:
-                    break;
+                if (uie.GetType().Name.Equals("ComboBox"))
+                {
+                    var cb = (ComboBox)uie;
+                    cb.SelectedIndex = -1;
+                    cb.Text = "";
+                    if (uie is ComboBox cbx && cbx.Name.Contains("txtMulti")) cbx.Items.Clear();
+                }
+                if (uie.GetType().Name.Equals("TextBox"))
+                {
+                    var tb = (TextBox)uie;
+                    tb.Text = string.Empty;
+                }
+                if (uie.GetType().Name.Equals("DataGrid"))
+                {
+                    var dg = (DataGrid)uie;
+                    dg.Items.Clear();
+                }
             }
         }
 
@@ -1759,7 +1671,9 @@ namespace RApID_Project_WPF
             }
         }
 
+        /// <summary> The original list of reference designators pulled from the BOM. </summary>
         private List<string> OrigRefSource;
+        /// <summary> The original list of part numbers pulled from the BOM. </summary>
         private List<string> OrigPartSource;
         private void txtMultiRefKeyUp(object sender, KeyEventArgs e)
         {
