@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Data.SqlClient;
 using System.IO.Ports;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
@@ -20,7 +22,7 @@ namespace RApID_Project_WPF
     /// <summary>
     /// Interaction logic for Repair.xaml
     /// </summary>
-    public partial class frmRepair : Window
+    public partial class frmRepair : Window, INotifyPropertyChanged
     {
         #region Variables
         private enum SubmissionStatus { COMPLETE, SENDTOQC, SENDTODQE };
@@ -42,10 +44,22 @@ namespace RApID_Project_WPF
         string sUserDepartmentNumber = "";
         string sDQE_DeptNum = "320900";
         double dLineNumber;
-        public bool BOMFileActive { get; set; } = false;
+        private bool _BomFileActive = false;
+        public bool BOMFileActive {
+            get => _BomFileActive;
+            set
+            {
+                _BomFileActive = value;
+                OnPropertyChanged();
+            }
+        }
 
         InitSplash initS = new InitSplash();
         #endregion
+
+        public event PropertyChangedEventHandler PropertyChanged;
+        private void OnPropertyChanged([CallerMemberName] string propName = "") 
+            => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propName));
 
         public frmRepair(bool bRework)
         {
@@ -359,11 +373,13 @@ namespace RApID_Project_WPF
 
             dgPrevRepairInfo.Items.Clear();
 
+            BOMFileActive = false;
+
             ucEOLTab.lblEOL.Content = "End of Line";
             ucEOLTab.lblPOST.Content = "Post Burn In";
 
-            OrigPartSource.Clear();
-            OrigRefSource.Clear();
+            if(OrigPartSource != null) OrigPartSource.Clear();
+            if(OrigRefSource != null) OrigRefSource.Clear();
 
             cbReportedIssue.SelectedIndex = -1;
             resetUnitIssues();
@@ -406,7 +422,7 @@ namespace RApID_Project_WPF
                     var cb = (ComboBox)uie;
                     cb.SelectedIndex = -1;
                     cb.Text = "";
-                    if (uie is ComboBox cbx && cbx.Name.Contains("txtMulti")) cbx.Items.Clear();
+                    if (uie is ComboBox cbx && cbx.Name.Contains("txt")) cbx.ItemsSource = new List<string>() {""};
                 }
                 if (uie.GetType().Name.Equals("TextBox"))
                 {
