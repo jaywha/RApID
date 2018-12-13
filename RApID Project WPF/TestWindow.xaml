@@ -1,0 +1,23 @@
+﻿<Window
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:RApID_Project_WPF"
+        xmlns:UserControls="clr-namespace:RApID_Project_WPF.UserControls" x:Class="RApID_Project_WPF.TestWindow"
+        mc:Ignorable="d"
+        Title="TestWindow" Height="527.674" Width="901.313">
+    <Grid>
+        <Grid.Background>
+            <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                <GradientStop Color="#FF4F3B3B" Offset="0.031"/>
+                <GradientStop Color="#FFAA8C8C" Offset="1"/>
+                <GradientStop Color="#FF444444" Offset="0.33"/>
+                <GradientStop Color="#FF797979" Offset="0.66"/>
+                <GradientStop Color="#FFA8A8A8" Offset="0.854"/>
+            </LinearGradientBrush>
+        </Grid.Background>
+        <UserControls:ucUnitIssue x:Name="unitIssue" HorizontalAlignment="Left" Height="478" Margin="10,10,0,0" VerticalAlignment="Top" Width="354" ReadOnly="False" Foreground="White" LabelColor="White"/>
+        <Button Content="Button" HorizontalAlignment="Left" Margin="488,187,0,0" VerticalAlignment="Top" Width="75" Click="Button_Click"/>
+    </Grid>
+</Window>

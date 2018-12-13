@@ -456,7 +456,7 @@
                 <ProgressBar x:Name="progMapper" Height="20" VerticalAlignment="Center" HorizontalAlignment="Right" Width="100" IsIndeterminate="True" Visibility="Collapsed"/>
                 <x:Code>
                     <![CDATA[
-                        private void /*inline*/ LabelDoubleClick(object sender, System.Windows.RoutedEventArgs args) {
+                        private void LabelDoubleClick(object sender, System.Windows.RoutedEventArgs args) {
                             System.Windows.MessageBox.Show($"Label {(sender as System.Windows.Controls.Label).Name} was double clicked.","Testing inline CSharp Code",System.Windows.MessageBoxButton.OK,System.Windows.MessageBoxImage.Information);
                         }
                     ]]>

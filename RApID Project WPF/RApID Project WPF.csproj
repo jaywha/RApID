@@ -205,6 +205,9 @@
     <Compile Include="ServiceManager.cs" />
     <Compile Include="Settings.cs" />
     <Compile Include="StaticVars.cs" />
+    <Compile Include="TestWindow.xaml.cs">
+      <DependentUpon>TestWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="UserControls\BoolToNotBoolConverter.cs" />
     <Compile Include="UserControls\BoolToStringConverter.cs" />
     <Compile Include="UserControls\BoolToVisibilityConverter.cs" />
@@ -297,6 +300,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="frmRepairPRI.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="TestWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

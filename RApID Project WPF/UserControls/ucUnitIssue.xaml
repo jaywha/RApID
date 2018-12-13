@@ -28,6 +28,7 @@
         <Style x:Key="LabelBaseStyle" TargetType="{x:Type Label}">
             <Setter Property="HorizontalAlignment" Value="Left" />
             <Setter Property="VerticalAlignment" Value="Top" />
+            <Setter Property="Foreground" Value="{Binding ElementName=uccUnitIssue,Path=LabelColor,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"/>
         </Style>
         <local:HeightToHeightConverter x:Key="SizeConverter"/>
         <sys:Double x:Key="mulWidth">1.3</sys:Double>
