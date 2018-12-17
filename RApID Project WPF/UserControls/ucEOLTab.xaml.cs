@@ -48,13 +48,13 @@ namespace RApID_Project_WPF.UserControls
         {
             Reset();
             string query = $"SELECT TestID FROM tblEOL WHERE PCBSerial = '{SerialNumber}';";
-            cbEOLTestID.FillFromQuery(query);
+            cbEOLTestID.PullItemsFromQuery(query);
 
             query = $"SELECT TestID FROM tblPre WHERE PCBSerial = '{SerialNumber}';";
-            cbPRETestID.FillFromQuery(query);
+            cbPRETestID.PullItemsFromQuery(query);
 
             query = $"SELECT TestID FROM tblPost WHERE PCBSerial = '{SerialNumber}';";
-            cbPOSTTestID.FillFromQuery(query);
+            cbPOSTTestID.PullItemsFromQuery(query);
 
             if (cbEOLTestID.Items.Count > 0)
             {

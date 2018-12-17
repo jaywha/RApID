@@ -5,6 +5,8 @@ using System.Runtime.CompilerServices;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace RApID_Project_WPF.UserControls
 {
@@ -21,6 +23,8 @@ namespace RApID_Project_WPF.UserControls
 
         #region Dependency Properties
 
+        public static readonly DependencyProperty IsRepairFormProperty = DependencyProperty.Register("IsRepairForm", typeof(bool), typeof(ucUnitIssue));
+
         public static readonly DependencyProperty ReportedIssueProperty = DependencyProperty.Register("ReportedIssue", typeof(string), typeof(ucUnitIssue));
         public static readonly DependencyProperty TestResultProperty = DependencyProperty.Register("TestResult", typeof(string), typeof(ucUnitIssue));
         public static readonly DependencyProperty AbortResultProperty = DependencyProperty.Register("AbortResult", typeof(string), typeof(ucUnitIssue));
@@ -35,7 +39,22 @@ namespace RApID_Project_WPF.UserControls
         public static readonly DependencyProperty LabelColorProperty = DependencyProperty.Register("LabelColor", typeof(Brush), typeof(ucUnitIssue), new PropertyMetadata(Brushes.Black));
         #endregion
 
+        #region Fields
+        private readonly csObjectHolder.csObjectHolder holder = csObjectHolder.csObjectHolder.ObjectHolderInstance();
+        #endregion
+
         #region Properties
+        [Description("Is this control in a Repiar type form?"),Category("Common")]
+        public bool IsRepairForm
+        {
+            get => (bool)GetValue(IsRepairFormProperty);
+            set
+            {
+                SetValue(IsRepairFormProperty, value);
+                OnPropertyChanged();
+            }
+        }
+
         [Description("Issue reported to tech"), Category("Unit Issue 1")]
         public string ReportedIssue
         {
@@ -135,7 +154,8 @@ namespace RApID_Project_WPF.UserControls
             {
                 SetValue(ReadOnlyProperty, value);
                 OnPropertyChanged();
-                if(!ReadOnly) MutateToComboBoxes();
+                if (!ReadOnly) MutateToComboBoxes();
+                else MutateToTextBoxes();
             }
         }
 
@@ -154,12 +174,14 @@ namespace RApID_Project_WPF.UserControls
         public ucUnitIssue()
         {
             InitializeComponent();
+            holder.vGetServerName("");
             DataContext = this;
         }
 
         public ucUnitIssue(int issueNum)
         {
             InitializeComponent();
+            holder.vGetServerName("");
 
             stkMain.Name += issueNum;
 
@@ -172,33 +194,115 @@ namespace RApID_Project_WPF.UserControls
 
         public bool MutateToComboBoxes()
         {
-            var controls = stkMain.Children;
+            return Dispatcher.Invoke(() => { 
+                var controls = new UIElement[stkMain.Children.Count];
+                stkMain.Children.Cast<UIElement>().ToList().CopyTo(controls, 0);
 
-            try
-            {
-                for (int index = 0; index < controls.Count; index++)
+                try
                 {
-                    if (controls[index] is TextBox txtbx)
+                    foreach (var control in controls)
                     {
-                        controls[index] = new ComboBox()
+                        if (control is TextBox txtbx)
                         {
-                            Name = txtbx.Name,
-                            Width = 250,
-                            HorizontalAlignment = HorizontalAlignment.Left,
-                            VerticalAlignment = VerticalAlignment.Top
-                        };
+                            var cmbx = new ComboBox()
+                            {
+                                Name = txtbx.Name,
+                                Width = txtbx.Width,
+                                HorizontalAlignment = txtbx.HorizontalAlignment,
+                                VerticalAlignment = txtbx.VerticalAlignment
+                            };
 
-                        (controls[index] as ComboBox).SetBinding(ComboBox.TextProperty,
-                            txtbx.GetBindingExpression(TextBox.TextProperty).ParentBinding);
+                            ComboBoxFiller(ref cmbx);
+
+                            var currChildIndex = stkMain.Children.IndexOf(txtbx);
+                            stkMain.Children.Remove(txtbx);
+                            stkMain.Children.Insert(currChildIndex, cmbx);
+
+                            cmbx.SetBinding(ComboBox.TextProperty, txtbx.GetBindingExpression(TextBox.TextProperty).ParentBinding);
+                        }
                     }
                 }
-            } catch(Exception e)
-            {
-                csExceptionLogger.csExceptionLogger.Write("ucUnitIssue_MutateToComboBoxes", e);
-                return false;
-            }
+                catch (Exception e)
+                {
+                    csExceptionLogger.csExceptionLogger.Write("ucUnitIssue_MutateToComboBoxes", e);
+                    return false;
+                }
 
-            return true;
+                return true;
+            }, System.Windows.Threading.DispatcherPriority.Background);
+        }
+
+        public bool MutateToTextBoxes()
+        {
+            return Dispatcher.Invoke(() => {
+                var controls = new UIElement[stkMain.Children.Count];
+                stkMain.Children.Cast<UIElement>().ToList().CopyTo(controls, 0);
+
+                try
+                {
+                    foreach (var control in controls)
+                    {
+                        if (control is ComboBox cmbx)
+                        {
+                            var txtbx = new TextBox()
+                            {
+                                Name = cmbx.Name,
+                                Width = cmbx.Width,
+                                HorizontalAlignment = cmbx.HorizontalAlignment,
+                                VerticalAlignment = cmbx.VerticalAlignment
+                            };
+
+                            var currChildIndex = stkMain.Children.IndexOf(cmbx);
+                            stkMain.Children.Remove(cmbx);
+                            stkMain.Children.Insert(currChildIndex, txtbx);
+
+                            txtbx.SetBinding(TextBox.TextProperty, cmbx.GetBindingExpression(ComboBox.TextProperty).ParentBinding);
+                        }
+                    }
+                }
+                catch (Exception e)
+                {
+                    csExceptionLogger.csExceptionLogger.Write("ucUnitIssue_MutateToTextBoxes", e);
+                    return false;
+                }
+
+                return true;
+            }, System.Windows.Threading.DispatcherPriority.Background);
+        }
+
+        public void ComboBoxFiller(ref ComboBox cmbx)
+        {
+            switch(cmbx.Name.Replace("txt",""))
+            {
+                case "ReportedIssue":
+                    if(!IsRepairForm) cmbx.PullItemsFromQuery("SELECT [ReportedIssue] FROM RApID_DropDowns", holder.RepairConnectionString);
+                    else              cmbx.PullItemsFromQuery("SELECT [PC1] FROM JDECodes", holder.RepairConnectionString);
+                    break;
+                case "TestResult":
+                    cmbx.PullItemsFromQuery("SELECT [TestResult] FROM RApID_DropDowns", holder.RepairConnectionString);
+                    break;
+                case "TestResultAbort":
+                    cmbx.PullItemsFromQuery("SELECT [TestResult_Abort] FROM RApID_DropDowns", holder.RepairConnectionString);
+                    break;
+                case "Cause":
+                    cmbx.PullItemsFromQuery("SELECT [Cause] FROM RApID_DropDowns", holder.RepairConnectionString);
+                    break;
+                case "Replacement":
+                    cmbx.PullItemsFromQuery("SELECT [Replacement] FROM RApID_DropDowns", holder.RepairConnectionString);
+                    break;
+                case "Issue":
+                    cmbx.PullItemsFromQuery("SELECT DISTINCT [Issue] FROM tblManufacturingTechIssues", holder.RepairConnectionString);
+                    break;
+                case "Item":
+                    cmbx.PullItemsFromQuery("SELECT DISTINCT [Item] FROM tblManufacturingTechIssues", holder.RepairConnectionString);
+                    break;
+                case "Problem":
+                    cmbx.PullItemsFromQuery("SELECT DISTINCT [Problem] FROM tblManufacturingTechIssues", holder.RepairConnectionString);
+                    break;
+                default:
+                    cmbx.Items.Add("<NULLBOXNAME>");
+                    break;
+            }
         }
     }
 }

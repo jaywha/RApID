@@ -135,16 +135,7 @@
             </tb:TaskbarIcon.ContextMenu>
         </tb:TaskbarIcon>
         <Button x:Name="btnShake" Content="Hello" HorizontalAlignment="Left" Margin="10,325,0,0" VerticalAlignment="Top" Width="75" Visibility="Collapsed"/>
-        <Button Margin="370,-13,22,313" RenderTransformOrigin="0.5,0.5" Content="Test" Click="Button_Click">
-            <Button.RenderTransform>
-                <TransformGroup>
-                    <ScaleTransform/>
-                    <SkewTransform AngleY="26.739"/>
-                    <RotateTransform Angle="-11.446"/>
-                    <TranslateTransform Y="25.19"/>
-                </TransformGroup>
-            </Button.RenderTransform>
-        </Button>
+        <Button Margin="311,8,10,291" RenderTransformOrigin="0.5,0.5" Content="Test" Click="Button_Click" Style="{StaticResource MainMenuButton}" Height="Auto" Width="Auto"/>
         <!--<uc:ucSuggestBox Width="100" Margin="10,10,334,279" LabelText="Test" Owner="{Binding ElementName=wndMain, Mode=OneWay}">
             <uc:ucSuggestBox.AutoCompleteSource>
                 <System:String>Example</System:String>

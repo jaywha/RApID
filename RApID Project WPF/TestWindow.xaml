@@ -4,9 +4,13 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:RApID_Project_WPF"
+        xmlns:sys="clr-namespace:System;assembly=mscorlib"
         xmlns:UserControls="clr-namespace:RApID_Project_WPF.UserControls" x:Class="RApID_Project_WPF.TestWindow"
         mc:Ignorable="d"
         Title="TestWindow" Height="527.674" Width="901.313">
+    <Window.Resources>
+        <UserControls:BoolToStringConverter x:Key="StatusConv"/>
+    </Window.Resources>
     <Grid>
         <Grid.Background>
             <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
@@ -17,7 +21,25 @@
                 <GradientStop Color="#FFA8A8A8" Offset="0.854"/>
             </LinearGradientBrush>
         </Grid.Background>
-        <UserControls:ucUnitIssue x:Name="unitIssue" HorizontalAlignment="Left" Height="478" Margin="10,10,0,0" VerticalAlignment="Top" Width="354" ReadOnly="False" Foreground="White" LabelColor="White"/>
-        <Button Content="Button" HorizontalAlignment="Left" Margin="488,187,0,0" VerticalAlignment="Top" Width="75" Click="Button_Click"/>
+        <UserControls:ucUnitIssue x:Name="unitIssue" HorizontalAlignment="Left" Height="Auto" Margin="10,10,0,10" Width="354" ReadOnly="True" IsRepairForm="False" Foreground="White" LabelColor="White"/>
+        <Button Content="Toggle" Background="AliceBlue" Margin="0,10,10,0" VerticalAlignment="Top" Click="btnToggle_Click" Height="30" HorizontalAlignment="Right" Width="75"/>
+        <Button Content="Mutate" Foreground="Orange" Background="DarkOliveGreen" Margin="0,45,10,0" VerticalAlignment="Top" Click="btnMutate_Click" Height="30" HorizontalAlignment="Right" Width="75"
+                IsEnabled="{Binding ElementName=unitIssue,Path=ReadOnly,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"/>
+
+        <Label HorizontalAlignment="Right" Margin="0,10,91,0" VerticalAlignment="Top" Width="150" Height="30" BorderBrush="Orange" BorderThickness="2" Foreground="Azure">
+            <Label.Content>
+                <Binding Path="ReadOnly" ElementName="unitIssue" Mode="TwoWay" UpdateSourceTrigger="PropertyChanged" Converter="{StaticResource StatusConv}">
+                    <Binding.ConverterParameter>
+                        <x:Array Type="{x:Type sys:String}">
+                            <sys:String>ReadOnly: Enabled</sys:String>
+                            <sys:String>ReadOnly: Disabled</sys:String>
+                        </x:Array>
+                    </Binding.ConverterParameter>
+                </Binding>
+            </Label.Content>
+        </Label>
+        <Label HorizontalAlignment="Right" Margin="0,45,91,0" VerticalAlignment="Top" Width="150" Height="30" BorderBrush="Orange" BorderThickness="2" Foreground="Azure">
+            <Binding Path="ReportedIssue" ElementName="unitIssue" Mode="TwoWay" UpdateSourceTrigger="PropertyChanged"/>
+        </Label>
     </Grid>
 </Window>

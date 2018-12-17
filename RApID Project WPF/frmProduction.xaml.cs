@@ -675,12 +675,18 @@ namespace RApID_Project_WPF
         /// <returns>True/False based on if EOL information exists.</returns>
         private bool QueryEOL()
         {
-            string query = "SELECT PartNumber, ModelDesc FROM tblEOL WHERE PCBSerial = '" + txtSerialNumber.Text.ToString().TrimEnd() + "';";
-            bool bQueryEOLPassed = csCrossClassInteraction.SNEOLQuery(query, txtPartNumber, txtPartName);
+            try
+            {
+                string query = "SELECT PartNumber, ModelDesc FROM tblEOL WHERE PCBSerial = '" + txtSerialNumber.Text.ToString().TrimEnd() + "';";
+                bool bQueryEOLPassed = csCrossClassInteraction.SNEOLQuery(query, txtPartNumber, txtPartName);
 
-            if (bQueryEOLPassed) { sVar.LogHandler.CreateLogAction("The EOL Query was successful!", csLogging.LogState.NOTE); }
+                if (bQueryEOLPassed) { sVar.LogHandler.CreateLogAction("The EOL Query was successful!", csLogging.LogState.NOTE); }
 
-            return bQueryEOLPassed;
+                return bQueryEOLPassed;
+            } catch(Exception e) {
+                csExceptionLogger.csExceptionLogger.Write("QueryEOL_SerialNumFail", e);
+                return false;
+            }
         }
 
         /// <summary>
@@ -688,18 +694,23 @@ namespace RApID_Project_WPF
         /// </summary>
         private void QueryProduction()
         {
-            string query = "SELECT Model FROM Production WHERE SerialNum = '" + txtSerialNumber.Text + "';";
-            string sProdQueryResults = csCrossClassInteraction.ProductionQuery(query);
+            try
+            {
+                string query = "SELECT Model FROM Production WHERE SerialNum = '" + txtSerialNumber.Text + "';";
+                string sProdQueryResults = csCrossClassInteraction.ProductionQuery(query);
 
-            if (sProdQueryResults.ToLower().Contains("rev"))
-            {
-                csCrossClassInteraction.LoadPartNumberForm(true, new List<TextBox> { txtPartNumber, txtPartName, txtPartSeries });
-            }
-            else
-            {
-                sVar.LogHandler.CreateLogAction("Part Number '" + sProdQueryResults + "' was found.", csLogging.LogState.NOTE);
-                txtPartNumber.Text = sProdQueryResults;
-                QueryItemMaster();
+                if (sProdQueryResults.ToLower().Contains("rev"))
+                {
+                    csCrossClassInteraction.LoadPartNumberForm(true, new List<TextBox> { txtPartNumber, txtPartName, txtPartSeries });
+                }
+                else
+                {
+                    sVar.LogHandler.CreateLogAction("Part Number '" + sProdQueryResults + "' was found.", csLogging.LogState.NOTE);
+                    txtPartNumber.Text = sProdQueryResults;
+                    QueryItemMaster();
+                }
+            } catch (Exception e) {
+                csExceptionLogger.csExceptionLogger.Write("QueryProduction_SerialNumFail", e);
             }
         }
 
@@ -708,13 +719,18 @@ namespace RApID_Project_WPF
         /// </summary>
         private void QueryItemMaster()
         {
-            string query = "SELECT PartName FROM ItemMaster WHERE PartNumber = '" + txtPartNumber.Text.ToString().TrimEnd() + "';";
-            string sItemMasterQueryResults = csCrossClassInteraction.ItemMasterQuery(query);
-
-            if (!string.IsNullOrEmpty(sItemMasterQueryResults))
+            try
             {
-                txtPartName.Text = sItemMasterQueryResults;
-                sVar.LogHandler.CreateLogAction("txtPartName's value has been set to " + txtPartName.Text + ".", csLogging.LogState.NOTE);
+                string query = "SELECT PartName FROM ItemMaster WHERE PartNumber = '" + txtPartNumber.Text.ToString().TrimEnd() + "';";
+                string sItemMasterQueryResults = csCrossClassInteraction.ItemMasterQuery(query);
+
+                if (!string.IsNullOrEmpty(sItemMasterQueryResults))
+                {
+                    txtPartName.Text = sItemMasterQueryResults;
+                    sVar.LogHandler.CreateLogAction("txtPartName's value has been set to " + txtPartName.Text + ".", csLogging.LogState.NOTE);
+                }
+            } catch (Exception e) {
+                csExceptionLogger.csExceptionLogger.Write("QueryItemMaster_SerialNumFail", e);
             }
         }
 

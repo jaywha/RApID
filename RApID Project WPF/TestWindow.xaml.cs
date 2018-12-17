@@ -24,9 +24,24 @@ namespace RApID_Project_WPF
             InitializeComponent();
         }
 
-        private void Button_Click(object sender, RoutedEventArgs e)
-        {
+        private void btnToggle_Click(object sender, RoutedEventArgs e) => unitIssue.ReadOnly = !unitIssue.ReadOnly;
 
+        private void btnMutate_Click(object sender, RoutedEventArgs e)
+        {
+            if (unitIssue.ReadOnly)
+            {
+                //From: https://stackoverflow.com/a/1344258/7476183
+                var chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+                var stringChars = new char[8];
+                var random = new Random();
+
+                for (int i = 0; i < stringChars.Length; i++)
+                {
+                    stringChars[i] = chars[random.Next(chars.Length)];
+                }
+
+                unitIssue.ReportedIssue = new string(stringChars);
+            }
         }
     }
 }

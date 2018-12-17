@@ -202,6 +202,7 @@
     <Compile Include="frmRepairPRI.xaml.cs">
       <DependentUpon>frmRepairPRI.xaml</DependentUpon>
     </Compile>
+    <Compile Include="GetDotNetVersion.cs" />
     <Compile Include="ServiceManager.cs" />
     <Compile Include="Settings.cs" />
     <Compile Include="StaticVars.cs" />

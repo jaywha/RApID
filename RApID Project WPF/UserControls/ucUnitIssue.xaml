@@ -34,7 +34,7 @@
         <sys:Double x:Key="mulWidth">1.3</sys:Double>
     </UserControl.Resources>
     <Grid>
-        <ScrollViewer>
+        <ScrollViewer VerticalScrollBarVisibility="Auto">
             <StackPanel x:Name="stkMain" Orientation="Vertical" HorizontalAlignment="Left">
                 <Label Content="Reported Issue:" Style="{StaticResource LabelBaseStyle}"/>
                 <TextBox x:Name="txtReportedIssue" Style="{StaticResource TextboxUnitIssueStyle}" Text="{Binding Path=ReportedIssue,ElementName=uccUnitIssue,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}">

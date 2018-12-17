@@ -213,16 +213,17 @@ namespace RApID_Project_WPF
         }
 
         /// <summary>
-        /// Fills a combobox with data from a sql query.
+        /// Adds data from a sql query to a combobox's item list.
         /// </summary>
         /// <param name="cbToFill">ComboBox to fill</param>
         /// <param name="_query">SQL Query</param>
-        public static void FillFromQuery(this ComboBox cbToFill, string _query)
+        /// <param name="connString">Optional Connection String</param>
+        public static void PullItemsFromQuery(this ComboBox cbToFill, string _query, string connString = "")
         {
             sVar.LogHandler.CreateLogAction(string.Format("Attempting to fill {0} from a SQL Query.", cbToFill.Name.ToString()), EricStabileLibrary.csLogging.LogState.NOTE);
             sVar.LogHandler.CreateLogAction("SQL QUERY: " + _query, EricStabileLibrary.csLogging.LogState.SQLQUERY);
 
-            var conn = new SqlConnection(holder.HummingBirdConnectionString);
+            var conn = new SqlConnection(string.IsNullOrEmpty(connString) ? holder.HummingBirdConnectionString : connString);
             var cmd = new SqlCommand(_query, conn);
             try
             {
@@ -231,7 +232,7 @@ namespace RApID_Project_WPF
                 {
                     while (reader.Read())
                     {
-                        if (reader[0] != DBNull.Value)
+                        if (reader[0] != DBNull.Value && !string.IsNullOrEmpty(reader[0].ToString()))
                         {
                             cbToFill.Items.Add(reader[0].ToString());
                             sVar.LogHandler.CreateLogAction(string.Format("{0} was found and added to {1}.", reader[0].ToString(), cbToFill.Name.ToString()), EricStabileLibrary.csLogging.LogState.NOTE);
@@ -1061,7 +1062,7 @@ namespace RApID_Project_WPF
             var dMultiParts = new Dictionary<int, List<RepairMultipleIssues>>();
             var lIndividualIssues = new List<RepairMultipleIssues>();
 
-            #region Split the overall list into two separate list: 1 with individual unit issues, 2 with same unit issue but different parts replaced/ref des
+#region Split the overall list into two separate list: 1 with individual unit issues, 2 with same unit issue but different parts replaced/ref des
             int key = 0;
             RepairMultipleIssues rmi = null;
             for (int i = 0; i < _lrmi.Count; i++)
@@ -1108,14 +1109,14 @@ namespace RApID_Project_WPF
                     i--;
                 }
             }
-            #endregion
+#endregion
 
-            #region Add individual unit issues to the combined list
+#region Add individual unit issues to the combined list
             if (lIndividualIssues.Count > 0)
                 lCombinedRMI.AddRange(lIndividualIssues);
-            #endregion
+#endregion
 
-            #region Combine all of the duplicated items by generating lists of parts replaced and ref designators for use in one unit issue
+#region Combine all of the duplicated items by generating lists of parts replaced and ref designators for use in one unit issue
             if (dMultiParts.Keys.Count > 0)
             {
                 foreach (KeyValuePair<int, List<RepairMultipleIssues>> kvp in dMultiParts)
@@ -1147,7 +1148,7 @@ namespace RApID_Project_WPF
                     }
                 }
             }
-            #endregion
+#endregion
 
             return lCombinedRMI;
         }
