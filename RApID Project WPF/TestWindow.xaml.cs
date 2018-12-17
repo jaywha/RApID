@@ -28,20 +28,47 @@ namespace RApID_Project_WPF
 
         private void btnMutate_Click(object sender, RoutedEventArgs e)
         {
-            if (unitIssue.ReadOnly)
+            //From: https://stackoverflow.com/a/1344258/7476183
+            var chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+            var stringChars = new char[8];
+            var random = new Random();
+
+            for (int i = 0; i < stringChars.Length; i++)
             {
-                //From: https://stackoverflow.com/a/1344258/7476183
-                var chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-                var stringChars = new char[8];
-                var random = new Random();
-
-                for (int i = 0; i < stringChars.Length; i++)
-                {
-                    stringChars[i] = chars[random.Next(chars.Length)];
-                }
-
-                unitIssue.ReportedIssue = new string(stringChars);
+                stringChars[i] = chars[random.Next(chars.Length)];
             }
+
+            var buttonTag = (sender as Button).Tag;
+            switch (buttonTag) {
+                case "ReportedIssue":
+                    unitIssue.ReportedIssue = new string(stringChars);
+                    break;
+                case "TestResult":
+                    unitIssue.TestResult = new string(stringChars);
+                    break;
+                case "TestResultAbort":
+                    unitIssue.AbortResult = new string(stringChars);
+                    break;
+                case "Cause":
+                    unitIssue.Cause = new string(stringChars);
+                    break;
+                case "Replacement":
+                    unitIssue.Replacement = new string(stringChars);
+                    break;
+                case "Issue":
+                    unitIssue.Issue = new string(stringChars);
+                    break;
+                case "Item":
+                    unitIssue.Item = new string(stringChars);
+                    break;
+                case "Problem":
+                    unitIssue.Problem = new string(stringChars);
+                    break;
+                default:
+                    Console.WriteLine($"Tag {buttonTag} wasn't found => Nothing to do here...");
+                    break;
+            }
+            
         }
     }
 }

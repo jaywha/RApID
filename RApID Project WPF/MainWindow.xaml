@@ -135,7 +135,12 @@
             </tb:TaskbarIcon.ContextMenu>
         </tb:TaskbarIcon>
         <Button x:Name="btnShake" Content="Hello" HorizontalAlignment="Left" Margin="10,325,0,0" VerticalAlignment="Top" Width="75" Visibility="Collapsed"/>
-        <Button Margin="311,8,10,291" RenderTransformOrigin="0.5,0.5" Content="Test" Click="Button_Click" Style="{StaticResource MainMenuButton}" Height="Auto" Width="Auto"/>
+        <Button x:Name="btnTest" Margin="311,8,10,291" RenderTransformOrigin="0.5,0.5" Content="Test" Click="Button_Click" Style="{StaticResource MainMenuButton}" Height="Auto" Width="Auto" Visibility="Collapsed"/>
+        <Label x:Name="lblDebug" Content="D E B U G" HorizontalAlignment="Left" Margin="194,43,0,0" VerticalAlignment="Top" FontFamily="BigNoodleTooOblique" FontSize="24" Foreground="#FF0C0CF8" Panel.ZIndex="1" UseLayoutRounding="False" Cursor="Pen" Visibility="Collapsed">
+            <Label.Effect>
+                <DropShadowEffect BlurRadius="4" Direction="335" Opacity="0.65" ShadowDepth="8"/>
+            </Label.Effect>
+        </Label>
         <!--<uc:ucSuggestBox Width="100" Margin="10,10,334,279" LabelText="Test" Owner="{Binding ElementName=wndMain, Mode=OneWay}">
             <uc:ucSuggestBox.AutoCompleteSource>
                 <System:String>Example</System:String>

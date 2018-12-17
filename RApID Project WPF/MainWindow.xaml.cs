@@ -36,6 +36,11 @@ namespace RApID_Project_WPF
 
             InitializeComponent();
 
+#if DEBUG
+            lblDebug.Visibility = Visibility.Visible;
+            btnTest.Visibility = Visibility.Visible;
+#endif
+
             Notify = notifyRapid;
             GlobalInstance = this;
 
