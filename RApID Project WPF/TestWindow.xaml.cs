@@ -70,5 +70,14 @@ namespace RApID_Project_WPF
             }
             
         }
+
+        private void unitIssue_DropDownEvent(object sender, EventArgs e)
+        {
+
+            MessageBox.Show($"{(sender as ComboBox).Name} changed vaule to {(sender as ComboBox).SelectedValue} !", 
+                $"DropDownEvent triggered at {DateTime.Now:hh:mm:ss tt}",
+                MessageBoxButton.OK,
+                MessageBoxImage.Information);
+        }
     }
 }

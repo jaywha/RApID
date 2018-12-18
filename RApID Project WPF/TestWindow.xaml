@@ -21,7 +21,7 @@
                 <GradientStop Color="#FFA8A8A8" Offset="0.854"/>
             </LinearGradientBrush>
         </Grid.Background>
-        <UserControls:ucUnitIssue x:Name="unitIssue" HorizontalAlignment="Left" Height="Auto" Margin="10,10,0,10" Width="354" ReadOnly="True" IsRepairForm="False" Foreground="White" LabelColor="White"/>
+        <UserControls:ucUnitIssue x:Name="unitIssue" HorizontalAlignment="Left" Height="Auto" Margin="10,10,0,10" Width="354" ReadOnly="True" IsRepairForm="False" Foreground="White" LabelColor="White" DropDownEvent="unitIssue_DropDownEvent"/>
 
         <Label Content="Read Only:" Foreground="Azure" Margin="0,10,196,0" HorizontalContentAlignment="Right" VerticalContentAlignment="Center" Width="120" HorizontalAlignment="Right" Height="31" VerticalAlignment="Top"/>
         <Label HorizontalAlignment="Right" Margin="0,10,91,0" VerticalAlignment="Top" Width="100" Height="30" BorderBrush="Orange" BorderThickness="2" Foreground="Azure">

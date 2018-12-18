@@ -22,7 +22,7 @@ namespace RApID_Project_WPF.UserControls
         #endregion
 
         #region Dependency Properties
-
+        public static readonly DependencyProperty DropDownEventProperty = DependencyProperty.Register("DropDownEvent", typeof(EventHandler), typeof(ucUnitIssue));
         public static readonly DependencyProperty IsRepairFormProperty = DependencyProperty.Register("IsRepairForm", typeof(bool), typeof(ucUnitIssue));
 
         public static readonly DependencyProperty ReportedIssueProperty = DependencyProperty.Register("ReportedIssue", typeof(string), typeof(ucUnitIssue));
@@ -41,6 +41,7 @@ namespace RApID_Project_WPF.UserControls
 
         #region Fields
         private readonly csObjectHolder.csObjectHolder holder = csObjectHolder.csObjectHolder.ObjectHolderInstance();
+        private object @lockDropDownEvent = new object();        
         #endregion
 
         #region Properties
@@ -169,6 +170,27 @@ namespace RApID_Project_WPF.UserControls
                 OnPropertyChanged();
             }
         }
+
+        [Description("Will trigger whenever any Combobox Dropdown is closed.")]
+        public event EventHandler DropDownEvent
+        {
+            add
+            {
+                lock (@lockDropDownEvent)
+                {
+                    SetValue(DropDownEventProperty, value);
+                    OnPropertyChanged();
+                }
+            }
+            remove
+            {
+                lock (@lockDropDownEvent)
+                {
+                    SetValue(DropDownEventProperty, null);
+                    OnPropertyChanged();
+                }
+            }
+        }
         #endregion
 
         public ucUnitIssue()
@@ -192,6 +214,8 @@ namespace RApID_Project_WPF.UserControls
             }
         }
 
+        #region Switch Readonly Mode (TextBoxes <-> ComboBoxes)
+
         public bool MutateToComboBoxes()
         {
             return Dispatcher.Invoke(() => { 
@@ -209,8 +233,8 @@ namespace RApID_Project_WPF.UserControls
                                 Name = txtbx.Name,
                                 Width = txtbx.Width,
                                 HorizontalAlignment = txtbx.HorizontalAlignment,
-                                VerticalAlignment = txtbx.VerticalAlignment
-                            };
+                                VerticalAlignment = txtbx.VerticalAlignment                                
+                            }; cmbx.DropDownClosed += ComboBox_DropDownClosed;
 
                             ComboBoxFiller(ref cmbx);
 
@@ -304,5 +328,10 @@ namespace RApID_Project_WPF.UserControls
                     break;
             }
         }
+        #endregion
+
+        #region Dropdown Events
+        private void ComboBox_DropDownClosed(object sender, EventArgs e) => ((EventHandler)GetValue(DropDownEventProperty))?.Invoke(sender, e);
+        #endregion
     }
 }
