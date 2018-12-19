@@ -24,6 +24,7 @@ namespace RApID_Project_WPF.UserControls
         public static readonly DependencyProperty DesignWidthProperty = DependencyProperty.Register("DesignWidth", typeof(double), typeof(ucIssueTabControl), new PropertyMetadata(275.0));
         public static readonly DependencyProperty DesignHeightProperty = DependencyProperty.Register("DesignHeight", typeof(double), typeof(ucIssueTabControl), new PropertyMetadata(450.0));
         public static readonly DependencyProperty ReadOnlyProperty = DependencyProperty.Register("ReadOnly", typeof(bool), typeof(ucIssueTabControl), new PropertyMetadata(false));
+        public static readonly DependencyProperty IsRepairProperty = DependencyProperty.Register("IsRepair", typeof(bool), typeof(ucIssueTabControl), new PropertyMetadata(false));
         #endregion
 
         #region Properties
@@ -45,6 +46,13 @@ namespace RApID_Project_WPF.UserControls
             get { return (bool)GetValue(ReadOnlyProperty); }
             set { SetValue(ReadOnlyProperty, value); }
         }
+        [Description("Determine what data to present."),Category("Common")]
+        public bool IsRepair
+        {
+            get { return (bool)GetValue(IsRepairProperty); }
+            set { SetValue(IsRepairProperty, value); }
+        }
+
 
         public int Count
         {
@@ -97,13 +105,14 @@ namespace RApID_Project_WPF.UserControls
                     HorizontalAlignment = HorizontalAlignment.Center,
                     VerticalAlignment = VerticalAlignment.Top,
                     Width = (double)GetValue(DesignWidthProperty) - 10,
-                    Height = (double)GetValue(DesignHeightProperty) - 10
+                    Height = (double)GetValue(DesignHeightProperty) - 10                    
                 },
                 HeaderTemplate = tcTabs.FindResource(ReadOnly ? "ROTabHeader" : "TabHeader") as DataTemplate,
                 HorizontalAlignment = HorizontalAlignment.Left,
                 VerticalAlignment = VerticalAlignment.Top
             };
 
+            (newTab.Content as ucUnitIssue).btnResetIssueData.Content += $"#{count - 1}";
             _tabItems.Insert(count - 1, newTab);
             return newTab;
         }

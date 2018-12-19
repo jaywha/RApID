@@ -79,5 +79,7 @@ namespace RApID_Project_WPF
                 MessageBoxButton.OK,
                 MessageBoxImage.Information);
         }
+
+        private void btnMutateForm_Click(object sender, RoutedEventArgs e) => unitIssue.IsRepairForm = !unitIssue.IsRepairForm;
     }
 }

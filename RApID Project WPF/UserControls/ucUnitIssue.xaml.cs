@@ -7,6 +7,7 @@ using System.Windows.Controls;
 using System.Windows.Media;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Windows.Data;
 
 namespace RApID_Project_WPF.UserControls
 {
@@ -233,16 +234,17 @@ namespace RApID_Project_WPF.UserControls
                                 Name = txtbx.Name,
                                 Width = txtbx.Width,
                                 HorizontalAlignment = txtbx.HorizontalAlignment,
-                                VerticalAlignment = txtbx.VerticalAlignment                                
+                                VerticalAlignment = txtbx.VerticalAlignment,
+                                Visibility =  txtbx.Visibility
                             }; cmbx.DropDownClosed += ComboBox_DropDownClosed;
+
+                            cmbx.SetBinding(ComboBox.TextProperty, txtbx.GetBindingExpression(TextBox.TextProperty).ParentBinding);
 
                             ComboBoxFiller(ref cmbx);
 
                             var currChildIndex = stkMain.Children.IndexOf(txtbx);
                             stkMain.Children.Remove(txtbx);
                             stkMain.Children.Insert(currChildIndex, cmbx);
-
-                            cmbx.SetBinding(ComboBox.TextProperty, txtbx.GetBindingExpression(TextBox.TextProperty).ParentBinding);
                         }
                     }
                 }
@@ -273,14 +275,15 @@ namespace RApID_Project_WPF.UserControls
                                 Name = cmbx.Name,
                                 Width = cmbx.Width,
                                 HorizontalAlignment = cmbx.HorizontalAlignment,
-                                VerticalAlignment = cmbx.VerticalAlignment
+                                VerticalAlignment = cmbx.VerticalAlignment,
+                                Visibility = cmbx.Visibility
                             };
+
+                            txtbx.SetBinding(TextBox.TextProperty, cmbx.GetBindingExpression(ComboBox.TextProperty).ParentBinding);
 
                             var currChildIndex = stkMain.Children.IndexOf(cmbx);
                             stkMain.Children.Remove(cmbx);
                             stkMain.Children.Insert(currChildIndex, txtbx);
-
-                            txtbx.SetBinding(TextBox.TextProperty, cmbx.GetBindingExpression(ComboBox.TextProperty).ParentBinding);
                         }
                     }
                 }
@@ -330,8 +333,21 @@ namespace RApID_Project_WPF.UserControls
         }
         #endregion
 
-        #region Dropdown Events
+        #region UIElement Events
         private void ComboBox_DropDownClosed(object sender, EventArgs e) => ((EventHandler)GetValue(DropDownEventProperty))?.Invoke(sender, e);
+
+        private void btnResetIssueData_Click(object sender, RoutedEventArgs e)
+        {
+            ReportedIssue = string.Empty;
+            TestResult = string.Empty;
+            AbortResult = string.Empty;
+            Issue = string.Empty;
+            Item = string.Empty;
+            Problem = string.Empty;
+            Cause = string.Empty;
+            Replacement = string.Empty;
+            dgMultipleParts.Items.Clear();
+        }
         #endregion
     }
 }

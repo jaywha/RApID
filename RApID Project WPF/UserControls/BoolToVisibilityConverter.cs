@@ -12,12 +12,25 @@ namespace RApID_Project_WPF.UserControls
     {
         public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
         {
-            return (bool) value ? Visibility.Hidden : Visibility.Visible;
+            if(parameter != null)
+            {
+                if (parameter is string s)
+                {
+                    if (s.Equals("Repair"))
+                    {
+                        return (bool)value ? Visibility.Collapsed : Visibility.Visible;
+                    }
+                    else
+                    {
+                        return !((bool)value) ? Visibility.Collapsed : Visibility.Visible;
+                    }
+                }
+            } return (bool) value ? Visibility.Hidden : Visibility.Visible;
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
         {
-            return (Visibility) value == Visibility.Hidden;
+            return (Visibility) value != Visibility.Hidden;
         }
     }
 }
