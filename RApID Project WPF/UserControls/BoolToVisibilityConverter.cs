@@ -18,12 +18,9 @@ namespace RApID_Project_WPF.UserControls
                 {
                     if (s.Equals("Repair"))
                     {
-                        return (bool)value ? Visibility.Collapsed : Visibility.Visible;
+                        return (bool)value ? Visibility.Visible : Visibility.Collapsed;
                     }
-                    else
-                    {
-                        return !((bool)value) ? Visibility.Collapsed : Visibility.Visible;
-                    }
+                    return (bool)value ? Visibility.Collapsed : Visibility.Visible;
                 }
             } return (bool) value ? Visibility.Hidden : Visibility.Visible;
         }

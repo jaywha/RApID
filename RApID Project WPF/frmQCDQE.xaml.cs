@@ -74,8 +74,8 @@ namespace RApID_Project_WPF
 
         private void buildDGViews()
         {
-            csCrossClassInteraction.dgBuildView(dgMultipleParts, "MULTIPLEPARTS");
-            csCrossClassInteraction.dgBuildView(dgPrevRepairInfo, "PREVREPAIRINFO");
+            csCrossClassInteraction.dgBuildView(dgMultipleParts, DataGridTypes.MULTIPLEPARTS);
+            csCrossClassInteraction.dgBuildView(dgPrevRepairInfo, DataGridTypes.PREVREPAIRINFO);
         }
 
         private void handleInitSerialPort()

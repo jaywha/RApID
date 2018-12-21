@@ -185,7 +185,12 @@
                     </TextBox.Visibility>
                 </TextBox>
 
-                <Label Content="Parts Replaced:" Style="{StaticResource LabelBaseStyle}"/>
+                <DockPanel>
+                    <Label Content="Parts Replaced:" Style="{StaticResource LabelBaseStyle}"/>
+                    <Button x:Name="btnAddPartsReplaced" HorizontalAlignment="Right" Height="30" Width="30" Click="btnAddPartsReplaced_Click">
+                        <Image Source="/RApID Project WPF;component/Resources/14-149858_big-image-green-plus-icon-png.jpg" Stretch="Fill"/>
+                    </Button>
+                </DockPanel>
                 <DataGrid x:Name="dgMultipleParts" Style="{StaticResource DataGridBaseStyle}" ItemsSource="{Binding Path=PartsReplaced,ElementName=uccUnitIssue,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" Height="100">
                     <DataGrid.Width>
                         <Binding ElementName="uccUnitIssue" Path="Width" Mode="TwoWay" UpdateSourceTrigger="PropertyChanged" Converter="{StaticResource SizeConverter}">
@@ -196,7 +201,7 @@
                     </DataGrid.Width>
                 </DataGrid>
 
-                <Separator BorderThickness="1" BorderBrush="DarkGoldenrod" Height="10">
+                <Separator BorderThickness="1" BorderBrush="DarkGoldenrod" Height="10" Visibility="{Binding ElementName=uccUnitIssue,Path=ReadOnly,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged,Converter={StaticResource BoolToVis}}">
                     <Separator.Width>
                         <Binding ElementName="uccUnitIssue" Path="Width" Mode="TwoWay" UpdateSourceTrigger="PropertyChanged" Converter="{StaticResource SizeConverter}">
                             <Binding.ConverterParameter>

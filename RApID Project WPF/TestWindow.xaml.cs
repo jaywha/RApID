@@ -81,5 +81,13 @@ namespace RApID_Project_WPF
         }
 
         private void btnMutateForm_Click(object sender, RoutedEventArgs e) => unitIssue.IsRepairForm = !unitIssue.IsRepairForm;
+
+        private void unitIssue_AddPartReplaced(object sender, RoutedEventArgs e) 
+            => unitIssue.dgMultipleParts.Items.Add(
+                    new MultiplePartsReplaced() {
+                        RefDesignator = "R100",
+                        PartReplaced = "664103-2",
+                        PartsReplacedPartDescription = "Supreme 4kΩ Resistor"
+                    });
     }
 }

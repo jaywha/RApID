@@ -34,8 +34,8 @@ namespace RApID_Project_WPF.UserControls
         public ucAOITab()
         {
             InitializeComponent();
-            dgAOI.dgBuildView("AOI");
-            dgDefectCodes.dgBuildView("DEFECTCODES");
+            dgAOI.dgBuildView(DataGridTypes.AOI);
+            dgDefectCodes.dgBuildView(DataGridTypes.DEFECTCODES);
         }
 
         /// <summary>

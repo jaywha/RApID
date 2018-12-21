@@ -50,7 +50,7 @@ namespace RApID_Project_WPF
         /// </summary>
         private void buildDGView()
         {
-            csCrossClassInteraction.dgBuildView(dgRPInfo, "CUSTOMERINFO");
+            csCrossClassInteraction.dgBuildView(dgRPInfo, DataGridTypes.CUSTOMERINFO);
         }
 
         /// <summary>

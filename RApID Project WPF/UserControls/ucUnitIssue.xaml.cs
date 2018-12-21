@@ -24,8 +24,9 @@ namespace RApID_Project_WPF.UserControls
 
         #region Dependency Properties
         public static readonly DependencyProperty DropDownEventProperty = DependencyProperty.Register("DropDownEvent", typeof(EventHandler), typeof(ucUnitIssue));
-        public static readonly DependencyProperty IsRepairFormProperty = DependencyProperty.Register("IsRepairForm", typeof(bool), typeof(ucUnitIssue));
+        public static readonly DependencyProperty AddPartReplacedProperty = DependencyProperty.Register("AddPartReplaced", typeof(RoutedEventHandler), typeof(ucUnitIssue));
 
+        public static readonly DependencyProperty IsRepairFormProperty = DependencyProperty.Register("IsRepairForm", typeof(bool), typeof(ucUnitIssue));
         public static readonly DependencyProperty ReportedIssueProperty = DependencyProperty.Register("ReportedIssue", typeof(string), typeof(ucUnitIssue));
         public static readonly DependencyProperty TestResultProperty = DependencyProperty.Register("TestResult", typeof(string), typeof(ucUnitIssue));
         public static readonly DependencyProperty AbortResultProperty = DependencyProperty.Register("AbortResult", typeof(string), typeof(ucUnitIssue));
@@ -42,7 +43,29 @@ namespace RApID_Project_WPF.UserControls
 
         #region Fields
         private readonly csObjectHolder.csObjectHolder holder = csObjectHolder.csObjectHolder.ObjectHolderInstance();
-        private object @lockDropDownEvent = new object();        
+        private readonly List<string> SpecialCases = new List<string>() { "Cause", "Replacement", "Item", "Problem" };
+
+        private Binding IsRepairVisibilityBinding = new Binding() {
+            ElementName = "uccUnitIssue",
+            Path = new PropertyPath("IsRepairForm"),
+            Converter = new BoolToVisibilityConverter(),
+            ConverterParameter = "Repair",
+            Mode = BindingMode.TwoWay,
+            UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged
+        };
+        private Binding IsProductionVisibilityBinding = new Binding()
+        {
+            ElementName = "uccUnitIssue",
+            Path = new PropertyPath("IsRepairForm"),
+            Converter = new BoolToVisibilityConverter(),
+            ConverterParameter = "Produciton",
+            Mode = BindingMode.TwoWay,
+            UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged
+
+        };
+
+        private object @lockDropDownEvent = new object();
+        private object @lockAddPartReplacedEvent = new object();
         #endregion
 
         #region Properties
@@ -192,6 +215,28 @@ namespace RApID_Project_WPF.UserControls
                 }
             }
         }
+
+        [Description("Will trigger when the add part button is pressed.")]
+        public event RoutedEventHandler AddPartReplaced
+        {
+            add
+            {
+                lock (@lockAddPartReplacedEvent)
+                {
+                    SetValue(AddPartReplacedProperty, value);
+                    OnPropertyChanged();
+                }
+            }
+            remove
+            {
+                lock (@lockAddPartReplacedEvent)
+                {
+                    SetValue(AddPartReplacedProperty, null);
+                    OnPropertyChanged();
+                }
+            }
+        }
+
         #endregion
 
         public ucUnitIssue()
@@ -199,6 +244,7 @@ namespace RApID_Project_WPF.UserControls
             InitializeComponent();
             holder.vGetServerName("");
             DataContext = this;
+            dgMultipleParts.dgBuildView(DataGridTypes.MULTIPLEPARTS);
         }
 
         public ucUnitIssue(int issueNum)
@@ -217,6 +263,21 @@ namespace RApID_Project_WPF.UserControls
 
         #region Switch Readonly Mode (TextBoxes <-> ComboBoxes)
 
+        private Binding GetConvParam(FrameworkElement bx)
+        {
+            switch (bx.Name)
+            {
+                case "txtCause":
+                case "txtReplacement":
+                    return IsRepairVisibilityBinding;
+                case "txtItem":
+                case "txtProblem":
+                    return IsProductionVisibilityBinding;
+                default:
+                    return null;
+            }
+        }
+
         public bool MutateToComboBoxes()
         {
             return Dispatcher.Invoke(() => { 
@@ -234,11 +295,11 @@ namespace RApID_Project_WPF.UserControls
                                 Name = txtbx.Name,
                                 Width = txtbx.Width,
                                 HorizontalAlignment = txtbx.HorizontalAlignment,
-                                VerticalAlignment = txtbx.VerticalAlignment,
-                                Visibility =  txtbx.Visibility
+                                VerticalAlignment = txtbx.VerticalAlignment
                             }; cmbx.DropDownClosed += ComboBox_DropDownClosed;
 
                             cmbx.SetBinding(ComboBox.TextProperty, txtbx.GetBindingExpression(TextBox.TextProperty).ParentBinding);
+                            if(GetConvParam(txtbx) is Binding b) cmbx.SetBinding(VisibilityProperty, b);
 
                             ComboBoxFiller(ref cmbx);
 
@@ -275,11 +336,11 @@ namespace RApID_Project_WPF.UserControls
                                 Name = cmbx.Name,
                                 Width = cmbx.Width,
                                 HorizontalAlignment = cmbx.HorizontalAlignment,
-                                VerticalAlignment = cmbx.VerticalAlignment,
-                                Visibility = cmbx.Visibility
+                                VerticalAlignment = cmbx.VerticalAlignment
                             };
 
                             txtbx.SetBinding(TextBox.TextProperty, cmbx.GetBindingExpression(ComboBox.TextProperty).ParentBinding);
+                            if (GetConvParam(cmbx) is Binding b) txtbx.SetBinding(VisibilityProperty, b);
 
                             var currChildIndex = stkMain.Children.IndexOf(cmbx);
                             stkMain.Children.Remove(cmbx);
@@ -335,6 +396,7 @@ namespace RApID_Project_WPF.UserControls
 
         #region UIElement Events
         private void ComboBox_DropDownClosed(object sender, EventArgs e) => ((EventHandler)GetValue(DropDownEventProperty))?.Invoke(sender, e);
+        private void btnAddPartsReplaced_Click(object sender, RoutedEventArgs e) { ((RoutedEventHandler)GetValue(AddPartReplacedProperty))?.Invoke(sender, e); }
 
         private void btnResetIssueData_Click(object sender, RoutedEventArgs e)
         {

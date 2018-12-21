@@ -95,12 +95,12 @@ namespace RApID_Project_WPF
         #region Initialization
         private void buildDGViews()
         {
-            dgMultipleParts.dgBuildView("MULTIPLEPARTS");
-            dgMultipleParts_2.dgBuildView("MULTIPLEPARTS");
-            dgMultipleParts_3.dgBuildView("MULTIPLEPARTS");
-            ucAOITab.dgAOI.dgBuildView("AOI");
-            ucAOITab.dgDefectCodes.dgBuildView("DEFECTCODES");
-            dgPrevRepairInfo.dgBuildView("PREVREPAIRINFO");
+            dgMultipleParts.dgBuildView(DataGridTypes.MULTIPLEPARTS);
+            dgMultipleParts_2.dgBuildView(DataGridTypes.MULTIPLEPARTS);
+            dgMultipleParts_3.dgBuildView(DataGridTypes.MULTIPLEPARTS);
+            ucAOITab.dgAOI.dgBuildView(DataGridTypes.AOI);
+            ucAOITab.dgDefectCodes.dgBuildView(DataGridTypes.DEFECTCODES);
+            dgPrevRepairInfo.dgBuildView(DataGridTypes.PREVREPAIRINFO);
         }
 
         /// <summary>

@@ -21,6 +21,22 @@ using System.Drawing;
 
 namespace RApID_Project_WPF
 {
+    public enum DataGridTypes
+    {
+        /// <summary> UnitIssues<para/>(Reference Designator, Part Number, Part Description)</summary>
+        MULTIPLEPARTS,
+        /// <summary> Tech Subs [AOI Tab Main]<para/>(Sys ID,Inspector,Assembly,SerialNumber,Ref ID,Defect Code,Part Total,Rec Type,Reworked,PartNumber,BoardFail)</summary>
+        AOI,
+        /// <summary> Tech Subs [AOI Tab Legend]<para/>(Code,Description)</summary>
+        DEFECTCODES,
+        /// <summary> Tech Subs [DataLog Tab]<para/>(Tech Name, Date Submitted, SerialNumber)</summary>
+        PREVREPAIRINFO,
+        /// <summary> UNUSED <para/> (Part Name,Part Number)</summary>
+        PARTNUMBERNAME,
+        /// <summary> Multiple RP Numbers <para/> (Repair Number, Customer Number, Customer Name)</summary>
+        CUSTOMERINFO
+    }
+
     public static class csCrossClassInteraction
     {
         private static StaticVars sVar = StaticVars.StaticVarsInstance();
@@ -32,16 +48,16 @@ namespace RApID_Project_WPF
         /// </summary>
         /// <param name="dgToBuid"></param>
         /// <param name="sType">"MULTIPLEPARTS", "AOI", "DEFECTCODES", "PREVREPAIRINFO", "PARTNUMBERNAME", "CUSTOMERINFO"</param>
-        public static void dgBuildView(this DataGrid dgToBuid, string sType)
+        public static void dgBuildView(this DataGrid dgToBuid, DataGridTypes sType)
         {
             switch (sType)
             {
-                case "MULTIPLEPARTS":
+                case DataGridTypes.MULTIPLEPARTS:
                     dgToBuid.Columns.Add(DataGridViewHelper.newColumn("Ref Designator", "RefDesignator"));
                     dgToBuid.Columns.Add(DataGridViewHelper.newColumn("Part Replaced", "PartReplaced"));
                     dgToBuid.Columns.Add(DataGridViewHelper.newColumn("Part Description", "PartsReplacedPartDescription"));
                     break;
-                case "AOI":
+                case DataGridTypes.AOI:
                     dgToBuid.Columns.Add(DataGridViewHelper.newColumn("System ID", "SystemID"));
                     dgToBuid.Columns.Add(DataGridViewHelper.newColumn("Inspector", "Inspector"));
                     dgToBuid.Columns.Add(DataGridViewHelper.newColumn("Assy", "Assy"));
@@ -55,20 +71,20 @@ namespace RApID_Project_WPF
                     dgToBuid.Columns.Add(DataGridViewHelper.newColumn("PN", "PN"));
                     dgToBuid.Columns.Add(DataGridViewHelper.newColumn("BrdFail", "BrdFail"));
                     break;
-                case "DEFECTCODES":
+                case DataGridTypes.DEFECTCODES:
                     dgToBuid.Columns.Add(DataGridViewHelper.newColumn("Code", "Code"));
                     dgToBuid.Columns.Add(DataGridViewHelper.newColumn("Description", "Description"));
                     break;
-                case "PREVREPAIRINFO":
+                case DataGridTypes.PREVREPAIRINFO:
                     dgToBuid.Columns.Add(DataGridViewHelper.newColumn("Tech Name", "TechName"));
                     dgToBuid.Columns.Add(DataGridViewHelper.newColumn("Date Submitted", "DateSubmitted"));
                     dgToBuid.Columns.Add(DataGridViewHelper.newColumn("Serial Number", "SerialNumber"));
                     break;
-                case "PARTNUMBERNAME":
+                case DataGridTypes.PARTNUMBERNAME:
                     dgToBuid.Columns.Add(DataGridViewHelper.newColumn("Part Name", "PartName"));
                     dgToBuid.Columns.Add(DataGridViewHelper.newColumn("Part Number", "PartNumber"));
                     break;
-                case "CUSTOMERINFO":
+                case DataGridTypes.CUSTOMERINFO:
                     dgToBuid.Columns.Add(DataGridViewHelper.newColumn("RP Number", "RPNumber"));
                     dgToBuid.Columns.Add(DataGridViewHelper.newColumn("Customer Number", "CustomerNumber"));
                     dgToBuid.Columns.Add(DataGridViewHelper.newColumn("Customer Name", "CustomerName"));

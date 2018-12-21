@@ -21,7 +21,9 @@
                 <GradientStop Color="#FFA8A8A8" Offset="0.854"/>
             </LinearGradientBrush>
         </Grid.Background>
-        <UserControls:ucUnitIssue x:Name="unitIssue" HorizontalAlignment="Left" Height="Auto" Margin="10,10,0,10" Width="354" ReadOnly="True" IsRepairForm="False" Foreground="White" LabelColor="White" DropDownEvent="unitIssue_DropDownEvent"/>
+        <UserControls:ucUnitIssue x:Name="unitIssue" HorizontalAlignment="Left" Height="Auto" Margin="10,10,0,10" Width="354" 
+                                  ReadOnly="True" IsRepairForm="False" Foreground="White" LabelColor="White" 
+                                  DropDownEvent="unitIssue_DropDownEvent" AddPartReplaced="unitIssue_AddPartReplaced"/>
 
         <Label Content="Read Only:" Foreground="Azure" Margin="0,10,196,0" HorizontalContentAlignment="Right" VerticalContentAlignment="Center" Width="105" HorizontalAlignment="Right" Height="31" VerticalAlignment="Top"/>
         <Label HorizontalAlignment="Right" Margin="0,10,91,0" VerticalAlignment="Top" Width="100" Height="30" BorderBrush="Orange" BorderThickness="2" Foreground="Azure">
@@ -78,13 +80,14 @@
         <Border BorderThickness="2" BorderBrush="ForestGreen" Margin="369,22,306,419" Padding="1px">
             <StackPanel x:Name="stkOther" Orientation="Vertical">
                 <Label Content="Parent Window ComboBox" HorizontalAlignment="Left" VerticalAlignment="Top" Foreground="Azure"/>
-                <ComboBox x:Name="cmbxOther" HorizontalAlignment="Left" VerticalAlignment="Top" Width="151" BorderBrush="#FF002EFF" Foreground="#FFEAF0F1" DropDownClosed="unitIssue_DropDownEvent">
+                <ComboBox x:Name="cmbxOther" HorizontalAlignment="Left" VerticalAlignment="Top" 
+                          Width="151" BorderBrush="#FF002EFF" Foreground="Orange" DropDownClosed="unitIssue_DropDownEvent" SelectedIndex="0">
                     <ComboBox.Background>
                         <LinearGradientBrush EndPoint="0,1" StartPoint="0,0">
-                            <GradientStop Color="#FFC3D1DE" Offset="0"/>
-                            <GradientStop Color="#FF88B2DA" Offset="0.385"/>
-                            <GradientStop Color="#FF408FDC" Offset="0.528"/>
-                            <GradientStop Color="#FF0976E4" Offset="1"/>
+                            <GradientStop Color="#FF94ADC5" Offset="0"/>
+                            <GradientStop Color="#FF5C84AA" Offset="0.385"/>
+                            <GradientStop Color="#FF2D6BA8" Offset="0.528"/>
+                            <GradientStop Color="#FF073D74" Offset="1"/>
                         </LinearGradientBrush>
                     </ComboBox.Background>
                     <sys:String>Sample Selection</sys:String>
@@ -93,7 +96,7 @@
                 </ComboBox>
             </StackPanel>
         </Border>
-        <Button x:Name="btnMutateForm" HorizontalAlignment="Left" Margin="650,438,0,0" VerticalAlignment="Top" Width="181" Height="50" Click="btnMutateForm_Click">
+        <Button x:Name="btnMutateForm" HorizontalAlignment="Left" Margin="650,438,0,0" VerticalAlignment="Top" Width="181" Height="50" Click="btnMutateForm_Click" Foreground="#FFE8E4E4">
             <Button.Background>
                 <LinearGradientBrush EndPoint="0,1" StartPoint="0,0">
                     <GradientStop Color="#FFE8B0B0" Offset="0"/>
@@ -104,20 +107,22 @@
             </Button.Background>
             <Button.Content>
                 <StackPanel Orientation="Horizontal">
-                    <Label>
+                    <Label Foreground="{Binding ElementName=btnMutateForm,Path=Foreground,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}">
                         <Label.Content>
-                        <Binding ElementName="unitIssue" Path="IsRepairForm" Mode="TwoWay" UpdateSourceTrigger="PropertyChanged" Converter="{StaticResource StatusConv}">
+                            <Binding ElementName="unitIssue" Path="IsRepairForm" Mode="TwoWay" UpdateSourceTrigger="PropertyChanged" Converter="{StaticResource StatusConv}">
                                 <Binding.ConverterParameter>
                                     <x:Array Type="{x:Type sys:String}">
                                         <sys:String>Toggle to Production Mode</sys:String>
                                         <sys:String>Toggle to Repair Mode</sys:String>
                                     </x:Array>
                                 </Binding.ConverterParameter>
-                        </Binding>
+                            </Binding>
                         </Label.Content>
                     </Label>
                 </StackPanel>
             </Button.Content>
         </Button>
+        <Label Content="Is Repair Form:" Foreground="Azure" Margin="0,402,65,0" HorizontalContentAlignment="Right" VerticalContentAlignment="Center" Height="31" VerticalAlignment="Top" HorizontalAlignment="Right" Width="126"/>
+        <Label HorizontalAlignment="Right" Margin="0,403,10,0" VerticalAlignment="Top" Width="50" Height="30" BorderBrush="Orange" BorderThickness="2" Foreground="Azure" ToolTip="{Binding IsRepairForm, ElementName=unitIssue, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Content="{Binding IsRepairForm, ElementName=unitIssue, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
     </Grid>
 </Window>

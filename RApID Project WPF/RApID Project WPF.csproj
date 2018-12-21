@@ -376,6 +376,7 @@
     <Resource Include="Resources\close.png" />
     <Resource Include="RApID.ico" />
     <None Include="FodyWeavers.xml" />
+    <Resource Include="Resources\14-149858_big-image-green-plus-icon-png.jpg" />
     <Content Include="Resources\BarcodeLib.dll" />
     <Resource Include="Resources\settingsIcon.png" />
   </ItemGroup>
