@@ -13,6 +13,7 @@ using System.Windows.Controls;
 using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
+using System.Windows.Media.Effects;
 using System.Windows.Threading;
 using EricStabileLibrary;
 
@@ -1867,6 +1868,48 @@ namespace RApID_Project_WPF
             else
             {
                 txtMultiPartNum.SelectedIndex = txtMultiRefDes.SelectedIndex;
+            }
+        }
+
+        private MultiplePartsReplaced _newItem = null;
+        private void dgMultipleParts_DragEnter(object sender, DragEventArgs e)
+        {
+            var grid = (sender as DataGrid);
+            if(grid != null)
+            {
+                if(e.Data.GetDataPresent(typeof(MultiplePartsReplaced)) && grid.Dispatcher.Invoke(()=>!grid.Items.Contains(_newItem)))
+                {
+                    _newItem = (MultiplePartsReplaced) e.Data.GetData(typeof(MultiplePartsReplaced));
+                    grid.Dispatcher.Invoke(()=>grid.Items.Add(_newItem));
+                }
+            }
+        }
+
+        private void dgMultipleParts_DragOver(object sender, DragEventArgs e)
+        {
+            e.Effects = DragDropEffects.Copy | DragDropEffects.Move;
+        }
+
+        private void dgBOMList_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            var grid = (sender as DataGrid);
+            if (grid.SelectedItem is MultiplePartsReplaced mpr && e.LeftButton == MouseButtonState.Pressed)
+            {
+                //TODO: Hit Test for Cell
+                DragDrop.DoDragDrop(grid, mpr, DragDropEffects.Copy);
+            }
+        }
+
+        private void dgMultipleParts_DragLeave(object sender, DragEventArgs e)
+        {
+            var grid = (sender as DataGrid);
+            if (grid != null)
+            {
+                if (e.Data.GetDataPresent(typeof(MultiplePartsReplaced)) && grid.Dispatcher.Invoke(() => grid.Items.Contains(_newItem)))
+                {
+                    _newItem = (MultiplePartsReplaced)e.Data.GetData(typeof(MultiplePartsReplaced));
+                    grid.Dispatcher.Invoke(() => grid.Items.Remove(_newItem));
+                }
             }
         }
     }
