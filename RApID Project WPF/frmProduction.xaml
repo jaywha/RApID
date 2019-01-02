@@ -156,7 +156,7 @@
                         <CheckBox Name="cbxScrap" Content="SCRAP" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="115,369,0,0" />
 
                         <Label Content="Previous Repair Information" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="6,390,0,0" />
-                        <Label Content="Double Click on Record To View" FontStyle="Italic" FontSize="10" Margin="6,405,0,0" />
+                        <Label Content="Double Click on Record To View" FontStyle="Italic" FontSize="10" Margin="6,405,789,197" />
                         <DataGrid Name="dgPrevRepairInfo" HorizontalAlignment="Left" VerticalAlignment="Top" Width="280" Height="200" Margin="6,425,0,0" BeginningEdit="dgBeginEdit" MouseDoubleClick="dgPrevRepairInfo_MouseDoubleClick"/>
 
                         <TabControl HorizontalAlignment="Left" VerticalAlignment="Top" Width="300" Height="616" Margin="300,11,0,0">
@@ -280,6 +280,8 @@
                                 </Paragraph>
                             </FlowDocument>
                         </RichTextBox>
+                        <DataGrid x:Name="dgBOMList" HorizontalAlignment="Left" Height="328" Margin="766,295,0,0" VerticalAlignment="Top" Width="300"/>
+                        <Label x:Name="lblBOMList" Content="BOM Parts List" HorizontalAlignment="Left" Margin="766,264,0,0" VerticalAlignment="Top" Width="299" ToolTip="From JUKI Sheet of BOM Excel File"/>
 
                     </Grid>
                 </TabItem>
@@ -325,7 +327,7 @@
                                     <Binding.ConverterParameter>
                                         <x:Array Type="{x:Type sys:String}">
                                             <sys:String>Found</sys:String>
-                                            <sys:String>Not Found</sys:String>                                            
+                                            <sys:String>Not Found</sys:String>
                                         </x:Array>
                                     </Binding.ConverterParameter>
                                 </Binding>

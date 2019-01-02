@@ -22,12 +22,12 @@ namespace RApID_Project_WPF.UserControls
                     }
                     return (bool)value ? Visibility.Collapsed : Visibility.Visible;
                 }
-            } return (bool) value ? Visibility.Hidden : Visibility.Visible;
+            } return (bool) value ? Visibility.Collapsed : Visibility.Visible;
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
         {
-            return (Visibility) value != Visibility.Hidden;
+            return (Visibility) value != Visibility.Collapsed;
         }
     }
 }

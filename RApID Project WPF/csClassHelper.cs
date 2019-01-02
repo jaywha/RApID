@@ -129,9 +129,18 @@ namespace RApID_Project_WPF
     /// </summary>
     public class MultiplePartsReplaced
     {
-        public string PartReplaced { get; set; }
         public string RefDesignator { get; set; }
+        public string PartReplaced { get; set; }
         public string PartsReplacedPartDescription { get; set; }
+
+        public MultiplePartsReplaced() { }
+        public MultiplePartsReplaced(string rd, string pr, string desc)
+        {
+            RefDesignator = rd;
+            PartReplaced = pr;
+            PartsReplacedPartDescription = desc;
+        }
+        public override string ToString() => $"[{RefDesignator}::{PartReplaced}] => \"{PartsReplacedPartDescription}\"";
     }
 
     /// <summary>

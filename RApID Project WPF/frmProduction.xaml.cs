@@ -89,6 +89,7 @@ namespace RApID_Project_WPF
             ucAOITab.dgAOI.dgBuildView(DataGridTypes.AOI);
             ucAOITab.dgDefectCodes.dgBuildView(DataGridTypes.DEFECTCODES);
             dgPrevRepairInfo.dgBuildView(DataGridTypes.PREVREPAIRINFO);
+            dgBOMList.dgBuildView(DataGridTypes.MULTIPLEPARTS);
         }
 
         private void initDataLog()
@@ -247,6 +248,8 @@ namespace RApID_Project_WPF
             cbxScrap.IsChecked = false;
             dgPrevRepairInfo.Items.Clear();
             rtbAdditionalComments.Document.Blocks.Clear();
+            dgBOMList.ItemsSource = null;
+            dgBOMList.Items.Refresh();
 
             ucEOLTab.lblEOL.Content = "End of Line";
             ucEOLTab.lblPOST.Content = "Post Burn-In";
@@ -607,14 +610,14 @@ namespace RApID_Project_WPF
                                 #endif                            
                             } else {
                                 var result = await mapper.FindFileAsync(".xls");
-                                csCrossClassInteraction.DoExcelOperations(result.Item1, progMapper,
+                                csCrossClassInteraction.DoExcelOperations(result.Item1, progMapper, dgBOMList,
                                 new Tuple<Control, Control>(txtMultiRefDes, txtMultiPartNum),
                                 new Tuple<Control, Control>(txtMultiRefDes_2, txtMultiPartNum_2),
                                 new Tuple<Control, Control>(txtMultiRefDes_3, txtMultiPartNum_3));
-                                                        
+
                                 BOMFileActive = true;
                             }
-                        }), DispatcherPriority.Background);
+                        }), DispatcherPriority.ContextIdle);
                     }));
                 }
             }

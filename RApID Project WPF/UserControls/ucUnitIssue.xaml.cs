@@ -329,7 +329,7 @@ namespace RApID_Project_WPF.UserControls
                 {
                     foreach (var control in controls)
                     {
-                        if (control is ComboBox cmbx)
+                        if (control is ComboBox cmbx && cmbx.Name.StartsWith("txt"))
                         {
                             var txtbx = new TextBox()
                             {

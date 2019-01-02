@@ -11,6 +11,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
+using System.Windows.Threading;
 
 namespace RApID_Project_WPF
 {
@@ -89,5 +90,44 @@ namespace RApID_Project_WPF
                         PartReplaced = "664103-2",
                         PartsReplacedPartDescription = "Supreme 4kΩ Resistor"
                     });
+
+        public bool BOMFileActive = false;
+        private async void MapRefDesToPartNum()
+        {
+            try
+            {
+                using (var mapper = csSerialNumberMapper.Instance)
+                {
+                    await Task.Factory.StartNew(new Action(() => // in new task
+                    {
+                        Dispatcher.BeginInvoke(new Action(async () => // perform dispatched UI actions
+                        {
+                            if (!mapper.GetData(txtSerialNumber.Text))
+                            {
+#if DEBUG
+                                throw new InvalidOperationException("Couldn't find data for this barcode!");
+#else
+                                    MessageBox.Show("Couldn't find the barcode's entry in the database.\nPlease enter information manually.", 
+                                        "Soft Error - BOM Lookup", MessageBoxButton.OK, MessageBoxImage.Warning);
+#endif
+                            }
+                            else
+                            {
+                                var result = await mapper.FindFileAsync(".xls");
+                                csCrossClassInteraction.DoExcelOperations(result.Item1, progMapper,
+                                new Tuple<Control, Control>(unitIssue.cmbxRefDesignator, unitIssue.cmbxPartNumber));
+
+                                BOMFileActive = true;
+                            }
+                        }), DispatcherPriority.Background);
+                    }));
+                }
+            }
+            catch (InvalidOperationException ioe)
+            {
+                csExceptionLogger.csExceptionLogger.Write("BadBarcode-MapRefDesToPartNum", ioe);
+                return;
+            }
+        }
     }
 }

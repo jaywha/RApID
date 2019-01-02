@@ -212,6 +212,7 @@
     <Compile Include="UserControls\BoolToNotBoolConverter.cs" />
     <Compile Include="UserControls\BoolToStringConverter.cs" />
     <Compile Include="UserControls\BoolToVisibilityConverter.cs" />
+    <Compile Include="UserControls\CombiningConverter.cs" />
     <Compile Include="UserControls\HeightToHeightConverter.cs" />
     <Compile Include="UserControls\ucIssueTabControl.xaml.cs">
       <DependentUpon>ucIssueTabControl.xaml</DependentUpon>

@@ -18,6 +18,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using RApID_Project_WPF.UserControls;
 using System.Drawing;
+using System.Windows.Threading;
 
 namespace RApID_Project_WPF
 {
@@ -163,19 +164,29 @@ namespace RApID_Project_WPF
             w.Top = (((workAreaHeight - (w.Height * dpiScaling)) / 2) + (workArea.Top * dpiScaling));
         }
 
+        public static List<string> ReferenceDesignators { get; private set; } = new List<string>();
+        public static List<string> PartNumbers { get; private set; } = new List<string>();
+
         /// <summary>
         /// Does the excel operations for grabbing Reference and Part numbers.
         /// </summary>
         /// <param name="filePath">Path to the Excel file - normally the BoM file.</param>
+        /// <param name="progData">Any related progress bar to semi-report operation progress.</param>
         /// <param name="designators">A list of reference and part number designators to give autocompletion.</param>
-        public static async void DoExcelOperations(string filePath, ProgressBar progData = null, params DesginatorPair[] designators)
-        {
-            var refs = new List<string>();
-            var invs = new List<string>();
+        public static void DoExcelOperations(string filePath, ProgressBar progData = null, params DesginatorPair[] designators) => DoExcelOperations(filePath, progData, null, designators);
 
+        /// <summary>
+        /// Does the excel operations for grabbing Reference and Part numbers.
+        /// </summary>
+        /// <param name="filePath">Path to the Excel file - normally the BoM file.</param>
+        /// <param name="progData">Any related progress bar to semi-report operation progress.</param>
+        /// <param name="bomlist">The datagrid to fill with the results, if any.</param>
+        /// <param name="designators">A list of reference and part number designators to give autocompletion.</param>
+        public static async void DoExcelOperations(string filePath, ProgressBar progData = null, DataGrid bomlist = null, params DesginatorPair[] designators)
+        {
             try
             {
-                await Task.Factory.StartNew(new Action(() =>
+                await Task.Factory.StartNew(new Action(async () =>
                 {
                     if (progData != null) progData.Dispatcher.Invoke(() => progData.Visibility = Visibility.Visible);
                     if (string.IsNullOrEmpty(filePath)) {
@@ -195,11 +206,23 @@ namespace RApID_Project_WPF
                             while (reader.Read() && !string.IsNullOrEmpty(reader.GetValue(0)?.ToString())
                                                  && !string.IsNullOrEmpty(reader.GetValue(4)?.ToString()))
                             {
-                                refs.Add(reader.GetValue(0).ToString());
-                                invs.Add(reader.GetValue(4).ToString());
+                                ReferenceDesignators.Add(reader.GetValue(0).ToString());
+                                PartNumbers.Add(reader.GetValue(4).ToString());
                             }
                         }
                     }
+
+                    if (bomlist != null)
+                    {
+                        await Task.Factory.StartNew(new Action(() =>
+                        {
+                            var parts = ReferenceDesignators.Zip(
+                            PartNumbers, (referenceDesignator, partNumber)
+                            => new MultiplePartsReplaced(referenceDesignator, partNumber, frmProduction.getPartReplacedPartDescription(partNumber))).ToList();
+                        foreach (var part in parts) bomlist.Dispatcher.Invoke(()=>bomlist.Items.Add(part));
+                        }),TaskCreationOptions.LongRunning);
+                    }
+                    
 
                     foreach (var designator in designators)
                     {
@@ -208,18 +231,19 @@ namespace RApID_Project_WPF
 
                         if (reference is ComboBox refbox)
                         {
-                            refbox.Dispatcher.Invoke(() => refbox.ItemsSource = refs);
+                            refbox.Dispatcher.Invoke(() => refbox.ItemsSource = ReferenceDesignators);
                         }
 
                         if (partnumber is ComboBox invbox)
                         {
-                            invbox.Dispatcher.Invoke(() => invbox.ItemsSource = invs);
+                            invbox.Dispatcher.Invoke(() => invbox.ItemsSource = PartNumbers);
                         }
                     }
 
-                    while (Process.GetProcessesByName("EXCEL").Any()) { Process.GetProcessesByName("EXCEL")[0].Kill(); }
+                    GC.Collect();
+                    Thread.Sleep(500);
 
-                    if(progData != null) progData.Dispatcher.Invoke(() => progData.Visibility = Visibility.Hidden);
+                    if (progData != null) progData.Dispatcher.Invoke(() => progData.Visibility = Visibility.Hidden);
                 }));
             }
             catch (IOException ioe)
@@ -1261,9 +1285,9 @@ namespace RApID_Project_WPF
             issue.ReportedIssue = values[vi++];
             issue.TestResult = values[vi++];
             issue.AbortResult = values[vi++];
+            issue.Issue = values[vi++];
             issue.Cause = values[vi++];
             issue.Replacement = values[vi++];
-            issue.Issue = values[vi++];
             issue.Item = values[vi++];
             issue.Problem = values[vi++];
 
@@ -1274,17 +1298,9 @@ namespace RApID_Project_WPF
                 var partnums = values[vi++].Split(',');
                 var refids = values[vi++].Split(',');
                 var parts = refids.Zip(partnums,
-                    (rid, pnum) => new MultiplePartsReplaced()
-                    {
-                        RefDesignator = rid,
-                        PartReplaced = pnum,
-                        PartsReplacedPartDescription = frmProduction.getPartReplacedPartDescription(pnum)
-                    });
-                issue.PartsReplaced = new System.Collections.Generic.List<MultiplePartsReplaced>();
-                foreach (var part in parts)
-                {
-                    issue.PartsReplaced.Add(part);
-                }
+                    (rid, pnum) => new MultiplePartsReplaced(rid,pnum,frmProduction.getPartReplacedPartDescription(pnum)));
+                issue.PartsReplaced = new List<MultiplePartsReplaced>();
+                foreach (var part in parts) issue.PartsReplaced.Add(part);
             }
         }
     }
