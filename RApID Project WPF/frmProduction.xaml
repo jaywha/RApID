@@ -159,7 +159,7 @@
                         <Label Content="Double Click on Record To View" FontStyle="Italic" FontSize="10" Margin="6,405,789,197" />
                         <DataGrid Name="dgPrevRepairInfo" HorizontalAlignment="Left" VerticalAlignment="Top" Width="280" Height="200" Margin="6,425,0,0" BeginningEdit="dgBeginEdit" MouseDoubleClick="dgPrevRepairInfo_MouseDoubleClick"/>
 
-                        <TabControl HorizontalAlignment="Left" VerticalAlignment="Top" Width="300" Height="616" Margin="300,11,0,0">
+                        <TabControl x:Name="tcUnitIssues" HorizontalAlignment="Left" VerticalAlignment="Top" Width="300" Height="616" Margin="300,11,0,0">
                             <TabItem Name="tiUI1" Header="Unit Issue #1">
                                 <Grid Name="gridUI1" Background="#FFE5E5E5">
                                     <Label Content="Reported Issue:" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10,10,0,0" />
@@ -192,8 +192,7 @@
                                               IsEnabled="{Binding ElementName=wndMain, Path=BOMFileActive, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged,Converter={StaticResource NegateBoolean}}"/>
                                     <Button Name="btnAddRefPart" Margin="255,335,0,0" Content="Add" HorizontalAlignment="Left" VerticalAlignment="Top" Width="35" Visibility="Hidden" Click="btnAddRefPart_Click"/>
 
-                                    <DataGrid Name="dgMultipleParts" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10,370,0,0" Width="275" Height="180" AllowDrop="True" IsReadOnly="True" BeginningEdit="dgBeginEdit" Visibility="Hidden" KeyUp="dataGrid_KeyUp" 
-                                              DragEnter="dgMultipleParts_DragEnter" DragLeave="dgMultipleParts_DragLeave" DragOver="dgMultipleParts_DragOver"/>
+                                    <DataGrid Name="dgMultipleParts" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10,370,0,0" Width="275" Height="180" AllowDrop="True" IsReadOnly="True" BeginningEdit="dgBeginEdit" Visibility="Hidden" KeyUp="dataGrid_KeyUp" />
                                     <Button Name="btnReset" Content="Reset Unit Issue #1" Margin="10,555,0,0" Style="{StaticResource UnitIssueButtons}" Width="275" Visibility="Visible" Click="btnReset_Click"/>
                                 </Grid>
                             </TabItem>
@@ -281,7 +280,7 @@
                                 </Paragraph>
                             </FlowDocument>
                         </RichTextBox>
-                        <DataGrid x:Name="dgBOMList" HorizontalAlignment="Left" Height="328" Margin="605,295,0,0" VerticalAlignment="Top" Width="461" BeginningEdit="dgBeginEdit" PreviewMouseLeftButtonDown="dgBOMList_PreviewMouseLeftButtonDown"/>
+                        <DataGrid x:Name="dgBOMList" HorizontalAlignment="Left" Height="328" Margin="605,295,0,0" VerticalAlignment="Top" Width="461" BeginningEdit="dgBeginEdit" MouseDoubleClick="dgBOMList_MouseDoubleClick"/>
                         <Label x:Name="lblBOMList" Content="BOM Parts List" HorizontalAlignment="Left" Margin="605,264,0,0" VerticalAlignment="Top" Width="128" ToolTip="From JUKI Sheet of BOM Excel File"/>
 
                     </Grid>

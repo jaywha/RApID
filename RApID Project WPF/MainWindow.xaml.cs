@@ -212,6 +212,6 @@ namespace RApID_Project_WPF
             //-TODO: Use service to start a new instance.
         }
 
-        private void Button_Click(object sender, RoutedEventArgs e) => new TestWindow().Show();
+        private void Button_Click(object sender, RoutedEventArgs e) => new TestWindow { Owner = this, WindowStartupLocation = WindowStartupLocation.CenterOwner }.Show();
     }
 }

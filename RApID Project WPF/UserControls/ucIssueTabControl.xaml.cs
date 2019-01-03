@@ -107,7 +107,7 @@ namespace RApID_Project_WPF.UserControls
                     Width = (double)GetValue(DesignWidthProperty) - 10,
                     Height = (double)GetValue(DesignHeightProperty) - 10                    
                 },
-                HeaderTemplate = tcTabs.FindResource(ReadOnly ? "ROTabHeader" : "TabHeader") as DataTemplate,
+                HeaderTemplate = (DataTemplate) tcTabs.FindResource(ReadOnly ? "ROTabHeader" : "TabHeader"),
                 HorizontalAlignment = HorizontalAlignment.Left,
                 VerticalAlignment = VerticalAlignment.Top
             };

@@ -83,13 +83,19 @@ namespace RApID_Project_WPF
 
         private void btnMutateForm_Click(object sender, RoutedEventArgs e) => unitIssue.IsRepairForm = !unitIssue.IsRepairForm;
 
-        private void unitIssue_AddPartReplaced(object sender, RoutedEventArgs e) 
-            => unitIssue.dgMultipleParts.Items.Add(
-                    new MultiplePartsReplaced() {
-                        RefDesignator = "R100",
-                        PartReplaced = "664103-2",
-                        PartsReplacedPartDescription = "Supreme 4kΩ Resistor"
-                    });
+        private void unitIssue_AddPartReplaced(object sender, RoutedEventArgs e)
+        {
+            unitIssue.dgMultipleParts.Items.Add(
+                      new MultiplePartsReplaced()
+                      {
+                          RefDesignator = unitIssue.cmbxRefDesignator.SelectedValue.ToString(),
+                          PartReplaced = unitIssue.cmbxPartNumber.SelectedValue.ToString(),
+                          PartsReplacedPartDescription = frmProduction.getPartReplacedPartDescription(unitIssue.cmbxPartNumber.SelectedValue.ToString())
+                      });
+
+            unitIssue.cmbxPartNumber.SelectedIndex = -1;
+            unitIssue.cmbxRefDesignator.SelectedIndex = -1;
+        }
 
         public bool BOMFileActive = false;
         private async void MapRefDesToPartNum()
@@ -100,8 +106,9 @@ namespace RApID_Project_WPF
                 {
                     await Task.Factory.StartNew(new Action(() => // in new task
                     {
-                        Dispatcher.BeginInvoke(new Action(async () => // perform dispatched UI actions
+                        var mapOps = Dispatcher.BeginInvoke(new Action(async () => // perform dispatched UI actions
                         {
+                            Console.WriteLine("(TestWindow.xaml.cs) ==> Mapper successfully started...");
                             if (!mapper.GetData(txtSerialNumber.Text))
                             {
 #if DEBUG
@@ -120,6 +127,9 @@ namespace RApID_Project_WPF
                                 BOMFileActive = true;
                             }
                         }), DispatcherPriority.Background);
+                        mapOps.Completed += delegate {
+                            txtSerialNumber.Dispatcher.Invoke(() => txtSerialNumber.IsEnabled = true);
+                        };
                     }));
                 }
             }
@@ -127,6 +137,15 @@ namespace RApID_Project_WPF
             {
                 csExceptionLogger.csExceptionLogger.Write("BadBarcode-MapRefDesToPartNum", ioe);
                 return;
+            }
+        }
+
+        private void txtSerialNumber_KeyDown(object sender, KeyEventArgs e)
+        {
+            if(e.Key.Equals(Key.Enter))
+            {
+                (sender as TextBox).IsEnabled = false;
+                MapRefDesToPartNum();
             }
         }
     }

@@ -611,10 +611,10 @@ namespace RApID_Project_WPF
                                 #endif                            
                             } else {
                                 var result = await mapper.FindFileAsync(".xls");
-                                csCrossClassInteraction.DoExcelOperations(result.Item1, progMapper, dgBOMList,
+                                csCrossClassInteraction.DoExcelOperations(result.Item1, progMapper, dgBOMList/*,
                                 new Tuple<Control, Control>(txtMultiRefDes, txtMultiPartNum),
                                 new Tuple<Control, Control>(txtMultiRefDes_2, txtMultiPartNum_2),
-                                new Tuple<Control, Control>(txtMultiRefDes_3, txtMultiPartNum_3));
+                                new Tuple<Control, Control>(txtMultiRefDes_3, txtMultiPartNum_3)*/);
 
                                 BOMFileActive = true;
                             }
@@ -1562,8 +1562,6 @@ namespace RApID_Project_WPF
                     Owner = this
                 };
                 pri.Show();
-                //PrevRepairInfo pri = new PrevRepairInfo((PreviousRepairInformation)dgPrevRepairInfo.SelectedItem);
-                //pri.ShowDialog();
                 Activate();
             }
         }
@@ -1728,8 +1726,14 @@ namespace RApID_Project_WPF
 
         private void dataGrid_KeyUp(object sender, KeyEventArgs e)
         {
-            if (e.Key == Key.Delete && ((DataGrid)sender).SelectedItem != null)
-                ((DataGrid)sender).Items.Remove(((DataGrid)sender).SelectedItem);
+            var grid = ((DataGrid)sender);
+
+            if (e.Key == Key.Delete && grid.SelectedItem != null)
+            {
+                var row = (DataGridRow)dgBOMList.ItemContainerGenerator.ContainerFromItem(grid.SelectedItem);
+                if (row != null) { row.Foreground = Brushes.Black; row.Background = Brushes.White; }
+                grid.Items.Remove(grid.SelectedItem);
+            }
         }
 
         #region Log Actions
@@ -1871,45 +1875,16 @@ namespace RApID_Project_WPF
             }
         }
 
-        private MultiplePartsReplaced _newItem = null;
-        private void dgMultipleParts_DragEnter(object sender, DragEventArgs e)
+        private void dgBOMList_MouseDoubleClick(object sender, MouseButtonEventArgs e)
         {
-            var grid = (sender as DataGrid);
-            if(grid != null)
-            {
-                if(e.Data.GetDataPresent(typeof(MultiplePartsReplaced)) && grid.Dispatcher.Invoke(()=>!grid.Items.Contains(_newItem)))
-                {
-                    _newItem = (MultiplePartsReplaced) e.Data.GetData(typeof(MultiplePartsReplaced));
-                    grid.Dispatcher.Invoke(()=>grid.Items.Add(_newItem));
-                }
-            }
-        }
+            var targetGrid = (DataGrid)(tcUnitIssues.SelectedContent as Grid).FindName($"dgMultipleParts{(tcUnitIssues.SelectedIndex > 0 ? $"_{tcUnitIssues.SelectedIndex+1}" : "")}");
+            var item = (MultiplePartsReplaced) dgBOMList.SelectedItem;
 
-        private void dgMultipleParts_DragOver(object sender, DragEventArgs e)
-        {
-            e.Effects = DragDropEffects.Copy | DragDropEffects.Move;
-        }
-
-        private void dgBOMList_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
-        {
-            var grid = (sender as DataGrid);
-            if (grid.SelectedItem is MultiplePartsReplaced mpr && e.LeftButton == MouseButtonState.Pressed)
+            if(!targetGrid.Items.Contains(item))
             {
-                //TODO: Hit Test for Cell
-                DragDrop.DoDragDrop(grid, mpr, DragDropEffects.Copy);
-            }
-        }
-
-        private void dgMultipleParts_DragLeave(object sender, DragEventArgs e)
-        {
-            var grid = (sender as DataGrid);
-            if (grid != null)
-            {
-                if (e.Data.GetDataPresent(typeof(MultiplePartsReplaced)) && grid.Dispatcher.Invoke(() => grid.Items.Contains(_newItem)))
-                {
-                    _newItem = (MultiplePartsReplaced)e.Data.GetData(typeof(MultiplePartsReplaced));
-                    grid.Dispatcher.Invoke(() => grid.Items.Remove(_newItem));
-                }
+                var row = (DataGridRow) dgBOMList.ItemContainerGenerator.ContainerFromIndex(dgBOMList.SelectedIndex);
+                if (row != null) { row.Foreground = Brushes.White; row.Background = Brushes.DarkGreen; }
+                targetGrid.Items.Add(item);
             }
         }
     }

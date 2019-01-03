@@ -254,10 +254,10 @@ namespace RApID_Project_WPF.UserControls
 
             stkMain.Name += issueNum;
 
-            foreach (Control c in stkMain.Children)
+            foreach (FrameworkElement u in stkMain.Children)
             {
-                if (string.IsNullOrEmpty(c.Name)) continue;
-                else c.Name += issueNum;
+                if (string.IsNullOrEmpty(u.Name)) continue;
+                else u.Name += issueNum;
             }
         }
 
@@ -398,6 +398,8 @@ namespace RApID_Project_WPF.UserControls
         private void ComboBox_DropDownClosed(object sender, EventArgs e) => ((EventHandler)GetValue(DropDownEventProperty))?.Invoke(sender, e);
         private void btnAddPartsReplaced_Click(object sender, RoutedEventArgs e) { ((RoutedEventHandler)GetValue(AddPartReplacedProperty))?.Invoke(sender, e); }
 
+        
+
         private void btnResetIssueData_Click(object sender, RoutedEventArgs e)
         {
             ReportedIssue = string.Empty;
@@ -408,8 +410,12 @@ namespace RApID_Project_WPF.UserControls
             Problem = string.Empty;
             Cause = string.Empty;
             Replacement = string.Empty;
+            cmbxPartNumber.SelectedIndex = -1;
+            cmbxRefDesignator.SelectedIndex = -1;
             dgMultipleParts.Items.Clear();
         }
         #endregion
+
+        private void cmbxRefDesignator_SelectionChanged(object sender, SelectionChangedEventArgs e) => cmbxPartNumber.SelectedIndex = cmbxRefDesignator.SelectedIndex;
     }
 }

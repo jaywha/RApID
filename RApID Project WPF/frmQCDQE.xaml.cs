@@ -722,7 +722,7 @@ namespace RApID_Project_WPF
             if (dgPrevRepairInfo.SelectedItem != null)
             {
                 var pri = new frmRepairPRI((PreviousRepairInformation)dgPrevRepairInfo.SelectedItem);
-                pri.ShowDialog();
+                pri.Show();
             }
         }
 
