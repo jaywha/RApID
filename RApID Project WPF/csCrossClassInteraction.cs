@@ -19,6 +19,7 @@ using System.Windows;
 using RApID_Project_WPF.UserControls;
 using System.Drawing;
 using System.Windows.Threading;
+using System.Runtime.Caching;
 
 namespace RApID_Project_WPF
 {
@@ -40,6 +41,7 @@ namespace RApID_Project_WPF
 
     public static class csCrossClassInteraction
     {
+        internal static readonly ObjectCache ApplicationCache = MemoryCache.Default;
         private static StaticVars sVar = StaticVars.StaticVarsInstance();
         private static csObjectHolder.csObjectHolder holder = csObjectHolder.csObjectHolder.ObjectHolderInstance();
 
@@ -186,7 +188,7 @@ namespace RApID_Project_WPF
         {
             try
             {
-                await Task.Factory.StartNew(new Action(async () =>
+                await Task.Factory.StartNew(new Action(() =>
                 {
                     if (progData != null) progData.Dispatcher.Invoke(() => progData.Visibility = Visibility.Visible);
                     if (string.IsNullOrEmpty(filePath)) {
@@ -236,6 +238,18 @@ namespace RApID_Project_WPF
                         {
                             invbox.Dispatcher.Invoke(() => invbox.ItemsSource = PartNumbers);
                         }
+                    }
+
+                    //TODO: Determine if caching entire Excel file is better than min-maxing each sheet.
+                    var componentNumber = filePath.Substring(filePath.LastIndexOf('\\') + 1, 8);
+                    if (ApplicationCache[componentNumber] == null)
+                    {
+                        var iPolicy = new CacheItemPolicy() {
+                            AbsoluteExpiration = DateTimeOffset.Now.AddHours(12.0)
+                        };
+                        var fileContents = File.ReadAllText(filePath);
+                        iPolicy.ChangeMonitors.Add(new HostFileChangeMonitor(new List<string>() { filePath }));
+                        ApplicationCache.Set(componentNumber, fileContents, iPolicy);
                     }
 
                     GC.Collect();

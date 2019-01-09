@@ -301,6 +301,11 @@ namespace RApID_Project_WPF
                 filename = @"\\joi\EU\application\EngDocumentation\Design\Electrical\407028-6 REV F (ICE FLASHER)\407026-1_(ICE 35)_407028-6_F.xls";
                 return new Tuple<string, bool>(filename, true);
             }
+            if (csCrossClassInteraction.ApplicationCache?[ComponentNumber] != null)
+            {
+                MainWindow.Notify.ShowBalloonTip("Loaded data from cache", $"Found data for {ComponentNumber} in the application cache.", Hardcodet.Wpf.TaskbarNotification.BalloonIcon.Info);
+                return new Tuple<string, bool>(csCrossClassInteraction.ApplicationCache[ComponentNumber] as string, true);
+            }
 
             try
             {
