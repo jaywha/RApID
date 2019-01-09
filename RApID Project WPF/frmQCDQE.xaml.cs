@@ -370,7 +370,7 @@ namespace RApID_Project_WPF
 
         private void getUnitIssueInfo()
         {
-            var lRMI = new List<RepairMultipleIssues>();
+            var lRMI = new List<UnitIssueModel>();
             string query = "SELECT * FROM TechnicianUnitIssues WHERE ID = '" + ScannedUnitInformation.ID + "' ORDER BY ID DESC";
             var conn = new SqlConnection(holder.RepairConnectionString);
             var cmd = new SqlCommand(query, conn);
@@ -382,7 +382,7 @@ namespace RApID_Project_WPF
                 {
                     while(reader.Read())
                     {
-                        lRMI.Add(new RepairMultipleIssues()
+                        lRMI.Add(new UnitIssueModel()
                         {
                             ID = Convert.ToInt32(reader["ID"].ToString()),
                             ReportedIssue = reader["ReportedIssue"].ToString(),
@@ -430,7 +430,7 @@ namespace RApID_Project_WPF
 
             if (ScannedUnitInformation.UnitIssues.Count > 0)
             {
-                foreach (RepairMultipleIssues rmi in ScannedUnitInformation.UnitIssues)
+                foreach (UnitIssueModel rmi in ScannedUnitInformation.UnitIssues)
                 {
                     if (rmi != null)
                     {

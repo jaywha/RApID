@@ -910,7 +910,7 @@ namespace RApID_Project_WPF
                 cmd.Parameters.AddWithValue("@ReportedIssue", csCrossClassInteraction.EmptyIfNull(cbReportedIssue.Text));
 
                 #region Unit Issues
-                RepairMultipleIssues lUI = getUnitIssueString(0);
+                UnitIssueModel lUI = getUnitIssueString(0);
                 cmd.Parameters.AddWithValue("@TestResult", csCrossClassInteraction.EmptyIfNull(lUI.TestResult));
                 cmd.Parameters.AddWithValue("@TestResultAbort", csCrossClassInteraction.EmptyIfNull(lUI.TestResultAbort));
                 cmd.Parameters.AddWithValue("@Cause", csCrossClassInteraction.EmptyIfNull(lUI.Cause));
@@ -1033,7 +1033,7 @@ namespace RApID_Project_WPF
                                     "VALUES (@id, @partNumber, @partName, @commoditySubClass, @reportedIssue, @testResult, @testResultAbort, @cause, @replacement, @partsReplaced, @refDesignator, @prpd)";
             sVar.LogHandler.CreateLogAction("Submitting the Unit Issues to the TechnicianUnitIssues Table.", csLogging.LogState.NOTE);
             string sLogString = "";
-            List<RepairMultipleIssues> lRMI = getUnitIssues();
+            List<UnitIssueModel> lRMI = getUnitIssues();
 
             var conn = new SqlConnection(holder.RepairConnectionString);
             var cmd = new SqlCommand(query, conn);
@@ -1127,9 +1127,9 @@ namespace RApID_Project_WPF
         /// <summary>
         /// To be used when submitting basic information to the TechnicianSubmission table
         /// </summary>
-        private RepairMultipleIssues getUnitIssueString(int iUIData)
+        private UnitIssueModel getUnitIssueString(int iUIData)
         {
-            var pmuiReturn = new RepairMultipleIssues();
+            var pmuiReturn = new UnitIssueModel();
 
             if (tiUI1.IsEnabled && (iUIData == 0 || iUIData == 1)) //-Will always be enabled but doing 'if' to be uniform
             {
@@ -1225,9 +1225,9 @@ namespace RApID_Project_WPF
         /// <summary>
         /// To be used when submitting individual items to the TechnicianUnitIssues table
         /// </summary>
-        private List<RepairMultipleIssues> getUnitIssues()
+        private List<UnitIssueModel> getUnitIssues()
         {
-            var lMPUI = new List<RepairMultipleIssues>
+            var lMPUI = new List<UnitIssueModel>
             {
                 getUnitIssueString(1)
             };

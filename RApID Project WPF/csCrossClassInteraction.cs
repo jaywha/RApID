@@ -206,23 +206,21 @@ namespace RApID_Project_WPF
                             while (reader.Read() && !string.IsNullOrEmpty(reader.GetValue(0)?.ToString())
                                                  && !string.IsNullOrEmpty(reader.GetValue(4)?.ToString()))
                             {
-                                ReferenceDesignators.Add(reader.GetValue(0).ToString());
-                                PartNumbers.Add(reader.GetValue(4).ToString());
+                                var rd = reader.GetValue(0).ToString();
+                                var pn = reader.GetValue(4).ToString();
+                                ReferenceDesignators.Add(rd);
+                                PartNumbers.Add(pn);
+
+                                /*bomlist?.Dispatcher.Invoke(() => {
+                                    if (PartNumbers.Contains(pn)) {
+                                    }
+
+                                    bomlist.Items.Add(new MultiplePartsReplaced(rd, pn,
+                                        pn.Contains("NP") ? "NO PART" : frmProduction.getPartReplacedPartDescription(pn)));
+                                });*/
                             }
                         }
                     }
-
-                    if (bomlist != null)
-                    {
-                        await Task.Factory.StartNew(new Action(() =>
-                        {
-                            var parts = ReferenceDesignators.Zip(
-                            PartNumbers, (referenceDesignator, partNumber)
-                            => new MultiplePartsReplaced(referenceDesignator, partNumber, frmProduction.getPartReplacedPartDescription(partNumber))).ToList();
-                        foreach (var part in parts) bomlist.Dispatcher.Invoke(()=>bomlist.Items.Add(part));
-                        }),TaskCreationOptions.LongRunning);
-                    }
-                    
 
                     foreach (var designator in designators)
                     {
@@ -1096,15 +1094,15 @@ namespace RApID_Project_WPF
             return _ciReturn;
         }
 
-        private static List<RepairMultipleIssues> breakdownRepairIssues(List<RepairMultipleIssues> _lrmi)
+        private static List<UnitIssueModel> breakdownRepairIssues(List<UnitIssueModel> _lrmi)
         {
-            var lCombinedRMI = new List<RepairMultipleIssues>();
-            var dMultiParts = new Dictionary<int, List<RepairMultipleIssues>>();
-            var lIndividualIssues = new List<RepairMultipleIssues>();
+            var lCombinedRMI = new List<UnitIssueModel>();
+            var dMultiParts = new Dictionary<int, List<UnitIssueModel>>();
+            var lIndividualIssues = new List<UnitIssueModel>();
 
 #region Split the overall list into two separate list: 1 with individual unit issues, 2 with same unit issue but different parts replaced/ref des
             int key = 0;
-            RepairMultipleIssues rmi = null;
+            UnitIssueModel rmi = null;
             for (int i = 0; i < _lrmi.Count; i++)
             {
                 key++;
@@ -1117,10 +1115,10 @@ namespace RApID_Project_WPF
 
                 bool bAddComparisonRMI = false;
                 rmi = _lrmi[i];
-                dMultiParts[key] = new List<RepairMultipleIssues>();
+                dMultiParts[key] = new List<UnitIssueModel>();
                 for (int j = 1; j < _lrmi.Count; j++)
                 {
-                    RepairMultipleIssues _cRMI = _lrmi[j];
+                    UnitIssueModel _cRMI = _lrmi[j];
 
                     if (rmi.ReportedIssue == _cRMI.ReportedIssue &&
                          rmi.TestResult == _cRMI.TestResult &&
@@ -1159,11 +1157,11 @@ namespace RApID_Project_WPF
 #region Combine all of the duplicated items by generating lists of parts replaced and ref designators for use in one unit issue
             if (dMultiParts.Keys.Count > 0)
             {
-                foreach (KeyValuePair<int, List<RepairMultipleIssues>> kvp in dMultiParts)
+                foreach (KeyValuePair<int, List<UnitIssueModel>> kvp in dMultiParts)
                 {
                     if (kvp.Value.Count > 0)
                     {
-                        var _rmiCombine = new RepairMultipleIssues();
+                        var _rmiCombine = new UnitIssueModel();
 
                         for (int i = 0; i < kvp.Value.Count; i++)
                         {
@@ -1194,11 +1192,11 @@ namespace RApID_Project_WPF
         }
 
         /// <summary>
-        /// Returns a list of RepairMultipleIssues based off of an ID
+        /// Returns a list of UnitIssueModel based off of an ID
         /// </summary>
-        public static List<RepairMultipleIssues> GetRepairUnitIssues(string ID)
+        public static List<UnitIssueModel> GetRepairUnitIssues(string ID)
         {
-            var lRMI = new List<RepairMultipleIssues>();
+            var lRMI = new List<UnitIssueModel>();
 
             string query = "SELECT * FROM TechnicianUnitIssues WHERE ID = '" + ID + "'";
             var conn = new SqlConnection(holder.RepairConnectionString);
@@ -1211,7 +1209,7 @@ namespace RApID_Project_WPF
                 {
                     while (reader.Read())
                     {
-                        lRMI.Add(new RepairMultipleIssues()
+                        lRMI.Add(new UnitIssueModel()
                         {
                             ID = int.TryParse(reader["ID"].ToString().EmptyIfNull(), out int _id) ? _id : 0,
                             ReportedIssue = reader["ReportedIssue"].ToString().EmptyIfNull(),
@@ -1274,11 +1272,30 @@ namespace RApID_Project_WPF
         }
 
         /// <summary>
+        /// Generates a random array of characters. 
+        /// </summary>
+        /// <param name="length">[Optional] defaults to ^ characters.</param>
+        /// <remarks>From: https://stackoverflow.com/a/1344258/7476183</remarks>
+        public static string GenerateRandomString(int length = 8)
+        {
+            var chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+            var stringChars = new char[length];
+            var random = new Random();
+
+            for (int i = 0; i < stringChars.Length; i++)
+            {
+                stringChars[i] = chars[random.Next(chars.Length)];
+            }
+
+            return new string(stringChars);
+        }
+
+        /// <summary>
         /// Fills the specified <see cref="ucUnitIssue"/> with the data from the given <see cref="string"/>array.
         /// </summary>
         /// <param name="issue">The target <see cref="ucUnitIssue"/> to fill with data.</param>
         /// <param name="values"><see cref="string"/> values ordered by visual appearance in the control.</param>
-        public static void FillUnitIssue(this ucUnitIssue issue, List<MultiplePartsReplaced> replacedParts = null, params string[] values)
+        public static void FillUnitIssue(this ucUnitIssue issue, params string[] values)
         {
             var vi = 0;
 
@@ -1291,16 +1308,11 @@ namespace RApID_Project_WPF
             issue.Item = values[vi++];
             issue.Problem = values[vi++];
 
-            if (replacedParts != null)
-                issue.PartsReplaced = replacedParts;
-            else
+            while (values[vi] != null)
             {
-                var partnums = values[vi++].Split(',');
-                var refids = values[vi++].Split(',');
-                var parts = refids.Zip(partnums,
-                    (rid, pnum) => new MultiplePartsReplaced(rid,pnum,frmProduction.getPartReplacedPartDescription(pnum)));
-                issue.PartsReplaced = new List<MultiplePartsReplaced>();
-                foreach (var part in parts) issue.PartsReplaced.Add(part);
+                issue.PartsReplaced = new List<MultiplePartsReplaced> {
+                    new MultiplePartsReplaced(values[vi++], values[vi++], values[vi++] ?? frmProduction.getPartReplacedPartDescription(values[vi-2]))
+                };
             }
         }
     }

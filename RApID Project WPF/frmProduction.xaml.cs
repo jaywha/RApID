@@ -1,4 +1,5 @@
-﻿using System;
+﻿using EricStabileLibrary;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -13,9 +14,7 @@ using System.Windows.Controls;
 using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
-using System.Windows.Media.Effects;
 using System.Windows.Threading;
-using EricStabileLibrary;
 
 namespace RApID_Project_WPF
 {
@@ -38,10 +37,12 @@ namespace RApID_Project_WPF
 
         InitSplash initS = new InitSplash();
         csObjectHolder.csObjectHolder holder = csObjectHolder.csObjectHolder.ObjectHolderInstance();
-        public static readonly DependencyProperty BOMFileActiveProperty = DependencyProperty.Register("BOMFileActive",typeof(bool),typeof(frmProduction),new PropertyMetadata(false));
-        public bool BOMFileActive {
+        public static readonly DependencyProperty BOMFileActiveProperty = DependencyProperty.Register("BOMFileActive", typeof(bool), typeof(frmProduction), new PropertyMetadata(false));
+        public bool BOMFileActive
+        {
             get => (bool)GetValue(BOMFileActiveProperty);
-            set {
+            set
+            {
                 SetValue(BOMFileActiveProperty, value);
                 OnPropertyChanged();
             }
@@ -73,12 +74,13 @@ namespace RApID_Project_WPF
             GC.Collect();
             csSplashScreenHelper.ShowText("Done!");
             csSplashScreenHelper.Hide();
-            this.Activate();      
+            this.Activate();
 #if DEBUG
             txtSerialNumber.Text = "160815030117";
 #endif
             WindowState = WindowState.Maximized;
             Show();
+            //tcUnitIssues.SelectionChanged += tcUnitIssues_SelectionChanged;
         }
 
         #region Initialize Form
@@ -450,7 +452,7 @@ namespace RApID_Project_WPF
                 tSPChecker = new DispatcherTimer();
                 tSPChecker.Tick += new EventHandler(tSPChecker_Tick);
                 tSPChecker.Interval = new TimeSpan(0, 0, 30);
-                if(!tSPChecker.Dispatcher.HasShutdownStarted) tSPChecker.Start();
+                if (!tSPChecker.Dispatcher.HasShutdownStarted) tSPChecker.Start();
             }
             else if (sp != null && !sp.IsOpen)
             {
@@ -598,23 +600,25 @@ namespace RApID_Project_WPF
                 using (var mapper = csSerialNumberMapper.Instance)
                 {
                     await Task.Factory.StartNew(new Action(() => // in new task
-                    { 
+                    {
                         Dispatcher.BeginInvoke(new Action(async () => // perform dispatched UI actions
                         {
                             if (!mapper.GetData(txtSerialNumber.Text))
                             {
-                                #if DEBUG
-                                    throw new InvalidOperationException("Couldn't find data for this barcode!");
-                                #else
+#if DEBUG
+                                throw new InvalidOperationException("Couldn't find data for this barcode!");
+#else
                                     MessageBox.Show("Couldn't find the barcode's entry in the database.\nPlease enter information manually.", 
                                         "Soft Error - BOM Lookup", MessageBoxButton.OK, MessageBoxImage.Warning);
-                                #endif                            
-                            } else {
+#endif
+                            }
+                            else
+                            {
                                 var result = await mapper.FindFileAsync(".xls");
-                                csCrossClassInteraction.DoExcelOperations(result.Item1, progMapper, dgBOMList/*,
+                                csCrossClassInteraction.DoExcelOperations(result.Item1, progMapper,
                                 new Tuple<Control, Control>(txtMultiRefDes, txtMultiPartNum),
                                 new Tuple<Control, Control>(txtMultiRefDes_2, txtMultiPartNum_2),
-                                new Tuple<Control, Control>(txtMultiRefDes_3, txtMultiPartNum_3)*/);
+                                new Tuple<Control, Control>(txtMultiRefDes_3, txtMultiPartNum_3));
 
                                 BOMFileActive = true;
                             }
@@ -638,7 +642,7 @@ namespace RApID_Project_WPF
             sVar.LogHandler.LogCreation = DateTime.Now;
 
             MapRefDesToPartNum();
-            
+
             if (!string.IsNullOrEmpty(txtSerialNumber.Text))
             {
                 sVar.LogHandler.CreateLogAction("**** This is a Production Log ****", csLogging.LogState.NOTE);
@@ -687,7 +691,9 @@ namespace RApID_Project_WPF
                 if (bQueryEOLPassed) { sVar.LogHandler.CreateLogAction("The EOL Query was successful!", csLogging.LogState.NOTE); }
 
                 return bQueryEOLPassed;
-            } catch(Exception e) {
+            }
+            catch (Exception e)
+            {
                 csExceptionLogger.csExceptionLogger.Write("QueryEOL_SerialNumFail", e);
                 return false;
             }
@@ -713,7 +719,9 @@ namespace RApID_Project_WPF
                     txtPartNumber.Text = sProdQueryResults;
                     QueryItemMaster();
                 }
-            } catch (Exception e) {
+            }
+            catch (Exception e)
+            {
                 csExceptionLogger.csExceptionLogger.Write("QueryProduction_SerialNumFail", e);
             }
         }
@@ -733,7 +741,9 @@ namespace RApID_Project_WPF
                     txtPartName.Text = sItemMasterQueryResults;
                     sVar.LogHandler.CreateLogAction("txtPartName's value has been set to " + txtPartName.Text + ".", csLogging.LogState.NOTE);
                 }
-            } catch (Exception e) {
+            }
+            catch (Exception e)
+            {
                 csExceptionLogger.csExceptionLogger.Write("QueryItemMaster_SerialNumFail", e);
             }
         }
@@ -973,7 +983,7 @@ namespace RApID_Project_WPF
                 cmd.Parameters.AddWithValue("@scrap", cbxScrap.IsChecked);
 
                 #region Unit Issues
-                ProductionMultipleUnitIssues lUI = getUnitIssueString(0);
+                UnitIssueModel lUI = getUnitIssueString(0);
                 cmd.Parameters.AddWithValue("@reportedIssue", lUI.ReportedIssue);
                 cmd.Parameters.AddWithValue("@testResult", csCrossClassInteraction.EmptyIfNull(lUI.TestResult));
                 cmd.Parameters.AddWithValue("@testResultAbort", csCrossClassInteraction.EmptyIfNull(lUI.TestResultAbort));
@@ -1031,7 +1041,7 @@ namespace RApID_Project_WPF
             sVar.LogHandler.CreateLogAction("SQL QUERY: " + query, csLogging.LogState.SQLQUERY);
 
             string sLogString = "";
-            List<ProductionMultipleUnitIssues> lPI = getUnitIssues();
+            List<UnitIssueModel> lPI = getUnitIssues();
             var conn = new SqlConnection(holder.RepairConnectionString);
             var cmd = new SqlCommand(query, conn);
             try
@@ -1124,9 +1134,9 @@ namespace RApID_Project_WPF
         /// <summary>
         /// To be used when submitting basic information to the TechnicianSubmission table
         /// </summary>
-        private ProductionMultipleUnitIssues getUnitIssueString(int iUIData)
+        private UnitIssueModel getUnitIssueString(int iUIData)
         {
-            var pmuiReturn = new ProductionMultipleUnitIssues();
+            var pmuiReturn = new UnitIssueModel();
 
             if (tiUI1.IsEnabled && (iUIData == 0 || iUIData == 1)) //-Will always be enabled but doing 'if' to be uniform
             {
@@ -1230,9 +1240,9 @@ namespace RApID_Project_WPF
         /// <summary>
         /// To be used when submitting individual items to the TechnicianUnitIssues table
         /// </summary>
-        private List<ProductionMultipleUnitIssues> getUnitIssues()
+        private List<UnitIssueModel> getUnitIssues()
         {
-            var lMPUI = new List<ProductionMultipleUnitIssues>();
+            var lMPUI = new List<UnitIssueModel>();
 
             lMPUI.Add(getUnitIssueString(1));
 
@@ -1378,7 +1388,8 @@ namespace RApID_Project_WPF
                             brdRefDes_2.BorderThickness = new Thickness(0.0);
                         }
 
-                        if (!txtMultiRefDes_2.Items.Contains(txtMultiRefDes_2.Text)) {
+                        if (!txtMultiRefDes_2.Items.Contains(txtMultiRefDes_2.Text))
+                        {
                             string sWarning = string.Format($"The Reference Designator entered ( {txtMultiRefDes_2.Text} ) does not exist.\n" +
                                 "Please verify the Part Number and try again.");
                             sVar.LogHandler.CreateLogAction(sWarning, csLogging.LogState.WARNING);
@@ -1478,7 +1489,7 @@ namespace RApID_Project_WPF
                 {
                     sVar.LogHandler.CreateLogAction((Button)sender, csLogging.LogState.CLICK);
 
-                    if (BOMFileActive && (!txtMultiRefDes.Items.Contains(txtMultiRefDes.Text) 
+                    if (BOMFileActive && (!txtMultiRefDes.Items.Contains(txtMultiRefDes.Text)
                         || dgMultipleParts.Items
                         .OfType<MultiplePartsReplaced>()
                         .Where(mpr => mpr.RefDesignator.Equals(txtMultiRefDes.Text)).Count() > 0))
@@ -1877,14 +1888,52 @@ namespace RApID_Project_WPF
 
         private void dgBOMList_MouseDoubleClick(object sender, MouseButtonEventArgs e)
         {
-            var targetGrid = (DataGrid)(tcUnitIssues.SelectedContent as Grid).FindName($"dgMultipleParts{(tcUnitIssues.SelectedIndex > 0 ? $"_{tcUnitIssues.SelectedIndex+1}" : "")}");
-            var item = (MultiplePartsReplaced) dgBOMList.SelectedItem;
+            var targetGrid = (DataGrid)(tcUnitIssues.SelectedContent as Grid).FindName($"dgMultipleParts{(tcUnitIssues.SelectedIndex > 0 ? $"_{tcUnitIssues.SelectedIndex + 1}" : "")}");
+            var item = (MultiplePartsReplaced)dgBOMList.SelectedItem;
 
-            if(!targetGrid.Items.Contains(item))
+            if (!targetGrid.Items.Contains(item))
             {
-                var row = (DataGridRow) dgBOMList.ItemContainerGenerator.ContainerFromIndex(dgBOMList.SelectedIndex);
+                var row = (DataGridRow)dgBOMList.ItemContainerGenerator.ContainerFromIndex(dgBOMList.SelectedIndex);
                 if (row != null) { row.Foreground = Brushes.White; row.Background = Brushes.DarkGreen; }
                 targetGrid.Items.Add(item);
+            }
+        }
+
+        private Grid PrevGrid = null;
+        private void tcUnitIssues_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            try
+            {
+                var targetGrid = (DataGrid)(tcUnitIssues.SelectedContent as Grid).FindName($"dgMultipleParts{(tcUnitIssues.SelectedIndex > 0 ? $"_{tcUnitIssues.SelectedIndex + 1}" : "")}");
+                var pgridIndex = int.Parse(PrevGrid.Name.Last().ToString());
+                var prevGrid = (DataGrid)PrevGrid.FindName($"dgMultipleParts{(pgridIndex > 0 ? $"_{pgridIndex + 1}" : "")}");
+                if (prevGrid != null)
+                {
+                    foreach (MultiplePartsReplaced mpr in prevGrid.Items)
+                    {
+                        if (dgBOMList.Items.Contains(mpr))
+                        {
+                            var row = (DataGridRow)dgBOMList.ItemContainerGenerator.ContainerFromItem(mpr);
+                            if (row != null) { row.Foreground = Brushes.Black; row.Background = Brushes.White; }
+                        }
+                    }
+                }
+
+                foreach (MultiplePartsReplaced mpr in targetGrid.Items)
+                {
+                    if (dgBOMList.Items.Contains(mpr))
+                    {
+                        var row = (DataGridRow)dgBOMList.ItemContainerGenerator.ContainerFromItem(mpr);
+                        if (row != null) { row.Foreground = Brushes.White; row.Background = Brushes.DarkGreen; }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            } finally
+            {
+                PrevGrid = tcUnitIssues.SelectedContent as Grid ?? null;
             }
         }
     }

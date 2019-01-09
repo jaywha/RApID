@@ -95,33 +95,21 @@ namespace RApID_Project_WPF
     }
 
     /// <summary>
-    /// MultipleIssues will be used to help with storing multiple issues related to the unit.
+    /// Mirrors merged unit issue properties similar to the <see cref="UserControls.ucUnitIssue"/> user control.
     /// </summary>
-    public class RepairMultipleIssues
-    {
-        public int ID { get; set; }
-        public string ReportedIssue { get; set; }
-        public string TestResult { get; set; }
-        public string TestResultAbort { get; set; }
-        public string Cause { get; set; }
-        public string Replacement { get; set; }
-        public List<MultiplePartsReplaced> MultiPartsReplaced { get; set; }
-        public MultiplePartsReplaced SinglePartReplaced { get; set; }
-    }
-
-    /// <summary>
-    /// Class object for a Full Unit Issue within Production
-    /// </summary>
-    public class ProductionMultipleUnitIssues
+    public class UnitIssueModel
     {
         public int ID { get; set; }
         public string ReportedIssue { get; set; }
         public string TestResult { get; set; }
         public string TestResultAbort { get; set; }
         public string Issue { get; set; }
+        public string Cause { get; set; }
+        public string Replacement { get; set; }
         public string Item { get; set; }
         public string Problem { get; set; }
         public List<MultiplePartsReplaced> MultiPartsReplaced { get; set; }
+        public MultiplePartsReplaced SinglePartReplaced { get; set; }
     }
 
     /// <summary>
@@ -233,7 +221,7 @@ namespace RApID_Project_WPF
         public string TypeOfReturn { get; set; }
         public string TypeOfFailure { get; set; }
         public string HoursOnUnit { get; set; }
-        public List<RepairMultipleIssues> UnitIssues { get; set; }
+        public List<UnitIssueModel> UnitIssues { get; set; }
         public string AdditionalComments { get; set; }
         public string TechAction1 { get; set; }
         public string TechAction2 { get; set; }

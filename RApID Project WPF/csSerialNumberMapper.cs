@@ -285,7 +285,7 @@ namespace RApID_Project_WPF
         /// <returns>A Task resulting in a Tuple consisting of the filename and <c>true</c> if it was found</returns>        
         public async Task<Tuple<string, bool>> FindFileAsync(string ext)
         {
-            //TODO: Build a list of possible excel files for ops to test each one for JUKI tab
+            // TODO: Build a list of possible excel files for ops to test each one for JUKI tab
             var filename = "";
             var found = false;
 

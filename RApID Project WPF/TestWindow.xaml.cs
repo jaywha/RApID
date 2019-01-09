@@ -25,45 +25,41 @@ namespace RApID_Project_WPF
             InitializeComponent();
         }
 
+        private void btnUCSwitch_Click(object sender, RoutedEventArgs e)
+        {
+            tcUnitIssues.Visibility = (tcUnitIssues.Visibility == Visibility.Collapsed) ? Visibility.Visible : Visibility.Collapsed;
+            unitIssue.Visibility = (unitIssue.Visibility == Visibility.Collapsed) ? Visibility.Visible : Visibility.Collapsed;
+        }
+
         private void btnToggle_Click(object sender, RoutedEventArgs e) => unitIssue.ReadOnly = !unitIssue.ReadOnly;
 
         private void btnMutate_Click(object sender, RoutedEventArgs e)
         {
-            //From: https://stackoverflow.com/a/1344258/7476183
-            var chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-            var stringChars = new char[8];
-            var random = new Random();
-
-            for (int i = 0; i < stringChars.Length; i++)
-            {
-                stringChars[i] = chars[random.Next(chars.Length)];
-            }
-
             var buttonTag = (sender as Button).Tag;
             switch (buttonTag) {
                 case "ReportedIssue":
-                    unitIssue.ReportedIssue = new string(stringChars);
+                    unitIssue.ReportedIssue = csCrossClassInteraction.GenerateRandomString();
                     break;
                 case "TestResult":
-                    unitIssue.TestResult = new string(stringChars);
+                    unitIssue.TestResult = csCrossClassInteraction.GenerateRandomString();
                     break;
                 case "TestResultAbort":
-                    unitIssue.AbortResult = new string(stringChars);
+                    unitIssue.AbortResult = csCrossClassInteraction.GenerateRandomString();
                     break;
                 case "Cause":
-                    unitIssue.Cause = new string(stringChars);
+                    unitIssue.Cause = csCrossClassInteraction.GenerateRandomString();
                     break;
                 case "Replacement":
-                    unitIssue.Replacement = new string(stringChars);
+                    unitIssue.Replacement = csCrossClassInteraction.GenerateRandomString();
                     break;
                 case "Issue":
-                    unitIssue.Issue = new string(stringChars);
+                    unitIssue.Issue = csCrossClassInteraction.GenerateRandomString();
                     break;
                 case "Item":
-                    unitIssue.Item = new string(stringChars);
+                    unitIssue.Item = csCrossClassInteraction.GenerateRandomString();
                     break;
                 case "Problem":
-                    unitIssue.Problem = new string(stringChars);
+                    unitIssue.Problem = csCrossClassInteraction.GenerateRandomString();
                     break;
                 default:
                     Console.WriteLine($"Tag {buttonTag} wasn't found => Nothing to do here...");

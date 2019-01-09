@@ -33,11 +33,19 @@ namespace RApID_Project_WPF
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
-            if (PRI == null)
-                Close();
+            try
+            {
+                if (PRI == null)
+                    Close();
 
-            if (!loadPRI())
-                Close();
+                if (!loadPRI())
+                    Close();
+                else
+                    ucIssues = null;
+            } catch (Exception ex)
+            {
+                csExceptionLogger.csExceptionLogger.Write("frmRepairPRI-Window_Loaded", ex);
+            }
         }
         
         private bool loadPRI()
@@ -113,22 +121,24 @@ namespace RApID_Project_WPF
                 conn.Close();
                                 
                 if (!string.IsNullOrEmpty(sUnitID)) {
-                    List<RepairMultipleIssues> lRMI = csCrossClassInteraction.GetRepairUnitIssues(sUnitID);
+                    List<UnitIssueModel> lRMI = csCrossClassInteraction.GetRepairUnitIssues(sUnitID);
 
                     int ucIndex = 0;
                     foreach (var issue in lRMI)
                     {
                         ucIssues[ucIndex].FillUnitIssue(
                             //TODO: Find Multiple Parts to be added here
-                            new List<MultiplePartsReplaced>() { issue.SinglePartReplaced },
                             issue.ReportedIssue,
                             issue.TestResult,
                             issue.TestResultAbort,
-                            "",
+                            issue.Issue,
                             issue.Cause,
                             issue.Replacement,
-                            "",
-                            ""                        
+                            issue.Item,
+                            issue.Problem,
+                            issue.SinglePartReplaced.RefDesignator,
+                            issue.SinglePartReplaced.PartReplaced,
+                            issue.SinglePartReplaced.PartsReplacedPartDescription
                         );
                         if (lRMI.Count > ucIndex) ucIssues.AddTabItem();
                     }
