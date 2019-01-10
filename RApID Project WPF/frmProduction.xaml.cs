@@ -802,7 +802,7 @@ namespace RApID_Project_WPF
             #region Unit Issue 1
             if (!string.IsNullOrEmpty(txtMultiPartNum.Text))
             {
-                string _sPRPD = getPartReplacedPartDescription(txtMultiPartNum.Text);
+                string _sPRPD = csCrossClassInteraction.GetPartReplacedPartDescription(txtMultiPartNum.Text);
 
                 if (string.IsNullOrEmpty(_sPRPD))
                 {
@@ -827,7 +827,7 @@ namespace RApID_Project_WPF
             #region Unit Issue 2
             if (!string.IsNullOrEmpty(txtMultiPartNum_2.Text))
             {
-                string _sPRPD = getPartReplacedPartDescription(txtMultiPartNum_2.Text);
+                string _sPRPD = csCrossClassInteraction.GetPartReplacedPartDescription(txtMultiPartNum_2.Text);
 
                 if (string.IsNullOrEmpty(_sPRPD))
                 {
@@ -852,7 +852,7 @@ namespace RApID_Project_WPF
             #region Unit Issue 3
             if (!string.IsNullOrEmpty(txtMultiPartNum_3.Text))
             {
-                string _sPRPD = getPartReplacedPartDescription(txtMultiPartNum_3.Text);
+                string _sPRPD = csCrossClassInteraction.GetPartReplacedPartDescription(txtMultiPartNum_3.Text);
 
                 if (string.IsNullOrEmpty(_sPRPD))
                 {
@@ -1288,18 +1288,6 @@ namespace RApID_Project_WPF
                 cbReportedIssue_3.Text = cb.Text;
         }
 
-        internal static string getPartReplacedPartDescription(string _sPartReplaced)
-        {
-            if (string.IsNullOrEmpty(_sPartReplaced))
-                return string.Empty;
-
-            string query = "SELECT PartName FROM ItemMaster WHERE PartNumber = '" + _sPartReplaced + "';";
-            string sPRPD = csCrossClassInteraction.ItemMasterQuery(query);
-            if (sPRPD == "N/A")
-                sPRPD = string.Empty;
-            return sPRPD;
-        }
-
         #region Events
 
         #region Button Click
@@ -1399,7 +1387,7 @@ namespace RApID_Project_WPF
                             return;
                         }
 
-                        string _sPRPD = getPartReplacedPartDescription(txtMultiPartNum_2.Text);
+                        string _sPRPD = csCrossClassInteraction.GetPartReplacedPartDescription(txtMultiPartNum_2.Text);
 
                         if (string.IsNullOrEmpty(_sPRPD) && !string.IsNullOrEmpty(txtMultiPartNum_2.Text))
                         {
@@ -1457,7 +1445,7 @@ namespace RApID_Project_WPF
                             return;
                         }
 
-                        string _sPRPD = getPartReplacedPartDescription(txtMultiPartNum_3.Text);
+                        string _sPRPD = csCrossClassInteraction.GetPartReplacedPartDescription(txtMultiPartNum_3.Text);
 
                         if (string.IsNullOrEmpty(_sPRPD) && !string.IsNullOrEmpty(txtMultiPartNum_3.Text))
                         {
@@ -1516,7 +1504,7 @@ namespace RApID_Project_WPF
                         return;
                     }
 
-                    string _sPRPD = getPartReplacedPartDescription(txtMultiPartNum.Text);
+                    string _sPRPD = csCrossClassInteraction.GetPartReplacedPartDescription(txtMultiPartNum.Text);
 
                     if (string.IsNullOrEmpty(_sPRPD) && !string.IsNullOrEmpty(txtMultiPartNum.Text))
                     {

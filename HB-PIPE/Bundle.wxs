@@ -1,14 +1,22 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Wix xmlns="http://schemas.microsoft.com/wix/2006/wi" xmlns:bal="http://schemas.microsoft.com/wix/BalExtension">
-	<Bundle Name="HB_PIPE" Version="1.0.0.0" Manufacturer="Humminbird" UpgradeCode="a95f0c6c-dcfb-4b98-b7bc-f04eafd5c57e">
+	<Bundle Name="HB_PIPE" 
+          Version="1.0.0.0" 
+          Manufacturer="Humminbird"
+          UpgradeCode="a95f0c6c-dcfb-4b98-b7bc-f04eafd5c57e">
     <BootstrapperApplicationRef Id="WixStandardBootstrapperApplication.RtfLicense" >
       <bal:WixStandardBootstrapperApplication LicenseFile="\\joi\EU\Collaboration\EEPT\Universal Installer Files\License.rtf"
                                               LogoFile="\\joi\EU\Collaboration\EEPT\Universal Installer Files\LogoFile.bmp"/>
     </BootstrapperApplicationRef>
     
 		<Chain>
-      <PackageGroupRef Id="NetFx461Web"/>
-			<MsiPackage SourceFile="C:\Visual Studio Projects\RApID\RApIDInstaller\bin\Debug\RApIDInstaller.msi" />
+      <PackageGroupRef Id="NetFx472Redist"/>
+			<MsiPackage Id="MainSetup"
+                  DisplayInternalUI="yes"
+                  Compressed="yes"
+                  SourceFile="C:\Visual Studio Projects\RApID\RApIDInstaller\bin\Debug\RApIDInstaller.msi"
+                  Vital="yes"
+      />
 		</Chain>
 	</Bundle>
 </Wix>

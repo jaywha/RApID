@@ -86,7 +86,7 @@ namespace RApID_Project_WPF
                       {
                           RefDesignator = unitIssue.cmbxRefDesignator.SelectedValue.ToString(),
                           PartReplaced = unitIssue.cmbxPartNumber.SelectedValue.ToString(),
-                          PartsReplacedPartDescription = frmProduction.getPartReplacedPartDescription(unitIssue.cmbxPartNumber.SelectedValue.ToString())
+                          PartsReplacedPartDescription = csCrossClassInteraction.GetPartReplacedPartDescription(unitIssue.cmbxPartNumber.SelectedValue.ToString())
                       });
 
             unitIssue.cmbxPartNumber.SelectedIndex = -1;

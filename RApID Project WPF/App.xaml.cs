@@ -4,7 +4,9 @@ using System.Configuration;
 using System.Data;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Reflection;
 using System.Windows;
+using MonkeyCache.FileStore;
 
 namespace RApID_Project_WPF
 {
@@ -13,5 +15,14 @@ namespace RApID_Project_WPF
     /// </summary>
     public partial class App : Application
     {
+        [STAThread]
+        public static void Main(string[] args)
+        {
+            Barrel.ApplicationId = AppDomain.CurrentDomain.FriendlyName;
+
+            var application = new App();
+            application.InitializeComponent();
+            application.Run();
+        }
     }
 }

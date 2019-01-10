@@ -20,6 +20,8 @@ using RApID_Project_WPF.UserControls;
 using System.Drawing;
 using System.Windows.Threading;
 using System.Runtime.Caching;
+using MonkeyCache.FileStore;
+using MonkeyCache;
 
 namespace RApID_Project_WPF
 {
@@ -41,7 +43,7 @@ namespace RApID_Project_WPF
 
     public static class csCrossClassInteraction
     {
-        internal static readonly ObjectCache ApplicationCache = MemoryCache.Default;
+        public static IBarrel Cache = Barrel.Current;
         private static StaticVars sVar = StaticVars.StaticVarsInstance();
         private static csObjectHolder.csObjectHolder holder = csObjectHolder.csObjectHolder.ObjectHolderInstance();
 
@@ -218,7 +220,7 @@ namespace RApID_Project_WPF
                                     }
 
                                     bomlist.Items.Add(new MultiplePartsReplaced(rd, pn,
-                                        pn.Contains("NP") ? "NO PART" : frmProduction.getPartReplacedPartDescription(pn)));
+                                        pn.Contains("NP") ? "NO PART" : frmProduction.csCrossClassInteraction.getPartReplacedPartDescription(pn)));
                                 });*/
                             }
                         }
@@ -240,18 +242,6 @@ namespace RApID_Project_WPF
                         }
                     }
 
-                    //TODO: Determine if caching entire Excel file is better than min-maxing each sheet.
-                    var componentNumber = filePath.Substring(filePath.LastIndexOf('\\') + 1, 8);
-                    if (ApplicationCache[componentNumber] == null)
-                    {
-                        var iPolicy = new CacheItemPolicy() {
-                            AbsoluteExpiration = DateTimeOffset.Now.AddHours(12.0)
-                        };
-                        var fileContents = File.ReadAllText(filePath);
-                        iPolicy.ChangeMonitors.Add(new HostFileChangeMonitor(new List<string>() { filePath }));
-                        ApplicationCache.Set(componentNumber, fileContents, iPolicy);
-                    }
-
                     GC.Collect();
                     Thread.Sleep(500);
 
@@ -262,6 +252,46 @@ namespace RApID_Project_WPF
             {
                 csExceptionLogger.csExceptionLogger.Write("RetestVerifier-MainWindow_ExcelOps-LockedFile", ioe);
             }
+        }
+
+        /// <summary>
+        /// Checks the <see cref="ApplicationCache"/> for any data related to the <see cref="MultiplePartsReplaced"/> model for the given component number.
+        /// </summary>
+        /// <param name="cacheTarget">Either Part Number or Reference Designators</param>
+        /// <param name="filePath">The Excel File path </param>
+        private static bool CheckCache(string cacheTarget, string filePath)
+        {
+            var componentNumber = filePath.Substring(filePath.LastIndexOf('\\') + 1, 8);
+            return Barrel.Current.Exists(componentNumber+cacheTarget); ;
+        }
+
+        /// <summary>
+        /// Updates the <see cref="ApplicationCache"/> with any data related to the <see cref="MultiplePartsReplaced"/> model for the given component number.
+        /// </summary>
+        /// <param name="cacheTarget">Either Part Number or Reference Designators</param>
+        /// <param name="filePath">The Excel File path </param>
+        private static void UpdateCache(string cacheTarget, string filePath)
+        {
+            var componentNumber = filePath.Substring(filePath.LastIndexOf('\\') + 1, 8);
+            
+
+        }
+
+        /// <summary>
+        /// Will use the given part number to find the part's description in the ItemMaster table.
+        /// </summary>
+        /// <param name="_sPartReplaced">Part Number replaced</param>
+        /// <returns>Description or an empty string</returns>
+        public static string GetPartReplacedPartDescription(string _sPartReplaced)
+        {
+            if (string.IsNullOrEmpty(_sPartReplaced))
+                return string.Empty;
+
+            string query = "SELECT PartName FROM ItemMaster WHERE PartNumber = '" + _sPartReplaced + "';";
+            string sPRPD = ItemMasterQuery(query);
+            if (sPRPD == "N/A")
+                return string.Empty;
+            else return sPRPD;
         }
 
         /// <summary>
@@ -1325,7 +1355,7 @@ namespace RApID_Project_WPF
             while (values[vi] != null)
             {
                 issue.PartsReplaced = new List<MultiplePartsReplaced> {
-                    new MultiplePartsReplaced(values[vi++], values[vi++], values[vi++] ?? frmProduction.getPartReplacedPartDescription(values[vi-2]))
+                    new MultiplePartsReplaced(values[vi++], values[vi++], values[vi++] ?? csCrossClassInteraction.GetPartReplacedPartDescription(values[vi-2]))
                 };
             }
         }
