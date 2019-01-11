@@ -43,9 +43,13 @@ namespace RApID_Project_WPF
 
     public static class csCrossClassInteraction
     {
+        /// <summary> Shortcut to <see cref="Banana"/> instance modelled in <see cref="Barrel.Current"/> </summary>
         public static IBarrel Cache = Barrel.Current;
         private static StaticVars sVar = StaticVars.StaticVarsInstance();
         private static csObjectHolder.csObjectHolder holder = csObjectHolder.csObjectHolder.ObjectHolderInstance();
+
+        public static List<string> ReferenceDesignators { get; private set; } = new List<string>();
+        public static List<string> PartNumbers { get; private set; } = new List<string>();
 
         /// <summary>
         /// Takes an empy datagrid and fills it with the appropriate columns based on the criteria.
@@ -168,9 +172,6 @@ namespace RApID_Project_WPF
             w.Top = (((workAreaHeight - (w.Height * dpiScaling)) / 2) + (workArea.Top * dpiScaling));
         }
 
-        public static List<string> ReferenceDesignators { get; private set; } = new List<string>();
-        public static List<string> PartNumbers { get; private set; } = new List<string>();
-
         /// <summary>
         /// Does the excel operations for grabbing Reference and Part numbers.
         /// </summary>
@@ -188,6 +189,8 @@ namespace RApID_Project_WPF
         /// <param name="designators">A list of reference and part number designators to give autocompletion.</param>
         public static async void DoExcelOperations(string filePath, ProgressBar progData = null, DataGrid bomlist = null, params DesginatorPair[] designators)
         {
+            Cache.EmptyExpired();
+
             try
             {
                 await Task.Factory.StartNew(new Action(() =>
@@ -197,6 +200,17 @@ namespace RApID_Project_WPF
                         MainWindow.Notify.ShowBalloonTip("Couldn't find BOM File",
                             "The BOM file path was empty! There're no autocomplete or quick links available.\nPlease alert Dex or Jay.", 
                             Hardcodet.Wpf.TaskbarNotification.BalloonIcon.Warning);
+                        return;
+                    }
+
+                    var (exists, partNumbers, referenceDesignators) = CheckCache(filePath);
+                    if(exists)
+                    {
+                        MainWindow.Notify.ShowBalloonTip($"Using Cached Data for {filePath.Substring(filePath.LastIndexOf('\\') + 1, 8)}",
+                            "The data was pulled from the cache.\nIf data is outdated, please notify Jay W.",
+                            Hardcodet.Wpf.TaskbarNotification.BalloonIcon.Info);
+                        PartNumbers = partNumbers.Split(',').ToList();
+                        ReferenceDesignators = referenceDesignators.Split(',').ToList();
                         return;
                     }
 
@@ -242,6 +256,9 @@ namespace RApID_Project_WPF
                         }
                     }
 
+                    UpdateCache("PN", filePath);
+                    UpdateCache("RD", filePath);
+
                     GC.Collect();
                     Thread.Sleep(500);
 
@@ -257,12 +274,14 @@ namespace RApID_Project_WPF
         /// <summary>
         /// Checks the <see cref="ApplicationCache"/> for any data related to the <see cref="MultiplePartsReplaced"/> model for the given component number.
         /// </summary>
-        /// <param name="cacheTarget">Either Part Number or Reference Designators</param>
         /// <param name="filePath">The Excel File path </param>
-        private static bool CheckCache(string cacheTarget, string filePath)
+        private static (bool exists, string partNumbers, string referenceDesignators) CheckCache(string filePath)
         {
             var componentNumber = filePath.Substring(filePath.LastIndexOf('\\') + 1, 8);
-            return Barrel.Current.Exists(componentNumber+cacheTarget); ;
+            if (!Cache.Exists(componentNumber))
+                return (false, string.Empty, string.Empty);
+            else
+                return (true, Cache.Get<string>(componentNumber + "PN"), Cache.Get<string>(componentNumber + "RD"));
         }
 
         /// <summary>
@@ -273,8 +292,24 @@ namespace RApID_Project_WPF
         private static void UpdateCache(string cacheTarget, string filePath)
         {
             var componentNumber = filePath.Substring(filePath.LastIndexOf('\\') + 1, 8);
+            if (!Cache.Exists(componentNumber))
+                Cache.Add(componentNumber, filePath, TimeSpan.Parse("12:01:00"));
             
+            string data = "";
+            switch(cacheTarget)
+            {
+                case "PN":
+                    data = PartNumbers.Aggregate((curr,next) => $"{curr},{next}");
+                    break;
+                case "RD":
+                    data = ReferenceDesignators.Aggregate((curr, next) => $"{curr},{next}");
+                    break;
+                default:
+                    Console.WriteLine($"[WARN]: RApID_Project_WPF::csCrossClassInteraction.UpdateCache() with unknown cacheTarget = {cacheTarget}.");
+                    return;
+            }
 
+            Cache.Add(componentNumber + cacheTarget, data, TimeSpan.FromHours(12.0));            
         }
 
         /// <summary>

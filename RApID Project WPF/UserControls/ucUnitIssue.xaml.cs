@@ -8,6 +8,7 @@ using System.Windows.Media;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Data;
+using System.Reflection;
 
 namespace RApID_Project_WPF.UserControls
 {
@@ -251,6 +252,7 @@ namespace RApID_Project_WPF.UserControls
         {
             InitializeComponent();
             holder.vGetServerName("");
+            if (string.IsNullOrEmpty(MonkeyCache.FileStore.Barrel.ApplicationId)) MonkeyCache.FileStore.Barrel.ApplicationId = AppDomain.CurrentDomain.FriendlyName;
 
             stkMain.Name += issueNum;
 

@@ -144,5 +144,18 @@ namespace RApID_Project_WPF
                 MapRefDesToPartNum();
             }
         }
+
+        private void btnContextSwitch_Click(object sender, RoutedEventArgs e)
+        {
+            if (unitIssue.Visibility != Visibility.Visible)
+            {
+                tcUnitIssues.Visibility = Visibility.Collapsed;
+                unitIssue.Visibility = Visibility.Visible;
+            } else
+            {
+                tcUnitIssues.Visibility = Visibility.Visible;
+                unitIssue.Visibility = Visibility.Collapsed;
+            }
+        }
     }
 }

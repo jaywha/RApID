@@ -76,7 +76,7 @@ namespace RApID_Project_WPF.UserControls
                 InitializeComponent();
 
                 _tabItems = new List<TabItem> { tiNewTab };
-                               
+                                               
                 AddTabItem();
 
                 tcTabs.DataContext = _tabItems;
