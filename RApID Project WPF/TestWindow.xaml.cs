@@ -1,4 +1,5 @@
-﻿using System;
+﻿using RApID_Project_WPF.UserControls;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -20,9 +21,11 @@ namespace RApID_Project_WPF
     /// </summary>
     public partial class TestWindow : Window
     {
+
         public TestWindow()
         {
             InitializeComponent();
+            tcUnitIssues.AddTabItem(unitIssue.Copy(), "Modelled Tab");
         }
 
         private void btnUCSwitch_Click(object sender, RoutedEventArgs e)

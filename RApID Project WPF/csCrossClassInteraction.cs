@@ -204,38 +204,36 @@ namespace RApID_Project_WPF
                     }
 
                     var (exists, partNumbers, referenceDesignators) = CheckCache(filePath);
-                    if(exists)
-                    {
+                    if (exists) {
                         MainWindow.Notify.ShowBalloonTip($"Using Cached Data for {filePath.Substring(filePath.LastIndexOf('\\') + 1, 8)}",
                             "The data was pulled from the cache.\nIf data is outdated, please notify Jay W.",
                             Hardcodet.Wpf.TaskbarNotification.BalloonIcon.Info);
                         PartNumbers = partNumbers.Split(',').ToList();
                         ReferenceDesignators = referenceDesignators.Split(',').ToList();
-                        return;
-                    }
-
-                    using (var stream = File.Open(filePath, FileMode.Open, FileAccess.Read))
-                    {
-                        using (var reader = ExcelReaderFactory.CreateReader(stream))
+                    } else {
+                        using (var stream = File.Open(filePath, FileMode.Open, FileAccess.Read))
                         {
-                            while (reader.NextResult() && reader.Name != null && !reader.Name.Equals("JUKI"))
-                            { /*spin until JUKI sheet*/ }
-
-                            while (reader.Read() && !string.IsNullOrEmpty(reader.GetValue(0)?.ToString())
-                                                 && !string.IsNullOrEmpty(reader.GetValue(4)?.ToString()))
+                            using (var reader = ExcelReaderFactory.CreateReader(stream))
                             {
-                                var rd = reader.GetValue(0).ToString();
-                                var pn = reader.GetValue(4).ToString();
-                                ReferenceDesignators.Add(rd);
-                                PartNumbers.Add(pn);
+                                while (reader.NextResult() && reader.Name != null && !reader.Name.Equals("JUKI"))
+                                { /*spin until JUKI sheet*/ }
 
-                                /*bomlist?.Dispatcher.Invoke(() => {
-                                    if (PartNumbers.Contains(pn)) {
-                                    }
+                                while (reader.Read() && !string.IsNullOrEmpty(reader.GetValue(0)?.ToString())
+                                                     && !string.IsNullOrEmpty(reader.GetValue(4)?.ToString()))
+                                {
+                                    var rd = reader.GetValue(0).ToString();
+                                    var pn = reader.GetValue(4).ToString();
+                                    ReferenceDesignators.Add(rd);
+                                    PartNumbers.Add(pn);
 
-                                    bomlist.Items.Add(new MultiplePartsReplaced(rd, pn,
-                                        pn.Contains("NP") ? "NO PART" : frmProduction.csCrossClassInteraction.getPartReplacedPartDescription(pn)));
-                                });*/
+                                    /*bomlist?.Dispatcher.Invoke(() => {
+                                        if (PartNumbers.Contains(pn)) {
+                                        }
+
+                                        bomlist.Items.Add(new MultiplePartsReplaced(rd, pn,
+                                            pn.Contains("NP") ? "NO PART" : frmProduction.csCrossClassInteraction.getPartReplacedPartDescription(pn)));
+                                    });*/
+                                }
                             }
                         }
                     }
@@ -1393,6 +1391,46 @@ namespace RApID_Project_WPF
                     new MultiplePartsReplaced(values[vi++], values[vi++], values[vi++] ?? csCrossClassInteraction.GetPartReplacedPartDescription(values[vi-2]))
                 };
             }
+        }
+
+        /// <summary>
+        /// Removes a child element from its parent visual continer.
+        /// </summary>
+        /// <param name="parent">Invoking visual container</param>
+        /// <param name="child"><see cref="UIElement"/> to remove</param>
+        public static void RemoveChild(this DependencyObject parent, UIElement child)
+        {
+            if (parent is Panel panel) {
+                panel.Children.Remove(child);
+            } else if (parent is Decorator decorator) {
+                if (decorator.Child == child) decorator.Child = null;
+            } else if (parent is ContentPresenter contentPresenter) {
+                if (contentPresenter.Content == child) contentPresenter.Content = null;
+            } else if (parent is ContentControl contentControl) {
+                if (contentControl.Content == child) contentControl.Content = null;
+            }
+        }
+
+        /// <summary>
+        /// Makes a copy of the given <see cref="ucUnitIssue"/>
+        /// </summary>
+        /// <param name="orig">The original <see cref="ucUnitIssue"/></param>
+        /// <returns>New <see cref="ucUnitIssue"/> instance.</returns>
+        public static ucUnitIssue Copy(this ucUnitIssue orig)
+        {
+            var u = new ucUnitIssue()
+            {
+                ReportedIssue = orig.ReportedIssue,
+                TestResult = orig.TestResult,
+                AbortResult = orig.AbortResult,
+                Issue = orig.Issue,
+                Item = orig.Item,
+                Problem = orig.Problem,
+                Cause = orig.Cause,
+                Replacement = orig.Replacement
+            };
+
+            return u;
         }
     }
 }

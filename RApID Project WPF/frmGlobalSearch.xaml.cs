@@ -180,8 +180,22 @@ namespace RApID_Project_WPF
         // https://stackoverflow.com/a/16824343/7476183 - Need some adaptation, but should be what we need.
         private void OpenProduction(object sender, RoutedEventArgs e)
         {
-            MainWindow.Notify.ShowBalloonTip("Work in Progress...", "This feature will come in a future update.",
-                Hardcodet.Wpf.TaskbarNotification.BalloonIcon.Info);
+            //Get the clicked MenuItem
+            var menuItem = (MenuItem)sender;
+
+            //Get the ContextMenu to which the menuItem belongs
+            var contextMenu = (ContextMenu)menuItem.Parent;
+
+            //Find the placementTarget
+            var item = (DataGrid)contextMenu.PlacementTarget;
+
+            //Get the underlying item, that you cast to your object that is bound
+            //to the DataGrid (and has subject and state as property)
+            var recordToOpen = (Record)item.SelectedCells[0].Item;
+
+            //Open form with Record as PRI
+            var frm = new frmProductionPRI(recordToOpen);
+            frm.Show();
         }
 
         private void OpenRepair(object sender, RoutedEventArgs e)

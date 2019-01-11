@@ -28,13 +28,13 @@ namespace RApID_Project_WPF.UserControls
         #endregion
 
         #region Properties
-        [Description("User Control Width"), Category("Design")]
+        [Description("User Control Width"), Category("Layout")]
         public double DesignWidth
         {
             get { return (double)GetValue(DesignWidthProperty); }
             set { SetValue(DesignWidthProperty, value); }
         }
-        [Description("User Control Height"), Category("Design")]
+        [Description("User Control Height"), Category("Layout")]
         public double DesignHeight
         {
             get { return (double)GetValue(DesignHeightProperty); }
@@ -93,6 +93,24 @@ namespace RApID_Project_WPF.UserControls
             _backupNewTab = tiNewTab;
         }
 
+        internal void AddTabItem(ucUnitIssue unitIssue, string customHeader = null)
+        {
+            int count = _tabItems.Count;
+
+            var newTab = new TabItem()
+            {
+                Header = customHeader ?? $"Unit Issue #{count}",
+                Name = $"tiUnitIssue{count}",
+                Content = unitIssue,
+                HeaderTemplate = (DataTemplate)tcTabs.FindResource(ReadOnly ? "ROTabHeader" : "TabHeader"),
+                HorizontalAlignment = HorizontalAlignment.Left,
+                VerticalAlignment = VerticalAlignment.Top
+            };
+
+            (newTab.Content as ucUnitIssue).btnResetIssueData.Content += $"#{count - 1}";
+            _tabItems.Insert(count - 1, newTab);
+        }
+
         internal TabItem AddTabItem()
         {
             int count = _tabItems.Count;
@@ -121,7 +139,7 @@ namespace RApID_Project_WPF.UserControls
         {
             if (tcTabs.SelectedItem is TabItem tab && tab.Header != null && tab.Equals(tiNewTab))
             {                
-                tcTabs.SelectedItem = UpdateTabCollection(tcTabs, AddTabItem);                
+                tcTabs.SelectedItem = UpdateTabCollection(tcTabs, AddTabItem);
             }
         }
 
@@ -167,6 +185,7 @@ namespace RApID_Project_WPF.UserControls
             tc.DataContext = null;            
             var result = (TResult) operation.DynamicInvoke(args);
             if (tiNewTab == null) tiNewTab = _backupNewTab;
+            while (result == null) { /*Spin*/ }
             _tabItems.Add(tiNewTab);
             tc.DataContext = _tabItems;
 
@@ -183,6 +202,7 @@ namespace RApID_Project_WPF.UserControls
             tc.DataContext = null;
             var result = operation.Invoke();
             if (tiNewTab == null) tiNewTab = _backupNewTab;
+            while (result == null) { /*Spin*/ }
             _tabItems.Add(tiNewTab);
             tc.DataContext = _tabItems;
 

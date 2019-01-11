@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.ComponentModel;
-using System.Data;
 using System.Data.SqlClient;
 using System.Runtime.CompilerServices;
 using System.Threading;
@@ -38,10 +37,11 @@ namespace RApID_Project_WPF
         /// Gets the current list of records from the TechnicianSubmission Table, possibly based off of filters.
         /// </summary>
         internal async Task GetData(CancellationToken cancelation, Label lbl, ProgressBar prog, Dispatcher UIThread, string _query = "",
-            string lblMsg ="", string notifyTitle = "", string notifyMsg = "")
+            string lblMsg = "", string notifyTitle = "", string notifyMsg = "")
         {
             var recs = new List<Record>();
-            if (string.IsNullOrEmpty(_query)) {
+            if (string.IsNullOrEmpty(_query))
+            {
                 _query = $"SELECT * FROM [Repair].[dbo].[TechnicianSubmission]";
             }
 
@@ -72,7 +72,7 @@ namespace RApID_Project_WPF
 
                 lbl.Dispatcher.Invoke(() =>
                 {
-                    lbl.Content = !string.IsNullOrEmpty(lblMsg) ? lblMsg :  "Loading Complete!";
+                    lbl.Content = !string.IsNullOrEmpty(lblMsg) ? lblMsg : "Loading Complete!";
                     lbl.Visibility = Visibility.Collapsed;
                 });
 
@@ -704,6 +704,15 @@ namespace RApID_Project_WPF
 
             return newRecord;
         }
+        public static implicit operator PreviousRepairInformation(Record r) =>
+        new PreviousRepairInformation
+        {
+            DateSubmitted = r.DateSubmitted,
+            ID = r.ID,
+            SerialNumber = r.SerialNumber,
+            TechName = r.Technician
+        };
+
     }
 
     /// <summary>
