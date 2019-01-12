@@ -102,7 +102,7 @@
             <Label Content="Hours on Unit:" Margin="0,500,0,0" Style="{StaticResource LabelBaseStyle}" />
             <TextBox Name="txtHOU" Margin="0,525,0,0" Style="{StaticResource TextboxBaseStyle}" />
 
-            <uc:ucIssueTabControl x:Name="ucIssues" Margin="202,23,374,125" DesignHeight="495" DesignWidth="345" ReadOnly="True" />
+            <uc:ucIssueTabControl x:Name="ucIssues" Margin="202,23,374,125" DesignHeight="430" DesignWidth="345" ReadOnly="True" />
 
             <Label Content="Additional Comments:" Margin="200,450,0,0" Style="{StaticResource LabelBaseStyle}" />
             <RichTextBox Name="rtbAddComm" Margin="200,475,0,0" Style="{StaticResource RTBBaseStyle}" Width="326" />

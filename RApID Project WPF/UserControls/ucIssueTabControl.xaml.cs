@@ -2,17 +2,27 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
+using System.Runtime.CompilerServices;
+using System.Runtime.InteropServices;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Data;
 using System.Windows.Input;
+using System.Windows.Interop;
 
 namespace RApID_Project_WPF.UserControls
 {
     /// <summary>
     /// Interaction logic for ucIssueTabControl.xaml
     /// </summary>
-    public partial class ucIssueTabControl : UserControl
+    public partial class ucIssueTabControl : UserControl, INotifyPropertyChanged
     {
+        #region NotifyPropertyChanged Implementation
+        public event PropertyChangedEventHandler PropertyChanged;
+        private void OnPropertyChanged([CallerMemberName] string propName = "")
+            => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propName));
+        #endregion
+
         #region Fields
         public int CurrentNewTabIndex = 1;
 
@@ -32,25 +42,37 @@ namespace RApID_Project_WPF.UserControls
         public double DesignWidth
         {
             get { return (double)GetValue(DesignWidthProperty); }
-            set { SetValue(DesignWidthProperty, value); }
+            set {
+                SetValue(DesignWidthProperty, value);
+                OnPropertyChanged();
+            }
         }
         [Description("User Control Height"), Category("Layout")]
         public double DesignHeight
         {
             get { return (double)GetValue(DesignHeightProperty); }
-            set { SetValue(DesignHeightProperty, value); }
+            set {
+                SetValue(DesignHeightProperty, value);
+                OnPropertyChanged();
+            }
         }
         [Description("Deterimines if users can edit data."), Category("Common")]
         public bool ReadOnly
         {
             get { return (bool)GetValue(ReadOnlyProperty); }
-            set { SetValue(ReadOnlyProperty, value); }
+            set {
+                SetValue(ReadOnlyProperty, value);                
+                OnPropertyChanged();
+            }
         }
         [Description("Determine what data to present."),Category("Common")]
         public bool IsRepair
         {
             get { return (bool)GetValue(IsRepairProperty); }
-            set { SetValue(IsRepairProperty, value); }
+            set {
+                SetValue(IsRepairProperty, value);
+                OnPropertyChanged();
+            }
         }
 
 
@@ -93,42 +115,28 @@ namespace RApID_Project_WPF.UserControls
             _backupNewTab = tiNewTab;
         }
 
-        internal void AddTabItem(ucUnitIssue unitIssue, string customHeader = null)
-        {
-            int count = _tabItems.Count;
-
-            var newTab = new TabItem()
-            {
-                Header = customHeader ?? $"Unit Issue #{count}",
-                Name = $"tiUnitIssue{count}",
-                Content = unitIssue,
-                HeaderTemplate = (DataTemplate)tcTabs.FindResource(ReadOnly ? "ROTabHeader" : "TabHeader"),
-                HorizontalAlignment = HorizontalAlignment.Left,
-                VerticalAlignment = VerticalAlignment.Top
-            };
-
-            (newTab.Content as ucUnitIssue).btnResetIssueData.Content += $"#{count - 1}";
-            _tabItems.Insert(count - 1, newTab);
-        }
-
-        internal TabItem AddTabItem()
+        internal TabItem AddTabItem(ucUnitIssue unitIssue = null, string customHeader = null)
         {
             int count = _tabItems.Count;
 
             var newTab = new TabItem() {
-                Header = $"Unit Issue #{count}",
+                Header = customHeader ?? $"Unit Issue #{count}",
                 Name = $"tiUnitIssue{count}",
-                Content = new ucUnitIssue(count) {
+                Content = unitIssue ?? new ucUnitIssue(count) {
                     Name = $"otherIssue{count}",
                     HorizontalAlignment = HorizontalAlignment.Center,
                     VerticalAlignment = VerticalAlignment.Top,
                     Width = (double)GetValue(DesignWidthProperty) - 10,
-                    Height = (double)GetValue(DesignHeightProperty) - 10                    
+                    Height = (double)GetValue(DesignHeightProperty) - 10
                 },
-                HeaderTemplate = (DataTemplate) tcTabs.FindResource(ReadOnly ? "ROTabHeader" : "TabHeader"),
                 HorizontalAlignment = HorizontalAlignment.Left,
                 VerticalAlignment = VerticalAlignment.Top
             };
+
+            if (ReadOnly)
+                newTab.HeaderTemplate = (DataTemplate)tcTabs.FindResource("ROTabHeader");
+            else
+                newTab.HeaderTemplate = (DataTemplate)tcTabs.FindResource("TabHeader");
 
             (newTab.Content as ucUnitIssue).btnResetIssueData.Content += $"#{count - 1}";
             _tabItems.Insert(count - 1, newTab);
@@ -138,8 +146,8 @@ namespace RApID_Project_WPF.UserControls
         private void tcTabs_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             if (tcTabs.SelectedItem is TabItem tab && tab.Header != null && tab.Equals(tiNewTab))
-            {                
-                tcTabs.SelectedItem = UpdateTabCollection(tcTabs, AddTabItem);
+            {
+                tcTabs.SelectedItem = UpdateTabCollection<ucUnitIssue, string, TabItem>(tcTabs, AddTabItem, null, null);
             }
         }
 
@@ -175,6 +183,23 @@ namespace RApID_Project_WPF.UserControls
         }
 
         /// <summary>
+        /// Performs the <see cref="Func{T1, T2, TResult}"/> on the given <see cref="TabControl"/>.
+        /// </summary>
+        /// <param name="tc">The main tab control of the user control</param>
+        /// <param name="operation">The desired operation to run on the collection.</param>
+        /// <param name="args">Any needed arguments for the function.</param>
+        private TResult UpdateTabCollection<T1, T2, TResult>(TabControl tc, Func<T1, T2, TResult> operation, params object[] args)
+        {
+            tc.DataContext = null;
+            var result = (TResult)operation.DynamicInvoke(args);
+            if (tiNewTab == null) tiNewTab = _backupNewTab;
+            _tabItems.Add(tiNewTab);
+            tc.DataContext = _tabItems;
+
+            return result;
+        }
+
+        /// <summary>
         /// Performs the <see cref="Func{T, TResult}"/> on the given <see cref="TabControl"/>.
         /// </summary>
         /// <param name="tc">The main tab control of the user control</param>
@@ -182,10 +207,9 @@ namespace RApID_Project_WPF.UserControls
         /// <param name="args">Any needed arguments for the function.</param>
         private TResult UpdateTabCollection<T, TResult>(TabControl tc, Func<T, TResult> operation, params object[] args)
         {
-            tc.DataContext = null;            
+            tc.DataContext = null;
             var result = (TResult) operation.DynamicInvoke(args);
             if (tiNewTab == null) tiNewTab = _backupNewTab;
-            while (result == null) { /*Spin*/ }
             _tabItems.Add(tiNewTab);
             tc.DataContext = _tabItems;
 
@@ -200,9 +224,8 @@ namespace RApID_Project_WPF.UserControls
         private TResult UpdateTabCollection<TResult>(TabControl tc, Func<TResult> operation)
         {
             tc.DataContext = null;
-            var result = operation.Invoke();
+            var result = operation();
             if (tiNewTab == null) tiNewTab = _backupNewTab;
-            while (result == null) { /*Spin*/ }
             _tabItems.Add(tiNewTab);
             tc.DataContext = _tabItems;
 
