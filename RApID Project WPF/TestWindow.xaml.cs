@@ -34,7 +34,17 @@ namespace RApID_Project_WPF
             unitIssue.Visibility = (unitIssue.Visibility == Visibility.Collapsed) ? Visibility.Visible : Visibility.Collapsed;
         }
 
-        private void btnToggle_Click(object sender, RoutedEventArgs e) => unitIssue.ReadOnly = !unitIssue.ReadOnly;
+        private void btnMutateForm_Click(object sender, RoutedEventArgs e)
+        {
+            tcUnitIssues.IsRepair = !tcUnitIssues.IsRepair;
+            unitIssue.IsRepairForm = !unitIssue.IsRepairForm;
+        }
+
+        private void btnToggle_Click(object sender, RoutedEventArgs e)
+        {
+            tcUnitIssues.ReadOnly = !tcUnitIssues.ReadOnly;
+            unitIssue.ReadOnly = !unitIssue.ReadOnly;
+        }
 
         private void btnMutate_Click(object sender, RoutedEventArgs e)
         {
@@ -79,8 +89,6 @@ namespace RApID_Project_WPF
                 MessageBoxButton.OK,
                 MessageBoxImage.Information);
         }
-
-        private void btnMutateForm_Click(object sender, RoutedEventArgs e) => unitIssue.IsRepairForm = !unitIssue.IsRepairForm;
 
         private void unitIssue_AddPartReplaced(object sender, RoutedEventArgs e)
         {

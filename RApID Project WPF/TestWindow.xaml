@@ -30,7 +30,7 @@
                 <TextBox x:Name="txtSerialNumber" HorizontalAlignment="Left" Height="23" TextWrapping="Wrap" VerticalAlignment="Top" Width="146" DockPanel.Dock="Bottom" Margin="10,0,0,0" KeyDown="txtSerialNumber_KeyDown"/>
             </DockPanel>
         </Border>
-        <UserControls:ucIssueTabControl x:Name="tcUnitIssues" Margin="10,10,0,10" Width="349" HorizontalAlignment="Left"/>
+        <UserControls:ucIssueTabControl x:Name="tcUnitIssues" Margin="10,10,0,10" Width="349" HorizontalAlignment="Left" ReadOnly="True" IsRepair="True"/>
         <UserControls:ucUnitIssue x:Name="unitIssue" HorizontalAlignment="Left" Height="Auto" Margin="10,10,0,10" Width="349" Foreground="White" LabelColor="White" 
                                   DropDownEvent="unitIssue_DropDownEvent" AddPartReplaced="unitIssue_AddPartReplaced" IsRepairForm="True" Visibility="Collapsed"/>
 
