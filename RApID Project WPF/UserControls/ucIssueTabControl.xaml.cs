@@ -115,14 +115,36 @@ namespace RApID_Project_WPF.UserControls
             _backupNewTab = tiNewTab;
         }
 
-        internal TabItem AddTabItem(ucUnitIssue unitIssue = null, string customHeader = null)
+        internal void AddTabItem(ucUnitIssue unitIssue, string customHeader = null)
+        {
+            int count = _tabItems.Count;
+
+            var newTab = new TabItem()
+            {
+                Header = customHeader ?? $"Unit Issue #{count}",
+                Name = $"tiUnitIssue{count}",
+                Content = unitIssue,
+                HorizontalAlignment = HorizontalAlignment.Left,
+                VerticalAlignment = VerticalAlignment.Top
+            };
+
+            if(unitIssue.ReadOnly)            
+                newTab.HeaderTemplate = (DataTemplate) tcTabs.FindResource("ROTabHeader");
+            else
+                newTab.HeaderTemplate = (DataTemplate)tcTabs.FindResource("TabHeader");            
+
+            (newTab.Content as ucUnitIssue).btnResetIssueData.Content += $"#{count - 1}";
+            _tabItems.Insert(count - 1, newTab);
+        }
+
+        internal TabItem AddTabItem()
         {
             int count = _tabItems.Count;
 
             var newTab = new TabItem() {
-                Header = customHeader ?? $"Unit Issue #{count}",
+                Header = $"Unit Issue #{count}",
                 Name = $"tiUnitIssue{count}",
-                Content = unitIssue ?? new ucUnitIssue(count) {
+                Content = new ucUnitIssue(count) {
                     Name = $"otherIssue{count}",
                     HorizontalAlignment = HorizontalAlignment.Center,
                     VerticalAlignment = VerticalAlignment.Top,
@@ -147,7 +169,7 @@ namespace RApID_Project_WPF.UserControls
         {
             if (tcTabs.SelectedItem is TabItem tab && tab.Header != null && tab.Equals(tiNewTab))
             {
-                tcTabs.SelectedItem = UpdateTabCollection<ucUnitIssue, string, TabItem>(tcTabs, AddTabItem, null, null);
+                tcTabs.SelectedItem = UpdateTabCollection(tcTabs, AddTabItem);
             }
         }
 
@@ -183,23 +205,6 @@ namespace RApID_Project_WPF.UserControls
         }
 
         /// <summary>
-        /// Performs the <see cref="Func{T1, T2, TResult}"/> on the given <see cref="TabControl"/>.
-        /// </summary>
-        /// <param name="tc">The main tab control of the user control</param>
-        /// <param name="operation">The desired operation to run on the collection.</param>
-        /// <param name="args">Any needed arguments for the function.</param>
-        private TResult UpdateTabCollection<T1, T2, TResult>(TabControl tc, Func<T1, T2, TResult> operation, params object[] args)
-        {
-            tc.DataContext = null;
-            var result = (TResult)operation.DynamicInvoke(args);
-            if (tiNewTab == null) tiNewTab = _backupNewTab;
-            _tabItems.Add(tiNewTab);
-            tc.DataContext = _tabItems;
-
-            return result;
-        }
-
-        /// <summary>
         /// Performs the <see cref="Func{T, TResult}"/> on the given <see cref="TabControl"/>.
         /// </summary>
         /// <param name="tc">The main tab control of the user control</param>
@@ -207,7 +212,7 @@ namespace RApID_Project_WPF.UserControls
         /// <param name="args">Any needed arguments for the function.</param>
         private TResult UpdateTabCollection<T, TResult>(TabControl tc, Func<T, TResult> operation, params object[] args)
         {
-            tc.DataContext = null;
+            tc.DataContext = null;            
             var result = (TResult) operation.DynamicInvoke(args);
             if (tiNewTab == null) tiNewTab = _backupNewTab;
             _tabItems.Add(tiNewTab);
@@ -224,7 +229,7 @@ namespace RApID_Project_WPF.UserControls
         private TResult UpdateTabCollection<TResult>(TabControl tc, Func<TResult> operation)
         {
             tc.DataContext = null;
-            var result = operation();
+            var result = operation.Invoke();
             if (tiNewTab == null) tiNewTab = _backupNewTab;
             _tabItems.Add(tiNewTab);
             tc.DataContext = _tabItems;
