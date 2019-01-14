@@ -236,6 +236,9 @@
     </Compile>
     <Compile Include="UserControls\BoolToNotBoolConverter.cs" />
     <Compile Include="UserControls\BoolToStringConverter.cs" />
+    <Compile Include="UserControls\ucPreviousRepairInformation.xaml.cs">
+      <DependentUpon>ucPreviousRepairInformation.xaml</DependentUpon>
+    </Compile>
     <Compile Include="UserControls\VisibilityToBoolConverter.cs" />
     <Compile Include="UserControls\BoolToVisibilityConverter.cs" />
     <Compile Include="UserControls\CombiningConverter.cs" />
@@ -337,6 +340,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="UserControls\ucIssueTabControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UserControls\ucPreviousRepairInformation.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

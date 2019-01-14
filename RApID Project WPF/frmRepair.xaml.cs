@@ -1257,7 +1257,7 @@ namespace RApID_Project_WPF
                 {
                     await Task.Factory.StartNew(new Action(() =>
                     {
-                        tabcUnitIssues.Dispatcher.BeginInvoke(new Action(async () => // perform actions on dispatched thread
+                        tbcUnitIssues.Dispatcher.BeginInvoke(new Action(async () => // perform actions on dispatched thread
                     {
                         if (!mapper.GetData(txtBarcode.Text))
                         {

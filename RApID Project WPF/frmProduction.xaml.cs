@@ -1,4 +1,5 @@
 ﻿using EricStabileLibrary;
+using MaterialDesignThemes.Wpf;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -1552,16 +1553,28 @@ namespace RApID_Project_WPF
         }
         #endregion
 
-        private void dgPrevRepairInfo_MouseDoubleClick(object sender, MouseButtonEventArgs e)
+        private void dlgPRIHost_DialogClosing(object sender, DialogClosingEventArgs eventArgs)
+        {
+
+        }
+
+        private async void dgPrevRepairInfo_MouseDoubleClick(object sender, MouseButtonEventArgs e)
         {
             if (dgPrevRepairInfo.SelectedItem != null)
             {
-                var pri = new frmProductionPRI((PreviousRepairInformation)dgPrevRepairInfo.SelectedItem)
+                var selectedItem = (PreviousRepairInformation)dgPrevRepairInfo.SelectedItem;
+
+                /*var pri = new frmProductionPRI(selectedItem)
                 {
                     Owner = this
                 };
                 pri.Show();
-                Activate();
+                Activate();*/
+
+                var result = await DialogHost.Show(new UserControls.ucPreviousRepairInformation() { DisplayData = selectedItem }, delegate(object sender2, DialogOpenedEventArgs args) {
+                    System.Threading.Thread.Sleep(2000);
+                    args.Session.Close(false);
+                });
             }
         }
 

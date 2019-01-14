@@ -120,8 +120,8 @@
         <uc:BoolToStringConverter x:Key="StatusConv"/>
     </Window.Resources>
 
-    <md:DialogHost>
-        <Viewbox Stretch="Uniform">
+    <md:DialogHost x:Name="dlgPRIHost" DialogClosing="dlgPRIHost_DialogClosing">
+    <Viewbox Stretch="Uniform">
 
             <Grid>
                 <StackPanel Orientation="Horizontal">
@@ -169,9 +169,11 @@
 
                             <Label Content="Previous Repair Information" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="6,390,0,0" />
                             <Label Content="Double Click on Record To View" FontStyle="Italic" FontSize="10" Margin="6,405,789,197" />
-                            <DataGrid Name="dgPrevRepairInfo" HorizontalAlignment="Left" VerticalAlignment="Top" Width="280" Height="200" Margin="6,425,0,0" BeginningEdit="dgBeginEdit" MouseDoubleClick="dgPrevRepairInfo_MouseDoubleClick"/>
+                            <DataGrid Name="dgPrevRepairInfo" HorizontalAlignment="Left" VerticalAlignment="Top" Width="280" Height="200" Margin="6,425,0,0" BeginningEdit="dgBeginEdit"
+                                      MouseDoubleClick="dgPrevRepairInfo_MouseDoubleClick"/>
 
-                            <dragablz:TabablzControl x:Name="tcUnitIssues" HorizontalAlignment="Left" VerticalAlignment="Top" Width="300" Height="616" Margin="300,11,0,0">
+                            <dragablz:TabablzControl x:Name="tcUnitIssues" HorizontalAlignment="Left" VerticalAlignment="Top" Width="300" Height="616" Margin="300,11,0,0" ShowDefaultAddButton="True"
+                                                     InterTabController="{StaticResource }">
                                 <TabItem Name="tiUI1" Header="Unit Issue #1">
                                     <Grid Name="gridUI1" Background="#FFACACBC">
                                         <Label Content="Reported Issue:" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10,10,0,0" />

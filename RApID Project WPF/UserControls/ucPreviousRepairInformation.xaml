@@ -1,0 +1,15 @@
+﻿<UserControl x:Class="RApID_Project_WPF.UserControls.ucPreviousRepairInformation"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:RApID_Project_WPF.UserControls"
+             mc:Ignorable="d" 
+             x:Name="uccPreviousRepairInformation"
+             d:DesignHeight="450" d:DesignWidth="800">
+    <Grid>
+        <Frame HorizontalAlignment="Left" Height="430" Margin="10,10,0,0" VerticalAlignment="Top" Width="780" 
+               Content="{Binding ElementName=uccPreviousRepairInformation,Path=DisplayData,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"/>
+
+    </Grid>
+</UserControl>
