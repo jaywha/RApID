@@ -23,13 +23,6 @@ namespace RApID_Project_WPF.UserControls
             => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propName));
         #endregion
 
-        #region Fields
-        public int CurrentNewTabIndex = 1;
-
-        private List<TabItem> _tabItems;
-        private TabItem _backupNewTab;
-        #endregion
-
         #region Dependency Properties
         public static readonly DependencyProperty DesignWidthProperty = DependencyProperty.Register("DesignWidth", typeof(double), typeof(ucIssueTabControl), new PropertyMetadata(275.0));
         public static readonly DependencyProperty DesignHeightProperty = DependencyProperty.Register("DesignHeight", typeof(double), typeof(ucIssueTabControl), new PropertyMetadata(450.0));
@@ -42,7 +35,8 @@ namespace RApID_Project_WPF.UserControls
         public double DesignWidth
         {
             get { return (double)GetValue(DesignWidthProperty); }
-            set {
+            set
+            {
                 SetValue(DesignWidthProperty, value);
                 OnPropertyChanged();
             }
@@ -51,7 +45,8 @@ namespace RApID_Project_WPF.UserControls
         public double DesignHeight
         {
             get { return (double)GetValue(DesignHeightProperty); }
-            set {
+            set
+            {
                 SetValue(DesignHeightProperty, value);
                 OnPropertyChanged();
             }
@@ -75,34 +70,32 @@ namespace RApID_Project_WPF.UserControls
             }
         }
 
-
-        public int Count
-        {
-            get { return tcTabs.Items.Count; }
-        }
-        #endregion
-
         public ucUnitIssue this[int index]
         {
-            get {
-                if (_tabItems[index].Equals(_backupNewTab)) return null;
-                return _tabItems[index].Content as ucUnitIssue;
+            get
+            {
+                return Issues[index].Content as ucUnitIssue;
             }
-            private set { _tabItems[index].Content = value; }
+            private set { Issues[index].Content = value; }
         }
+
+        protected internal List<ucUnitIssue> _issues = new List<ucUnitIssue>();
+        public List<ucUnitIssue> Issues
+        {
+            get => _issues;
+            set {
+                _issues = value;
+                OnPropertyChanged();
+            }
+        }
+        #endregion
 
         public ucIssueTabControl()
         {
             try
             {
                 InitializeComponent();
-
-                _tabItems = new List<TabItem> { tiNewTab };
-                                               
-                AddTabItem();
-
-                tcTabs.DataContext = _tabItems;
-                tcTabs.SelectedIndex = 0;
+                Issues.Add(new ucUnitIssue());
             } catch(Exception e)
             {
                 #if DEBUG
@@ -111,67 +104,9 @@ namespace RApID_Project_WPF.UserControls
                     csExceptionLogger.csExceptionLogger.Write("UnitIssueContainer_InitError", e);
                 #endif
             }
-
-            _backupNewTab = tiNewTab;
         }
 
-        internal void AddTabItem(ucUnitIssue unitIssue, string customHeader = null)
-        {
-            int count = _tabItems.Count;
-
-            var newTab = new TabItem()
-            {
-                Header = customHeader ?? $"Unit Issue #{count}",
-                Name = $"tiUnitIssue{count}",
-                Content = unitIssue,
-                HorizontalAlignment = HorizontalAlignment.Left,
-                VerticalAlignment = VerticalAlignment.Top
-            };
-
-            if(unitIssue.ReadOnly)            
-                newTab.HeaderTemplate = (DataTemplate) tcTabs.FindResource("ROTabHeader");
-            else
-                newTab.HeaderTemplate = (DataTemplate)tcTabs.FindResource("TabHeader");            
-
-            (newTab.Content as ucUnitIssue).btnResetIssueData.Content += $"#{count - 1}";
-            _tabItems.Insert(count - 1, newTab);
-        }
-
-        internal TabItem AddTabItem()
-        {
-            int count = _tabItems.Count;
-
-            var newTab = new TabItem() {
-                Header = $"Unit Issue #{count}",
-                Name = $"tiUnitIssue{count}",
-                Content = new ucUnitIssue(count) {
-                    Name = $"otherIssue{count}",
-                    HorizontalAlignment = HorizontalAlignment.Center,
-                    VerticalAlignment = VerticalAlignment.Top,
-                    Width = (double)GetValue(DesignWidthProperty) - 10,
-                    Height = (double)GetValue(DesignHeightProperty) - 10
-                },
-                HorizontalAlignment = HorizontalAlignment.Left,
-                VerticalAlignment = VerticalAlignment.Top
-            };
-
-            if (ReadOnly)
-                newTab.HeaderTemplate = (DataTemplate)tcTabs.FindResource("ROTabHeader");
-            else
-                newTab.HeaderTemplate = (DataTemplate)tcTabs.FindResource("TabHeader");
-
-            (newTab.Content as ucUnitIssue).btnResetIssueData.Content += $"#{count - 1}";
-            _tabItems.Insert(count - 1, newTab);
-            return newTab;
-        }
-
-        private void tcTabs_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-            if (tcTabs.SelectedItem is TabItem tab && tab.Header != null && tab.Equals(tiNewTab))
-            {
-                tcTabs.SelectedItem = UpdateTabCollection(tcTabs, AddTabItem);
-            }
-        }
+        public ucUnitIssue Last() => Issues.Last();
 
         private void btnDelete_Click(object sender, RoutedEventArgs e)
         {
@@ -186,20 +121,20 @@ namespace RApID_Project_WPF.UserControls
                  where i.Name.Equals(tabName)
                  select i).FirstOrDefault() is TabItem tab)
             {
-                if (_tabItems.Count < 3)
+                if (Issues.Count < 3)
                 {
                     MessageBox.Show("Can't remove the last tab.");
                 }
                 else if (MessageBox.Show($"Are you sure you want to remove the {tab.Header.ToString()} tab?", "Remove Tab", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
                 {
-                    UpdateTabCollection<TabItem, bool>(tcTabs, _tabItems.Remove, tab);
+                    UpdateTabCollection<ucUnitIssue, bool>(tcTabs, Issues.Remove, tab);
 
-                    if (!(tcTabs.SelectedItem is TabItem selectedTab) || selectedTab.Equals(tab))
+                    if (!(tcTabs.SelectedItem is ucUnitIssue selectedIssue) || selectedIssue.Equals(tab))
                     {
-                        selectedTab = _tabItems[0];
+                        selectedIssue = Issues[0];
                     }
 
-                    tcTabs.SelectedItem = selectedTab;
+                    tcTabs.SelectedItem = selectedIssue;
                 }
             }
         }
@@ -210,13 +145,11 @@ namespace RApID_Project_WPF.UserControls
         /// <param name="tc">The main tab control of the user control</param>
         /// <param name="operation">The desired operation to run on the collection.</param>
         /// <param name="args">Any needed arguments for the function.</param>
-        private TResult UpdateTabCollection<T, TResult>(TabControl tc, Func<T, TResult> operation, params object[] args)
+        private TResult UpdateTabCollection<T, TResult>(TabControl tc, Func<T, TResult> operation, params TabItem[] args)
         {
             tc.DataContext = null;            
             var result = (TResult) operation.DynamicInvoke(args);
-            if (tiNewTab == null) tiNewTab = _backupNewTab;
-            _tabItems.Add(tiNewTab);
-            tc.DataContext = _tabItems;
+            tc.DataContext = Issues;
 
             return result;
         }
@@ -230,9 +163,7 @@ namespace RApID_Project_WPF.UserControls
         {
             tc.DataContext = null;
             var result = operation.Invoke();
-            if (tiNewTab == null) tiNewTab = _backupNewTab;
-            _tabItems.Add(tiNewTab);
-            tc.DataContext = _tabItems;
+            tc.DataContext = Issues;
 
             return result;
         }

@@ -4,8 +4,9 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:RApID_Project_WPF.UserControls"
+             x:Name="uccAOITab"
              mc:Ignorable="d" Height="638.328" Width="1078.438">
-    <Grid Background="#FFE5E5E5">
+    <Grid Background="{Binding ElementName=uccAOITab,Path=Background,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}">
 
         <DataGrid Name="dgAOI" HorizontalAlignment="Left" VerticalAlignment="Top" Width="1058" Height="300" Margin="10,10,0,0" BeginningEdit="dgBeginEdit"/>
 

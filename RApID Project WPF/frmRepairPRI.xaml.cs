@@ -123,10 +123,12 @@ namespace RApID_Project_WPF
                 if (!string.IsNullOrEmpty(sUnitID)) {
                     List<UnitIssueModel> lRMI = csCrossClassInteraction.GetRepairUnitIssues(sUnitID);
 
+                    UnitIssueModel prevItem = null;
                     int ucIndex = 0;
                     foreach (var issue in lRMI)
                     {
-                        ucIssues[ucIndex].FillUnitIssue(
+                        Dragablz.TabablzControl.AddItem(issue, prevItem, Dragablz.AddLocationHint.After);
+                        ucIssues[ucIndex++].FillUnitIssue(
                             //TODO: Find Multiple Parts to be added here
                             issue.ReportedIssue,
                             issue.TestResult,
@@ -140,7 +142,7 @@ namespace RApID_Project_WPF
                             issue.SinglePartReplaced.PartReplaced,
                             issue.SinglePartReplaced.PartsReplacedPartDescription
                         );
-                        if (lRMI.Count > ucIndex) ucIssues.AddTabItem();
+                        prevItem = issue;
                     }
                 }
                 

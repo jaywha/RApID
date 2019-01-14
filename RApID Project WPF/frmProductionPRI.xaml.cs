@@ -86,10 +86,12 @@ namespace RApID_Project_WPF
 
                 using(var reader = unitIssueCmd.ExecuteReader())
                 {
+                    ucUnitIssue prevItem = null;
                     int index = 1;
                     while(reader.Read())
                     {
-                        ucIssues.AddTabItem();
+                        var curr = new ucUnitIssue();
+                        Dragablz.TabablzControl.AddItem(curr, prevItem, Dragablz.AddLocationHint.After);
                         ucIssues[index++].FillUnitIssue(null,
                             reader["ReportedIssue"].ToString().EmptyIfNull(),
                             reader["TestResult"].ToString().EmptyIfNull(),
@@ -102,6 +104,7 @@ namespace RApID_Project_WPF
                             reader["PartsReplaced"].ToString(),
                             reader["RefDesignator"].ToString()
                         );
+                        prevItem = curr;
                     }
                 }
 

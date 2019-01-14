@@ -13,7 +13,7 @@ namespace RApID_Project_WPF.UserControls
     public partial class ucEOLTab : UserControl
     {
         public static readonly DependencyProperty _serialNumber = DependencyProperty.Register("SerialNumber", typeof(string), typeof(ucEOLTab), new PropertyMetadata(""));
-        public static readonly DependencyProperty _partSeries = DependencyProperty.Register("PartSeries", typeof(string), typeof(ucEOLTab), new PropertyMetadata(""));
+        public static readonly DependencyProperty _partSeries = DependencyProperty.Register("PartSeries", typeof(string), typeof(ucEOLTab), new PropertyMetadata(""));        
 
         [Description("SN from parent Window"), Category("Common")]
         public string SerialNumber

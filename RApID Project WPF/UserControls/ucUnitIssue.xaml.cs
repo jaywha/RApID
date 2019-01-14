@@ -1,14 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Media;
-using System.Linq;
-using System.Threading.Tasks;
 using System.Windows.Data;
-using System.Reflection;
+using System.Windows.Media;
 
 namespace RApID_Project_WPF.UserControls
 {
@@ -46,7 +44,8 @@ namespace RApID_Project_WPF.UserControls
         private readonly csObjectHolder.csObjectHolder holder = csObjectHolder.csObjectHolder.ObjectHolderInstance();
         private readonly List<string> SpecialCases = new List<string>() { "Cause", "Replacement", "Item", "Problem" };
 
-        private Binding IsRepairVisibilityBinding = new Binding() {
+        private Binding IsRepairVisibilityBinding = new Binding()
+        {
             ElementName = "uccUnitIssue",
             Path = new PropertyPath("IsRepairForm"),
             Converter = new BoolToVisibilityConverter(),
@@ -70,7 +69,7 @@ namespace RApID_Project_WPF.UserControls
         #endregion
 
         #region Properties
-        [Description("Is this control in a Repiar type form?"),Category("Common")]
+        [Description("Is this control in a Repiar type form?"), Category("Common")]
         public bool IsRepairForm
         {
             get => (bool)GetValue(IsRepairFormProperty);
@@ -282,7 +281,8 @@ namespace RApID_Project_WPF.UserControls
 
         public bool MutateToComboBoxes()
         {
-            return Dispatcher.Invoke(() => { 
+            return Dispatcher.Invoke(() =>
+            {
                 var controls = new UIElement[stkMain.Children.Count];
                 stkMain.Children.Cast<UIElement>().ToList().CopyTo(controls, 0);
 
@@ -301,7 +301,7 @@ namespace RApID_Project_WPF.UserControls
                             }; cmbx.DropDownClosed += ComboBox_DropDownClosed;
 
                             cmbx.SetBinding(ComboBox.TextProperty, txtbx.GetBindingExpression(TextBox.TextProperty).ParentBinding);
-                            if(GetConvParam(txtbx) is Binding b) cmbx.SetBinding(VisibilityProperty, b);
+                            if (GetConvParam(txtbx) is Binding b) cmbx.SetBinding(VisibilityProperty, b);
 
                             ComboBoxFiller(ref cmbx);
 
@@ -323,7 +323,8 @@ namespace RApID_Project_WPF.UserControls
 
         public bool MutateToTextBoxes()
         {
-            return Dispatcher.Invoke(() => {
+            return Dispatcher.Invoke(() =>
+            {
                 var controls = new UIElement[stkMain.Children.Count];
                 stkMain.Children.Cast<UIElement>().ToList().CopyTo(controls, 0);
 
@@ -362,11 +363,11 @@ namespace RApID_Project_WPF.UserControls
 
         public void ComboBoxFiller(ref ComboBox cmbx)
         {
-            switch(cmbx.Name.Replace("txt",""))
+            switch (cmbx.Name.Replace("txt", ""))
             {
                 case "ReportedIssue":
-                    if(!IsRepairForm) cmbx.PullItemsFromQuery("SELECT [ReportedIssue] FROM RApID_DropDowns", holder.RepairConnectionString);
-                    else              cmbx.PullItemsFromQuery("SELECT [PC1] FROM JDECodes", holder.RepairConnectionString);
+                    if (!IsRepairForm) cmbx.PullItemsFromQuery("SELECT [ReportedIssue] FROM RApID_DropDowns", holder.RepairConnectionString);
+                    else cmbx.PullItemsFromQuery("SELECT [PC1] FROM JDECodes", holder.RepairConnectionString);
                     break;
                 case "TestResult":
                     cmbx.PullItemsFromQuery("SELECT [TestResult] FROM RApID_DropDowns", holder.RepairConnectionString);
@@ -400,8 +401,6 @@ namespace RApID_Project_WPF.UserControls
         private void ComboBox_DropDownClosed(object sender, EventArgs e) => ((EventHandler)GetValue(DropDownEventProperty))?.Invoke(sender, e);
         private void btnAddPartsReplaced_Click(object sender, RoutedEventArgs e) { ((RoutedEventHandler)GetValue(AddPartReplacedProperty))?.Invoke(sender, e); }
 
-        
-
         private void btnResetIssueData_Click(object sender, RoutedEventArgs e)
         {
             ReportedIssue = string.Empty;
@@ -419,5 +418,24 @@ namespace RApID_Project_WPF.UserControls
         #endregion
 
         private void cmbxRefDesignator_SelectionChanged(object sender, SelectionChangedEventArgs e) => cmbxPartNumber.SelectedIndex = cmbxRefDesignator.SelectedIndex;
+
+        public static implicit operator ucUnitIssue(UnitIssueModel model)
+        {
+            var r = new ucUnitIssue()
+            {
+                ReportedIssue = model.ReportedIssue,
+                TestResult = model.TestResult,
+                AbortResult = model.TestResultAbort,
+                Issue = model.Issue,
+                Problem = model.Problem,
+                Cause = model.Cause,
+                Replacement = model.Replacement
+            };
+
+            if(model.MultiPartsReplaced != null) r.dgMultipleParts.ItemsSource = model.MultiPartsReplaced;
+            else if(model.SinglePartReplaced != null) r.dgMultipleParts.Items.Add(model.SinglePartReplaced);
+
+            return r;
+        }
     }
 }

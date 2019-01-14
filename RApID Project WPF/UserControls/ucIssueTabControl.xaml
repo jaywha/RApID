@@ -5,8 +5,17 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:RApID_Project_WPF.UserControls"
              mc:Ignorable="d" x:Name="uccIssueTabControl"
-             d:DesignHeight="{Binding Path=DesignHeight,ElementName=uccIssueTabControl,Mode=TwoWay}"
-             d:DesignWidth="{Binding Path=DesignWidth,ElementName=uccIssueTabControl,Mode=TwoWay}">
+             xmlns:dragablz="http://dragablz.net/winfx/xaml/dragablz"
+                xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+             TextElement.Foreground="{DynamicResource MaterialDesignBody}"
+                TextElement.FontWeight="Regular"
+                TextElement.FontSize="13"
+                TextOptions.TextFormattingMode="Ideal" 
+                TextOptions.TextRenderingMode="Auto"        
+                Background="{DynamicResource MaterialDesignPaper}"
+                FontFamily="{DynamicResource MaterialDesignFont}"
+             d:DesignHeight="{Binding Path=DesignHeight,ElementName=uccIssueTabControl,Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+             d:DesignWidth="{Binding Path=DesignWidth,ElementName=uccIssueTabControl,Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
     <UserControl.Resources>
         <Style x:Key="TCBaseStyle" TargetType="{x:Type TabControl}">
             <Setter Property="HorizontalAlignment" Value="Left" />
@@ -15,26 +24,23 @@
             <Setter Property="Height" Value="{Binding Path=DesignHeight,ElementName=uccIssueTabControl,Mode=TwoWay}" />
         </Style>
         <local:BoolToVisibilityConverter x:Key="VisibilityConverter"/>
+        <DataTemplate x:Key="TabHeader" DataType="TabItem">
+            <DockPanel>
+                <Button Name="btnDelete" DockPanel.Dock="Right" Margin="5,0,0,0" Padding="0" Click="btnDelete_Click" CommandParameter="{Binding Path=Name,RelativeSource={RelativeSource AncestorType={x:Type TabItem}}}">
+                    <Image Source="/RApID Project WPF;component/Resources/close.png" Height="11" Width="11"/>
+                </Button>
+                <TextBlock Text="{Binding Path=Header,RelativeSource={RelativeSource AncestorType={x:Type TabItem}}}"/>
+            </DockPanel>
+        </DataTemplate>
+        <DataTemplate x:Key="ROTabHeader" DataType="TabItem">
+            <DockPanel>
+                <TextBlock Text="{Binding Path=Header,RelativeSource={RelativeSource AncestorType={x:Type TabItem}}}"/>
+            </DockPanel>
+        </DataTemplate>
     </UserControl.Resources>
     <Grid>
-        <TabControl x:Name="tcTabs" Style="{StaticResource TCBaseStyle}" ItemsSource="{Binding}" SelectionChanged="tcTabs_SelectionChanged" 
-                    Width="{Binding Path=DesignWidth,ElementName=uccIssueTabControl,Mode=TwoWay}" Height="{Binding Path=DesignHeight,ElementName=uccIssueTabControl,Mode=TwoWay}">
-            <TabControl.Resources>
-                <DataTemplate x:Key="TabHeader" DataType="TabItem">
-                    <DockPanel>
-                        <Button Name="btnDelete" DockPanel.Dock="Right" Margin="5,0,0,0" Padding="0" Click="btnDelete_Click" CommandParameter="{Binding Path=Name,RelativeSource={RelativeSource AncestorType={x:Type TabItem}}}">
-                            <Image Source="/RApID Project WPF;component/Resources/close.png" Height="11" Width="11"/>
-                        </Button>
-                        <TextBlock Text="{Binding Path=Header,RelativeSource={RelativeSource AncestorType={x:Type TabItem}}}"/>
-                    </DockPanel>
-                </DataTemplate>
-                <DataTemplate x:Key="ROTabHeader" DataType="TabItem">
-                    <DockPanel>
-                        <TextBlock Text="{Binding Path=Header,RelativeSource={RelativeSource AncestorType={x:Type TabItem}}}"/>
-                    </DockPanel>
-                </DataTemplate>
-            </TabControl.Resources>
-        </TabControl>
-        <TabItem x:Name="tiNewTab" Header="+" Visibility="{Binding Path=ReadOnly,ElementName=uccIssueTabControl,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged,Converter={StaticResource VisibilityConverter}}"/>        
+        <dragablz:TabablzControl x:Name="tcTabs" Style="{StaticResource TCBaseStyle}" ItemsSource="{Binding ElementName=uccIssueTabControl,Path=Issues,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" 
+                                 Width="{Binding Path=DesignWidth,ElementName=uccIssueTabControl,Mode=TwoWay}" Height="{Binding Path=DesignHeight,ElementName=uccIssueTabControl,Mode=TwoWay}"
+                                 ShowDefaultAddButton="{Binding ElementName=uccIssueTabControl,Path=ReadOnly,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"/>
     </Grid>
 </UserControl>
