@@ -12,7 +12,7 @@
             <Label Name="lblCreateDate" Content="{Binding Path=CreateDate, ElementName=ucLogActionViewer}" Background="AntiqueWhite"/>
             <Label Name="lblSubmitDate" Content="{Binding Path=SubmitDate, ElementName=ucLogActionViewer}" Background="GhostWhite"/>
         </StackPanel>
-        <RichTextBox Name="rtbLogBox" AllowDrop="False" IsTabStop="False" Height="200" IsReadOnly="True">
+        <RichTextBox Name="rtbLogBox" AllowDrop="False" IsTabStop="False" Height="200" IsReadOnly="True" Background="{Binding Path=RTBBackground,ElementName=ucLogActionViewer,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}">
             <FlowDocument>
                 <Paragraph>
                     <Run Text="Technician submission details would appear here if a Database LogID was associated with this record."/>

@@ -8,6 +8,8 @@ using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Media;
 
+using RApID_Project_WPF.UserControls.Converters;
+
 namespace RApID_Project_WPF.UserControls
 {
     /// <summary>
@@ -239,10 +241,12 @@ namespace RApID_Project_WPF.UserControls
 
         #endregion
 
+        #region Constructors
         public ucUnitIssue()
         {
             InitializeComponent();
             holder.vGetServerName("");
+            if (string.IsNullOrEmpty(MonkeyCache.FileStore.Barrel.ApplicationId)) MonkeyCache.FileStore.Barrel.ApplicationId = AppDomain.CurrentDomain.FriendlyName;
             DataContext = this;
             dgMultipleParts.dgBuildView(DataGridTypes.MULTIPLEPARTS);
         }
@@ -261,6 +265,7 @@ namespace RApID_Project_WPF.UserControls
                 else u.Name += issueNum;
             }
         }
+        #endregion
 
         #region Switch Readonly Mode (TextBoxes <-> ComboBoxes)
 
@@ -415,27 +420,74 @@ namespace RApID_Project_WPF.UserControls
             cmbxRefDesignator.SelectedIndex = -1;
             dgMultipleParts.Items.Clear();
         }
+        private void cmbxRefDesignator_SelectionChanged(object sender, SelectionChangedEventArgs e) => cmbxPartNumber.SelectedIndex = cmbxRefDesignator.SelectedIndex;
         #endregion
 
-        private void cmbxRefDesignator_SelectionChanged(object sender, SelectionChangedEventArgs e) => cmbxPartNumber.SelectedIndex = cmbxRefDesignator.SelectedIndex;
-
+        #region Conversion Operators
+        /// <summary>
+        /// Allows creating a <see cref="ucUnitIssue"/> from a given <see cref="UnitIssueModel"/>.
+        /// </summary>
+        /// <param name="model">The given <see cref="UnitIssueModel"/> instance.</param>
         public static implicit operator ucUnitIssue(UnitIssueModel model)
         {
             var r = new ucUnitIssue()
             {
-                ReportedIssue = model.ReportedIssue,
-                TestResult = model.TestResult,
-                AbortResult = model.TestResultAbort,
-                Issue = model.Issue,
-                Problem = model.Problem,
-                Cause = model.Cause,
-                Replacement = model.Replacement
+                ReportedIssue = model.ReportedIssue ?? "",
+                TestResult = model.TestResult ?? "",
+                AbortResult = model.TestResultAbort ?? "",
+                Issue = model.Issue ?? "",
+                Problem = model.Problem ?? "",
+                Cause = model.Cause ?? "",
+                Replacement = model.Replacement ?? ""
             };
 
-            if(model.MultiPartsReplaced != null) r.dgMultipleParts.ItemsSource = model.MultiPartsReplaced;
+            if (model.MultiPartsReplaced != null) r.dgMultipleParts.ItemsSource = model.MultiPartsReplaced;
             else if(model.SinglePartReplaced != null) r.dgMultipleParts.Items.Add(model.SinglePartReplaced);
 
             return r;
         }
+
+        /// <summary>
+        /// Allows creating a <see cref="UnitIssueModel"/> from a given <see cref="ucUnitIssue"/>.
+        /// </summary>
+        /// <param name="unitIssue">The given <see cref="ucUnitIssue"/> UserControl instance.</param>
+        public static implicit operator UnitIssueModel(ucUnitIssue unitIssue)
+        {
+            var r = new UnitIssueModel()
+            {
+                ReportedIssue = unitIssue.ReportedIssue ?? "",
+                TestResult = unitIssue.TestResult ?? "",
+                TestResultAbort = unitIssue.AbortResult ?? "",
+                Issue = unitIssue.Issue ?? "",
+                Problem = unitIssue.Problem ?? "",
+                Cause = unitIssue.Cause ?? "",
+                Replacement = unitIssue.Replacement ?? ""
+            };
+
+            var partsList = unitIssue.dgMultipleParts.Items.Cast<MultiplePartsReplaced>().ToList();
+            if (unitIssue.dgMultipleParts != null) r.MultiPartsReplaced = partsList;
+            else if (unitIssue.dgMultipleParts != null) r.SinglePartReplaced = partsList[0];
+
+            return r;
+        }
+
+        /// <summary>
+        /// Allows casting from <see cref="ucUnitIssue"/> to <see cref="TabItem"/> for use in <see cref="ucIssueTabControl"/>.
+        /// </summary>
+        /// <param name="unitIssue">The given <see cref="ucUnitIssue"/> UserControl instance.</param>
+        public static implicit operator TabItem(ucUnitIssue unitIssue)
+        {
+            var ti = new TabItem()
+            {
+                Header = "Unit Issue #ISSUENUMBER",
+                Content = unitIssue,
+                Width = unitIssue.Width,
+                Height = unitIssue.Height
+            };
+
+            return ti;
+        }
+        #endregion
+
     }
 }

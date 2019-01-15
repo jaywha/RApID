@@ -163,10 +163,10 @@
       <SubType>Designer</SubType>
     </Page>
     <Compile Include="..\..\Linked Items\csObjectHolder\csObjectHolder\csObjectHolder.cs">
-      <Link>csObjectHolder.cs</Link>
+      <Link>Classes\csObjectHolder.cs</Link>
     </Compile>
     <Compile Include="..\..\Linked Items\csSQL\csSQL\csSQLClass.cs">
-      <Link>csSQLClass.cs</Link>
+      <Link>Classes\csSQLClass.cs</Link>
     </Compile>
     <Compile Include="..\..\Linked Items\frmMessageBox\frmMessageBox\frmMessageBox.cs">
       <Link>frmMessageBox.cs</Link>
@@ -176,14 +176,15 @@
       <Link>frmMessageBox.designer.cs</Link>
       <DependentUpon>frmMessageBox.cs</DependentUpon>
     </Compile>
-    <Compile Include="csExceptionLogger.cs" />
-    <Compile Include="csSerialNumberMapper.cs" />
-    <Compile Include="csClassHelper.cs" />
-    <Compile Include="csCrossClassInteraction.cs" />
-    <Compile Include="csPrintQCDQELabel.cs" />
-    <Compile Include="csSplashScreenHelper.cs" />
-    <Compile Include="csVersionControl.cs" />
-    <Compile Include="ESLIB.cs" />
+    <Compile Include="Classes\csExceptionLogger.cs" />
+    <Compile Include="Classes\csSerialNumberMapper.cs" />
+    <Compile Include="Classes\csClassHelper.cs" />
+    <Compile Include="Classes\csCrossClassInteraction.cs" />
+    <Compile Include="Classes\csPrintQCDQELabel.cs" />
+    <Compile Include="Classes\csSplashScreenHelper.cs" />
+    <Compile Include="Classes\csVersionControl.cs" />
+    <Compile Include="Classes\ESLIB.cs" />
+    <Compile Include="Classes\IssueTabController.cs" />
     <Compile Include="frmFullCustomerInformation.xaml.cs">
       <DependentUpon>frmFullCustomerInformation.xaml</DependentUpon>
     </Compile>
@@ -220,30 +221,30 @@
     <Compile Include="frmViewMultipleIssues.xaml.cs">
       <DependentUpon>frmViewMultipleIssues.xaml</DependentUpon>
     </Compile>
-    <Compile Include="csRecordList.cs" />
+    <Compile Include="Classes\csRecordList.cs" />
     <Compile Include="frmRepair.xaml.cs">
       <DependentUpon>frmRepair.xaml</DependentUpon>
     </Compile>
     <Compile Include="frmRepairPRI.xaml.cs">
       <DependentUpon>frmRepairPRI.xaml</DependentUpon>
     </Compile>
-    <Compile Include="GetDotNetVersion.cs" />
-    <Compile Include="ServiceManager.cs" />
-    <Compile Include="Settings.cs" />
-    <Compile Include="StaticVars.cs" />
+    <Compile Include="Classes\GetDotNetVersion.cs" />
+    <Compile Include="Classes\ServiceManager.cs" />
+    <Compile Include="Classes\Settings.cs" />
+    <Compile Include="Classes\StaticVars.cs" />
     <Compile Include="TestWindow.xaml.cs">
       <DependentUpon>TestWindow.xaml</DependentUpon>
     </Compile>
-    <Compile Include="UserControls\BoolToNotBoolConverter.cs" />
-    <Compile Include="UserControls\BoolToStringConverter.cs" />
+    <Compile Include="UserControls\Converters\BoolToNotBoolConverter.cs" />
+    <Compile Include="UserControls\Converters\BoolToStringConverter.cs" />
     <Compile Include="UserControls\ucPreviousRepairInformation.xaml.cs">
       <DependentUpon>ucPreviousRepairInformation.xaml</DependentUpon>
     </Compile>
-    <Compile Include="UserControls\VisibilityToBoolConverter.cs" />
-    <Compile Include="UserControls\BoolToVisibilityConverter.cs" />
-    <Compile Include="UserControls\CombiningConverter.cs" />
-    <Compile Include="UserControls\HeightToHeightConverter.cs" />
-    <Compile Include="UserControls\NumericToBoolConverter.cs" />
+    <Compile Include="UserControls\Converters\VisibilityToBoolConverter.cs" />
+    <Compile Include="UserControls\Converters\BoolToVisibilityConverter.cs" />
+    <Compile Include="UserControls\Converters\CombiningConverter.cs" />
+    <Compile Include="UserControls\Converters\HeightToHeightConverter.cs" />
+    <Compile Include="UserControls\Converters\NumericToBoolConverter.cs" />
     <Compile Include="UserControls\ucIssueTabControl.xaml.cs">
       <DependentUpon>ucIssueTabControl.xaml</DependentUpon>
     </Compile>
@@ -265,7 +266,7 @@
     <Compile Include="UserControls\ucUnitIssue.xaml.cs">
       <DependentUpon>ucUnitIssue.xaml</DependentUpon>
     </Compile>
-    <Compile Include="ViewModelBase.cs" />
+    <Compile Include="Classes\ViewModelBase.cs" />
     <Compile Include="VMB\ViewModelBase.cs" />
     <Page Include="frmFullCustomerInformation.xaml">
       <SubType>Designer</SubType>
@@ -408,11 +409,11 @@
     <WCFMetadata Include="Service References\" />
   </ItemGroup>
   <ItemGroup>
+    <Resource Include="Resources\green-plus.png" />
     <Resource Include="Resources\trashcan.png" />
     <Resource Include="Resources\close.png" />
     <Resource Include="RApID.ico" />
     <None Include="FodyWeavers.xml" />
-    <Resource Include="Resources\14-149858_big-image-green-plus-icon-png.jpg" />
     <Content Include="Resources\BarcodeLib.dll" />
     <Resource Include="Resources\settingsIcon.png" />
   </ItemGroup>

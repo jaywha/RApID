@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Data;
 
-namespace RApID_Project_WPF.UserControls
+namespace RApID_Project_WPF.UserControls.Converters
 {
     [ValueConversion(typeof(int),typeof(bool))]
     class NumericToBoolConverter : IValueConverter

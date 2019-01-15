@@ -34,6 +34,7 @@ namespace RApID_Project_WPF.UserControls
         public ucAOITab()
         {
             InitializeComponent();
+            if (string.IsNullOrEmpty(MonkeyCache.FileStore.Barrel.ApplicationId)) MonkeyCache.FileStore.Barrel.ApplicationId = AppDomain.CurrentDomain.FriendlyName;
             dgAOI.dgBuildView(DataGridTypes.AOI);
             dgDefectCodes.dgBuildView(DataGridTypes.DEFECTCODES);
         }

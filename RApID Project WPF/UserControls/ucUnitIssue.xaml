@@ -4,44 +4,33 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:sys="clr-namespace:System;assembly=mscorlib"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             xmlns:local="clr-namespace:RApID_Project_WPF.UserControls"
+             
+             xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+            TextElement.Foreground="{DynamicResource MaterialDesignBody}"
+            TextElement.FontWeight="Regular"
+            TextElement.FontSize="13"
+            TextOptions.TextFormattingMode="Ideal" 
+            TextOptions.TextRenderingMode="Auto"        
+            Background="{DynamicResource MaterialDesignPaper}"
+            FontFamily="{DynamicResource MaterialDesignFont}"
+             
+             xmlns:conv="clr-namespace:RApID_Project_WPF.UserControls.Converters"
              mc:Ignorable="d" 
              Height="450" Width="250"
              x:Name="uccUnitIssue">
     <UserControl.Resources>
-        <Style x:Key="DataGridBaseStyle" TargetType="{x:Type DataGrid}">
-            <Setter Property="HorizontalAlignment" Value="Left" />
-            <Setter Property="VerticalAlignment" Value="Top" />
-            <Setter Property="Width" Value="225" />
-            <Setter Property="Height" Value="75" />
-            <Setter Property="IsReadOnly" Value="True" />
-        </Style>
-        <Style x:Key="TextboxUnitIssueStyle" TargetType="{x:Type TextBox}">
-            <Setter Property="HorizontalAlignment" Value="Left" />
-            <Setter Property="VerticalAlignment" Value="Top" />
-            <Setter Property="VerticalContentAlignment" Value="Center" />
-            <Setter Property="Width" Value="225" />
-            <Setter Property="Height" Value="23" />
-            <Setter Property="TextWrapping" Value="Wrap" />
-            <Setter Property="IsReadOnly" Value="True" />
-        </Style>
-        <Style x:Key="LabelBaseStyle" TargetType="{x:Type Label}">
-            <Setter Property="HorizontalAlignment" Value="Left" />
-            <Setter Property="VerticalAlignment" Value="Top" />
-            <Setter Property="Foreground" Value="{Binding ElementName=uccUnitIssue,Path=LabelColor,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"/>
-        </Style>
-        <local:HeightToHeightConverter x:Key="SizeConverter"/>
-        <local:NumericToBoolConverter x:Key="NumToBool"/>
-        <local:BoolToVisibilityConverter x:Key="BoolToVis"/>
-        <local:BoolToNotBoolConverter x:Key="NotBool"/>
-        <local:CombiningConverter x:Key="NotBoolToVis" Converter1="{StaticResource NotBool}" Converter2="{StaticResource BoolToVis}"/>
+        <conv:HeightToHeightConverter x:Key="SizeConverter"/>
+        <conv:NumericToBoolConverter x:Key="NumToBool"/>
+        <conv:BoolToVisibilityConverter x:Key="BoolToVis"/>
+        <conv:BoolToNotBoolConverter x:Key="NotBool"/>
+        <conv:CombiningConverter x:Key="NotBoolToVis" Converter1="{StaticResource NotBool}" Converter2="{StaticResource BoolToVis}"/>
         <sys:Double x:Key="mulWidth">1.3</sys:Double>
     </UserControl.Resources>
     <Grid>
         <ScrollViewer VerticalScrollBarVisibility="Auto">
             <StackPanel x:Name="stkMain" Orientation="Vertical" HorizontalAlignment="Left">
-                <Label Content="Reported Issue:" Style="{StaticResource LabelBaseStyle}"/>
-                <TextBox x:Name="txtReportedIssue" Style="{StaticResource TextboxUnitIssueStyle}" Text="{Binding Path=ReportedIssue,ElementName=uccUnitIssue,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}">
+                <Label Content="Reported Issue:" />
+                <TextBox x:Name="txtReportedIssue" Text="{Binding Path=ReportedIssue,ElementName=uccUnitIssue,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}">
                     <TextBox.Width>
                         <Binding ElementName="uccUnitIssue" Path="Width" Mode="TwoWay" UpdateSourceTrigger="PropertyChanged" Converter="{StaticResource SizeConverter}">
                             <Binding.ConverterParameter>
@@ -51,8 +40,8 @@
                     </TextBox.Width>
                 </TextBox>
 
-                <Label Content="Test Result:" Style="{StaticResource LabelBaseStyle}" />
-                <TextBox x:Name="txtTestResult" Style="{StaticResource TextboxUnitIssueStyle}" Text="{Binding Path=TestResult,ElementName=uccUnitIssue,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" >
+                <Label Content="Test Result:" />
+                <TextBox x:Name="txtTestResult" Text="{Binding Path=TestResult,ElementName=uccUnitIssue,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" >
                     <TextBox.Width>
                         <Binding ElementName="uccUnitIssue" Path="Width" Mode="TwoWay" UpdateSourceTrigger="PropertyChanged" Converter="{StaticResource SizeConverter}">
                             <Binding.ConverterParameter>
@@ -62,8 +51,8 @@
                     </TextBox.Width>
                 </TextBox>
 
-                <Label Content="Test Result (Abort Input):" Style="{StaticResource LabelBaseStyle}" />
-                <TextBox x:Name="txtTestResultAbort" Style="{StaticResource TextboxUnitIssueStyle}" Text="{Binding Path=AbortResult,ElementName=uccUnitIssue,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" >
+                <Label Content="Test Result (Abort Input):" />
+                <TextBox x:Name="txtTestResultAbort" Text="{Binding Path=AbortResult,ElementName=uccUnitIssue,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" >
                     <TextBox.Width>
                         <Binding ElementName="uccUnitIssue" Path="Width" Mode="TwoWay" UpdateSourceTrigger="PropertyChanged" Converter="{StaticResource SizeConverter}">
                             <Binding.ConverterParameter>
@@ -71,72 +60,72 @@
                             </Binding.ConverterParameter>
                         </Binding>
                     </TextBox.Width>
+                </TextBox>
+
+                <Label Content="Issue:" />
+                <TextBox x:Name="txtIssue" Text="{Binding Path=Issue,ElementName=uccUnitIssue,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" >
+                    <TextBox.Width>
+                        <Binding ElementName="uccUnitIssue" Path="Width" Mode="TwoWay" UpdateSourceTrigger="PropertyChanged" Converter="{StaticResource SizeConverter}">
+                            <Binding.ConverterParameter>
+                                <StaticResource ResourceKey="mulWidth"/>
+                            </Binding.ConverterParameter>
+                        </Binding>
+                    </TextBox.Width>
+                </TextBox>
+
+                <Label Content="Cause:">
+                <Label.Visibility>
+                        <Binding ElementName="uccUnitIssue" Path="IsRepairForm" Mode="TwoWay" UpdateSourceTrigger="PropertyChanged" Converter="{StaticResource BoolToVis}">
+                            <Binding.ConverterParameter>
+                                <sys:String>Repair</sys:String>
+                            </Binding.ConverterParameter>
+                        </Binding>
+                    </Label.Visibility>
+                </Label>
+                <TextBox x:Name="txtCause" Text="{Binding Path=Cause,ElementName=uccUnitIssue,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" >
+                    <TextBox.Width>
+                        <Binding ElementName="uccUnitIssue" Path="Width" Mode="TwoWay" UpdateSourceTrigger="PropertyChanged" Converter="{StaticResource SizeConverter}">
+                            <Binding.ConverterParameter>
+                                <StaticResource ResourceKey="mulWidth"/>
+                            </Binding.ConverterParameter>
+                        </Binding>
+                    </TextBox.Width>
+                    <TextBox.Visibility>
+                        <Binding ElementName="uccUnitIssue" Path="IsRepairForm" Mode="TwoWay" UpdateSourceTrigger="PropertyChanged" Converter="{StaticResource BoolToVis}">
+                            <Binding.ConverterParameter>
+                                <sys:String>Repair</sys:String>
+                            </Binding.ConverterParameter>
+                        </Binding>
+                    </TextBox.Visibility>
+                </TextBox>
+
+                <Label Content="Replacement:">
+                    <Label.Visibility>
+                        <Binding ElementName="uccUnitIssue" Path="IsRepairForm" Mode="TwoWay" UpdateSourceTrigger="PropertyChanged" Converter="{StaticResource BoolToVis}">
+                            <Binding.ConverterParameter>
+                                <sys:String>Repair</sys:String>
+                            </Binding.ConverterParameter>
+                        </Binding>
+                    </Label.Visibility>
+                </Label>
+                <TextBox x:Name="txtReplacement" Text="{Binding Path=Replacement,ElementName=uccUnitIssue,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" >
+                    <TextBox.Width>
+                        <Binding ElementName="uccUnitIssue" Path="Width" Mode="TwoWay" UpdateSourceTrigger="PropertyChanged" Converter="{StaticResource SizeConverter}">
+                            <Binding.ConverterParameter>
+                                <StaticResource ResourceKey="mulWidth"/>
+                            </Binding.ConverterParameter>
+                        </Binding>
+                    </TextBox.Width>
+                    <TextBox.Visibility>
+                        <Binding ElementName="uccUnitIssue" Path="IsRepairForm" Mode="TwoWay" UpdateSourceTrigger="PropertyChanged" Converter="{StaticResource BoolToVis}">
+                            <Binding.ConverterParameter>
+                                <sys:String>Repair</sys:String>
+                            </Binding.ConverterParameter>
+                        </Binding>
+                    </TextBox.Visibility>
                 </TextBox>
                 
-                <Label Content="Issue:" Style="{StaticResource LabelBaseStyle}"/>
-                <TextBox x:Name="txtIssue" Style="{StaticResource TextboxUnitIssueStyle}" Text="{Binding Path=Issue,ElementName=uccUnitIssue,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" >
-                    <TextBox.Width>
-                        <Binding ElementName="uccUnitIssue" Path="Width" Mode="TwoWay" UpdateSourceTrigger="PropertyChanged" Converter="{StaticResource SizeConverter}">
-                            <Binding.ConverterParameter>
-                                <StaticResource ResourceKey="mulWidth"/>
-                            </Binding.ConverterParameter>
-                        </Binding>
-                    </TextBox.Width>
-                </TextBox>
-
-                <Label Content="Cause:" Style="{StaticResource LabelBaseStyle}">
-                    <Label.Visibility>
-                        <Binding ElementName="uccUnitIssue" Path="IsRepairForm" Mode="TwoWay" UpdateSourceTrigger="PropertyChanged" Converter="{StaticResource BoolToVis}">
-                            <Binding.ConverterParameter>
-                                <sys:String>Repair</sys:String>
-                            </Binding.ConverterParameter>
-                        </Binding>
-                    </Label.Visibility>
-                </Label>
-                <TextBox x:Name="txtCause" Style="{StaticResource TextboxUnitIssueStyle}" Text="{Binding Path=Cause,ElementName=uccUnitIssue,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" >
-                    <TextBox.Width>
-                        <Binding ElementName="uccUnitIssue" Path="Width" Mode="TwoWay" UpdateSourceTrigger="PropertyChanged" Converter="{StaticResource SizeConverter}">
-                            <Binding.ConverterParameter>
-                                <StaticResource ResourceKey="mulWidth"/>
-                            </Binding.ConverterParameter>
-                        </Binding>
-                    </TextBox.Width>
-                    <TextBox.Visibility>
-                        <Binding ElementName="uccUnitIssue" Path="IsRepairForm" Mode="TwoWay" UpdateSourceTrigger="PropertyChanged" Converter="{StaticResource BoolToVis}">
-                            <Binding.ConverterParameter>
-                                <sys:String>Repair</sys:String>
-                            </Binding.ConverterParameter>
-                        </Binding>
-                    </TextBox.Visibility>
-                </TextBox>
-
-                <Label Content="Replacement:" Style="{StaticResource LabelBaseStyle}">
-                    <Label.Visibility>
-                        <Binding ElementName="uccUnitIssue" Path="IsRepairForm" Mode="TwoWay" UpdateSourceTrigger="PropertyChanged" Converter="{StaticResource BoolToVis}">
-                            <Binding.ConverterParameter>
-                                <sys:String>Repair</sys:String>
-                            </Binding.ConverterParameter>
-                        </Binding>
-                    </Label.Visibility>
-                </Label>
-                <TextBox x:Name="txtReplacement" Style="{StaticResource TextboxUnitIssueStyle}" Text="{Binding Path=Replacement,ElementName=uccUnitIssue,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" >
-                    <TextBox.Width>
-                        <Binding ElementName="uccUnitIssue" Path="Width" Mode="TwoWay" UpdateSourceTrigger="PropertyChanged" Converter="{StaticResource SizeConverter}">
-                            <Binding.ConverterParameter>
-                                <StaticResource ResourceKey="mulWidth"/>
-                            </Binding.ConverterParameter>
-                        </Binding>
-                    </TextBox.Width>
-                    <TextBox.Visibility>
-                        <Binding ElementName="uccUnitIssue" Path="IsRepairForm" Mode="TwoWay" UpdateSourceTrigger="PropertyChanged" Converter="{StaticResource BoolToVis}">
-                            <Binding.ConverterParameter>
-                                <sys:String>Repair</sys:String>
-                            </Binding.ConverterParameter>
-                        </Binding>
-                    </TextBox.Visibility>
-                </TextBox>
-
-                <Label Content="Item:" Style="{StaticResource LabelBaseStyle}">
+                <Label Content="Item:">
                     <Label.Visibility>
                         <Binding ElementName="uccUnitIssue" Path="IsRepairForm" Mode="TwoWay" UpdateSourceTrigger="PropertyChanged" Converter="{StaticResource BoolToVis}">
                             <Binding.ConverterParameter>
@@ -145,7 +134,7 @@
                         </Binding>
                     </Label.Visibility>
                 </Label>
-                <TextBox x:Name="txtItem" Style="{StaticResource TextboxUnitIssueStyle}" Text="{Binding Path=Item,ElementName=uccUnitIssue,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" >
+                <TextBox x:Name="txtItem" Text="{Binding Path=Item,ElementName=uccUnitIssue,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" >
                     <TextBox.Width>
                         <Binding ElementName="uccUnitIssue" Path="Width" Mode="TwoWay" UpdateSourceTrigger="PropertyChanged" Converter="{StaticResource SizeConverter}">
                             <Binding.ConverterParameter>
@@ -162,7 +151,7 @@
                     </TextBox.Visibility>
                 </TextBox>
 
-                <Label Content="Problem:" Style="{StaticResource LabelBaseStyle}">
+                <Label Content="Problem:">
                     <Label.Visibility>
                         <Binding ElementName="uccUnitIssue" Path="IsRepairForm" Mode="TwoWay" UpdateSourceTrigger="PropertyChanged" Converter="{StaticResource BoolToVis}">
                             <Binding.ConverterParameter>
@@ -171,7 +160,7 @@
                         </Binding>
                     </Label.Visibility>
                 </Label>
-                <TextBox x:Name="txtProblem" Style="{StaticResource TextboxUnitIssueStyle}" Text="{Binding Path=Problem,ElementName=uccUnitIssue,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" >
+                <TextBox x:Name="txtProblem" Text="{Binding Path=Problem,ElementName=uccUnitIssue,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" >
                     <TextBox.Width>
                         <Binding ElementName="uccUnitIssue" Path="Width" Mode="TwoWay" UpdateSourceTrigger="PropertyChanged" Converter="{StaticResource SizeConverter}">
                             <Binding.ConverterParameter>
@@ -188,10 +177,10 @@
                     </TextBox.Visibility>
                 </TextBox>
 
-                <Label Content="Parts Replaced:" Style="{StaticResource LabelBaseStyle}" Visibility="{Binding ElementName=uccUnitIssue, Path=ReadOnly, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource NotBoolToVis}}"/>
+                <Label Content="Parts Replaced:" Visibility="{Binding ElementName=uccUnitIssue, Path=ReadOnly, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource NotBoolToVis}}"/>
                 <DockPanel Visibility="{Binding ElementName=uccUnitIssue, Path=ReadOnly, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource BoolToVis}}">
                     <StackPanel Margin="0 0 5px 0">
-                        <Label Content="Ref Designator" Style="{StaticResource LabelBaseStyle}"/>
+                        <Label Content="Ref Designator"/>
                         <ComboBox x:Name="cmbxRefDesignator" SelectionChanged="cmbxRefDesignator_SelectionChanged">
                             <ComboBox.Width>
                                 <Binding ElementName="uccUnitIssue" Path="Width" Mode="TwoWay" UpdateSourceTrigger="PropertyChanged" Converter="{StaticResource SizeConverter}">
@@ -203,7 +192,7 @@
                         </ComboBox>
                     </StackPanel>
                     <StackPanel Margin="0 0 5px 0">
-                        <Label Content="Part Replaced" Style="{StaticResource LabelBaseStyle}"/>
+                        <Label Content="Part Replaced"/>
                         <ComboBox x:Name="cmbxPartNumber" IsReadOnly="True">
                             <ComboBox.Width>
                                 <Binding ElementName="uccUnitIssue" Path="Width" Mode="TwoWay" UpdateSourceTrigger="PropertyChanged" Converter="{StaticResource SizeConverter}">
@@ -214,11 +203,17 @@
                             </ComboBox.Width>
                         </ComboBox>
                     </StackPanel>
-                    <Button x:Name="btnAddPartsReplaced" HorizontalAlignment="Right" Height="30" Width="30" Click="btnAddPartsReplaced_Click" IsEnabled="{Binding ElementName=cmbxRefDesignator,Path=SelectedIndex,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged,Converter={StaticResource NumToBool},ConverterParameter=AddButtonParts}">
-                        <Image Source="/RApID Project WPF;component/Resources/14-149858_big-image-green-plus-icon-png.jpg" Stretch="Fill"/>
+
+                    <Button x:Name="btnAddPartsReplaced" Style="{DynamicResource MaterialDesignFloatingActionButton}" Width="40" Height="40" 
+                               IsEnabled="{Binding ElementName=cmbxRefDesignator,Path=SelectedIndex,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged,Converter={StaticResource NumToBool},ConverterParameter=AddButtonParts}"
+                            Click="btnAddPartsReplaced_Click">
+                        <Image Source="/RApID Project WPF;component/Resources/green-plus.png" 
+                               Stretch="Fill" Width="32" Height="32" VerticalAlignment="Center" HorizontalAlignment="Center"/>
                     </Button>
+
                 </DockPanel>
-                <DataGrid x:Name="dgMultipleParts" Style="{StaticResource DataGridBaseStyle}" ItemsSource="{Binding Path=PartsReplaced,ElementName=uccUnitIssue,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" Height="100">
+                <DataGrid x:Name="dgMultipleParts" ItemsSource="{Binding Path=PartsReplaced,ElementName=uccUnitIssue,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" 
+                          Background="#FF303030" Height="100">
                     <DataGrid.Width>
                         <Binding ElementName="uccUnitIssue" Path="Width" Mode="TwoWay" UpdateSourceTrigger="PropertyChanged" Converter="{StaticResource SizeConverter}">
                             <Binding.ConverterParameter>
@@ -238,7 +233,7 @@
                     </Separator.Width>
                 </Separator>
 
-                <Button x:Name="btnResetIssueData" Content="Reset Unit Issue" Height="20" Visibility="{Binding ElementName=uccUnitIssue,Path=ReadOnly,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged,Converter={StaticResource BoolToVis}}" Click="btnResetIssueData_Click">
+                <Button x:Name="btnResetIssueData" Content="Reset Unit Issue" Height="28" Visibility="{Binding ElementName=uccUnitIssue,Path=ReadOnly,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged,Converter={StaticResource BoolToVis}}" Click="btnResetIssueData_Click">
                     <Button.Width>
                         <Binding ElementName="uccUnitIssue" Path="Width" Mode="TwoWay" UpdateSourceTrigger="PropertyChanged" Converter="{StaticResource SizeConverter}">
                             <Binding.ConverterParameter>

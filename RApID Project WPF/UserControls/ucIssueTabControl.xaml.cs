@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
 using System.Runtime.CompilerServices;
@@ -24,33 +25,11 @@ namespace RApID_Project_WPF.UserControls
         #endregion
 
         #region Dependency Properties
-        public static readonly DependencyProperty DesignWidthProperty = DependencyProperty.Register("DesignWidth", typeof(double), typeof(ucIssueTabControl), new PropertyMetadata(275.0));
-        public static readonly DependencyProperty DesignHeightProperty = DependencyProperty.Register("DesignHeight", typeof(double), typeof(ucIssueTabControl), new PropertyMetadata(450.0));
         public static readonly DependencyProperty ReadOnlyProperty = DependencyProperty.Register("ReadOnly", typeof(bool), typeof(ucIssueTabControl), new PropertyMetadata(false));
         public static readonly DependencyProperty IsRepairProperty = DependencyProperty.Register("IsRepair", typeof(bool), typeof(ucIssueTabControl), new PropertyMetadata(false));
         #endregion
 
         #region Properties
-        [Description("User Control Width"), Category("Layout")]
-        public double DesignWidth
-        {
-            get { return (double)GetValue(DesignWidthProperty); }
-            set
-            {
-                SetValue(DesignWidthProperty, value);
-                OnPropertyChanged();
-            }
-        }
-        [Description("User Control Height"), Category("Layout")]
-        public double DesignHeight
-        {
-            get { return (double)GetValue(DesignHeightProperty); }
-            set
-            {
-                SetValue(DesignHeightProperty, value);
-                OnPropertyChanged();
-            }
-        }
         [Description("Deterimines if users can edit data."), Category("Common")]
         public bool ReadOnly
         {
@@ -74,13 +53,15 @@ namespace RApID_Project_WPF.UserControls
         {
             get
             {
-                return Issues[index].Content as ucUnitIssue;
+                return Issues[index];
             }
-            private set { Issues[index].Content = value; }
+            private set {
+                Issues[index] = value;
+            }
         }
 
-        protected internal List<ucUnitIssue> _issues = new List<ucUnitIssue>();
-        public List<ucUnitIssue> Issues
+        private ObservableCollection<UnitIssueModel> _issues = new ObservableCollection<UnitIssueModel>() { new UnitIssueModel() };
+        public ObservableCollection<UnitIssueModel> Issues
         {
             get => _issues;
             set {
@@ -95,7 +76,7 @@ namespace RApID_Project_WPF.UserControls
             try
             {
                 InitializeComponent();
-                Issues.Add(new ucUnitIssue());
+                DataContext = this;
             } catch(Exception e)
             {
                 #if DEBUG
@@ -107,65 +88,5 @@ namespace RApID_Project_WPF.UserControls
         }
 
         public ucUnitIssue Last() => Issues.Last();
-
-        private void btnDelete_Click(object sender, RoutedEventArgs e)
-        {
-            if (ReadOnly) {
-                MessageBox.Show("Can't remove tabs in read-only control.");
-                return;
-            }
-
-            var tabName = (sender as Button).CommandParameter.ToString();
-
-            if ((from i in tcTabs.Items.Cast<TabItem>()
-                 where i.Name.Equals(tabName)
-                 select i).FirstOrDefault() is TabItem tab)
-            {
-                if (Issues.Count < 3)
-                {
-                    MessageBox.Show("Can't remove the last tab.");
-                }
-                else if (MessageBox.Show($"Are you sure you want to remove the {tab.Header.ToString()} tab?", "Remove Tab", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
-                {
-                    UpdateTabCollection<ucUnitIssue, bool>(tcTabs, Issues.Remove, tab);
-
-                    if (!(tcTabs.SelectedItem is ucUnitIssue selectedIssue) || selectedIssue.Equals(tab))
-                    {
-                        selectedIssue = Issues[0];
-                    }
-
-                    tcTabs.SelectedItem = selectedIssue;
-                }
-            }
-        }
-
-        /// <summary>
-        /// Performs the <see cref="Func{T, TResult}"/> on the given <see cref="TabControl"/>.
-        /// </summary>
-        /// <param name="tc">The main tab control of the user control</param>
-        /// <param name="operation">The desired operation to run on the collection.</param>
-        /// <param name="args">Any needed arguments for the function.</param>
-        private TResult UpdateTabCollection<T, TResult>(TabControl tc, Func<T, TResult> operation, params TabItem[] args)
-        {
-            tc.DataContext = null;            
-            var result = (TResult) operation.DynamicInvoke(args);
-            tc.DataContext = Issues;
-
-            return result;
-        }
-
-        /// <summary>
-        /// Performs the <see cref="Func{TResult}"/> on the given <see cref="TabControl"/>.
-        /// </summary>
-        /// <param name="tc">The main tab control of the user control</param>
-        /// <param name="operation">The desired operation to run on the collection.</param>
-        private TResult UpdateTabCollection<TResult>(TabControl tc, Func<TResult> operation)
-        {
-            tc.DataContext = null;
-            var result = operation.Invoke();
-            tc.DataContext = Issues;
-
-            return result;
-        }
     }
 }

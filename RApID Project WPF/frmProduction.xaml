@@ -14,6 +14,7 @@
         FontFamily="{DynamicResource MaterialDesignFont}"
         
         xmlns:uc="clr-namespace:RApID_Project_WPF.UserControls"
+        xmlns:conv="clr-namespace:RApID_Project_WPF.UserControls.Converters"
         xmlns:sys="clr-namespace:System;assembly=mscorlib"
         x:Name="wndMain"
         Title="Production" Width="1104" Height="815" MinWidth="300" MinHeight="300" Loaded="Window_Loaded" Closing="Window_Closing">
@@ -116,8 +117,8 @@
             <Setter Property="Height" Value="30"/>
         </Style>
 
-        <uc:BoolToNotBoolConverter x:Key="NegateBoolean"/>
-        <uc:BoolToStringConverter x:Key="StatusConv"/>
+        <conv:BoolToNotBoolConverter x:Key="NegateBoolean"/>
+        <conv:BoolToStringConverter x:Key="StatusConv"/>
     </Window.Resources>
 
     <md:DialogHost x:Name="dlgPRIHost" DialogClosing="dlgPRIHost_DialogClosing">
@@ -172,8 +173,7 @@
                             <DataGrid Name="dgPrevRepairInfo" HorizontalAlignment="Left" VerticalAlignment="Top" Width="280" Height="200" Margin="6,425,0,0" BeginningEdit="dgBeginEdit"
                                       MouseDoubleClick="dgPrevRepairInfo_MouseDoubleClick"/>
 
-                            <dragablz:TabablzControl x:Name="tcUnitIssues" HorizontalAlignment="Left" VerticalAlignment="Top" Width="300" Height="616" Margin="300,11,0,0" ShowDefaultAddButton="True"
-                                                     InterTabController="{StaticResource }">
+                            <dragablz:TabablzControl x:Name="tcUnitIssues" HorizontalAlignment="Left" VerticalAlignment="Top" Width="300" Height="616" Margin="300,11,0,0" ShowDefaultAddButton="True">
                                 <TabItem Name="tiUI1" Header="Unit Issue #1">
                                     <Grid Name="gridUI1" Background="#FFACACBC">
                                         <Label Content="Reported Issue:" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10,10,0,0" />

@@ -25,7 +25,7 @@ namespace RApID_Project_WPF
         public TestWindow()
         {
             InitializeComponent();
-            tcUnitIssues.tcTabs.AddToSource(unitIssue.Copy());
+            tcUnitIssues.tcTabs.AddToSource((UnitIssueModel) unitIssue.Copy());
         }
 
         private void btnUCSwitch_Click(object sender, RoutedEventArgs e)

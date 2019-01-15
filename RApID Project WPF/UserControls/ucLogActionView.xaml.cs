@@ -3,6 +3,7 @@ using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Media;
 using EricStabileLibrary;
 
 namespace RApID_Project_WPF.UserControls
@@ -17,6 +18,17 @@ namespace RApID_Project_WPF.UserControls
         public event PropertyChangedEventHandler PropertyChanged;
         public void OnPropertyChanged([CallerMemberName] string propName = "")
             => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propName));
+
+        public static DependencyProperty RTBBackgroundProperty = DependencyProperty.Register("RTBBackground", typeof(Brush), typeof(ucLogActionView), new PropertyMetadata(Brushes.LightGray));
+        public Brush RTBBackground
+        {
+            get => (Brush)GetValue(RTBBackgroundProperty);
+            set
+            {
+                SetValue(RTBBackgroundProperty, value);
+                OnPropertyChanged();
+            }
+        }
 
         private string _techName;
         public string TechName

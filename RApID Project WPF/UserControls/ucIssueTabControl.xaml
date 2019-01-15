@@ -3,10 +3,13 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             xmlns:local="clr-namespace:RApID_Project_WPF.UserControls"
-             mc:Ignorable="d" x:Name="uccIssueTabControl"
+             xmlns:classes="clr-namespace:RApID_Project_WPF.Classes"
+             xmlns:conv="clr-namespace:RApID_Project_WPF.UserControls.Converters"
+             xmlns:uc="clr-namespace:RApID_Project_WPF.UserControls"
+             xmlns:local="clr-namespace:RApID_Project_WPF"
+             mc:Ignorable="d" x:Name="uccIssueTabControl"             
              xmlns:dragablz="http://dragablz.net/winfx/xaml/dragablz"
-                xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+             xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              TextElement.Foreground="{DynamicResource MaterialDesignBody}"
                 TextElement.FontWeight="Regular"
                 TextElement.FontSize="13"
@@ -14,33 +17,25 @@
                 TextOptions.TextRenderingMode="Auto"        
                 Background="{DynamicResource MaterialDesignPaper}"
                 FontFamily="{DynamicResource MaterialDesignFont}"
-             d:DesignHeight="{Binding Path=DesignHeight,ElementName=uccIssueTabControl,Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-             d:DesignWidth="{Binding Path=DesignWidth,ElementName=uccIssueTabControl,Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+             d:DesignHeight="425"
+             d:DesignWidth="275">
     <UserControl.Resources>
-        <Style x:Key="TCBaseStyle" TargetType="{x:Type TabControl}">
-            <Setter Property="HorizontalAlignment" Value="Left" />
-            <Setter Property="VerticalAlignment" Value="Top" />
-            <Setter Property="Width" Value="{Binding Path=DesignWidth,ElementName=uccIssueTabControl,Mode=TwoWay}" />
-            <Setter Property="Height" Value="{Binding Path=DesignHeight,ElementName=uccIssueTabControl,Mode=TwoWay}" />
-        </Style>
-        <local:BoolToVisibilityConverter x:Key="VisibilityConverter"/>
-        <DataTemplate x:Key="TabHeader" DataType="TabItem">
-            <DockPanel>
-                <Button Name="btnDelete" DockPanel.Dock="Right" Margin="5,0,0,0" Padding="0" Click="btnDelete_Click" CommandParameter="{Binding Path=Name,RelativeSource={RelativeSource AncestorType={x:Type TabItem}}}">
-                    <Image Source="/RApID Project WPF;component/Resources/close.png" Height="11" Width="11"/>
-                </Button>
-                <TextBlock Text="{Binding Path=Header,RelativeSource={RelativeSource AncestorType={x:Type TabItem}}}"/>
-            </DockPanel>
-        </DataTemplate>
-        <DataTemplate x:Key="ROTabHeader" DataType="TabItem">
-            <DockPanel>
-                <TextBlock Text="{Binding Path=Header,RelativeSource={RelativeSource AncestorType={x:Type TabItem}}}"/>
-            </DockPanel>
-        </DataTemplate>
+        <conv:BoolToVisibilityConverter x:Key="VisibilityConverter"/>
+        <classes:IssueTabClient x:Key="IssueTabClientInstance"/>
     </UserControl.Resources>
-    <Grid>
-        <dragablz:TabablzControl x:Name="tcTabs" Style="{StaticResource TCBaseStyle}" ItemsSource="{Binding ElementName=uccIssueTabControl,Path=Issues,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" 
-                                 Width="{Binding Path=DesignWidth,ElementName=uccIssueTabControl,Mode=TwoWay}" Height="{Binding Path=DesignHeight,ElementName=uccIssueTabControl,Mode=TwoWay}"
-                                 ShowDefaultAddButton="{Binding ElementName=uccIssueTabControl,Path=ReadOnly,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"/>
-    </Grid>
+    <dragablz:TabablzControl x:Name="tcTabs" ItemsSource="{Binding ElementName=uccIssueTabControl,Path=Issues,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
+                                Height="{Binding Path=Height,ElementName=uccIssueTabControl,Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                Width="{Binding Path=Width,ElementName=uccIssueTabControl,Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                ShowDefaultAddButton="{Binding ElementName=uccIssueTabControl,Path=ReadOnly,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
+                                ShowDefaultCloseButton="{Binding ElementName=uccIssueTabControl,Path=ReadOnly,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}">
+        <dragablz:TabablzControl.InterTabController>
+            <dragablz:InterTabController InterTabClient="{StaticResource IssueTabClientInstance}"/>
+        </dragablz:TabablzControl.InterTabController>
+        <dragablz:TabablzControl.Resources>
+            <DataTemplate DataType="{x:Type local:UnitIssueModel}">
+                <uc:ucUnitIssue/>
+            </DataTemplate>
+        </dragablz:TabablzControl.Resources>
+    </dragablz:TabablzControl>
+
 </UserControl>

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Data;
 
-namespace RApID_Project_WPF.UserControls
+namespace RApID_Project_WPF.UserControls.Converters
 {
     public class VisibilityToBoolConverter : IValueConverter
     {

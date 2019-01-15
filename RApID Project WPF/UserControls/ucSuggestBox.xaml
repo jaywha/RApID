@@ -5,11 +5,11 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:RApID_Project_WPF"
              xmlns:sys="clr-namespace:System;assembly=mscorlib"
-             xmlns:uc="clr-namespace:RApID_Project_WPF.UserControls"
+             xmlns:conv="clr-namespace:RApID_Project_WPF.UserControls.Converters" 
              mc:Ignorable="d"
              Visibility="{Binding Path=Visibility, ElementName=SuggestBox,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" Height="109" Width="101">
     <UserControl.Resources>
-        <uc:HeightToHeightConverter x:Key="SizeConverter"/>
+        <conv:HeightToHeightConverter x:Key="SizeConverter"/>
     </UserControl.Resources>
     <Grid x:Name="grdSuggestBox">
         <StackPanel Orientation="Vertical" HorizontalAlignment="Left" VerticalAlignment="top">

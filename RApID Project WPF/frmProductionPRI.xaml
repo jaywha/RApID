@@ -4,83 +4,48 @@
         xmlns:local="clr-namespace:RApID_Project_WPF" x:Class="RApID_Project_WPF.frmProductionPRI"
         xmlns:uc="clr-namespace:RApID_Project_WPF.UserControls" x:Name="wndMain"
         Title="Production: Previous Repair Information" Width="836.458" Height="570.625" Loaded="Window_Loaded">
-    <Window.Resources>
-        <Style x:Key="TextboxBaseStyle" TargetType="{x:Type TextBox}">
-            <Setter Property="HorizontalAlignment" Value="Left" />
-            <Setter Property="VerticalAlignment" Value="Top" />
-            <Setter Property="VerticalContentAlignment" Value="Center" />
-            <Setter Property="Width" Value="195" />
-            <Setter Property="Height" Value="23" />
-            <Setter Property="TextWrapping" Value="Wrap" />
-            <Setter Property="IsReadOnly" Value="True" />
-        </Style>
-        <Style x:Key="TextboxUnitIssueStyle" TargetType="{x:Type TextBox}">
-            <Setter Property="HorizontalAlignment" Value="Left" />
-            <Setter Property="VerticalAlignment" Value="Top" />
-            <Setter Property="VerticalContentAlignment" Value="Center" />
-            <Setter Property="Width" Value="225" />
-            <Setter Property="Height" Value="23" />
-            <Setter Property="TextWrapping" Value="Wrap" />
-            <Setter Property="IsReadOnly" Value="True" />
-        </Style>
-        <Style x:Key="LabelBaseStyle" TargetType="{x:Type Label}">
-            <Setter Property="HorizontalAlignment" Value="Left" />
-            <Setter Property="VerticalAlignment" Value="Top" />
-        </Style>
-        <Style x:Key="DataGridBaseStyle" TargetType="{x:Type DataGrid}">
-            <Setter Property="HorizontalAlignment" Value="Left" />
-            <Setter Property="VerticalAlignment" Value="Top" />
-            <Setter Property="Width" Value="225" />
-            <Setter Property="Height" Value="110" />
-            <Setter Property="IsReadOnly" Value="True" />
-        </Style>
-        <Style x:Key="RTBBaseStyle" TargetType="{x:Type RichTextBox}">
-            <Setter Property="HorizontalAlignment" Value="Left" />
-            <Setter Property="VerticalAlignment" Value="Top" />
-            <Setter Property="Width" Value="350" />
-            <Setter Property="Height" Value="250" />
-            <Setter Property="IsReadOnly" Value="True" />
-        </Style>
-    </Window.Resources>
 
     <Viewbox x:Name="vbxContainer" Width="{Binding Path=Width,ElementName=wndMain,Mode=TwoWay}" Height="{Binding Path=Height,ElementName=wndMain,Mode=TwoWay}">
-        <Grid Background="#FFDCD7D7" Width="{Binding Path=Width,ElementName=vbxContainer,Mode=TwoWay}" Height="{Binding Path=Height,ElementName=vbxContainer,Mode=TwoWay}">
-            <Label Content="Technician Name:" Margin="0,0,0,0" Style="{StaticResource LabelBaseStyle}" />
-            <TextBox x:Name="txtTechName" Margin="0,25,0,0" Style="{StaticResource TextboxBaseStyle}" />
+        <Grid Background="#FF303030" Width="{Binding Path=Width,ElementName=vbxContainer,Mode=TwoWay}" Height="{Binding Path=Height,ElementName=vbxContainer,Mode=TwoWay}">
+            <ScrollViewer Width="200" Height="525" VerticalScrollBarVisibility="Auto" Margin="0,10,0,0" VerticalAlignment="Top" HorizontalAlignment="Left">
+                <StackPanel Orientation="Vertical">
+                    <Label Content="Technician Name:"  />
+                    <TextBox x:Name="txtTechName"  />
 
-            <Label Content="Date Received:" Margin="0,50,0,0" Style="{StaticResource LabelBaseStyle}" />
-            <TextBox x:Name="txtDateReceived" Margin="0,75,0,0" Style="{StaticResource TextboxBaseStyle}" />
+                    <Label Content="Date Received:"  />
+                    <TextBox x:Name="txtDateReceived" />
 
-            <Label Content="Date Submitted:" Margin="0,100,0,0" Style="{StaticResource LabelBaseStyle}" />
-            <TextBox x:Name="txtDateSubmitted" Margin="0,125,0,0" Style="{StaticResource TextboxBaseStyle}" />
+                    <Label Content="Date Submitted:"  />
+                    <TextBox x:Name="txtDateSubmitted"  />
 
-            <Label Content="Part Name:" Margin="0,150,0,0" Style="{StaticResource LabelBaseStyle}" />
-            <TextBox x:Name="txtPartName" Margin="0,175,0,0" Style="{StaticResource TextboxBaseStyle}" />
+                    <Label Content="Part Name:"  />
+                    <TextBox x:Name="txtPartName" />
 
-            <Label Content="Part Number:" Margin="0,200,0,0" Style="{StaticResource LabelBaseStyle}" />
-            <TextBox x:Name="txtPartNumber" Margin="0,225,0,0" Style="{StaticResource TextboxBaseStyle}" />
+                    <Label Content="Part Number:"  />
+                    <TextBox x:Name="txtPartNumber"  />
 
-            <Label Content="Part Series:" Margin="0,250,0,0" Style="{StaticResource LabelBaseStyle}" />
-            <TextBox x:Name="txtPartSeries" Margin="0,275,0,0" Style="{StaticResource TextboxBaseStyle}" />
+                    <Label Content="Part Series:"  />
+                    <TextBox x:Name="txtPartSeries"  />
 
-            <Label Content="Commodity Sub-Class:" Margin="0,300,0,0" Style="{StaticResource LabelBaseStyle}" />
-            <TextBox x:Name="txtCommSubClass" Margin="0,325,0,0" Style="{StaticResource TextboxBaseStyle}" />
+                    <Label Content="Commodity Sub-Class:"  />
+                    <TextBox x:Name="txtCommSubClass"  />
 
-            <Label Content="Software Version:" Margin="0,350,0,0" Style="{StaticResource LabelBaseStyle}" />
-            <TextBox x:Name="txtSW" Margin="0,375,0,0" Style="{StaticResource TextboxBaseStyle}" />
+                    <Label Content="Software Version:"  />
+                    <TextBox x:Name="txtSW"  />
 
-            <Label Content="Type of Return:" Margin="0,400,0,0" Style="{StaticResource LabelBaseStyle}" />
-            <TextBox x:Name="txtTOR" Margin="0,425,0,0" Style="{StaticResource TextboxBaseStyle}" />
+                    <Label Content="Type of Return:"  />
+                    <TextBox x:Name="txtTOR"  />
 
-            <Label Content="From Area:" Margin="0,450,0,0" Style="{StaticResource LabelBaseStyle}" />
-            <TextBox x:Name="txtFromArea" Margin="0,475,0,0" Style="{StaticResource TextboxBaseStyle}" />
+                    <Label Content="From Area:"  />
+                    <TextBox x:Name="txtFromArea"  />
+                </StackPanel>
+            </ScrollViewer>
 
-            <uc:ucIssueTabControl x:Name="ucIssues" Margin="202,23,286.458,26.625" DesignHeight="495" DesignWidth="345" ReadOnly="True"/>
+            <uc:ucIssueTabControl x:Name="ucIssues" Margin="208,36,0,0" Height="495" ReadOnly="True" HorizontalAlignment="Left" Width="345" VerticalAlignment="Top"/>
 
-            <Label Content="Additional Comments:" Margin="560,23,0,0" Style="{StaticResource LabelBaseStyle}" Width="144" Height="23" />
-            <RichTextBox x:Name="rtbAddComm" Margin="560,51,0,0" Style="{StaticResource RTBBaseStyle}" Width="245" Height="225" />
-            <uc:ucLogActionView x:Name="ucTechActions" Margin="555,288,0,48.625" HorizontalAlignment="Left" Width="250"/>
-            <!--uc:ucUnitIssue x:Name="unitIssue" HorizontalAlignment="Left" Height="498" Margin="230,0,0,0" VerticalAlignment="Top" Width="300"/-->
+            <Label Content="Additional Comments:" Margin="576,27,116.458,520.625" />
+            <RichTextBox x:Name="rtbAddComm" Margin="576,55,0,0" Width="245" Height="225" Background="LightGray" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+            <uc:ucLogActionView x:Name="ucTechActions" Margin="576,309,0,39.625" HorizontalAlignment="Left" Width="250"/>
         </Grid>
     </Viewbox>
 

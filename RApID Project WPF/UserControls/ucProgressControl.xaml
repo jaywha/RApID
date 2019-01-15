@@ -3,12 +3,12 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             xmlns:local="clr-namespace:RApID_Project_WPF.UserControls"
+             xmlns:conv="clr-namespace:RApID_Project_WPF.UserControls.Converters"
              xmlns:sys="clr-namespace:System;assembly=mscorlib"
              mc:Ignorable="d"
              x:Name="uccProgresControl" Height="79.632" Width="243.631">
     <UserControl.Resources>
-        <local:HeightToHeightConverter x:Key="HeightConverter"/>
+        <conv:HeightToHeightConverter x:Key="HeightConverter"/>
 
     </UserControl.Resources>
     <Grid>
@@ -18,7 +18,7 @@
             <Label.Height>
                 <Binding Path="Height" ElementName="uccProgressControl" Converter="{StaticResource HeightConverter}" Mode="TwoWay" UpdateSourceTrigger="PropertyChanged">
                     <Binding.ConverterParameter>
-                        <sys:Double>2.0</sys:Double>
+                        <sys:Double>3.0</sys:Double>
                     </Binding.ConverterParameter>
                 </Binding>
             </Label.Height>

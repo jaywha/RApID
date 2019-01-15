@@ -6,6 +6,7 @@
         xmlns:dragablz="http://dragablz.net/winfx/xaml/dragablz"
         xmlns:sys="clr-namespace:System;assembly=mscorlib"
         xmlns:uc="clr-namespace:RApID_Project_WPF.UserControls"
+        xmlns:conv="clr-namespace:RApID_Project_WPF.UserControls.Converters"
         x:Name="wndMain"
         Title="Repair" Width="1104" Height="815" MinWidth="300" MinHeight="300" Loaded="Window_Loaded" Closing="Window_Closing" Background="#FF808285">
     <Window.Resources>
@@ -122,8 +123,8 @@
             <Setter Property="Height" Value="30"/>
         </Style>
 
-        <uc:BoolToNotBoolConverter x:Key="NegateBoolean"/>
-        <uc:BoolToStringConverter x:Key="StatusConv"/>
+        <conv:BoolToNotBoolConverter x:Key="NegateBoolean"/>
+        <conv:BoolToStringConverter x:Key="StatusConv"/>
     </Window.Resources>
     <Viewbox Stretch="Uniform">
         <Grid Background="#FF808285">
