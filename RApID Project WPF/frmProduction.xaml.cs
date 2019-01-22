@@ -305,9 +305,9 @@ namespace RApID_Project_WPF
                 case 1:
                     cbReportedIssue.SelectedIndex = cbTestResult.SelectedIndex = cbTestResultAbort.SelectedIndex = cbIssue.SelectedIndex = cbItem.SelectedIndex = cbProblem.SelectedIndex = -1;
                     txtMultiRefDes.Text = txtMultiPartNum.Text = string.Empty;
-                    dgMultipleParts.Items.Clear();
-                    txtMultiRefDes.Items.Clear();
-                    txtMultiPartNum.Items.Clear();
+                    dgMultipleParts.ItemsSource = null;
+                    txtMultiRefDes.ItemsSource = null;
+                    txtMultiPartNum.ItemsSource = null;
                     cbItem.IsEnabled = cbProblem.IsEnabled = false;
                     lblRefDes.Visibility = lblPartNum.Visibility = txtMultiRefDes.Visibility = txtMultiPartNum.Visibility = btnAddRefPart.Visibility = dgMultipleParts.Visibility = Visibility.Hidden;
                     brdRefDes.BorderThickness = new Thickness(0.0);
@@ -315,9 +315,9 @@ namespace RApID_Project_WPF
                 case 2:
                     cbReportedIssue_2.SelectedIndex = cbTestResult_2.SelectedIndex = cbTestResultAbort_2.SelectedIndex = cbIssue_2.SelectedIndex = cbItem_2.SelectedIndex = cbProblem_2.SelectedIndex = -1;
                     txtMultiRefDes_2.Text = txtMultiPartNum_2.Text = string.Empty;
-                    dgMultipleParts_2.Items.Clear();
-                    txtMultiRefDes_2.Items.Clear();
-                    txtMultiPartNum_2.Items.Clear();
+                    dgMultipleParts_2.ItemsSource = null;
+                    txtMultiRefDes_2.ItemsSource = null;
+                    txtMultiPartNum_2.ItemsSource = null;
                     cbItem_2.IsEnabled = cbProblem_2.IsEnabled = false;
                     lblRefDes_2.Visibility = lblPartNum_2.Visibility = txtMultiRefDes_2.Visibility = txtMultiPartNum_2.Visibility = btnAddRefPart_2.Visibility = dgMultipleParts_2.Visibility = Visibility.Hidden;
                     brdRefDes_2.BorderThickness = new Thickness(0.0);
@@ -325,9 +325,9 @@ namespace RApID_Project_WPF
                 case 3:
                     cbReportedIssue_3.SelectedIndex = cbTestResult_3.SelectedIndex = cbTestResultAbort_3.SelectedIndex = cbIssue_3.SelectedIndex = cbItem_3.SelectedIndex = cbProblem_3.SelectedIndex = -1;
                     txtMultiRefDes_3.Text = txtMultiPartNum_3.Text = string.Empty;
-                    dgMultipleParts_3.Items.Clear();
-                    txtMultiRefDes_3.Items.Clear();
-                    txtMultiPartNum_3.Items.Clear();
+                    dgMultipleParts_3.ItemsSource = null;
+                    txtMultiRefDes_3.ItemsSource = null;
+                    txtMultiPartNum_3.ItemsSource = null;
                     cbItem_3.IsEnabled = cbProblem_3.IsEnabled = false;
                     lblRefDes_3.Visibility = lblPartNum_3.Visibility = txtMultiRefDes_3.Visibility = txtMultiPartNum_3.Visibility = btnAddRefPart_3.Visibility = dgMultipleParts_3.Visibility = Visibility.Hidden;
                     brdRefDes_3.BorderThickness = new Thickness(0.0);

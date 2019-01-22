@@ -45,6 +45,7 @@ namespace RApID_Project_WPF.UserControls
         #region Fields
         private readonly csObjectHolder.csObjectHolder holder = csObjectHolder.csObjectHolder.ObjectHolderInstance();
         private readonly List<string> SpecialCases = new List<string>() { "Cause", "Replacement", "Item", "Problem" };
+        private int _id = 0;
 
         private Binding IsRepairVisibilityBinding = new Binding()
         {
@@ -236,6 +237,14 @@ namespace RApID_Project_WPF.UserControls
                     SetValue(AddPartReplacedProperty, null);
                     OnPropertyChanged();
                 }
+            }
+        }
+
+        public int ID {
+            get => _id;
+            set {
+                _id = value;
+                OnPropertyChanged();
             }
         }
 
@@ -432,6 +441,7 @@ namespace RApID_Project_WPF.UserControls
         {
             var r = new ucUnitIssue()
             {
+                ID = model.ID,
                 ReportedIssue = model.ReportedIssue ?? "",
                 TestResult = model.TestResult ?? "",
                 AbortResult = model.TestResultAbort ?? "",
@@ -441,8 +451,8 @@ namespace RApID_Project_WPF.UserControls
                 Replacement = model.Replacement ?? ""
             };
 
-            if (model.MultiPartsReplaced != null) r.dgMultipleParts.ItemsSource = model.MultiPartsReplaced;
-            else if(model.SinglePartReplaced != null) r.dgMultipleParts.Items.Add(model.SinglePartReplaced);
+            if (model.MultiPartsReplaced != null) model.MultiPartsReplaced.ForEach(mpr => r.dgMultipleParts.Items.Add(mpr));
+            else if (model.SinglePartReplaced != null) r.dgMultipleParts.Items.Add(model.SinglePartReplaced);
 
             return r;
         }
@@ -455,6 +465,7 @@ namespace RApID_Project_WPF.UserControls
         {
             var r = new UnitIssueModel()
             {
+                ID = unitIssue.ID,
                 ReportedIssue = unitIssue.ReportedIssue ?? "",
                 TestResult = unitIssue.TestResult ?? "",
                 TestResultAbort = unitIssue.AbortResult ?? "",

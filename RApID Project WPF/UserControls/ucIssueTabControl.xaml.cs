@@ -60,8 +60,8 @@ namespace RApID_Project_WPF.UserControls
             }
         }
 
-        private ObservableCollection<UnitIssueModel> _issues = new ObservableCollection<UnitIssueModel>() { new UnitIssueModel() };
-        public ObservableCollection<UnitIssueModel> Issues
+        private ObservableCollection<ucUnitIssue> _issues = new ObservableCollection<ucUnitIssue>();
+        public ObservableCollection<ucUnitIssue> Issues
         {
             get => _issues;
             set {
@@ -71,12 +71,20 @@ namespace RApID_Project_WPF.UserControls
         }
         #endregion
 
+        private static bool once = true;
+
         public ucIssueTabControl()
         {
+            InitializeComponent();
+
             try
-            {
-                InitializeComponent();
-                DataContext = this;
+            { if (once)
+                {
+                    Issues.CollectionChanged += Issues_CollectionChanged;
+                    Issues.Add(new ucUnitIssue());
+                    DataContext = this;
+                    once = false;
+                }
             } catch(Exception e)
             {
                 #if DEBUG
@@ -84,6 +92,14 @@ namespace RApID_Project_WPF.UserControls
                 #else
                     csExceptionLogger.csExceptionLogger.Write("UnitIssueContainer_InitError", e);
                 #endif
+            }
+        }
+
+        private void Issues_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
+        {
+            foreach(ucUnitIssue item in e.NewItems)
+            {
+                item.Width = tcTabs.Width;
             }
         }
 

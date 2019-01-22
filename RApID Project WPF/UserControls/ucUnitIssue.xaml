@@ -16,7 +16,7 @@
              
              xmlns:conv="clr-namespace:RApID_Project_WPF.UserControls.Converters"
              mc:Ignorable="d" 
-             Height="450" Width="250"
+             Height="450" Width="325"
              x:Name="uccUnitIssue">
     <UserControl.Resources>
         <conv:HeightToHeightConverter x:Key="SizeConverter"/>
@@ -24,11 +24,11 @@
         <conv:BoolToVisibilityConverter x:Key="BoolToVis"/>
         <conv:BoolToNotBoolConverter x:Key="NotBool"/>
         <conv:CombiningConverter x:Key="NotBoolToVis" Converter1="{StaticResource NotBool}" Converter2="{StaticResource BoolToVis}"/>
-        <sys:Double x:Key="mulWidth">1.3</sys:Double>
+        <sys:Double x:Key="mulWidth">1.2</sys:Double>
     </UserControl.Resources>
     <Grid>
         <ScrollViewer VerticalScrollBarVisibility="Auto">
-            <StackPanel x:Name="stkMain" Orientation="Vertical" HorizontalAlignment="Left">
+            <StackPanel x:Name="stkMain" Orientation="Vertical" HorizontalAlignment="Left" Width="315">
                 <Label Content="Reported Issue:" />
                 <TextBox x:Name="txtReportedIssue" Text="{Binding Path=ReportedIssue,ElementName=uccUnitIssue,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}">
                     <TextBox.Width>
@@ -124,7 +124,7 @@
                         </Binding>
                     </TextBox.Visibility>
                 </TextBox>
-                
+
                 <Label Content="Item:">
                     <Label.Visibility>
                         <Binding ElementName="uccUnitIssue" Path="IsRepairForm" Mode="TwoWay" UpdateSourceTrigger="PropertyChanged" Converter="{StaticResource BoolToVis}">

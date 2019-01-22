@@ -10,12 +10,28 @@ using System.Windows.Controls;
 
 namespace RApID_Project_WPF.Classes
 {
+    [Obsolete("Old legacy class; please don't use unless fixed.")]
     public class IssueTabClient : IInterTabClient
     {
         public IssueTabClient() { }
 
+        public List<NewTabHost<Window>> OpenIssues = new List<NewTabHost<Window>>();
+
         public INewTabHost<Window> GetNewHost(IInterTabClient interTabClient, object partition, TabablzControl source)
-            => new NewTabHost<Window>(new Window() { Content = (ucUnitIssue)source.SelectedContent }, source);
+        {
+            try
+            {
+                if (OpenIssues.Count > 0)
+                    return OpenIssues.Where(tab => tab.Container.Content == (ucUnitIssue)(UnitIssueModel)source.SelectedContent).Single();
+                else
+                    OpenIssues.Add(new NewTabHost<Window>(new Window() { Content = (ucUnitIssue)(UnitIssueModel)source.SelectedContent }, source));
+
+                return OpenIssues.Last();
+            } catch(Exception e) {
+                csExceptionLogger.csExceptionLogger.Write("RApID_IssueTabClient-GetNewHost", e);
+                return new NewTabHost<Window>(new Window() { Content = (ucUnitIssue)(UnitIssueModel) source.SelectedContent }, source);
+            }
+        }
 
         public TabEmptiedResponse TabEmptiedHandler(TabablzControl tabControl, Window window)
         {

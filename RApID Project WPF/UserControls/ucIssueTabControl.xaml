@@ -6,8 +6,10 @@
              xmlns:classes="clr-namespace:RApID_Project_WPF.Classes"
              xmlns:conv="clr-namespace:RApID_Project_WPF.UserControls.Converters"
              xmlns:uc="clr-namespace:RApID_Project_WPF.UserControls"
+             xmlns:sys="clr-namespace:System;assembly=mscorlib"
              xmlns:local="clr-namespace:RApID_Project_WPF"
-             mc:Ignorable="d" x:Name="uccIssueTabControl"             
+             mc:Ignorable="d" 
+             x:Name="uccIssueTabControl"             
              xmlns:dragablz="http://dragablz.net/winfx/xaml/dragablz"
              xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              TextElement.Foreground="{DynamicResource MaterialDesignBody}"
@@ -18,10 +20,12 @@
                 Background="{DynamicResource MaterialDesignPaper}"
                 FontFamily="{DynamicResource MaterialDesignFont}"
              d:DesignHeight="425"
-             d:DesignWidth="275">
+             d:DesignWidth="300">
     <UserControl.Resources>
+        <conv:HeightToHeightConverter x:Key="WidthConverter"/>
         <conv:BoolToVisibilityConverter x:Key="VisibilityConverter"/>
         <classes:IssueTabClient x:Key="IssueTabClientInstance"/>
+        <sys:Double x:Key="WidthMod">1.2</sys:Double>
     </UserControl.Resources>
     <dragablz:TabablzControl x:Name="tcTabs" ItemsSource="{Binding ElementName=uccIssueTabControl,Path=Issues,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
                                 Height="{Binding Path=Height,ElementName=uccIssueTabControl,Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
@@ -29,13 +33,21 @@
                                 ShowDefaultAddButton="{Binding ElementName=uccIssueTabControl,Path=ReadOnly,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
                                 ShowDefaultCloseButton="{Binding ElementName=uccIssueTabControl,Path=ReadOnly,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}">
         <dragablz:TabablzControl.InterTabController>
-            <dragablz:InterTabController InterTabClient="{StaticResource IssueTabClientInstance}"/>
+            <dragablz:InterTabController />
         </dragablz:TabablzControl.InterTabController>
-        <dragablz:TabablzControl.Resources>
-            <DataTemplate DataType="{x:Type local:UnitIssueModel}">
-                <uc:ucUnitIssue/>
+        <dragablz:TabablzControl.ItemTemplate>
+            <DataTemplate DataType="{x:Type uc:ucUnitIssue}">
+                <uc:ucUnitIssue Width="{Binding Path=Width, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=dragablz:TabablzControl}, Converter={StaticResource WidthConverter}, ConverterParameter={StaticResource WidthMod}}"/>
             </DataTemplate>
-        </dragablz:TabablzControl.Resources>
+        </dragablz:TabablzControl.ItemTemplate>
+        <dragablz:TabablzControl.HeaderItemTemplate>
+            <DataTemplate DataType="{x:Type uc:ucUnitIssue}">
+                <StackPanel Orientation="Horizontal">
+                    <Label>Unit Issue #</Label>
+                    <Label Content="{Binding ID}"/>
+                </StackPanel>
+            </DataTemplate>
+        </dragablz:TabablzControl.HeaderItemTemplate>
     </dragablz:TabablzControl>
 
 </UserControl>
