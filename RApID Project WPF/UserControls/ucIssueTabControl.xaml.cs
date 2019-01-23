@@ -29,6 +29,8 @@ namespace RApID_Project_WPF.UserControls
         public static readonly DependencyProperty ReadOnlyProperty = DependencyProperty.Register("ReadOnly", typeof(bool), typeof(ucIssueTabControl), new PropertyMetadata(false));
         public static readonly DependencyProperty IsRepairProperty = DependencyProperty.Register("IsRepair", typeof(bool), typeof(ucIssueTabControl), new PropertyMetadata(false));
         public static readonly DependencyProperty HeaderBrushProperty = DependencyProperty.Register("HeaderBrush", typeof(Brush), typeof(ucIssueTabControl), new PropertyMetadata(Brushes.DimGray));
+        public static readonly DependencyProperty StaticVarsInstanceProperty = DependencyProperty.Register("StaticVarsInstance", typeof(StaticVars), typeof(ucUnitIssue));
+        public static readonly DependencyProperty DropDownClosedHandlerProperty = DependencyProperty.Register("DropDownClosedHandler", typeof(EventHandler), typeof(ucIssueTabControl), new PropertyMetadata(0));
         #endregion
 
         #region Fields
@@ -76,6 +78,27 @@ namespace RApID_Project_WPF.UserControls
         }
 
         /// <summary>
+        /// The parent instance of StaticVars for logging, if available.
+        /// </summary>
+        [Description("The parent instance of StaticVars for logging, if available."), Category("Automation")]
+        public StaticVars StaticVarsInstance
+        {
+            get => (StaticVars)GetValue(StaticVarsInstanceProperty);
+            set
+            {
+                SetValue(StaticVarsInstanceProperty, value);
+                OnPropertyChanged();
+            }
+        }
+
+        [Description("Propogates the DropDown control event to the next control responsible for it."), Category("Automation")]
+        public EventHandler DropDownClosedHandler
+        {
+            get { return (EventHandler)GetValue(DropDownClosedHandlerProperty); }
+            set { SetValue(DropDownClosedHandlerProperty, value); }
+        }
+
+        /// <summary>
         /// Main backing collection for this <see cref="TabControl"/> UserControl
         /// </summary>
         public ObservableCollection<ucUnitIssue> Issues
@@ -87,6 +110,7 @@ namespace RApID_Project_WPF.UserControls
             }
         }
         #endregion
+
 
         /// <summary>
         /// Gets the <see cref="ucUnitIssue"/> at the given index.
@@ -113,7 +137,6 @@ namespace RApID_Project_WPF.UserControls
             InitializeComponent();
 
             tcTabs.NewItemFactory =()=> new ucUnitIssue();
-            
 
             try
             { if (once)
@@ -140,6 +163,8 @@ namespace RApID_Project_WPF.UserControls
                 foreach (ucUnitIssue item in e.NewItems)
                 {
                     item.Width = tcTabs.Width;
+                    item.StaticVars = StaticVarsInstance;
+                    item.DropDownEvent += (EventHandler)GetValue(DropDownClosedHandlerProperty);
                 }
             }
 

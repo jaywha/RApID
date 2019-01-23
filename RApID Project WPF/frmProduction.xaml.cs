@@ -56,6 +56,8 @@ namespace RApID_Project_WPF
         public frmProduction()
         {
             InitializeComponent();
+
+            ucUnitIssues.StaticVarsInstance = sVar;
         }
 
         private void Window_Loaded(object sender, RoutedEventArgs e)

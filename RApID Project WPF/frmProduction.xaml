@@ -122,7 +122,7 @@
     </Window.Resources>
 
     <md:DialogHost x:Name="dlgPRIHost" DialogClosing="dlgPRIHost_DialogClosing">
-    <Viewbox Stretch="Uniform">
+        <Viewbox Stretch="Uniform">
 
             <Grid>
                 <StackPanel Orientation="Horizontal">
@@ -294,11 +294,12 @@
                                     </Paragraph>
                                 </FlowDocument>
                             </RichTextBox>
+
+                            <uc:ucIssueTabControl x:Name="ucUnitIssues" Height="363" Margin="667,260,69,0" VerticalAlignment="Top" />
                             <StackPanel Orientation="Vertical" Margin="605,270,0,6" Visibility="Collapsed">
                                 <Label x:Name="lblBOMList" Content="BOM Parts List" HorizontalAlignment="Left" VerticalAlignment="Top" Width="128" ToolTip="From JUKI Sheet of BOM Excel File"/>
                                 <DataGrid x:Name="dgBOMList" HorizontalAlignment="Left" Height="328" VerticalAlignment="Top" Width="461" BeginningEdit="dgBeginEdit" MouseDoubleClick="dgBOMList_MouseDoubleClick"/>
                             </StackPanel>
-
                         </Grid>
                     </TabItem>
 

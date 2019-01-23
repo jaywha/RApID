@@ -40,7 +40,7 @@ namespace RApID_Project_WPF.UserControls
 
         public static readonly DependencyProperty ReadOnlyProperty = DependencyProperty.Register("ReadOnly", typeof(bool), typeof(ucUnitIssue), new PropertyMetadata(true));
         public static readonly DependencyProperty LabelColorProperty = DependencyProperty.Register("LabelColor", typeof(Brush), typeof(ucUnitIssue), new PropertyMetadata(Brushes.Black));
-        public static readonly DependencyProperty StaticVarsInstanceProperty = DependencyProperty.Register("StaticVarsInstance", typeof(StaticVars), typeof(ucUnitIssue));
+        public static readonly DependencyProperty StaticVarsProperty = DependencyProperty.Register("StaticVars", typeof(StaticVars), typeof(ucUnitIssue));
         #endregion
 
         #region Fields
@@ -202,11 +202,11 @@ namespace RApID_Project_WPF.UserControls
         }
 
         [Description("The parent instance of StaticVars for logging, if available."),Category("Automation")]
-        public StaticVars StaticVarsInstance
+        public StaticVars StaticVars
         {
-            get => (StaticVars)GetValue(StaticVarsInstanceProperty);
+            get => (StaticVars)GetValue(StaticVarsProperty);
             set {
-                SetValue(StaticVarsInstanceProperty, value);
+                SetValue(StaticVarsProperty, value);
                 OnPropertyChanged();
             }
         }
@@ -426,6 +426,7 @@ namespace RApID_Project_WPF.UserControls
 
         #region UIElement Events
         private void ComboBox_DropDownClosed(object sender, EventArgs e) => ((EventHandler)GetValue(DropDownEventProperty))?.Invoke(sender, e);
+        
         private void btnAddPartsReplaced_Click(object sender, RoutedEventArgs e) { ((RoutedEventHandler)GetValue(AddPartReplacedProperty))?.Invoke(sender, e); }
 
         private void btnResetIssueData_Click(object sender, RoutedEventArgs e)
