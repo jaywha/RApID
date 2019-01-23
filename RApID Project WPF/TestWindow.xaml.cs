@@ -83,10 +83,8 @@ namespace RApID_Project_WPF
         private void unitIssue_DropDownEvent(object sender, EventArgs e)
         {
 
-            MessageBox.Show($"{(sender as ComboBox).Name} changed vaule to {(sender as ComboBox).SelectedValue} !", 
-                $"DropDownEvent triggered at {DateTime.Now:hh:mm:ss tt}",
-                MessageBoxButton.OK,
-                MessageBoxImage.Information);
+            snkbrNotificationTray.MessageQueue.Enqueue($"{(sender as ComboBox).Name} changed vaule to {(sender as ComboBox).SelectedValue} !");
+            Console.WriteLine($"DropDownEvent triggered at {DateTime.Now:hh:mm:ss tt}");
         }
 
         private void unitIssue_AddPartReplaced(object sender, RoutedEventArgs e)
@@ -120,8 +118,8 @@ namespace RApID_Project_WPF
 #if DEBUG
                                 throw new InvalidOperationException("Couldn't find data for this barcode!");
 #else
-                                    MessageBox.Show("Couldn't find the barcode's entry in the database.\nPlease enter information manually.", 
-                                        "Soft Error - BOM Lookup", MessageBoxButton.OK, MessageBoxImage.Warning);
+                                    snkbrNotificationTray.MessageQueue.Enqueue("Couldn't find the barcode's entry in the database.\nPlease enter information manually.");
+                                    Console.WriteLine("Soft Error - BOM Lookup");
 #endif
                             }
                             else

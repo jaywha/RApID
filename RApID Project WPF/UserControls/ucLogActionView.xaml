@@ -18,7 +18,9 @@
                     <Run Text="Technician submission details would appear here if a Database LogID was associated with this record."/>
                     <LineBreak/>
                     <LineBreak/>
-                    <Run Text="If this is an error, please inform Jay W."/>
+                    <Run Text="If this is known to be an error, please inform Jay W."/>
+                    <LineBreak/>
+                    <Run Text="Otherwise, this is safe to ignore."/>
                 </Paragraph>
             </FlowDocument>
         </RichTextBox>

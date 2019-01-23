@@ -177,10 +177,12 @@ namespace RApID_Project_WPF
                 {
                     while (reader.Read())
                     {
-                        var iipc = new IssueItemProblemCombinations();
-                        iipc.Issue = reader["Issue"].ToString();
-                        iipc.Item = reader["Item"].ToString();
-                        iipc.Problem = reader["Problem"].ToString();
+                        var iipc = new IssueItemProblemCombinations
+                        {
+                            Issue = reader["Issue"].ToString(),
+                            Item = reader["Item"].ToString(),
+                            Problem = reader["Problem"].ToString()
+                        };
                         lIIPC.Add(iipc);
                     }
                 }
@@ -403,7 +405,7 @@ namespace RApID_Project_WPF
         /// <returns>True/False based on if data is found or not.</returns>
         private bool checkForUITabData(int iUITab)
         {
-            Grid gToCheck = null;
+            Panel gToCheck = null;
 
             if (iUITab == 1) gToCheck = gridUI1;
             else if (iUITab == 2) gToCheck = gridUI2;

@@ -40,6 +40,7 @@ namespace RApID_Project_WPF.UserControls
 
         public static readonly DependencyProperty ReadOnlyProperty = DependencyProperty.Register("ReadOnly", typeof(bool), typeof(ucUnitIssue), new PropertyMetadata(true));
         public static readonly DependencyProperty LabelColorProperty = DependencyProperty.Register("LabelColor", typeof(Brush), typeof(ucUnitIssue), new PropertyMetadata(Brushes.Black));
+        public static readonly DependencyProperty StaticVarsInstanceProperty = DependencyProperty.Register("StaticVarsInstance", typeof(StaticVars), typeof(ucUnitIssue));
         #endregion
 
         #region Fields
@@ -83,6 +84,7 @@ namespace RApID_Project_WPF.UserControls
             }
         }
 
+        #region UnitIssueModel Props
         [Description("Issue reported to tech"), Category("Unit Issue 1")]
         public string ReportedIssue
         {
@@ -173,6 +175,7 @@ namespace RApID_Project_WPF.UserControls
                 OnPropertyChanged();
             }
         }
+        #endregion
 
         [Description("Changes textboxes to comboboxes for editing"), Category("Common")]
         public bool ReadOnly
@@ -194,6 +197,16 @@ namespace RApID_Project_WPF.UserControls
             set
             {
                 SetValue(LabelColorProperty, value);
+                OnPropertyChanged();
+            }
+        }
+
+        [Description("The parent instance of StaticVars for logging, if available."),Category("Automation")]
+        public StaticVars StaticVarsInstance
+        {
+            get => (StaticVars)GetValue(StaticVarsInstanceProperty);
+            set {
+                SetValue(StaticVarsInstanceProperty, value);
                 OnPropertyChanged();
             }
         }

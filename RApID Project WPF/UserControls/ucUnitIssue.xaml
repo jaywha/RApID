@@ -27,8 +27,8 @@
         <sys:Double x:Key="mulWidth">1.2</sys:Double>
     </UserControl.Resources>
     <Grid>
-        <ScrollViewer VerticalScrollBarVisibility="Auto">
-            <StackPanel x:Name="stkMain" Orientation="Vertical" HorizontalAlignment="Left" Width="315">
+        <ScrollViewer x:Name="svMain" VerticalScrollBarVisibility="Auto">
+            <StackPanel x:Name="stkMain" Orientation="Vertical" HorizontalAlignment="Left" Width="{Binding ElementName=uccUnitIssue,Path=Width,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}">
                 <Label Content="Reported Issue:" />
                 <TextBox x:Name="txtReportedIssue" Text="{Binding Path=ReportedIssue,ElementName=uccUnitIssue,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}">
                     <TextBox.Width>

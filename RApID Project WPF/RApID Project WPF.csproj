@@ -184,6 +184,7 @@
     <Compile Include="Classes\csSplashScreenHelper.cs" />
     <Compile Include="Classes\csVersionControl.cs" />
     <Compile Include="Classes\ESLIB.cs" />
+    <Compile Include="Classes\IndexAttachedProperty.cs" />
     <Compile Include="Classes\IssueTabController.cs" />
     <Compile Include="frmFullCustomerInformation.xaml.cs">
       <DependentUpon>frmFullCustomerInformation.xaml</DependentUpon>

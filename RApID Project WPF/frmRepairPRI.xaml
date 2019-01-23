@@ -12,10 +12,10 @@
         Background="{DynamicResource MaterialDesignPaper}"
         FontFamily="{DynamicResource MaterialDesignFont}"
         
-        Title="Repair: Previous Repair Information" Width="900" Height="600" Loaded="Window_Loaded">
+        Title="Repair: Previous Repair Information" Width="1027" Height="771" Loaded="Window_Loaded">
     <Viewbox Stretch="Uniform">
-        <Grid Width="900" Height="575" Background="#FF303030">
-            <ScrollViewer Margin="0,0,700,0">
+        <Grid Width="900" Height="648" Background="#FF303030">
+            <ScrollViewer Margin="0,0,687,0">
                 <StackPanel Orientation="Vertical">
                     <Label Content="Technician Name:"/>
                     <TextBox Name="txtTechName" />
@@ -52,12 +52,12 @@
                 </StackPanel>
             </ScrollViewer>
 
-            <uc:ucIssueTabControl x:Name="ucIssues" Margin="218,10,337,135" Height="430" Width="345" ReadOnly="True" />
+            <uc:ucIssueTabControl x:Name="ucIssues" Margin="218,13,337,208" Width="345" ReadOnly="True" HeaderBrush="#FF204353" />
 
-            <Label Content="Additional Comments:" Margin="218,445,541,99" />
-            <RichTextBox Name="rtbAddComm" Margin="218,465,356,10" Width="326" Background="LightGray" Foreground="Black"/>
+            <Label Content="Additional Comments:" Margin="218,440,541,0" Height="25" VerticalAlignment="Top" />
+            <RichTextBox Name="rtbAddComm" Margin="218,470,356,0" Width="326" Background="LightGray" Foreground="Black" Height="168" VerticalAlignment="Top"/>
 
-            <GroupBox Name="gbTechActions" Margin="656,13,10,397" Header="Technician Actions">
+            <GroupBox Name="gbTechActions" Margin="568,13,10,0" Header="Technician Actions" Height="196" VerticalAlignment="Top">
                 <ScrollViewer VerticalScrollBarVisibility="Auto">
                     <StackPanel>
                         <Label Content="Technician Action #1:"/>
@@ -72,8 +72,8 @@
                 </ScrollViewer>
             </GroupBox>
 
-            <GroupBox Name="gbCustomerInfo" Margin="656,183,10,255" PreviewMouseDoubleClick="gbCustomerInfo_PreviewMouseDoubleClick"
-                      MouseEnter="gbCustomerInfo_MouseEnter" MouseLeave="gbCustomerInfo_MouseLeave" Background="#FF303030" Foreground="Black">
+            <GroupBox Name="gbCustomerInfo" Margin="568,214,10,0" PreviewMouseDoubleClick="gbCustomerInfo_PreviewMouseDoubleClick"
+                      MouseEnter="gbCustomerInfo_MouseEnter" MouseLeave="gbCustomerInfo_MouseLeave" Foreground="Black" Height="188" VerticalAlignment="Top">
                 <GroupBox.Header>
                     <Run FontStyle="Italic">Customer Information</Run>
                 </GroupBox.Header>
@@ -88,8 +88,8 @@
                 </ScrollViewer>
             </GroupBox>
 
-            <Label Content="Full QC/DQE Comments:" Margin="568,325,155,215" />
-            <RichTextBox Name="rtbQCDQEComments" Margin="568,365,5,10" Height="200" Background="LightGray"/>
+            <Label Content="Full QC/DQE Comments:" Margin="568,407,155,0" Height="26" VerticalAlignment="Top" />
+            <RichTextBox Name="rtbQCDQEComments" Margin="568,438,5,10" Height="200" Background="LightGray"/>
         </Grid>
     </Viewbox>
 </Window>

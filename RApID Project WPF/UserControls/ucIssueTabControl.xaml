@@ -42,9 +42,9 @@
         </dragablz:TabablzControl.ItemTemplate>
         <dragablz:TabablzControl.HeaderItemTemplate>
             <DataTemplate DataType="{x:Type uc:ucUnitIssue}">
-                <StackPanel Orientation="Horizontal">
-                    <Label>Unit Issue #</Label>
-                    <Label Content="{Binding ID}"/>
+                <StackPanel x:Name="stkTemplate" Orientation="Horizontal" classes:IndexAttachedProperty.TrackTabItemIndex="True">
+                    <Label Content="Unit Issue #" Foreground="{Binding ElementName=uccIssueTabControl,Path=HeaderBrush,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"/>
+                    <Label Content="{Binding ElementName=stkTemplate, Path=(classes:IndexAttachedProperty.TabItemIndex)}" Foreground="{Binding ElementName=uccIssueTabControl,Path=HeaderBrush,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"/>
                 </StackPanel>
             </DataTemplate>
         </dragablz:TabablzControl.HeaderItemTemplate>

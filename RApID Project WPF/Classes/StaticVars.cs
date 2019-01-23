@@ -25,7 +25,7 @@ namespace RApID_Project_WPF
 
         public void initStaticVars()
         {
-            LogHandler = new csLogging(System.Environment.UserName, DateTime.Now, Properties.Settings.Default.LogWriteLocation);
+            LogHandler = new csLogging(Environment.UserName, DateTime.Now, Properties.Settings.Default.LogWriteLocation);
             if (VersionControl == null)
             {
                 VersionControl = new csVersionControl();

@@ -41,9 +41,9 @@
                 <TextBox x:Name="txtSerialNumber" materialDesign:HintAssist.Hint="Barcode serial number..." HorizontalAlignment="Left" Height="28" TextWrapping="Wrap" VerticalAlignment="Top" Width="146" DockPanel.Dock="Bottom" Margin="10,0,0,0" KeyDown="txtSerialNumber_KeyDown"/>
             </DockPanel>
         </Border>
-        <UserControls:ucIssueTabControl x:Name="tcUnitIssues" Margin="10,10,569,10" ReadOnly="True" IsRepair="True"/>
-        <UserControls:ucUnitIssue x:Name="unitIssue" HorizontalAlignment="Left" Height="Auto" Margin="10,10,0,10" Width="349" Foreground="White" LabelColor="White" 
-                                  DropDownEvent="unitIssue_DropDownEvent" AddPartReplaced="unitIssue_AddPartReplaced" ReadOnly="True" IsRepairForm="True" Visibility="Collapsed"/>
+        <UserControls:ucIssueTabControl x:Name="tcUnitIssues" Margin="10,10,569,10" ReadOnly="True" IsRepair="True" Visibility="Collapsed" />
+        <UserControls:ucUnitIssue x:Name="unitIssue" HorizontalAlignment="Left" Height="Auto" Margin="10,10,0,10" Width="439" Foreground="White" LabelColor="White" 
+                                  DropDownEvent="unitIssue_DropDownEvent" AddPartReplaced="unitIssue_AddPartReplaced" ReadOnly="True" IsRepairForm="True"/>
 
         <Label Content="Read Only:" Foreground="Azure" Margin="0,10,301,0" HorizontalContentAlignment="Right" VerticalContentAlignment="Center" Width="74" HorizontalAlignment="Right" Height="31" VerticalAlignment="Top"/>
         <Label HorizontalAlignment="Right" Margin="0,10,196,0" VerticalAlignment="Top" Width="100" Height="30" BorderBrush="Orange" BorderThickness="2" Foreground="Azure">
@@ -59,16 +59,19 @@
         <Button Content="Toggle ReadOnly" Background="CornflowerBlue" Margin="0,10,10,0" VerticalAlignment="Top" Click="btnToggle_Click" Height="30" HorizontalAlignment="Right" Width="181" Foreground="WhiteSmoke"/>
 
         <Border x:Name="brdProps"
-                Margin="0,197,10,10" 
+                Margin="0,144,10,140" 
                       materialDesign:ShadowAssist.ShadowDepth="Depth4" 
                       materialDesign:ShadowAssist.ShadowEdges="Bottom"
                       materialDesign:ShadowAssist.Darken="True"
                     BorderThickness="2"
-                    BorderBrush="Bisque" HorizontalAlignment="Right" Width="373">
+                    BorderBrush="Bisque" HorizontalAlignment="Right" Width="386">
             <ScrollViewer VerticalScrollBarVisibility="Auto"
                           Width="{Binding ElementName=brdProps, Path=Width, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                           Height="{Binding ElementName=brdProps, Path=Height, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
-                <Grid x:Name="grdProperties">
+                <Grid x:Name="grdProperties"
+                      Width="{Binding ElementName=brdProps, Path=Width, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                          Height="{Binding ElementName=brdProps, Path=Height, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                      HorizontalAlignment="Left">
                     <Label Content="Reported Issue: " Margin="0,-1,259,0" HorizontalContentAlignment="Right" VerticalContentAlignment="Center" Height="31" VerticalAlignment="Top" HorizontalAlignment="Right" Width="114" Foreground="#FF71E5FF"/>
                     <Label HorizontalAlignment="Right" Margin="0,1,117,0" VerticalAlignment="Top" Width="137" Height="30" BorderBrush="Orange" BorderThickness="2" Foreground="Azure" ToolTip="{Binding ReportedIssue, ElementName=unitIssue, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Content="{Binding ReportedIssue, ElementName=unitIssue, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
                     <Button x:Name="btnReportedIssue" Content="Mutate" Foreground="Orange" Background="DarkOliveGreen" Margin="0,0,10,0" VerticalAlignment="Top" Click="btnMutate_Click" Height="30" HorizontalAlignment="Right" Width="102"
@@ -157,7 +160,7 @@
                Content="{Binding IsRepairForm, ElementName=unitIssue, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
         <GridSplitter Margin="0,0,559,0" Background="Aqua" Width="5"/>
         <ProgressBar x:Name="progMapper" HorizontalAlignment="Left" Height="64" Width="64" Margin="540,75,0,0" VerticalAlignment="Top" Style="{StaticResource MaterialDesignCircularProgressBar}"/>
-        <Button x:Name="btnContextSwitch" Margin="0,124,10,0" VerticalAlignment="Top" Height="60" Click="btnContextSwitch_Click" HorizontalAlignment="Right" Width="187">
+        <Button x:Name="btnContextSwitch" Margin="0,79,196,0" VerticalAlignment="Top" Height="60" Click="btnContextSwitch_Click" HorizontalAlignment="Right" Width="187">
             <Button.Background>
                 <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
                     <GradientStop Color="#FFF3BD06" Offset="0.007"/>
@@ -178,5 +181,7 @@
                 </Label>
             </StackPanel>
         </Button>
+        <materialDesign:Snackbar x:Name="snkbrNotificationTray" HorizontalAlignment="Left" Height="100" Margin="622,388,0,0" VerticalAlignment="Top" Width="386"
+                                 MessageQueue="{materialDesign:MessageQueue}"/>
     </Grid>
 </Window>
