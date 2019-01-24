@@ -46,7 +46,7 @@ namespace RApID_Project_WPF
             csSplashScreenHelper.ShowText("Handling Serial Port...");
             handleInitSerialPort();
             csSplashScreenHelper.ShowText("Waking up...");
-            txtQCDQETech.Text = System.Environment.UserName;
+            txtQCDQETech.Text = Environment.UserName;
             txtRepairBarcode.Focus();
             dtpDateReceived.SelectedDate = DateTime.Now;
             csSplashScreenHelper.ShowText("Preparing logs...");

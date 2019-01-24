@@ -1,12 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Configuration;
-using System.Data;
-using System.Linq;
-using System.Threading.Tasks;
-using System.Reflection;
+﻿using MonkeyCache.FileStore;
+using System;
 using System.Windows;
-using MonkeyCache.FileStore;
 
 namespace RApID_Project_WPF
 {
@@ -18,11 +12,18 @@ namespace RApID_Project_WPF
         [STAThread]
         public static void Main(string[] args)
         {
-            Barrel.ApplicationId = AppDomain.CurrentDomain.FriendlyName;
-
-            var application = new App();
-            application.InitializeComponent();
-            application.Run();
+            try
+            {
+               Barrel.ApplicationId = AppDomain.CurrentDomain.FriendlyName;
+            } catch (Exception e) {
+                MessageBox.Show("The cache library is causing the issue.", "DEBUGGING MESSAGE", MessageBoxButton.OK, MessageBoxImage.Stop);
+                csExceptionLogger.csExceptionLogger.Write("MonkeyCacheIssues", e);
+            } finally
+            {
+                var application = new App();
+                application.InitializeComponent();
+                application.Run();
+            }
         }
     }
 }
