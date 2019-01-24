@@ -41,10 +41,10 @@
                 </StackPanel>
             </ScrollViewer>
 
-            <uc:ucIssueTabControl x:Name="ucIssues" Margin="208,36,0,0" Height="495" ReadOnly="True" HorizontalAlignment="Left" Width="345" VerticalAlignment="Top" HeaderBrush="#FF1F405B"/>
+            <uc:ucIssueTabControl x:Name="ucIssues" Margin="205,10,0,0" Height="525" ReadOnly="True" HorizontalAlignment="Left" Width="366" VerticalAlignment="Top" HeaderBrush="#FF1F405B"/>
 
-            <Label Content="Additional Comments:" Margin="576,27,116.458,520.625" />
-            <RichTextBox x:Name="rtbAddComm" Margin="576,55,0,0" Width="245" Height="225" Background="LightGray" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+            <Label Content="Additional Comments:" Margin="576,17,116.458,530.625" />
+            <RichTextBox x:Name="rtbAddComm" Margin="576,45,0,0" Width="245" Height="259" Background="LightGray" HorizontalAlignment="Left" VerticalAlignment="Top"/>
             <uc:ucLogActionView x:Name="ucTechActions" Margin="576,309,0,39.625" HorizontalAlignment="Left" Width="250"/>
         </Grid>
     </Viewbox>

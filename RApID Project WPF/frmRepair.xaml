@@ -172,8 +172,8 @@
                         <CheckBox x:Name="cbxScrap" Content="SCRAP" HorizontalAlignment="Left" Margin="141,320,0,0" VerticalAlignment="Top" Click="cbxScrap_Click"/>
 
                         <Label Name="lblPrevRepairInfo" Content="Previous Repair Information:" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="6,481,0,0" />
-                        <Label Name="lblPrevRepairMoreInfo" Content="Double Click on Record To View" FontStyle="Italic" FontSize="10" Margin="10,413,-4,82"/>
-                        <DataGrid Name="dgPrevRepairInfo" HorizontalAlignment="Left" Margin="6,515,0,0" VerticalAlignment="Top" Width="280" Height="115" BeginningEdit="dgBeginEdit" MouseDoubleClick="dgPrevRepairInfo_MouseDoubleClick"/>
+                        <Label Name="lblPrevRepairMoreInfo" Content="Double Click on Record To View" FontStyle="Italic" FontSize="10" Margin="7,494,910,118"/>
+                        <DataGrid Name="dgPrevRepairInfo" HorizontalAlignment="Left" Margin="6,515,0,0" VerticalAlignment="Top" Width="254" Height="115" BeginningEdit="dgBeginEdit" MouseDoubleClick="dgPrevRepairInfo_MouseDoubleClick"/>
 
                         <Label Content="Type of Return:" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="6,295,0,0" />
                         <ComboBox Name="cbTOR" Margin="6,318,0,0" DropDownClosed="cbDDClosed" Style="{StaticResource ComboBoxBaseStyle}" Width="100"/>
@@ -184,7 +184,7 @@
                         <Label Name="lblHOU" Content="Hours on Unit:" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="6,388,0,0" />
                         <TextBox Name="txtHOU" HorizontalAlignment="Left" VerticalAlignment="Top" TextWrapping="Wrap" Width="100" Height="23" Margin="6,413,0,0" GotFocus="txtGotFocus" LostFocus="txtLostFocus"/>
 
-                        <dragablz:TabablzControl x:Name="tbcUnitIssues" HorizontalAlignment="Left" VerticalAlignment="Top" Width="300" Height="616" Margin="300,11,0,0" ShowDefaultAddButton="True" ShowDefaultCloseButton="True">
+                        <dragablz:TabablzControl x:Name="tbcUnitIssues" HorizontalAlignment="Left" VerticalAlignment="Top" Width="332" Height="616" Margin="268,11,0,0" ShowDefaultCloseButton="True">
                             <TabItem Name="tiUI1" Header="Unit Issue #1">
                                 <Grid Name="gridUI1" Background="#FFACACAC">
                                     <Label Content="Reported Issue:" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10,10,0,0" />

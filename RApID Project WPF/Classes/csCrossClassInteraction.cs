@@ -1385,7 +1385,7 @@ namespace RApID_Project_WPF
             issue.Item = values[vi++];
             issue.Problem = values[vi++];
 
-            while (values[vi] != null)
+            while (vi < values.Length && values[vi] != null)
             {
                 issue.PartsReplaced = new List<MultiplePartsReplaced> {
                     new MultiplePartsReplaced(values[vi++], values[vi++], values[vi++] ?? csCrossClassInteraction.GetPartReplacedPartDescription(values[vi-2]))

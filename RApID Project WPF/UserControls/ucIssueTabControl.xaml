@@ -24,14 +24,15 @@
     <UserControl.Resources>
         <conv:HeightToHeightConverter x:Key="WidthConverter"/>
         <conv:BoolToVisibilityConverter x:Key="VisibilityConverter"/>
+        <conv:BoolToNotBoolConverter x:Key="NotGate"/>
         <classes:IssueTabClient x:Key="IssueTabClientInstance"/>
         <sys:Double x:Key="WidthMod">1.2</sys:Double>
     </UserControl.Resources>
     <dragablz:TabablzControl x:Name="tcTabs" ItemsSource="{Binding ElementName=uccIssueTabControl,Path=Issues,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
                                 Height="{Binding Path=Height,ElementName=uccIssueTabControl,Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                 Width="{Binding Path=Width,ElementName=uccIssueTabControl,Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                                ShowDefaultAddButton="{Binding ElementName=uccIssueTabControl,Path=ReadOnly,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
-                                ShowDefaultCloseButton="{Binding ElementName=uccIssueTabControl,Path=ReadOnly,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}">
+                                ShowDefaultAddButton="{Binding ElementName=uccIssueTabControl,Path=ReadOnly,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged, Converter={StaticResource NotGate}}"
+                                ShowDefaultCloseButton="{Binding ElementName=uccIssueTabControl,Path=ReadOnly,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged, Converter={StaticResource NotGate}}">
         <dragablz:TabablzControl.InterTabController>
             <dragablz:InterTabController />
         </dragablz:TabablzControl.InterTabController>

@@ -30,7 +30,7 @@ namespace RApID_Project_WPF.UserControls
         public static readonly DependencyProperty IsRepairProperty = DependencyProperty.Register("IsRepair", typeof(bool), typeof(ucIssueTabControl), new PropertyMetadata(false));
         public static readonly DependencyProperty HeaderBrushProperty = DependencyProperty.Register("HeaderBrush", typeof(Brush), typeof(ucIssueTabControl), new PropertyMetadata(Brushes.DimGray));
         public static readonly DependencyProperty StaticVarsInstanceProperty = DependencyProperty.Register("StaticVarsInstance", typeof(StaticVars), typeof(ucUnitIssue));
-        public static readonly DependencyProperty DropDownClosedHandlerProperty = DependencyProperty.Register("DropDownClosedHandler", typeof(EventHandler), typeof(ucIssueTabControl), new PropertyMetadata(0));
+        public static readonly DependencyProperty DropDownClosedHandlerProperty = DependencyProperty.Register("DropDownClosedHandler", typeof(EventHandler), typeof(ucIssueTabControl));
         #endregion
 
         #region Fields
@@ -163,8 +163,10 @@ namespace RApID_Project_WPF.UserControls
                 foreach (ucUnitIssue item in e.NewItems)
                 {
                     item.Width = tcTabs.Width;
-                    item.StaticVars = StaticVarsInstance;
-                    item.DropDownEvent += (EventHandler)GetValue(DropDownClosedHandlerProperty);
+
+                    item.SetBinding(ucUnitIssue.StaticVarsProperty, new Binding("StaticVarsInstance"));
+                    item.SetBinding(ucUnitIssue.ReadOnlyProperty, new Binding("ReadOnly"));
+                    item.SetBinding(ucUnitIssue.DropDownEventProperty, new Binding("DropDownClosedHandler"));
                 }
             }
 
