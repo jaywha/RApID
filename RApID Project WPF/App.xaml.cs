@@ -1,4 +1,4 @@
-﻿using MonkeyCache.FileStore;
+﻿//using MonkeyCache.FileStore;
 using System;
 using System.Windows;
 
@@ -14,7 +14,7 @@ namespace RApID_Project_WPF
         {
             try
             {
-               Barrel.ApplicationId = AppDomain.CurrentDomain.FriendlyName;
+               //Barrel.ApplicationId = AppDomain.CurrentDomain.FriendlyName;
             } catch (Exception e) {
                 MessageBox.Show("The cache library is causing the issue.", "DEBUGGING MESSAGE", MessageBoxButton.OK, MessageBoxImage.Stop);
                 csExceptionLogger.csExceptionLogger.Write("MonkeyCacheIssues", e);

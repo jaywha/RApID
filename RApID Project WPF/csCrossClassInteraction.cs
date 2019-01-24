@@ -20,8 +20,8 @@ using RApID_Project_WPF.UserControls;
 using System.Drawing;
 using System.Windows.Threading;
 using System.Runtime.Caching;
-using MonkeyCache.FileStore;
-using MonkeyCache;
+//using MonkeyCache.FileStore;
+//using MonkeyCache;
 
 namespace RApID_Project_WPF
 {
@@ -44,7 +44,7 @@ namespace RApID_Project_WPF
     public static class csCrossClassInteraction
     {
         /// <summary> Shortcut to <see cref="Banana"/> instance modelled in <see cref="Barrel.Current"/> </summary>
-        public static IBarrel Cache = Barrel.Current;
+        //public static IBarrel Cache = Barrel.Current;
         private static StaticVars sVar = StaticVars.StaticVarsInstance();
         private static csObjectHolder.csObjectHolder holder = csObjectHolder.csObjectHolder.ObjectHolderInstance();
 
@@ -189,7 +189,7 @@ namespace RApID_Project_WPF
         /// <param name="designators">A list of reference and part number designators to give autocompletion.</param>
         public static async void DoExcelOperations(string filePath, ProgressBar progData = null, DataGrid bomlist = null, params DesginatorPair[] designators)
         {
-            Cache.EmptyExpired();
+            //Cache.EmptyExpired();
 
             try
             {
@@ -203,13 +203,13 @@ namespace RApID_Project_WPF
                         return;
                     }
 
-                    var (exists, partNumbers, referenceDesignators) = CheckCache(filePath);
-                    if (exists) {
+                    //var (exists, partNumbers, referenceDesignators) = CheckCache(filePath);
+                    if (false) {
                         MainWindow.Notify.ShowBalloonTip($"Using Cached Data for {filePath.Substring(filePath.LastIndexOf('\\') + 1, 8)}",
                             "The data was pulled from the cache.\nIf data is outdated, please notify Jay W.",
                             Hardcodet.Wpf.TaskbarNotification.BalloonIcon.Info);
-                        PartNumbers = partNumbers.Split(',').ToList();
-                        ReferenceDesignators = referenceDesignators.Split(',').ToList();
+                        /*PartNumbers = partNumbers.Split(',').ToList();
+                        ReferenceDesignators = referenceDesignators.Split(',').ToList();*/
                     } else {
                         using (var stream = File.Open(filePath, FileMode.Open, FileAccess.Read))
                         {
@@ -269,7 +269,7 @@ namespace RApID_Project_WPF
             }
         }
 
-        /// <summary>
+        /*// <summary>
         /// Checks the <see cref="ApplicationCache"/> for any data related to the <see cref="MultiplePartsReplaced"/> model for the given component number.
         /// </summary>
         /// <param name="filePath">The Excel File path </param>
@@ -280,7 +280,7 @@ namespace RApID_Project_WPF
                 return (false, string.Empty, string.Empty);
             else
                 return (true, Cache.Get<string>(componentNumber + "PN"), Cache.Get<string>(componentNumber + "RD"));
-        }
+        }*/
 
         /// <summary>
         /// Updates the <see cref="ApplicationCache"/> with any data related to the <see cref="MultiplePartsReplaced"/> model for the given component number.
@@ -290,8 +290,8 @@ namespace RApID_Project_WPF
         private static void UpdateCache(string cacheTarget, string filePath)
         {
             var componentNumber = filePath.Substring(filePath.LastIndexOf('\\') + 1, 8);
-            if (!Cache.Exists(componentNumber))
-                Cache.Add(componentNumber, filePath, TimeSpan.Parse("12:01:00"));
+            /*if (!Cache.Exists(componentNumber))
+                Cache.Add(componentNumber, filePath, TimeSpan.Parse("12:01:00"));*/
             
             string data = "";
             switch(cacheTarget)
@@ -307,7 +307,7 @@ namespace RApID_Project_WPF
                     return;
             }
 
-            Cache.Add(componentNumber + cacheTarget, data, TimeSpan.FromHours(12.0));            
+            //Cache.Add(componentNumber + cacheTarget, data, TimeSpan.FromHours(12.0));            
         }
 
         /// <summary>
