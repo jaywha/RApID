@@ -7,7 +7,7 @@
         xmlns:md="http://materialdesigninxaml.net/winfx/xaml/themes"
         TextElement.Foreground="{DynamicResource MaterialDesignBody}"
         TextElement.FontWeight="Regular"
-        TextElement.FontSize="13"
+        TextElement.FontSize="12"
         TextOptions.TextFormattingMode="Ideal" 
         TextOptions.TextRenderingMode="Auto"        
         Background="{DynamicResource MaterialDesignPaper}"
@@ -19,16 +19,6 @@
         x:Name="wndMain"
         Title="Production" Width="1104" Height="815" MinWidth="300" MinHeight="300" Loaded="Window_Loaded" Closing="Window_Closing">
     <Window.Resources>
-        <Style x:Key="TextboxBaseStyle" TargetType="{x:Type TextBox}">
-            <Setter Property="Width" Value="195" />
-            <Setter Property="Height" Value="23" />
-            <Setter Property="IsReadOnly" Value="True" />
-            <Setter Property="TextWrapping" Value="Wrap" />
-            <Setter Property="HorizontalAlignment" Value="Left" />
-            <Setter Property="VerticalAlignment" Value="Top" />
-            <Setter Property="VerticalContentAlignment" Value="Center" />
-        </Style>
-
         <Style x:Key="Combobox" TargetType="{x:Type ComboBox}">
             <Setter Property="Width" Value="275" />
             <Setter Property="HorizontalAlignment" Value="Left" />
@@ -134,48 +124,49 @@
                     <Button x:Name="btnComplete" Content="Complete" HorizontalAlignment="Right" VerticalAlignment="Top" Width="119" Height="59" Style="{StaticResource RepairButtons}" Click="btnComplete_Click"/>
                 </StackPanel>
 
-                <TabControl HorizontalAlignment="Left" VerticalAlignment="Top" Width="1085" Height="665" Margin="2,65,0,0" Grid.ColumnSpan="2">
+                <dragablz:TabablzControl HorizontalAlignment="Left" VerticalAlignment="Top" Width="1085" Height="665" Margin="2,65,0,0" Grid.ColumnSpan="2">
 
                     <TabItem Header="DataLog">
-                        <Grid Background="#FFACACAC">
+                        <Grid Background="#FF463838">
 
-                            <Label Content="Tech Name:" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="6,2,0,0" />
-                            <TextBox Name="txtTechName" Margin="6,25,0,0" GotFocus="txtGotFocus" LostFocus="txtLostFocus" Style="{StaticResource TextboxBaseStyle}" />
+                            <Label Content="Tech Name" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="6,2,0,0" />
+                            <TextBox Name="txtTechName" Margin="6,25,858,583" GotFocus="txtGotFocus" LostFocus="txtLostFocus"  />
 
-                            <Label Content="Date Received:" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="4,50,0,0" />
-                            <DatePicker Name="dtpDateReceived" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="6,74,0,0" Width="195" Height="29" />
+                            <Label Content="Date Received" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="4,50,0,0" />
+                            <DatePicker Name="dtpDateReceived" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="6,74,0,0" Width="211" Height="29" />
 
                             <Label Content="Part Name:" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="6,103,0,0" />
-                            <TextBox Name="txtPartName" Margin="6,126,0,0" GotFocus="txtGotFocus" LostFocus="txtLostFocus" Style="{StaticResource TextboxBaseStyle}"/>
-                            <Button Name="btnLookupPartName" Content="?" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="213,126,0,0" Width="47" Height="43" ToolTip="Look Up Part Name" Click="btnLookupPartName_Click" />
+                            <TextBox Name="txtPartName" Margin="6,126,859,482" GotFocus="txtGotFocus" LostFocus="txtLostFocus" />
+                            <Button Name="btnLookupPartName" Content="?" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="257,114,0,0" Width="38" Height="37" ToolTip="Look Up Part Name" Click="btnLookupPartName_Click" />
 
-                            <Label Content="Part Number:" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="6,151,0,0" />
-                            <TextBox Name="txtPartNumber" Margin="6,174,0,0" GotFocus="txtGotFocus" LostFocus="txtLostFocus" Style="{StaticResource TextboxBaseStyle}" Width="125" />
+                            <Label Content="Part Number:" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="6,159,0,0" />
+                            <TextBox Name="txtPartNumber" Margin="92,156,918,448" GotFocus="txtGotFocus" LostFocus="txtLostFocus" />
 
-                            <Label Content="Part Series:" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="135,151,0,0" />
-                            <TextBox Name="txtPartSeries" Margin="135,174,0,0" GotFocus="txtGotFocus" LostFocus="txtLostFocus" Style="{StaticResource TextboxBaseStyle}" Width="125" />
+                            <Label Content="Series:" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="162,159,0,0" />
+                            <TextBox Name="txtPartSeries" Margin="212,154,780,448" GotFocus="txtGotFocus" LostFocus="txtLostFocus" />
 
-                            <Label Content="Commodity Sub-Class:" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="6,199,0,0" />
-                            <TextBox Name="txtCommSubClass" Margin="6,222,0,0" GotFocus="txtGotFocus" LostFocus="txtLostFocus" Style="{StaticResource TextboxBaseStyle}" />
+                            <Label Content="Commodity Sub-Class" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10,190,0,0" />
+                            <TextBox Name="txtCommSubClass" Margin="10,221,858,378" GotFocus="txtGotFocus" LostFocus="txtLostFocus" RenderTransformOrigin="0.5,0.5"  >
+                            </TextBox>
 
-                            <Label Content="Software Version:" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="6,247,0,0" />
-                            <TextBox Name="txtSWVersion" Margin="6,270,0,0" GotFocus="txtGotFocus" LostFocus="txtLostFocus" Style="{StaticResource TextboxBaseStyle}" IsReadOnly="False"/>
+                            <Label Content="Software Version" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="6,260,0,0" />
+                            <TextBox Name="txtSWVersion" Margin="10,286,928,321" GotFocus="txtGotFocus" LostFocus="txtLostFocus"  IsReadOnly="False" Height="26"/>
 
-                            <Label Content="Type of Return:" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="6,295,0,0" />
-                            <TextBox Name="txtTOR" Text="Production" Margin="6,318,0,0" Style="{StaticResource TextboxBaseStyle}" />
+                            <Label Content="Type of Return" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="7,312,0,0" />
+                            <TextBox Name="txtTOR" Text="Production" Margin="10,338,855,261"  />
 
-                            <Label Content="From Area:" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="6,342,0,0" />
-                            <ComboBox Name="cbFromArea" Margin="6,365,0,0"  Width="100" DropDownClosed="cbDDClosed" />
-                            <CheckBox Name="cbxScrap" Content="SCRAP" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="115,369,0,0" />
+                            <Label Content="From Area" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10,377,0,0" />
+                            <ComboBox Name="cbFromArea" Margin="10,403,858,201" DropDownClosed="cbDDClosed" Height="29" />
+                            <CheckBox Name="cbxScrap" Content="SCRAP" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="226,414,0,0" Foreground="White" />
 
-                            <Label Content="Previous Repair Information" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="6,390,0,0" />
-                            <Label Content="Double Click on Record To View" FontStyle="Italic" FontSize="10" Margin="6,405,789,197" />
-                            <DataGrid Name="dgPrevRepairInfo" HorizontalAlignment="Left" VerticalAlignment="Top" Width="280" Height="200" Margin="6,425,0,0" BeginningEdit="dgBeginEdit"
+                            <Label Content="Previous Repair Information" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="7,437,0,0" />
+                            <Label Content="Double Click on Record To View" FontStyle="Italic" FontSize="10" Margin="7,450,903,149" />
+                            <DataGrid Name="dgPrevRepairInfo" HorizontalAlignment="Left" VerticalAlignment="Top" Width="280" Height="140" Margin="6,475,0,0" BeginningEdit="dgBeginEdit"
                                       MouseDoubleClick="dgPrevRepairInfo_MouseDoubleClick"/>
 
-                            <dragablz:TabablzControl x:Name="tcUnitIssues" HorizontalAlignment="Left" VerticalAlignment="Top" Width="300" Height="616" Margin="300,11,0,0" ShowDefaultAddButton="True">
+                            <dragablz:TabablzControl x:Name="tcUnitIssues" HorizontalAlignment="Left" VerticalAlignment="Top" Width="300" Height="605" Margin="300,11,0,0" ShowDefaultAddButton="True">
                                 <TabItem Name="tiUI1" Header="Unit Issue #1">
-                                    <StackPanel Name="gridUI1" Background="#FFACACBC" Orientation="Vertical">
+                                    <StackPanel Name="gridUI1" Background="#FF303030" Orientation="Vertical">
                                         <Label Content="Reported Issue:" />
                                         <ComboBox Name="cbReportedIssue" DropDownClosed="cbDDClosed"  />
 
@@ -194,17 +185,23 @@
                                         <Label Content="Problem:" VerticalAlignment="Center" />
                                         <ComboBox Name="cbProblem" VerticalAlignment="Center"  DropDownClosed="cbDDClosed"   Width="137" IsEnabled="False"/>
 
-                                        <Label Name="lblRefDes" Content="Ref Designator" Visibility="Collapsed"/>
-                                        <Border x:Name="brdRefDes">
-                                            <ComboBox x:Name="txtMultiRefDes" IsEditable="True"  IsReadOnly="False" Width="100" Visibility="Collapsed" KeyUp="txtMultiRefKeyUp" SelectionChanged="refDesIndexChanged"/>
-                                        </Border>
+                                        <StackPanel Orientation="Horizontal">
+                                            <StackPanel Orientation="Vertical">
+                                                <Label Name="lblRefDes" Content="Ref Designator" Visibility="Collapsed"/>
+                                                <Border x:Name="brdRefDes">
+                                                    <ComboBox x:Name="txtMultiRefDes" IsEditable="True"  IsReadOnly="False" Width="100" Visibility="Collapsed" KeyUp="txtMultiRefKeyUp" SelectionChanged="refDesIndexChanged"/>
+                                                </Border>
+                                            </StackPanel>
 
-                                        <Label Name="lblPartNum" Content="Part Number" Visibility="Collapsed"/>
-                                        <ComboBox x:Name="txtMultiPartNum"  Width="100" Visibility="Collapsed"
-                                              IsReadOnly="{Binding ElementName=wndMain, Path=BOMFileActive, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                                              IsEditable="{Binding ElementName=wndMain, Path=BOMFileActive, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged,Converter={StaticResource NegateBoolean}}"
-                                              IsEnabled="{Binding ElementName=wndMain, Path=BOMFileActive, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged,Converter={StaticResource NegateBoolean}}"/>
-                                        <Button Name="btnAddRefPart" Content="Add" Width="35" Visibility="Collapsed" Click="btnAddRefPart_Click"/>
+                                            <StackPanel Orientation="Vertical">
+                                                <Label Name="lblPartNum" Content="Part Number" Visibility="Collapsed"/>
+                                                <ComboBox x:Name="txtMultiPartNum"  Width="100" Visibility="Collapsed"
+                                                  IsReadOnly="{Binding ElementName=wndMain, Path=BOMFileActive, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                                  IsEditable="{Binding ElementName=wndMain, Path=BOMFileActive, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged,Converter={StaticResource NegateBoolean}}"
+                                                  IsEnabled="{Binding ElementName=wndMain, Path=BOMFileActive, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged,Converter={StaticResource NegateBoolean}}"/>
+                                            </StackPanel>
+                                            <Button Name="btnAddRefPart" Content="Add" Width="35" Visibility="Collapsed" Click="btnAddRefPart_Click"/>
+                                        </StackPanel>
 
                                         <DataGrid Name="dgMultipleParts" Width="275" Height="180" AllowDrop="True" IsReadOnly="True" BeginningEdit="dgBeginEdit" Visibility="Collapsed" KeyUp="dataGrid_KeyUp" />
                                         <Button Name="btnReset" Content="Reset Unit Issue #1" Width="275" Visibility="Visible" Click="btnReset_Click"/>
@@ -212,82 +209,82 @@
                                 </TabItem>
 
                                 <TabItem Name="tiUI2" Header="Unit Issue #2" IsEnabled="False">
-                                    <Grid Name="gridUI2" Background="#FFACACBF">
-                                        <Label Content="Reported Issue:" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10,10,0,0" />
-                                        <ComboBox Name="cbReportedIssue_2" Margin="10,35,0,0" DropDownClosed="cbDDClosed"  IsEnabled="False" />
+                                    <StackPanel Name="gridUI2" Background="#FF303030" Orientation="Vertical">
+                                        <Label Content="Reported Issue:" />
+                                        <ComboBox Name="cbReportedIssue_2" DropDownClosed="cbDDClosed"  />
 
-                                        <Label Content="Test Result:" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10,70,0,0" />
-                                        <ComboBox Name="cbTestResult_2" Margin="10,95,0,0" DropDownClosed="cbDDClosed"  />
+                                        <Label Content="Test Result:" />
+                                        <ComboBox Name="cbTestResult_2" DropDownClosed="cbDDClosed"  />
 
-                                        <Label Content="Test Result (Abort Input):" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10,130,0,0" />
-                                        <ComboBox Name="cbTestResultAbort_2" Margin="10,155,0,0" DropDownClosed="cbDDClosed"  />
+                                        <Label Content="Test Result (Abort Input):" />
+                                        <ComboBox Name="cbTestResultAbort_2" DropDownClosed="cbDDClosed"  />
 
-                                        <Label Content="Issue:" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10,190,0,0" />
-                                        <ComboBox Name="cbIssue_2" Margin="10,215,0,0" DropDownClosed="cbDDClosed"  />
+                                        <Label Content="Issue:" />
+                                        <ComboBox Name="cbIssue_2" DropDownClosed="cbDDClosed"  />
 
-                                        <Label Content="Item:" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10,250,0,0" />
-                                        <ComboBox Name="cbItem_2" Margin="10,275,0,0" DropDownClosed="cbDDClosed"  Width="137" IsEnabled="False"/>
+                                        <Label Content="Item:" VerticalAlignment="Center" />
+                                        <ComboBox Name="cbItem_2" VerticalAlignment="Center"  DropDownClosed="cbDDClosed"  Width="137" IsEnabled="False"/>
 
-                                        <Label Content="Problem:" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="150,250,0,0" />
-                                        <ComboBox Name="cbProblem_2" Margin="150,275,0,0" DropDownClosed="cbDDClosed"   Width="137" IsEnabled="False"/>
+                                        <Label Content="Problem:" VerticalAlignment="Center" />
+                                        <ComboBox Name="cbProblem_2" VerticalAlignment="Center"  DropDownClosed="cbDDClosed"   Width="137" IsEnabled="False"/>
 
-                                        <Label Name="lblRefDes_2" Content="Ref Designator" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10,310,0,0" Visibility="Hidden"/>
-                                        <Border x:Name="brdRefDes_2" Margin="10,335,180,226">
-                                            <ComboBox x:Name="txtMultiRefDes_2" IsEditable="True"  IsReadOnly="False" Width="100" Visibility="Hidden" KeyUp="txtMultiRefKeyUp" SelectionChanged="refDesIndexChanged"/>
+                                        <Label Name="lblRefDes_2" Content="Ref Designator" Visibility="Collapsed"/>
+                                        <Border x:Name="brdRefDes_2">
+                                            <ComboBox x:Name="txtMultiRefDes_2" IsEditable="True"  IsReadOnly="False" Width="100" Visibility="Collapsed" KeyUp="txtMultiRefKeyUp" SelectionChanged="refDesIndexChanged"/>
                                         </Border>
 
-                                        <Label Name="lblPartNum_2" Content="Part Number" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="150,310,0,0" Visibility="Hidden"/>
-                                        <ComboBox x:Name="txtMultiPartNum_2" Margin="150,335,0,0"  Width="100" Visibility="Hidden"
-                                              IsReadOnly="{Binding ElementName=wndMain, Path=BOMFileActive, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
-                                              IsEditable="{Binding ElementName=wndMain, Path=BOMFileActive, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged,Converter={StaticResource NegateBoolean}}"
-                                              IsEnabled="{Binding ElementName=wndMain, Path=BOMFileActive, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged,Converter={StaticResource NegateBoolean}}"/>
-                                        <Button Name="btnAddRefPart_2" Margin="255,335,0,0" Content="Add" HorizontalAlignment="Left" VerticalAlignment="Top" Width="35" Visibility="Hidden" Click="btnAddRefPart_Click"/>
-
-                                        <DataGrid Name="dgMultipleParts_2" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10,370,0,0" Width="275" Height="180" IsReadOnly="True" BeginningEdit="dgBeginEdit" Visibility="Hidden" KeyUp="dataGrid_KeyUp"/>
-                                        <Button Name="btnReset_2" Content="Reset Unit Issue #2" Margin="10,555,0,0" Style="{StaticResource UnitIssueButtons}" Width="275" Visibility="Visible" Click="btnReset_Click"/>
-                                    </Grid>
-                                </TabItem>
-
-                                <TabItem Name="tiUI3" Header="Unit Issue #3" IsEnabled="False">
-                                    <Grid Name="gridUI3" Background="#FFACAAC7">
-                                        <Label Content="Reported Issue:" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10,10,0,0" />
-                                        <ComboBox Name="cbReportedIssue_3" Margin="10,35,0,0" DropDownClosed="cbDDClosed"  IsEnabled="False" />
-
-                                        <Label Content="Test Result:" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10,70,0,0" />
-                                        <ComboBox Name="cbTestResult_3" Margin="10,95,0,0" DropDownClosed="cbDDClosed"  />
-
-                                        <Label Content="Test Result (Abort Input):" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10,130,0,0" />
-                                        <ComboBox Name="cbTestResultAbort_3" Margin="10,155,0,0" DropDownClosed="cbDDClosed"  />
-
-                                        <Label Content="Issue:" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10,190,0,0" />
-                                        <ComboBox Name="cbIssue_3" Margin="10,215,0,0" DropDownClosed="cbDDClosed"  />
-
-                                        <Label Content="Item:" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10,250,0,0" />
-                                        <ComboBox Name="cbItem_3" Margin="10,275,0,0" DropDownClosed="cbDDClosed"  Width="137" IsEnabled="False"/>
-
-                                        <Label Content="Problem:" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="150,250,0,0" />
-                                        <ComboBox Name="cbProblem_3" Margin="150,275,0,0" DropDownClosed="cbDDClosed"   Width="137" IsEnabled="False"/>
-
-                                        <Label Name="lblRefDes_3" Content="Ref Designator" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10,310,0,0" Visibility="Hidden"/>
-                                        <Border x:Name="brdRefDes_3" Margin="10,335,180,226">
-                                            <ComboBox x:Name="txtMultiRefDes_3" IsEditable="True"  IsReadOnly="False" Width="100" Visibility="Hidden" KeyUp="txtMultiRefKeyUp" SelectionChanged="refDesIndexChanged"/>
-                                        </Border>
-
-                                        <Label Name="lblPartNum_3" Content="Part Number" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="150,310,0,0" Visibility="Hidden"/>
-                                        <ComboBox x:Name="txtMultiPartNum_3" Margin="150,335,0,0"  Width="100" Visibility="Hidden" 
+                                        <Label Name="lblPartNum_2" Content="Part Number" Visibility="Collapsed"/>
+                                        <ComboBox x:Name="txtMultiPartNum_2"  Width="100" Visibility="Collapsed"
                                               IsReadOnly="{Binding ElementName=wndMain, Path=BOMFileActive, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                               IsEditable="{Binding ElementName=wndMain, Path=BOMFileActive, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged,Converter={StaticResource NegateBoolean}}"
                                               IsEnabled="{Binding ElementName=wndMain, Path=BOMFileActive, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged,Converter={StaticResource NegateBoolean}}"/>
-                                        <Button Name="btnAddRefPart_3" Margin="255,335,0,0" Content="Add" HorizontalAlignment="Left" VerticalAlignment="Top" Width="35" Visibility="Hidden" Click="btnAddRefPart_Click"/>
+                                        <Button Name="btnAddRefPart_2" Content="Add" Width="35" Visibility="Collapsed" Click="btnAddRefPart_Click"/>
 
-                                        <DataGrid Name="dgMultipleParts_3" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10,370,0,0" Width="275" Height="180" IsReadOnly="True" BeginningEdit="dgBeginEdit" Visibility="Hidden" KeyUp="dataGrid_KeyUp"/>
-                                        <Button Name="btnReset_3" Content="Reset Unit Issue #3" Margin="10,555,0,0" Style="{StaticResource UnitIssueButtons}" Width="275" Visibility="Visible" Click="btnReset_Click"/>
-                                    </Grid>
+                                        <DataGrid Name="dgMultipleParts_2" Width="275" Height="180" AllowDrop="True" IsReadOnly="True" BeginningEdit="dgBeginEdit" Visibility="Collapsed" KeyUp="dataGrid_KeyUp" />
+                                        <Button Name="btnReset_2" Content="Reset Unit Issue #2" Width="275" Visibility="Visible" Click="btnReset_Click"/>
+                                    </StackPanel>
+                                </TabItem>
+
+                                <TabItem Name="tiUI3" Header="Unit Issue #1" IsEnabled="False">
+                                    <StackPanel Name="gridUI3" Background="#FF303030" Orientation="Vertical">
+                                        <Label Content="Reported Issue:" />
+                                        <ComboBox Name="cbReportedIssue_3" DropDownClosed="cbDDClosed"  />
+
+                                        <Label Content="Test Result:" />
+                                        <ComboBox Name="cbTestResult_3" DropDownClosed="cbDDClosed"  />
+
+                                        <Label Content="Test Result (Abort Input):" />
+                                        <ComboBox Name="cbTestResultAbort_3" DropDownClosed="cbDDClosed"  />
+
+                                        <Label Content="Issue:" />
+                                        <ComboBox Name="cbIssue_3" DropDownClosed="cbDDClosed"  />
+
+                                        <Label Content="Item:" VerticalAlignment="Center" />
+                                        <ComboBox Name="cbItem_3" VerticalAlignment="Center"  DropDownClosed="cbDDClosed"  Width="137" IsEnabled="False"/>
+
+                                        <Label Content="Problem:" VerticalAlignment="Center" />
+                                        <ComboBox Name="cbProblem_3" VerticalAlignment="Center"  DropDownClosed="cbDDClosed"   Width="137" IsEnabled="False"/>
+
+                                        <Label Name="lblRefDes_3" Content="Ref Designator" Visibility="Collapsed"/>
+                                        <Border x:Name="brdRefDes_3">
+                                            <ComboBox x:Name="txtMultiRefDes_3" IsEditable="True"  IsReadOnly="False" Width="100" Visibility="Collapsed" KeyUp="txtMultiRefKeyUp" SelectionChanged="refDesIndexChanged"/>
+                                        </Border>
+
+                                        <Label Name="lblPartNum_3" Content="Part Number" Visibility="Collapsed"/>
+                                        <ComboBox x:Name="txtMultiPartNum_3"  Width="100" Visibility="Collapsed"
+                                              IsReadOnly="{Binding ElementName=wndMain, Path=BOMFileActive, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                              IsEditable="{Binding ElementName=wndMain, Path=BOMFileActive, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged,Converter={StaticResource NegateBoolean}}"
+                                              IsEnabled="{Binding ElementName=wndMain, Path=BOMFileActive, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged,Converter={StaticResource NegateBoolean}}"/>
+                                        <Button Name="btnAddRefPart_3" Content="Add" Width="35" Visibility="Collapsed" Click="btnAddRefPart_Click"/>
+
+                                        <DataGrid Name="dgMultipleParts_3" Width="275" Height="180" AllowDrop="True" IsReadOnly="True" BeginningEdit="dgBeginEdit" Visibility="Collapsed" KeyUp="dataGrid_KeyUp" />
+                                        <Button Name="btnReset_3" Content="Reset Unit Issue #3" Width="275" Visibility="Visible" Click="btnReset_Click"/>
+                                    </StackPanel>
                                 </TabItem>
                             </dragablz:TabablzControl>
 
                             <Label Content="Additional Comments:" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="605,10,0,0"/>
-                            <RichTextBox Name="rtbAdditionalComments" HorizontalAlignment="Left" VerticalAlignment="Top" Width="465" Height="215" Margin="605,40,0,0" GotFocus="rtbGotFocus" LostFocus="rtbLostFocus">
+                            <RichTextBox Name="rtbAdditionalComments" HorizontalAlignment="Left" VerticalAlignment="Top" Width="465" Height="215" Margin="605,40,0,0" GotFocus="rtbGotFocus" LostFocus="rtbLostFocus" Background="#FF040404" Foreground="#FF5DFF00">
                                 <FlowDocument>
                                     <Paragraph>
                                         <Run Text=""/>
@@ -295,7 +292,7 @@
                                 </FlowDocument>
                             </RichTextBox>
 
-                            <uc:ucIssueTabControl x:Name="ucUnitIssues" Height="363" Margin="667,260,69,0" VerticalAlignment="Top" />
+                            <uc:ucIssueTabControl x:Name="ucUnitIssues" Height="363" Margin="667,260,69,0" VerticalAlignment="Top" Visibility="Hidden"/>
                             <StackPanel Orientation="Vertical" Margin="605,270,0,6" Visibility="Collapsed">
                                 <Label x:Name="lblBOMList" Content="BOM Parts List" HorizontalAlignment="Left" VerticalAlignment="Top" Width="128" ToolTip="From JUKI Sheet of BOM Excel File"/>
                                 <DataGrid x:Name="dgBOMList" HorizontalAlignment="Left" Height="328" VerticalAlignment="Top" Width="461" BeginningEdit="dgBeginEdit" MouseDoubleClick="dgBOMList_MouseDoubleClick"/>
@@ -305,14 +302,14 @@
 
                     <TabItem Header="EOL Test">
                         <uc:ucEOLTab x:Name="ucEOLTab" SerialNumber="{Binding Path=Text, ElementName=txtSerialNumber, Mode=TwoWay}" PartSeries="{Binding Path=Text, ElementName=txtPartSeries, Mode=TwoWay}"
-                                 VerticalAlignment="top" HorizontalAlignment="Left" Background="#FFACACAC"/>
+                                 VerticalAlignment="top" HorizontalAlignment="Left" Background="#FF303030"/>
                     </TabItem>
 
                     <TabItem Header="AOI">
                         <uc:ucAOITab x:Name="ucAOITab" SerialNumber="{Binding Path=Text, ElementName=txtSerialNumber, Mode=TwoWay}" VerticalAlignment="top" HorizontalAlignment="Left" Background="#FFACACAC"/>
                     </TabItem>
 
-                </TabControl>
+                </dragablz:TabablzControl>
 
                 <ToolBar Name="tbSPStatus" HorizontalAlignment="Stretch" Margin="0,740,0,0" VerticalAlignment="Top" Width="auto" Height="34" Header="Serial Port Status:" Grid.ColumnSpan="2">
                     <Label Name="tbPortStatus" Content="Port Status: Closed" Height="34" ToolBar.OverflowMode="Never" VerticalAlignment="Top" HorizontalAlignment="Left" Padding="5,7,5,0" />

@@ -56,18 +56,12 @@ namespace RApID_Project_WPF.UserControls
             query = $"SELECT TestID FROM tblPost WHERE PCBSerial = '{SerialNumber}';";
             cbPOSTTestID.PullItemsFromQuery(query);
 
-            if (cbEOLTestID.Items.Count > 0)
-            {
+            if (cbEOLTestID.Items.Count > 0)            
                 cbBEAMSTestType.Items.Add("EOL");
-            }
-
             if (cbPRETestID.Items.Count > 0)
                 cbBEAMSTestType.Items.Add("PRE");
-
-            if (cbPOSTTestID.Items.Count > 0)
-            {
+            if (cbPOSTTestID.Items.Count > 0)            
                 cbBEAMSTestType.Items.Add("POST");
-            }
         }
 
         /// <summary>

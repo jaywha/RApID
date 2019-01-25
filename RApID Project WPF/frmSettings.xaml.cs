@@ -27,6 +27,7 @@ namespace RApID_Project_WPF
         csPrintQCDQELabel printLabel;
         StaticVars sVars = StaticVars.StaticVarsInstance();
         csObjectHolder.csObjectHolder holder = csObjectHolder.csObjectHolder.ObjectHolderInstance();
+        private csLog LogToReview = new csLog() { lActions = new List<csLogAction>() { new csLogAction() { LogNote = "EMPTY" } } };
 
 
         public frmSettings()
@@ -40,7 +41,7 @@ namespace RApID_Project_WPF
             buildSerialPortSettings();
             buildLogSettings();
             buildPrinterSettings();
-            this.Activate();
+            Activate();
         }
 
         #region Database Settings
@@ -429,44 +430,44 @@ namespace RApID_Project_WPF
             txtLogWriteLoc.Text = Properties.Settings.Default.LogWriteLocation;
         }
 
-        //private void attemptToReadLog(string sLogLoc)
-        //{
-        //    rtbLogInfo.Document.Blocks.Clear();
-        //    LogToReview = csSerialization.deserializeFile(sLogLoc);
+        private void attemptToReadLog(string sLogLoc)
+        {
+            rtbLogInfo.Document.Blocks.Clear();
+            LogToReview = csSerialization.deserializeFile(sLogLoc);
 
-        //    if (LogToReview == null)
-        //    {
-        //        rtbLogInfo.AppendText("There was an error reading in the selected log.");
-        //        btnViewLogNewWindow.Visibility = Visibility.Hidden;
-        //    }
-        //    else if (LogToReview != null)
-        //    {
-        //        btnViewLogNewWindow.Visibility = Visibility.Visible;
+            if (LogToReview == null)
+            {
+                rtbLogInfo.AppendText("There was an error reading in the selected log.");
+                btnViewLogNewWindow.Visibility = Visibility.Hidden;
+            }
+            else if (LogToReview != null)
+            {
+                btnViewLogNewWindow.Visibility = Visibility.Visible;
 
-        //        string sLogData = String.Format("{0} began this entry at {1}.\n", LogToReview.Tech, LogToReview.LogCreationTime.ToString("MM/dd/yyyy hh:mm:ss tt"));
+                string sLogData = string.Format("{0} began this entry at {1}.\n", LogToReview.Tech, LogToReview.LogCreationTime.ToString("MM/dd/yyyy hh:mm:ss tt"));
 
-        //        if (LogToReview.IsCR)
-        //            sLogData += "This was regarding a Credit Return.\n";
-        //        else sLogData += "This was not a Credit Return.\n";
+                if (LogToReview.IsCR)
+                    sLogData += "This was regarding a Credit Return.\n";
+                else sLogData += "This was not a Credit Return.\n";
 
-        //        sLogData += "Actions Associated With This Log File:\n";
+                sLogData += "Actions Associated With This Log File:\n";
 
-        //        //Note: Count the number of times each action appears.
-        //        for (int i = 0; i < System.Enum.GetNames(typeof(csLogging.LogState)).Length; i++)
-        //        {
-        //            int iCount = 0;
-        //            csLogging.LogState _stateChecker = (csLogging.LogState)i;
-        //            for (int j = 0; j < LogToReview.lActions.Count; j++)
-        //            {
-        //                if (LogToReview.lActions[j].EventType.Equals(_stateChecker))
-        //                    iCount++;
-        //            }
-        //            sLogData += String.Format("Type of Event: {0} | Number of Occurrences: {1}\n", _stateChecker.ToString(), iCount.ToString());
-        //        }
+                //Note: Count the number of times each action appears.
+                for (int i = 0; i < System.Enum.GetNames(typeof(csLogging.LogState)).Length; i++)
+                {
+                    int iCount = 0;
+                    var _stateChecker = (csLogging.LogState)i;
+                    for (int j = 0; j < LogToReview.lActions.Count; j++)
+                    {
+                        if (LogToReview.lActions[j].EventType.Equals(_stateChecker))
+                            iCount++;
+                    }
+                    sLogData += string.Format("Type of Event: {0} | Number of Occurrences: {1}\n", _stateChecker.ToString(), iCount.ToString());
+                }
 
-        //        rtbLogInfo.AppendText(sLogData);
-        //    }
-        //}
+                rtbLogInfo.AppendText(sLogData);
+            }
+        }
 
         private void btnUpdateLogLocation_Click(object sender, RoutedEventArgs e)
         {
@@ -491,21 +492,24 @@ namespace RApID_Project_WPF
             MessageBox.Show("Log Settings Updated!");
         }
 
-        //private void btnReadLog_Click(object sender, RoutedEventArgs e)
-        //{
-        //    string sLogFileLoc = String.Empty;
-        //    OpenFileDialog ofd = new OpenFileDialog();
-        //    ofd.Filter = "XML Files (*.xml)|*xml";
-        //    if (ofd.ShowDialog() == true)
-        //    {
-        //        sLogFileLoc = ofd.FileName;
-        //        Console.WriteLine(sLogFileLoc);
-        //        if (!String.IsNullOrEmpty(sLogFileLoc))
-        //        {
-        //            attemptToReadLog(sLogFileLoc);
-        //        }
-        //    }
-        //}
+        private void btnReadLog_Click(object sender, RoutedEventArgs e)
+        {
+            string sLogFileLoc = String.Empty;
+            var ofd = new OpenFileDialog
+            {
+                Filter = "XML Files (*.xml)|*xml",
+                InitialDirectory = txtLogWriteLoc.Text
+            };
+            if (ofd.ShowDialog() == true)
+            {
+                sLogFileLoc = ofd.FileName;
+                Console.WriteLine(sLogFileLoc);
+                if (!string.IsNullOrEmpty(sLogFileLoc))
+                {
+                    attemptToReadLog(sLogFileLoc);
+                }
+            }
+        }
 
         private void btnViewLogNewWindow_Click(object sender, RoutedEventArgs e)
         {

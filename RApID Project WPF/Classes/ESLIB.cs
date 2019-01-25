@@ -349,6 +349,7 @@ namespace EricStabileLibrary
         public DateTime LogCreationTime { get; set; }
         public List<csLogAction> lActions { get; set; }
         public DateTime LogSubmitTime { get; set; }
+        public bool IsCR { get; set; }
         public void buildCSLog(string sTech, DateTime dtLC, List<csLogAction> lLA)
         {
             Tech = sTech;

@@ -415,8 +415,10 @@ namespace RApID_Project_WPF
         /// <param name="lsvToFill">List To Fill</param>
         public static void lsvFillFromQuery(string _conn, string _query, ListView lsvToFill)
         {
-            var conn = new SqlConnection();
-            conn.ConnectionString = _conn;
+            var conn = new SqlConnection
+            {
+                ConnectionString = _conn
+            };
             var cmd = new SqlCommand(_query, conn);
             try
             {
@@ -1002,7 +1004,14 @@ namespace RApID_Project_WPF
         public static void LoadPartNumberForm(bool bProduction, List<TextBox> lTB)
         {
             var fpn = new frmPartNumber(bProduction);
-            fpn.ShowDialog();
+            try
+            {
+                MaterialDesignThemes.Wpf.DialogHost.Show(fpn);
+            } catch(Exception e)
+            {
+                csExceptionLogger.csExceptionLogger.Write("NoDialogHostFound", e);
+                fpn.ShowDialog();
+            }
             if (sVar.SelectedPartNumberPartName.PartNumberSelected)
             {
                 lTB[0].Text = sVar.SelectedPartNumberPartName.PartNumber;

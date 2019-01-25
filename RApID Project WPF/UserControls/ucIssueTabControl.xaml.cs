@@ -111,7 +111,6 @@ namespace RApID_Project_WPF.UserControls
         }
         #endregion
 
-
         /// <summary>
         /// Gets the <see cref="ucUnitIssue"/> at the given index.
         /// </summary>
