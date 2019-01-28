@@ -19,12 +19,6 @@
         x:Name="wndMain"
         Title="Production" Width="1104" Height="815" MinWidth="300" MinHeight="300" Loaded="Window_Loaded" Closing="Window_Closing">
     <Window.Resources>
-        <Style x:Key="Combobox" TargetType="{x:Type ComboBox}">
-            <Setter Property="Width" Value="275" />
-            <Setter Property="HorizontalAlignment" Value="Left" />
-            <Setter Property="VerticalAlignment" Value="Top" />
-        </Style>
-
         <Style x:Key="EOLComboBox" TargetType="{x:Type ComboBox}">
             <Setter Property="Width" Value="120" />
             <Setter Property="HorizontalAlignment" Value="Left" />
@@ -124,7 +118,7 @@
                     <Button x:Name="btnComplete" Content="Complete" HorizontalAlignment="Right" VerticalAlignment="Top" Width="119" Height="59" Style="{StaticResource RepairButtons}" Click="btnComplete_Click"/>
                 </StackPanel>
 
-                <dragablz:TabablzControl HorizontalAlignment="Left" VerticalAlignment="Top" Width="1085" Height="665" Margin="2,65,0,0" Grid.ColumnSpan="2">
+                <dragablz:TabablzControl x:Name="tcMain"  HorizontalAlignment="Left" VerticalAlignment="Top" Width="1085" Height="665" Margin="2,65,0,0" Grid.ColumnSpan="2">
 
                     <TabItem Header="DataLog">
                         <Grid Background="#FF463838">

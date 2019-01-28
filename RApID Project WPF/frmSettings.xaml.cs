@@ -15,6 +15,9 @@ using EricStabileLibrary;
 using System.IO.Ports;
 using Microsoft.Win32;
 using WinForm = System.Windows.Forms;
+using RApID_Project_WPF.UserControls;
+using RApID_Project_WPF.Classes;
+using MaterialDesignThemes.Wpf;
 
 namespace RApID_Project_WPF
 {
@@ -28,7 +31,7 @@ namespace RApID_Project_WPF
         StaticVars sVars = StaticVars.StaticVarsInstance();
         csObjectHolder.csObjectHolder holder = csObjectHolder.csObjectHolder.ObjectHolderInstance();
         private csLog LogToReview = new csLog() { lActions = new List<csLogAction>() { new csLogAction() { LogNote = "EMPTY" } } };
-
+        private SimpleThemeManager STM = new SimpleThemeManager();
 
         public frmSettings()
         {
@@ -42,6 +45,10 @@ namespace RApID_Project_WPF
             buildLogSettings();
             buildPrinterSettings();
             Activate();
+
+            rbtnDarkTheme.Checked += RadioButton_Checked;
+            rbtnDefaultTheme.Checked += RadioButton_Checked;
+            rbtnLightTheme.Checked += RadioButton_Checked;
         }
 
         #region Database Settings
@@ -424,6 +431,39 @@ namespace RApID_Project_WPF
         }
         #endregion
 
+        #region Theme Settings
+
+        private void RadioButton_Checked(object sender, RoutedEventArgs e)
+        {
+            var rbtn = (sender as RadioButton);
+            Console.WriteLine($"New theme selected: {rbtn.Name.Replace("rbtn","")}.\n");
+            var innerGrid = ((frmSample.Content as ThemeSample).Content as DialogHost).Content as Grid;
+            switch (rbtn.Name.Replace("rbtn",""))
+            {
+                case "LightTheme":
+                    grpbxThemes.Background = STM.LightThemeBackground;
+                    ThemeAttachedProperty.SetThemeType(innerGrid, Themes.Light);
+                    break;
+                case "DarkTheme":
+                    grpbxThemes.Background = STM.DarkThemeBackground;
+                    ThemeAttachedProperty.SetThemeType(innerGrid, Themes.Dark);
+                    break;
+                case "DefaultTheme":
+                default:
+                    grpbxThemes.Background = STM.DefaultThemeBackground;
+                    ThemeAttachedProperty.SetThemeType(innerGrid, Themes.Default);
+                    break;
+            }
+        }
+
+        private void btnSaveTheme_Click(object sender, RoutedEventArgs e)
+        {
+            var t = ThemeAttachedProperty.GetThemeType(((frmSample.Content as ThemeSample).Content as DialogHost).Content as Grid);
+            Console.WriteLine($"Theme read -> {t}");
+        }
+
+        #endregion
+
         #region Log Settings
         private void buildLogSettings()
         {
@@ -587,5 +627,7 @@ namespace RApID_Project_WPF
 
             MainWindow.GlobalInstance.MakeFocus();
         }
+
+        
     }
 }

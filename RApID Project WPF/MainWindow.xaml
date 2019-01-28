@@ -4,7 +4,8 @@
         xmlns:tb="http://www.hardcodet.net/taskbar"
     xmlns:conv="clr-namespace:RApID_Project_WPF.UserControls.Converters"
     xmlns:sys="clr-namespace:System;assembly=mscorlib"
-        xmlns:System="clr-namespace:System;assembly=mscorlib" x:Class="RApID_Project_WPF.MainWindow"
+        xmlns:System="clr-namespace:System;assembly=mscorlib"
+    xmlns:themes="http://materialdesigninxaml.net/winfx/xaml/themes" x:Class="RApID_Project_WPF.MainWindow"
         x:Name="wndMain"
         Title="RApID" Width="450" Height="385" WindowStartupLocation="CenterScreen" ResizeMode="CanMinimize" Loaded="Window_Loaded" Closing="Window_Closing" Closed="wndMain_Closed"
     Left="500">
@@ -106,27 +107,32 @@
                 </TextBlock.Effect>
             </TextBlock>
         </Label>
-        <Label x:Name="lblTitleDef" Content="RepAIr Data" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10,50,0,0" Width="100" FontFamily="Arial" FontSize="16" Visibility="Hidden"/>
+        
         <Button x:Name="btnRework" Content="Production" HorizontalAlignment="Left" Margin="10,90,0,0" VerticalAlignment="Top" Width="200" Height="100" Style="{StaticResource MainMenuButton}" Click="btnClicks" FontFamily="Arial" ToolTip="Board Rework - Electrical Techs."/>
         <Button x:Name="btnRepair" Content="Repair" HorizontalAlignment="Right" Margin="0,90,10,0" VerticalAlignment="Top" Width="200" Height="100" Style="{StaticResource MainMenuButton}" Click="btnClicks" FontFamily="Arial" ToolTip="Customer Service - Board &amp; Accessory Repair"/>
+
         <Button x:Name="btnQCDQE" Content="QC/DQE" HorizontalAlignment="Left" Margin="10,195,0,0" VerticalAlignment="Top" Width="200" Height="100" Style="{StaticResource MainMenuButton}" Click="btnClicks" FontFamily="Arial" ToolTip="Design Qualfication Eng. - ERAP &amp; Pilot Repair"/>
+
         <Button x:Name="btnReportViewer" Content="Report Viewer" HorizontalAlignment="Right" Margin="0,195,10,0" VerticalAlignment="Top" Width="200" Height="100" Style="{StaticResource MainMenuButton}" Click="btnClicks" FontFamily="Arial" ToolTip="MSSQL Reports"/>
-        <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,300,10,0" Width="200">
-            <Button x:Name="btnSettings" Width="54" Height="35" VerticalAlignment="Center" Click="btnClicks" ToolTip="Application Settings" Margin="0,11">
-                <StackPanel>
-                    <Image Source="Resources/settingsIcon.png"/>
-                </StackPanel>
-            </Button>
-            <Separator Visibility="Hidden" Width="10" />
-            <Button x:Name="btnClearCache" Width="54" Height="35" VerticalAlignment="Center" Click="btnClicks" ToolTip="Clear Application Cache" Visibility="Collapsed">
-                <StackPanel>
-                    <Image Source="Resources/trashcan.png" />
-                </StackPanel>
-            </Button>
-            <Separator Visibility="Hidden" Width="10" />
-            <Button x:Name="btnTicketLookup" Content="🔍" FontSize="20" Width="51" Height="35" 
+
+        <themes:TransitioningContent OpeningEffect="{themes:TransitionEffect FadeIn}">
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,300,10,0" Width="200">
+                <Button x:Name="btnSettings" Width="54" Height="35" VerticalAlignment="Center" Click="btnClicks" ToolTip="Application Settings" Margin="0,11">
+                    <StackPanel>
+                        <Image Source="Resources/settingsIcon.png"/>
+                    </StackPanel>
+                </Button>
+                <Separator Visibility="Hidden" Width="10" />
+                <Button x:Name="btnClearCache" Width="54" Height="35" VerticalAlignment="Center" Click="btnClicks" ToolTip="Clear Application Cache" Visibility="Collapsed">
+                    <StackPanel>
+                        <Image Source="Resources/trashcan.png" />
+                    </StackPanel>
+                </Button>
+                <Separator Visibility="Hidden" Width="10" />
+                <Button x:Name="btnTicketLookup" Content="🔍" FontSize="20" Width="51" Height="35" 
                     VerticalAlignment="Center" Click="btnClicks" ToolTip="Global Search - Technician Submissions" Margin="0,11"/>
-        </StackPanel>
+            </StackPanel>
+        </themes:TransitioningContent>
         <tb:TaskbarIcon x:Name="notifyRapid" IconSource="RApID.ico" ToolTipText="{Binding Title, ElementName=wndMain}"
                         MenuActivation="RightClick">
             <tb:TaskbarIcon.ContextMenu>

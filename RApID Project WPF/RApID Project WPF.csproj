@@ -186,6 +186,8 @@
     <Compile Include="Classes\ESLIB.cs" />
     <Compile Include="Classes\IndexAttachedProperty.cs" />
     <Compile Include="Classes\IssueTabController.cs" />
+    <Compile Include="Classes\SimpleThemeManager.cs" />
+    <Compile Include="Classes\ThemeAttachedProperty.cs" />
     <Compile Include="frmFullCustomerInformation.xaml.cs">
       <DependentUpon>frmFullCustomerInformation.xaml</DependentUpon>
     </Compile>
@@ -238,6 +240,9 @@
     </Compile>
     <Compile Include="UserControls\Converters\BoolToNotBoolConverter.cs" />
     <Compile Include="UserControls\Converters\BoolToStringConverter.cs" />
+    <Compile Include="UserControls\ThemeSample.xaml.cs">
+      <DependentUpon>ThemeSample.xaml</DependentUpon>
+    </Compile>
     <Compile Include="UserControls\ucPreviousRepairInformation.xaml.cs">
       <DependentUpon>ucPreviousRepairInformation.xaml</DependentUpon>
     </Compile>
@@ -341,6 +346,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="UserControls\ThemeSample.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="UserControls\ucIssueTabControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -410,6 +419,7 @@
     <WCFMetadata Include="Service References\" />
   </ItemGroup>
   <ItemGroup>
+    <Resource Include="Resources\menu-512.png" />
     <Resource Include="Resources\green-plus.png" />
     <Resource Include="Resources\trashcan.png" />
     <Resource Include="Resources\close.png" />

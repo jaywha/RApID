@@ -163,9 +163,10 @@ namespace RApID_Project_WPF.UserControls
                 {
                     item.Width = tcTabs.Width;
 
-                    item.SetBinding(ucUnitIssue.StaticVarsProperty, new Binding("StaticVarsInstance"));
-                    item.SetBinding(ucUnitIssue.ReadOnlyProperty, new Binding("ReadOnly"));
-                    item.SetBinding(ucUnitIssue.DropDownEventProperty, new Binding("DropDownClosedHandler"));
+                    ApplyBinding(item, ucUnitIssue.StaticVarsProperty, "StaticVarsInstance");
+                    ApplyBinding(item, ucUnitIssue.ReadOnlyProperty, "ReadOnly");
+                    ApplyBinding(item, ucUnitIssue.DropDownEventProperty, "DropDownClosedHandler");
+                    ApplyBinding(item, ucUnitIssue.IsRepairFormProperty, "IsRepair");
                 }
             }
 
@@ -176,5 +177,19 @@ namespace RApID_Project_WPF.UserControls
         }
 
         public ucUnitIssue Last() => Issues.Last();
+
+        /// <summary> Applys a binding using the static <see cref="BindingOperations.SetBinding(DependencyObject, DependencyProperty, BindingBase)"/> for this class. </summary>
+        /// <param name="obj">The affected object</param>
+        /// <param name="dp">The dependency property to apply binding towards</param>
+        /// <param name="pathValue">The property name of a property in this class</param>        
+        protected internal BindingExpressionBase ApplyBinding(DependencyObject obj, DependencyProperty dp, string pathValue)
+            => BindingOperations.SetBinding(obj, dp, new Binding()
+            {
+                Source = uccIssueTabControl,
+                Path = new PropertyPath(pathValue),
+                Mode = BindingMode.TwoWay,
+                UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged
+            });
+        
     }
 }
