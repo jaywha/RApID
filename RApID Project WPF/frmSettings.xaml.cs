@@ -436,21 +436,27 @@ namespace RApID_Project_WPF
         private void RadioButton_Checked(object sender, RoutedEventArgs e)
         {
             var rbtn = (sender as RadioButton);
-            Console.WriteLine($"New theme selected: {rbtn.Name.Replace("rbtn","")}.\n");
+            //Console.WriteLine($"New theme selected: {rbtn.Name.Replace("rbtn","")}.\n");
             var innerGrid = ((frmSample.Content as ThemeSample).Content as DialogHost).Content as Grid;
             switch (rbtn.Name.Replace("rbtn",""))
             {
                 case "LightTheme":
                     grpbxThemes.Background = STM.LightThemeBackground;
+                    rbtnDefaultTheme.Foreground = Brushes.Gold;
+                    rbtnDarkTheme.Foreground = Brushes.Black;
                     ThemeAttachedProperty.SetThemeType(innerGrid, Themes.Light);
                     break;
                 case "DarkTheme":
                     grpbxThemes.Background = STM.DarkThemeBackground;
+                    rbtnDefaultTheme.Foreground = Brushes.Goldenrod;
+                    rbtnDarkTheme.Foreground = Brushes.LightSlateGray;
                     ThemeAttachedProperty.SetThemeType(innerGrid, Themes.Dark);
                     break;
                 case "DefaultTheme":
                 default:
                     grpbxThemes.Background = STM.DefaultThemeBackground;
+                    rbtnDefaultTheme.Foreground = Brushes.Goldenrod;
+                    rbtnDarkTheme.Foreground = Brushes.LightSlateGray;
                     ThemeAttachedProperty.SetThemeType(innerGrid, Themes.Default);
                     break;
             }

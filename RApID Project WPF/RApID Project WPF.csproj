@@ -240,6 +240,7 @@
     </Compile>
     <Compile Include="UserControls\Converters\BoolToNotBoolConverter.cs" />
     <Compile Include="UserControls\Converters\BoolToStringConverter.cs" />
+    <Compile Include="UserControls\Converters\ThemeToBackground.cs" />
     <Compile Include="UserControls\ThemeSample.xaml.cs">
       <DependentUpon>ThemeSample.xaml</DependentUpon>
     </Compile>

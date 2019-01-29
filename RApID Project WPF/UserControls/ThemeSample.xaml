@@ -11,6 +11,7 @@
       xmlns:controls="clr-namespace:MaterialDesignExtensions.Controls;assembly=MaterialDesignExtensions"
       xmlns:model="clr-namespace:MaterialDesignExtensions.Model;assembly=MaterialDesignExtensions"
       xmlns:innerThemes="clr-namespace:RApID_Project_WPF.Classes"
+      xmlns:conv="clr-namespace:RApID_Project_WPF.UserControls.Converters"
       TextElement.Foreground="{DynamicResource MaterialDesignBody}"
         TextElement.FontWeight="Regular"
         TextElement.FontSize="13"
@@ -83,6 +84,7 @@
             <Setter Property="Height" Value="30"/>
         </Style>
         <innerThemes:SimpleThemeManager x:Key="themeManager"/>
+        <conv:ThemeToBackground x:Key="ThemeApplier"/>
     </Page.Resources>
     <materialDesign:DialogHost CloseOnClickAway="True" CloseOnClickAwayParameter="FALSE">
         <materialDesign:DialogHost.DialogContent>
@@ -92,7 +94,15 @@
             </StackPanel>
         </materialDesign:DialogHost.DialogContent>
         <Grid x:Name="grdMain" innerThemes:ThemeAttachedProperty.ThemeType="Default">
-            <controls:AppBar Type="Default" Title="Theme Sample View">
+            <Grid.Background>
+                <MultiBinding Converter="{StaticResource ThemeApplier}">
+                    <MultiBinding.Bindings>
+                        <Binding RelativeSource="{RelativeSource Self}"/>
+                        <Binding ElementName="grdMain" Path="(innerThemes:ThemeAttachedProperty.ThemeType)" Mode="OneWay" UpdateSourceTrigger="PropertyChanged"/>
+                    </MultiBinding.Bindings>
+                </MultiBinding>
+            </Grid.Background>
+            <controls:AppBar Type="Default" Title="{Binding ElementName=grdMain, Path=(innerThemes:ThemeAttachedProperty.ThemeType), Mode=OneWay, UpdateSourceTrigger=PropertyChanged, StringFormat='Current Theme: {0}'}">
                 <controls:AppBar.AppIcon>
                     <Image Source="../Resources/menu-512.png" Margin="-33,-18,-8,-8"/>
                 </controls:AppBar.AppIcon>
@@ -105,7 +115,7 @@
             </controls:AppBar>
 
             <ScrollViewer Margin="0,69,0,0">
-                <controls:Stepper Layout="Vertical" IsLinear="True" BlockNavigationOnValidationErrors="True" Foreground="White">
+                <controls:Stepper Layout="Vertical" IsLinear="True" Foreground="White">
                     <model:Step>
                         <model:Step.Header>
                             <Label Foreground="AliceBlue">Scan Board Barcode</Label>

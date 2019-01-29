@@ -1,4 +1,5 @@
-﻿using System;
+﻿using RApID_Project_WPF.Classes;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
@@ -20,12 +21,8 @@ namespace RApID_Project_WPF.UserControls
     /// <summary>
     /// Interaction logic for ThemeSample.xaml
     /// </summary>
-    public partial class ThemeSample : Page, INotifyPropertyChanged
+    public partial class ThemeSample : Page
     {
-        public event PropertyChangedEventHandler PropertyChanged;
-        private void OnPropertyChanged([CallerMemberName] string propName = "")
-            => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propName));
-
         public ThemeSample()
         {
             InitializeComponent();

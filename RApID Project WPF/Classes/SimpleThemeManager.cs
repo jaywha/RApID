@@ -1,12 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Globalization;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Data;
 using System.Windows.Media;
 
 namespace RApID_Project_WPF.Classes
@@ -21,7 +23,7 @@ namespace RApID_Project_WPF.Classes
         Light    
     }
 
-    public class SimpleThemeManager : StyleSelector, INotifyPropertyChanged
+    public class SimpleThemeManager : INotifyPropertyChanged
     {
         public event PropertyChangedEventHandler PropertyChanged;
         private void OnPropertyChanged([CallerMemberName] string propName = "")
@@ -50,29 +52,6 @@ namespace RApID_Project_WPF.Classes
             }
         }
 
-        public SimpleThemeManager() { }
-
-        public override Style SelectStyle(object item, DependencyObject container)
-        {
-            var st = new Style { TargetType = typeof(Panel) };
-            var backGroundSetter = new Setter { Property = Panel.BackgroundProperty };
-            var panel = (Panel) container;
-            switch(ThemeAttachedProperty.GetThemeType(panel))
-            {
-                case Themes.Dark:
-                    CurrentBackground = DarkThemeBackground;
-                    break;
-                case Themes.Light:
-                    CurrentBackground = LightThemeBackground;
-                    break;
-                case Themes.Default:
-                default:
-                    CurrentBackground = DefaultThemeBackground;
-                    break;
-            }
-            backGroundSetter.Value = CurrentBackground;
-            st.Setters.Add(backGroundSetter);
-            return st;
-        }
+        public SimpleThemeManager() { }        
     }
 }
