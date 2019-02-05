@@ -31,7 +31,8 @@ namespace RApID_Project_WPF
         StaticVars sVars = StaticVars.StaticVarsInstance();
         csObjectHolder.csObjectHolder holder = csObjectHolder.csObjectHolder.ObjectHolderInstance();
         private csLog LogToReview = new csLog() { lActions = new List<csLogAction>() { new csLogAction() { LogNote = "EMPTY" } } };
-        private SimpleThemeManager STM = new SimpleThemeManager();
+
+        private Themes CurrentlyViewableTheme = Themes.Default;
 
         public frmSettings()
         {
@@ -441,31 +442,37 @@ namespace RApID_Project_WPF
             switch (rbtn.Name.Replace("rbtn",""))
             {
                 case "LightTheme":
-                    grpbxThemes.Background = STM.LightThemeBackground;
+                    grpbxThemes.Background = SimpleThemeManager.LightThemeBackground;
                     rbtnDefaultTheme.Foreground = Brushes.Gold;
                     rbtnDarkTheme.Foreground = Brushes.Black;
                     ThemeAttachedProperty.SetThemeType(innerGrid, Themes.Light);
+
+                    CurrentlyViewableTheme = Themes.Light;
                     break;
                 case "DarkTheme":
-                    grpbxThemes.Background = STM.DarkThemeBackground;
+                    grpbxThemes.Background = SimpleThemeManager.DarkThemeBackground;
                     rbtnDefaultTheme.Foreground = Brushes.Goldenrod;
                     rbtnDarkTheme.Foreground = Brushes.LightSlateGray;
                     ThemeAttachedProperty.SetThemeType(innerGrid, Themes.Dark);
+
+                    CurrentlyViewableTheme = Themes.Dark;
                     break;
                 case "DefaultTheme":
                 default:
-                    grpbxThemes.Background = STM.DefaultThemeBackground;
+                    grpbxThemes.Background = SimpleThemeManager.DefaultThemeBackground;
                     rbtnDefaultTheme.Foreground = Brushes.Goldenrod;
                     rbtnDarkTheme.Foreground = Brushes.LightSlateGray;
                     ThemeAttachedProperty.SetThemeType(innerGrid, Themes.Default);
+
+                    CurrentlyViewableTheme = Themes.Default;
                     break;
             }
         }
 
         private void btnSaveTheme_Click(object sender, RoutedEventArgs e)
         {
-            var t = ThemeAttachedProperty.GetThemeType(((frmSample.Content as ThemeSample).Content as DialogHost).Content as Grid);
-            Console.WriteLine($"Theme read -> {t}");
+            frmRepair.CurrentTheme = CurrentlyViewableTheme;
+            snkbrNotificationTray.MessageQueue.Enqueue("Saved current theme!");ctor 
         }
 
         #endregion

@@ -26,29 +26,30 @@ namespace RApID_Project_WPF.Classes
     public class SimpleThemeManager : INotifyPropertyChanged
     {
         public event PropertyChangedEventHandler PropertyChanged;
-        private void OnPropertyChanged([CallerMemberName] string propName = "")
-            => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propName));
+        public static event PropertyChangedEventHandler StaticPropertyChanged;
+        private static void OnStaticPropertyChanged([CallerMemberName] string propName = "")
+            => StaticPropertyChanged?.Invoke(typeof(SimpleThemeManager), new PropertyChangedEventArgs(propName));
 
-        public Brush DefaultThemeBackground { get; private set; } = new SolidColorBrush(Color.FromArgb(0xFF, 0x46, 0x38, 0x38));
-        public Brush LightThemeBackground { get; private set; } = new SolidColorBrush(Color.FromArgb(0xFF,0xAC,0xAC,0xAC));
-        public Brush DarkThemeBackground { get; private set; } = new SolidColorBrush(Color.FromArgb(0xFF, 0x30, 0x30, 0x30));
+        public static Brush DefaultThemeBackground { get; private set; } = new SolidColorBrush(Color.FromArgb(0xFF, 0x46, 0x38, 0x38));
+        public static Brush LightThemeBackground { get; private set; } = new SolidColorBrush(Color.FromArgb(0xFF,0xAC,0xAC,0xAC));
+        public static Brush DarkThemeBackground { get; private set; } = new SolidColorBrush(Color.FromArgb(0xFF, 0x30, 0x30, 0x30));
 
-        private Brush _currentBackground;
-        public Brush CurrentBackground {
+        private static Brush _currentBackground;
+        public static Brush CurrentBackground {
             get => _currentBackground;
             set {
                 _currentBackground = value;
-                OnPropertyChanged();
+                OnStaticPropertyChanged();
             }
         }
 
-        private Themes _currentThemeType;
-        public Themes CurrentThemeType
+        private static Themes _currentThemeType;
+        public static Themes CurrentThemeType
         {
             get => _currentThemeType;
             set {
                 _currentThemeType = value;
-                OnPropertyChanged();
+                OnStaticPropertyChanged();
             }
         }
 

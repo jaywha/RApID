@@ -15,8 +15,6 @@ namespace RApID_Project_WPF.UserControls.Converters
     [ValueConversion(typeof(Themes),typeof(Brush))]
     public class ThemeToBackground : IMultiValueConverter
     {
-        private SimpleThemeManager STM = new SimpleThemeManager();
-
         public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
         {
             if (values[1] == DependencyProperty.UnsetValue)
@@ -28,12 +26,12 @@ namespace RApID_Project_WPF.UserControls.Converters
             switch ((Themes) values[1])
             {
                 case Themes.Dark:
-                    return STM.DarkThemeBackground;
+                    return SimpleThemeManager.DarkThemeBackground;
                 case Themes.Light:
-                    return STM.LightThemeBackground;
+                    return SimpleThemeManager.LightThemeBackground;
                 case Themes.Default:
                 default:
-                    return STM.DefaultThemeBackground;
+                    return SimpleThemeManager.DefaultThemeBackground;
             }
         }
 

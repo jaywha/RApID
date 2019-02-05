@@ -2,7 +2,8 @@
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:behaviors="clr-namespace:WPFTextBoxAutoComplete;assembly=WPFTextBoxAutoComplete"
-        xmlns:rapid_project_wpf="clr-namespace:RApID_Project_WPF"
+        xmlns:local="clr-namespace:RApID_Project_WPF"
+        xmlns:innerThemes="clr-namespace:RApID_Project_WPF.Classes"
         xmlns:dragablz="http://dragablz.net/winfx/xaml/dragablz"
         xmlns:sys="clr-namespace:System;assembly=mscorlib"
         xmlns:uc="clr-namespace:RApID_Project_WPF.UserControls"
@@ -125,9 +126,19 @@
 
         <conv:BoolToNotBoolConverter x:Key="NegateBoolean"/>
         <conv:BoolToStringConverter x:Key="StatusConv"/>
+        <innerThemes:SimpleThemeManager x:Key="themeManager"/>
+        <conv:ThemeToBackground x:Key="ThemeApplier"/>
     </Window.Resources>
     <Viewbox Stretch="Uniform">
-        <Grid Background="#FF808285">
+        <Grid x:Name="grdMain" innerThemes:ThemeAttachedProperty.ThemeType="{Binding ElementName=wndMain, Path=(local:frmRepair.CurrentTheme), Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+            <Grid.Background>
+                <MultiBinding Converter="{StaticResource ThemeApplier}">
+                    <MultiBinding.Bindings>
+                        <Binding RelativeSource="{RelativeSource Self}"/>
+                        <Binding ElementName="grdMain" Path="(innerThemes:ThemeAttachedProperty.ThemeType)" Mode="OneWay" UpdateSourceTrigger="PropertyChanged"/>
+                    </MultiBinding.Bindings>
+                </MultiBinding>
+            </Grid.Background>
             <Label Name="lblOrderNumber" Content="Order Number:" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="209,21,0,0" FontWeight="Bold" />
             <TextBox Name="txtOrderNumber" HorizontalAlignment="Left" VerticalAlignment="Top" TextWrapping="Wrap" Width="215" Height="37" Margin="310,10,0,0" KeyDown="txtOrderNumber_KeyDown" PreviewTextInput="PreviewTextInput"  />
             <Label Name="lblRPNumber" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="530,10,0,0" Height="37" Width="190" />
@@ -140,7 +151,15 @@
 
             <TabControl HorizontalAlignment="Left" Height="665" Margin="2,75,0,0" VerticalAlignment="Top" Width="1086">
                 <TabItem Header="DataLog">
-                    <Grid Background = "#FFACACAC">
+                    <Grid>
+                        <Grid.Background>
+                            <MultiBinding Converter="{StaticResource ThemeApplier}">
+                                <MultiBinding.Bindings>
+                                    <Binding RelativeSource="{RelativeSource Self}"/>
+                                    <Binding ElementName="grdMain" Path="(innerThemes:ThemeAttachedProperty.ThemeType)" Mode="OneWay" UpdateSourceTrigger="PropertyChanged"/>
+                                </MultiBinding.Bindings>
+                            </MultiBinding>
+                        </Grid.Background>
 
                         <Label Content="Tech Name:" HorizontalAlignment="Left" Margin="6,2,0,0" VerticalAlignment="Top"/>
                         <TextBox Name="txtTechName" Margin="6,25,0,0" GotFocus="txtGotFocus" LostFocus="txtLostFocus" Style="{StaticResource TextboxBaseStyle}"/>
@@ -186,7 +205,15 @@
 
                         <dragablz:TabablzControl x:Name="tbcUnitIssues" HorizontalAlignment="Left" VerticalAlignment="Top" Width="332" Height="616" Margin="268,11,0,0" ShowDefaultCloseButton="True">
                             <TabItem Name="tiUI1" Header="Unit Issue #1">
-                                <Grid Name="gridUI1" Background="#FFACACAC">
+                                <Grid Name="gridUI1">
+                                    <Grid.Background>
+                                        <MultiBinding Converter="{StaticResource ThemeApplier}">
+                                            <MultiBinding.Bindings>
+                                                <Binding RelativeSource="{RelativeSource Self}"/>
+                                                <Binding ElementName="grdMain" Path="(innerThemes:ThemeAttachedProperty.ThemeType)" Mode="OneWay" UpdateSourceTrigger="PropertyChanged"/>
+                                            </MultiBinding.Bindings>
+                                        </MultiBinding>
+                                    </Grid.Background>
                                     <Label Content="Reported Issue:" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10,10,0,0" />
                                     <ComboBox Name="cbReportedIssue" Margin="10,35,0,0" DropDownClosed="cbDDClosed" Style="{StaticResource Combobox}" />
 

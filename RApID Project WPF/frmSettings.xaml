@@ -21,7 +21,7 @@
         <sys:Double x:Key="SizeMod">1.08</sys:Double>
     </Window.Resources>
     <Grid>
-        <TabControl x:Name="tcSettings" HorizontalAlignment="Center" VerticalAlignment="Center"
+        <dragablz:TabablzControl x:Name="tcSettings" HorizontalAlignment="Center" VerticalAlignment="Center"
                                  Width="{Binding ElementName=wndSettings, Path=Width, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"
                                  Height="{Binding ElementName=wndSettings, Path=Height, Mode=OneWay, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource SizeConv}, ConverterParameter={StaticResource SizeMod}}"
                                  Foreground="White">
@@ -133,7 +133,7 @@
                             Style="{DynamicResource MaterialDesignRaisedDarkButton}"/>
                 </Grid>
             </TabItem>
-        </TabControl>
-
+        </dragablz:TabablzControl>
+        <materialDesign:Snackbar x:Name="snkbrNotificationTray" MessageQueue="{materialDesign:MessageQueue}" Width="475" Height="75"/>
     </Grid>
 </Window>

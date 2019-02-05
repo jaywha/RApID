@@ -16,6 +16,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Threading;
 using EricStabileLibrary;
+using RApID_Project_WPF.Classes;
 
 namespace RApID_Project_WPF
 {
@@ -60,6 +61,19 @@ namespace RApID_Project_WPF
         public event PropertyChangedEventHandler PropertyChanged;
         private void OnPropertyChanged([CallerMemberName] string propName = "") 
             => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propName));
+
+        public static event PropertyChangedEventHandler StaticPropertyChanged;
+        private static void OnStaticPropertyChanged([CallerMemberName] string propName = "")
+            => StaticPropertyChanged?.Invoke(typeof(frmRepair), new PropertyChangedEventArgs(propName));
+
+        private static Themes _currentTheme = Themes.Default;
+        public static Themes CurrentTheme {
+            get => _currentTheme;
+            set {
+                _currentTheme = value;
+                OnStaticPropertyChanged();
+            }
+        }
 
         public frmRepair(bool bRework)
         {
