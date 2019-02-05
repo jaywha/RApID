@@ -46,6 +46,7 @@ namespace RApID_Project_WPF.UserControls
         #region Fields
         private readonly csObjectHolder.csObjectHolder holder = csObjectHolder.csObjectHolder.ObjectHolderInstance();
         private readonly List<string> SpecialCases = new List<string>() { "Cause", "Replacement", "Item", "Problem" };
+        private List<IssueItemProblemCombinations> lIIPC = new List<IssueItemProblemCombinations>();
         private int _id = 0;
 
         private Binding IsRepairVisibilityBinding = new Binding()
@@ -444,6 +445,127 @@ namespace RApID_Project_WPF.UserControls
             dgMultipleParts.Items.Clear();
         }
         private void cmbxRefDesignator_SelectionChanged(object sender, SelectionChangedEventArgs e) => cmbxPartNumber.SelectedIndex = cmbxRefDesignator.SelectedIndex;
+
+        #region Issue Item and Problem Section
+
+        private void fillItemCB(ComboBox cbIssueEdit, ComboBox cbItemEdit, ComboBox cbProblemEdit)
+        {
+            var lTempFindings = new List<IssueItemProblemCombinations>();
+
+            if (cbIssueEdit.Text.ToLower().Equals("no trouble found")) { return; }
+
+            for (int i = 0; i < lIIPC.Count; i++)
+            {
+                if (cbIssueEdit.Text.ToString().Equals(lIIPC[i].Issue))
+                    lTempFindings.Add(lIIPC[i]);
+            }
+
+            for (int i = 0; i < lTempFindings.Count; i++)
+            {
+                if (!cbItemEdit.Items.Contains(lTempFindings[i].Item) && !string.IsNullOrEmpty(lTempFindings[i].Item))
+                    cbItemEdit.Items.Add(lTempFindings[i].Item);
+            }
+
+            if (cbItemEdit.Items.Count < 1)
+                fillProblemCB(lTempFindings, cbProblemEdit);
+            else cbItemEdit.IsEnabled = true;
+        }
+
+        private void fillProblemCB(ComboBox cbIssueEdit, ComboBox cbItemEdit, ComboBox cbProblemEdit)
+        {
+            var lTempFindings = new List<IssueItemProblemCombinations>();
+
+            for (int i = 0; i < lIIPC.Count; i++)
+            {
+                if (cbIssueEdit.Text.ToString().Equals(lIIPC[i].Issue) && cbItemEdit.Text.ToString().Equals(lIIPC[i].Item))
+                    lTempFindings.Add(lIIPC[i]);
+            }
+
+            for (int i = 0; i < lTempFindings.Count; i++)
+            {
+                if (!cbProblemEdit.Items.Contains(lTempFindings[i].Problem))
+                    cbProblemEdit.Items.Add(lTempFindings[i].Problem);
+            }
+
+            cbProblemEdit.IsEnabled = true;
+        }
+
+        private void fillProblemCB(List<IssueItemProblemCombinations> lNarrowedDownList, ComboBox cbProblemEdit)
+        {
+            //if (!cbProblemEdit.Name.Contains("_"))
+            resetIIPItems(false, txtItem, txtProblem, cmbxRefDesignator, lblRefDes, cmbxPartNumber, lblPartReplaced, btnAddPartsReplaced, dgMultipleParts, null);
+            /*else if (cbProblemEdit.Name.EndsWith("2"))
+                resetIIPItems(false, unitIssue.txtItem, unitIssue.txtProblem, unitIssue.cmbxRefDesignator, null, unitIssue.cmbxPartNumber, null, unitIssue.btnAddPartsReplaced, unitIssue.dgMultipleParts, null);
+            else if (cbProblemEdit.Name.EndsWith("3"))
+                resetIIPItems(false, unitIssue.txtItem, unitIssue.txtProblem, unitIssue.cmbxRefDesignator, null, unitIssue.cmbxPartNumber, null, unitIssue.btnAddPartsReplaced, unitIssue.dgMultipleParts, null);*/
+
+            for (int i = 0; i < lNarrowedDownList.Count; i++)
+            {
+                if (!cbProblemEdit.Items.Contains(lNarrowedDownList[i].Problem))
+                    cbProblemEdit.Items.Add(lNarrowedDownList[i].Problem);
+            }
+
+            cbProblemEdit.IsEnabled = true;
+        }
+
+        private void resetIIPItems(bool bResetAll, TextBox cbItemReset, TextBox cbProblemReset, Control txtRefReset, Label lblRefReset, Control txtPartReset, Label lblPartReset, Button btnAddReset, DataGrid dgReset, Border borderError)
+        {
+            if (bResetAll)
+            {
+                cbItemReset.IsEnabled = false;
+                txtRefReset.SetContent(string.Empty);
+                lblRefReset.Visibility = Visibility.Hidden;
+                txtRefReset.Visibility = Visibility.Hidden;
+                borderError.Visibility = Visibility.Hidden;
+            }
+
+            cbProblemReset.IsEnabled = false;
+            txtPartReset.SetContent(string.Empty);
+            dgReset.Items.Clear();
+            lblPartReset.Visibility = Visibility.Hidden;
+            txtPartReset.Visibility = Visibility.Hidden;
+            btnAddReset.Visibility = Visibility.Collapsed;
+            dgReset.Visibility = Visibility.Collapsed;
+        }
+
+        private void dispIIPElements(Label lblRefToDisp, Control txtRefToDisp, Label lblPartToDisp, Control txtPartToDisp, ComboBox cbItemToCompare, ComboBox cbProblemToCompare, DataGrid dgToEdit, Button btnAddToDG, Border borderError)
+        {
+            bool bDispAll = false;
+
+            if (cbItemToCompare.Text.Equals("Ref Designator Code"))
+            {
+                borderError.Visibility = Visibility.Visible;
+                lblRefToDisp.Visibility = Visibility.Visible;
+                txtRefToDisp.Visibility = Visibility.Visible;
+                bDispAll = true;
+            }
+            else
+            {
+                borderError.Visibility = Visibility.Hidden;
+                lblRefToDisp.Visibility = Visibility.Hidden;
+                txtRefToDisp.Visibility = Visibility.Hidden;
+            }
+
+            if (cbProblemToCompare.Text.Equals("Part Number"))
+            {
+                lblPartToDisp.Visibility = Visibility.Visible;
+                txtPartToDisp.Visibility = Visibility.Visible;
+                bDispAll = true;
+            }
+            else
+            {
+                lblPartToDisp.Visibility = Visibility.Hidden;
+                txtPartToDisp.Visibility = Visibility.Hidden;
+            }
+
+            if (bDispAll)
+            {
+                btnAddToDG.Visibility = Visibility.Visible;
+                dgToEdit.Visibility = Visibility.Visible;
+            }
+        }
+
+        #endregion
         #endregion
 
         #region Conversion Operators

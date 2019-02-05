@@ -92,7 +92,7 @@ namespace RApID_Project_WPF
             GC.Collect();
             csSplashScreenHelper.ShowText("Done!");
             csSplashScreenHelper.Hide();
-            this.Activate();
+            Activate();
 #if DEBUG
             txtSerialNumber.Text = "160815030117";
 #endif
@@ -328,7 +328,7 @@ namespace RApID_Project_WPF
                     txtMultiRefDes.ItemsSource = null;
                     txtMultiPartNum.ItemsSource = null;
                     cbItem.IsEnabled = cbProblem.IsEnabled = false;
-                    lblRefDes.Visibility = lblPartNum.Visibility = txtMultiRefDes.Visibility = txtMultiPartNum.Visibility = btnAddRefPart.Visibility = dgMultipleParts.Visibility = Visibility.Hidden;
+                    lblRefDes.Visibility = sepDGMargin.Visibility = sepRefDesPartNum.Visibility = lblPartNum.Visibility = txtMultiRefDes.Visibility = txtMultiPartNum.Visibility = btnAddRefPart.Visibility = dgMultipleParts.Visibility = Visibility.Collapsed;
                     brdRefDes.BorderThickness = new Thickness(0.0);
                     break;
                 case 2:
@@ -338,7 +338,7 @@ namespace RApID_Project_WPF
                     txtMultiRefDes_2.ItemsSource = null;
                     txtMultiPartNum_2.ItemsSource = null;
                     cbItem_2.IsEnabled = cbProblem_2.IsEnabled = false;
-                    lblRefDes_2.Visibility = lblPartNum_2.Visibility = txtMultiRefDes_2.Visibility = txtMultiPartNum_2.Visibility = btnAddRefPart_2.Visibility = dgMultipleParts_2.Visibility = Visibility.Hidden;
+                    lblRefDes_2.Visibility = lblPartNum_2.Visibility = txtMultiRefDes_2.Visibility = txtMultiPartNum_2.Visibility = btnAddRefPart_2.Visibility = dgMultipleParts_2.Visibility = Visibility.Collapsed;
                     brdRefDes_2.BorderThickness = new Thickness(0.0);
                     break;
                 case 3:
@@ -348,7 +348,7 @@ namespace RApID_Project_WPF
                     txtMultiRefDes_3.ItemsSource = null;
                     txtMultiPartNum_3.ItemsSource = null;
                     cbItem_3.IsEnabled = cbProblem_3.IsEnabled = false;
-                    lblRefDes_3.Visibility = lblPartNum_3.Visibility = txtMultiRefDes_3.Visibility = txtMultiPartNum_3.Visibility = btnAddRefPart_3.Visibility = dgMultipleParts_3.Visibility = Visibility.Hidden;
+                    lblRefDes_3.Visibility = lblPartNum_3.Visibility = txtMultiRefDes_3.Visibility = txtMultiPartNum_3.Visibility = btnAddRefPart_3.Visibility = dgMultipleParts_3.Visibility = Visibility.Collapsed;
                     brdRefDes_3.BorderThickness = new Thickness(0.0);
                     break;
             }
@@ -570,8 +570,10 @@ namespace RApID_Project_WPF
             dgReset.Items.Clear();
             lblPartReset.Visibility = Visibility.Hidden;
             txtPartReset.Visibility = Visibility.Hidden;
-            btnAddReset.Visibility = Visibility.Hidden;
-            dgReset.Visibility = Visibility.Hidden;
+            btnAddReset.Visibility = Visibility.Collapsed;
+            dgReset.Visibility = Visibility.Collapsed;
+            sepDGMargin.Visibility = Visibility.Collapsed;
+            sepRefDesPartNum.Visibility = Visibility.Collapsed;
         }
 
         private void dispIIPElements(Label lblRefToDisp, Control txtRefToDisp, Label lblPartToDisp, Control txtPartToDisp, ComboBox cbItemToCompare, ComboBox cbProblemToCompare, DataGrid dgToEdit, Button btnAddToDG, Border borderError)
@@ -608,6 +610,8 @@ namespace RApID_Project_WPF
             {
                 btnAddToDG.Visibility = Visibility.Visible;
                 dgToEdit.Visibility = Visibility.Visible;
+                sepRefDesPartNum.Visibility = Visibility.Visible;
+                sepDGMargin.Visibility = Visibility.Visible;
             }
         }
 

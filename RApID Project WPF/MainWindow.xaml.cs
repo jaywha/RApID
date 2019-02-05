@@ -37,6 +37,7 @@ namespace RApID_Project_WPF
             InitializeComponent();
 
             Classes.SimpleThemeManager.CurrentThemeType = (Classes.Themes) Properties.Settings.Default.UserTheme;
+            new frmSettings(); //-> Forces Theme Updates
 
 #if DEBUG
             lblDebug.Visibility = Visibility.Visible;

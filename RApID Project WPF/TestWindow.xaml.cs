@@ -21,7 +21,6 @@ namespace RApID_Project_WPF
     /// </summary>
     public partial class TestWindow : Window
     {
-
         public TestWindow()
         {
             InitializeComponent();

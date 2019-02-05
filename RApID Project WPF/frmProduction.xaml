@@ -129,7 +129,7 @@
                     <Button x:Name="btnComplete" Content="Complete" HorizontalAlignment="Right" VerticalAlignment="Top" Width="119" Height="59" Style="{StaticResource RepairButtons}" Click="btnComplete_Click"/>
                 </StackPanel>
 
-                <TabControl x:Name="tcMain"  HorizontalAlignment="Left" VerticalAlignment="Top" Width="1085" Height="665" Margin="2,65,0,0" Grid.ColumnSpan="2">
+                <dragablz:TabablzControl x:Name="tcMain"  HorizontalAlignment="Left" VerticalAlignment="Top" Width="1085" Height="665" Margin="2,65,0,0" Grid.ColumnSpan="2">
 
                     <TabItem Header="DataLog">
                         <Grid>
@@ -177,57 +177,85 @@
                             <DataGrid Name="dgPrevRepairInfo" HorizontalAlignment="Left" VerticalAlignment="Top" Width="280" Height="140" Margin="6,475,0,0" BeginningEdit="dgBeginEdit"
                                       MouseDoubleClick="dgPrevRepairInfo_MouseDoubleClick"/>
 
-                            <TabControl x:Name="tcUnitIssues" HorizontalAlignment="Left" VerticalAlignment="Top" Width="300" Height="605" Margin="300,11,0,0">
-                                <!--ShowDefaultAddButton="True"-->
+                            <dragablz:TabablzControl x:Name="tcUnitIssues" HorizontalAlignment="Left" VerticalAlignment="Top" Width="352" Height="605" Margin="300,11,0,0" ShowDefaultAddButton="True">
                                 <TabItem Name="tiUI1" Header="Unit Issue #1">
-                                    <StackPanel Name="gridUI1" Orientation="Vertical">
-                                        <StackPanel.Background>
-                                            <MultiBinding Converter="{StaticResource ThemeApplier}">
-                                                <MultiBinding.Bindings>
-                                                    <Binding RelativeSource="{RelativeSource Self}"/>
-                                                    <Binding ElementName="grdMain" Path="(innerThemes:ThemeAttachedProperty.ThemeType)" Mode="OneWay" UpdateSourceTrigger="PropertyChanged"/>
-                                                </MultiBinding.Bindings>
-                                            </MultiBinding>
-                                        </StackPanel.Background>
-                                        <Label Content="Reported Issue:" />
-                                        <ComboBox Name="cbReportedIssue" DropDownClosed="cbDDClosed"  />
+                                    <ScrollViewer VerticalScrollBarVisibility="Auto">
+                                        <StackPanel Name="gridUI1" Orientation="Vertical">
+                                            <StackPanel.Background>
+                                                <MultiBinding Converter="{StaticResource ThemeApplier}">
+                                                    <MultiBinding.Bindings>
+                                                        <Binding RelativeSource="{RelativeSource Self}"/>
+                                                        <Binding ElementName="grdMain" Path="(innerThemes:ThemeAttachedProperty.ThemeType)" Mode="OneWay" UpdateSourceTrigger="PropertyChanged"/>
+                                                    </MultiBinding.Bindings>
+                                                </MultiBinding>
+                                            </StackPanel.Background>
+                                            <Label Content="Reported Issue:" />
+                                            <ComboBox Name="cbReportedIssue" DropDownClosed="cbDDClosed" Margin="15,5,15,0"/>
 
-                                        <Label Content="Test Result:" />
-                                        <ComboBox Name="cbTestResult" DropDownClosed="cbDDClosed"  />
+                                            <Label Content="Test Result:" />
+                                            <ComboBox Name="cbTestResult" DropDownClosed="cbDDClosed"  Margin="15,5,15,0"/>
 
-                                        <Label Content="Test Result (Abort Input):" />
-                                        <ComboBox Name="cbTestResultAbort" DropDownClosed="cbDDClosed"  />
+                                            <Label Content="Test Result (Abort Input):" />
+                                            <ComboBox Name="cbTestResultAbort" DropDownClosed="cbDDClosed"  Margin="15,5,15,0"/>
 
-                                        <Label Content="Issue:" />
-                                        <ComboBox Name="cbIssue" DropDownClosed="cbDDClosed"  />
-
-                                        <Label Content="Item:" VerticalAlignment="Center" />
-                                        <ComboBox Name="cbItem" VerticalAlignment="Center"  DropDownClosed="cbDDClosed"  Width="137" IsEnabled="False"/>
-
-                                        <Label Content="Problem:" VerticalAlignment="Center" />
-                                        <ComboBox Name="cbProblem" VerticalAlignment="Center"  DropDownClosed="cbDDClosed"   Width="137" IsEnabled="False"/>
-
-                                        <StackPanel Orientation="Horizontal">
-                                            <StackPanel Orientation="Vertical">
-                                                <Label Name="lblRefDes" Content="Ref Designator" Visibility="Collapsed"/>
-                                                <Border x:Name="brdRefDes">
-                                                    <ComboBox x:Name="txtMultiRefDes" IsEditable="True"  IsReadOnly="False" Width="100" Visibility="Collapsed" KeyUp="txtMultiRefKeyUp" SelectionChanged="refDesIndexChanged"/>
-                                                </Border>
+                                            <Label Content="Issue:" />
+                                            <ComboBox Name="cbIssue" DropDownClosed="cbDDClosed"  Margin="15,5,15,0"/>
+                                            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                                                <StackPanel Orientation="Vertical">
+                                                    <Label Content="Item:" VerticalAlignment="Center" />
+                                                    <ComboBox Name="cbItem" VerticalAlignment="Center"  DropDownClosed="cbDDClosed" IsEnabled="False" Width="140"/>
+                                                </StackPanel>
+                                                <Separator Height="5" BorderBrush="DarkGoldenrod" BorderThickness="2" Width="40" RenderTransformOrigin="0.5,0.5">
+                                                    <Separator.RenderTransform>
+                                                        <TransformGroup>
+                                                            <ScaleTransform/>
+                                                            <SkewTransform/>
+                                                            <RotateTransform Angle="90"/>
+                                                            <TranslateTransform/>
+                                                        </TransformGroup>
+                                                    </Separator.RenderTransform>
+                                                </Separator>
+                                                <StackPanel Orientation="Vertical">
+                                                    <Label Content="Problem:" VerticalAlignment="Center" />
+                                                    <ComboBox Name="cbProblem" VerticalAlignment="Center"  DropDownClosed="cbDDClosed" IsEnabled="False" Width="140"/>
+                                                </StackPanel>
                                             </StackPanel>
 
-                                            <StackPanel Orientation="Vertical">
-                                                <Label Name="lblPartNum" Content="Part Number" Visibility="Collapsed"/>
-                                                <ComboBox x:Name="txtMultiPartNum"  Width="100" Visibility="Collapsed"
+                                            <StackPanel Orientation="Horizontal">
+                                                <StackPanel Orientation="Vertical">
+                                                    <Label Name="lblRefDes" Content="Ref Designator" Visibility="Collapsed"/>
+                                                    <Border x:Name="brdRefDes">
+                                                        <ComboBox x:Name="txtMultiRefDes" IsEditable="True"  IsReadOnly="False" Width="120" Visibility="Collapsed" KeyUp="txtMultiRefKeyUp" SelectionChanged="refDesIndexChanged"/>
+                                                    </Border>
+                                                </StackPanel>
+                                                <Separator x:Name="sepRefDesPartNum"  Height="5" BorderBrush="DarkGoldenrod" BorderThickness="2" Width="40" RenderTransformOrigin="0.5,0.5" Visibility="Collapsed">
+                                                    <Separator.RenderTransform>
+                                                        <TransformGroup>
+                                                            <ScaleTransform/>
+                                                            <SkewTransform/>
+                                                            <RotateTransform Angle="90"/>
+                                                            <TranslateTransform/>
+                                                        </TransformGroup>
+                                                    </Separator.RenderTransform>
+                                                </Separator>
+                                                <StackPanel Orientation="Vertical">
+                                                    <Label Name="lblPartNum" Content="Part Number" Visibility="Collapsed"/>
+                                                    <ComboBox x:Name="txtMultiPartNum"  Width="120" Visibility="Collapsed"
                                                   IsReadOnly="{Binding ElementName=wndMain, Path=BOMFileActive, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                                   IsEditable="{Binding ElementName=wndMain, Path=BOMFileActive, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged,Converter={StaticResource NegateBoolean}}"
                                                   IsEnabled="{Binding ElementName=wndMain, Path=BOMFileActive, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged,Converter={StaticResource NegateBoolean}}"/>
+                                                </StackPanel>
                                             </StackPanel>
-                                            <Button Name="btnAddRefPart" Content="Add" Width="35" Visibility="Collapsed" Click="btnAddRefPart_Click"/>
-                                        </StackPanel>
+                                            <Separator Visibility="Hidden" Height="5"/>
+                                            <Button Name="btnAddRefPart" HorizontalAlignment="Center" Content="Add" Width="120" Visibility="Collapsed" Click="btnAddRefPart_Click"/>
 
-                                        <DataGrid Name="dgMultipleParts" Width="275" Height="180" AllowDrop="True" IsReadOnly="True" BeginningEdit="dgBeginEdit" Visibility="Collapsed" KeyUp="dataGrid_KeyUp" />
-                                        <Button Name="btnReset" Content="Reset Unit Issue #1" Width="275" Visibility="Visible" Click="btnReset_Click"/>
-                                    </StackPanel>
+                                            <Separator x:Name="sepDGMargin" BorderBrush="CornflowerBlue" BorderThickness="2" Height="10" Visibility="Collapsed"/>
+
+                                            <DataGrid Name="dgMultipleParts" Width="275" Height="180" AllowDrop="True" IsReadOnly="True" BeginningEdit="dgBeginEdit" Visibility="Collapsed" KeyUp="dataGrid_KeyUp" />
+                                            <Separator BorderBrush="PaleGoldenrod" BorderThickness="2" Height="10"/>
+                                            <Button Name="btnReset" Content="Reset Unit Issue #1" Width="275" Visibility="Visible" Click="btnReset_Click"/>
+                                        </StackPanel>
+                                    </ScrollViewer>
                                 </TabItem>
 
                                 <TabItem Name="tiUI2" Header="Unit Issue #2" IsEnabled="False">
@@ -303,11 +331,11 @@
                                         <Button Name="btnReset_3" Content="Reset Unit Issue #3" Width="275" Visibility="Visible" Click="btnReset_Click"/>
                                     </StackPanel>
                                 </TabItem>
-                            </TabControl>
+                            </dragablz:TabablzControl>
                             <!--uc:ucIssueTabControl Margin="300,10,475,20" IsRepair="False" ReadOnly="False"/-->
 
-                            <Label Content="Additional Comments:" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="605,10,0,0"/>
-                            <RichTextBox Name="rtbAdditionalComments" HorizontalAlignment="Left" VerticalAlignment="Top" Width="465" Height="215" Margin="605,40,0,0" GotFocus="rtbGotFocus" LostFocus="rtbLostFocus" Background="#FF545454" Foreground="#FF60DE18">
+                            <Label Content="Additional Comments:" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="657,11,0,0"/>
+                            <RichTextBox Name="rtbAdditionalComments" HorizontalAlignment="Left" VerticalAlignment="Top" Width="413" Height="215" Margin="657,40,0,0" GotFocus="rtbGotFocus" LostFocus="rtbLostFocus" Background="#FF545454" Foreground="#FF60DE18">
                                 <FlowDocument>
                                     <Paragraph>
                                         <Run Text=""/>
@@ -332,7 +360,7 @@
                         <uc:ucAOITab x:Name="ucAOITab" SerialNumber="{Binding Path=Text, ElementName=txtSerialNumber, Mode=TwoWay}" VerticalAlignment="top" HorizontalAlignment="Left" Background="#FFACACAC"/>
                     </TabItem>
 
-                </TabControl>
+                </dragablz:TabablzControl>
 
                 <ToolBar Name="tbSPStatus" HorizontalAlignment="Stretch" Margin="0,740,0,0" VerticalAlignment="Top" Width="auto" Height="34" Header="Serial Port Status:" Grid.ColumnSpan="2">
                     <Label Name="tbPortStatus" Content="Port Status: Closed" Height="34" ToolBar.OverflowMode="Never" VerticalAlignment="Top" HorizontalAlignment="Left" Padding="5,7,5,0" />

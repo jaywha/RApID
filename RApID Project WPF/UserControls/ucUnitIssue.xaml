@@ -180,7 +180,7 @@
                 <Label Content="Parts Replaced:" Visibility="{Binding ElementName=uccUnitIssue, Path=ReadOnly, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource NotBoolToVis}}"/>
                 <DockPanel Visibility="{Binding ElementName=uccUnitIssue, Path=ReadOnly, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource BoolToVis}}">
                     <StackPanel Margin="0 0 5px 0">
-                        <Label Content="Ref Designator"/>
+                        <Label x:Name="lblRefDes" Content="Ref Designator"/>
                         <ComboBox x:Name="cmbxRefDesignator" SelectionChanged="cmbxRefDesignator_SelectionChanged">
                             <ComboBox.Width>
                                 <Binding ElementName="uccUnitIssue" Path="Width" Mode="TwoWay" UpdateSourceTrigger="PropertyChanged" Converter="{StaticResource SizeConverter}">
@@ -192,7 +192,7 @@
                         </ComboBox>
                     </StackPanel>
                     <StackPanel Margin="0 0 5px 0">
-                        <Label Content="Part Replaced"/>
+                        <Label x:Name="lblPartReplaced" Content="Part Replaced"/>
                         <ComboBox x:Name="cmbxPartNumber" IsReadOnly="True">
                             <ComboBox.Width>
                                 <Binding ElementName="uccUnitIssue" Path="Width" Mode="TwoWay" UpdateSourceTrigger="PropertyChanged" Converter="{StaticResource SizeConverter}">

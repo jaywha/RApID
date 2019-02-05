@@ -124,7 +124,7 @@ namespace RApID_Project_WPF
                 lblRepairBarcode.Content = "Scan Repair Label:";
             }
 
-            foreach(UIElement uie in gMainGrid.Children)
+            foreach(UIElement uie in grdInnerGrid.Children)
             {
                 if (uie.GetType().Name.Equals("TextBox"))
                 {

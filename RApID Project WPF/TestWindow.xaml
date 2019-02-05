@@ -43,7 +43,7 @@
         </Border>
         <UserControls:ucIssueTabControl x:Name="tcUnitIssues" Margin="10,10,569,10" ReadOnly="True" IsRepair="True" Visibility="Collapsed" />
         <UserControls:ucUnitIssue x:Name="unitIssue" HorizontalAlignment="Left" Height="Auto" Margin="10,10,0,10" Width="439" Foreground="White" LabelColor="White" 
-                                  DropDownEvent="unitIssue_DropDownEvent" AddPartReplaced="unitIssue_AddPartReplaced" ReadOnly="True" IsRepairForm="True"/>
+                                  DropDownEvent="unitIssue_DropDownEvent" AddPartReplaced="unitIssue_AddPartReplaced" ReadOnly="True" IsRepairForm="False"/>
 
         <Label Content="Read Only:" Foreground="Azure" Margin="0,10,301,0" HorizontalContentAlignment="Right" VerticalContentAlignment="Center" Width="74" HorizontalAlignment="Right" Height="31" VerticalAlignment="Top"/>
         <Label HorizontalAlignment="Right" Margin="0,10,196,0" VerticalAlignment="Top" Width="100" Height="30" BorderBrush="Orange" BorderThickness="2" Foreground="Azure">
