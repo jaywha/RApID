@@ -1681,7 +1681,7 @@ namespace RApID_Project_WPF
         private List<string> OrigPartSource;
         private void txtMultiRefKeyUp(object sender, KeyEventArgs e)
         {
-            if (sender is ComboBox cbox)
+            /*if (sender is ComboBox cbox)
             {
                 if (cbox.Name.Contains("Ref") && OrigRefSource != null)
                 {
@@ -1691,7 +1691,7 @@ namespace RApID_Project_WPF
                 {
                     cbox.ItemsSource = OrigPartSource.Where((p) => p.Contains(cbox.Text));
                 }
-            }
+            }*/
         }
 
         private void txtCustomerNumber_KeyDown(object sender, KeyEventArgs e)
@@ -2025,8 +2025,12 @@ namespace RApID_Project_WPF
         {
             if (dgPrevRepairInfo.SelectedItem != null)
             {
-                var pri = new frmRepairPRI((PreviousRepairInformation)dgPrevRepairInfo.SelectedItem);
+                var pri = new frmRepairPRI((PreviousRepairInformation)dgPrevRepairInfo.SelectedItem)
+                {
+                    Owner = this
+                };
                 pri.Show();
+                Activate();
             }
         }
 

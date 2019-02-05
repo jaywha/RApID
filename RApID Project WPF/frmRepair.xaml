@@ -202,8 +202,8 @@
 
                                     <Label Content="Ref Designator" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10,310,0,0" />
                                     <Border x:Name="brdRefDes" Margin="10,335,180,226"/>
-                                    <ComboBox x:Name="txtRefDes" Margin="10,335,180,226" IsTextSearchEnabled="False" IsEditable="True" HorizontalAlignment="Left" VerticalAlignment="Top" VerticalContentAlignment="Center" Width="100" Height="23"
-                                                SelectionChanged="refDesIndexChanged" GotFocus="txtGotFocus" LostFocus="txtLostFocus" KeyUp="txtMultiRefKeyUp"/>
+                                    <ComboBox x:Name="txtRefDes" Margin="10,335,180,226" IsTextSearchEnabled="True" IsEditable="True" HorizontalAlignment="Left" VerticalAlignment="Top" VerticalContentAlignment="Center" Width="100" Height="23"
+                                                SelectionChanged="refDesIndexChanged" GotFocus="txtGotFocus" LostFocus="txtLostFocus" KeyUp="txtMultiRefKeyUp" IsReadOnly="False"/>
                                     
 
                                     <Label Content="Part Replaced" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="115,310,0,0" />
@@ -237,7 +237,7 @@
 
                                     <Label Content="Ref Designator" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10,310,0,0" />
                                     <Border x:Name="brdRefDes_2" Margin="10,335,180,226"/>
-                                    <ComboBox x:Name="txtRefDes_2" Margin="10,335,180,226" IsTextSearchEnabled="False" IsEditable="True" HorizontalAlignment="Left" VerticalAlignment="Top" VerticalContentAlignment="Center" Width="100" Height="23"
+                                    <ComboBox x:Name="txtRefDes_2" Margin="10,335,180,226" IsTextSearchEnabled="True" IsEditable="True" HorizontalAlignment="Left" VerticalAlignment="Top" VerticalContentAlignment="Center" Width="100" Height="23"
                                                   SelectionChanged="refDesIndexChanged" GotFocus="txtGotFocus" LostFocus="txtLostFocus" KeyUp="txtMultiRefKeyUp"/>
                                     
 
@@ -272,7 +272,7 @@
 
                                     <Label Content="Ref Designator" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10,310,0,0" />
                                     <Border x:Name="brdRefDes_3" Margin="10,335,180,226"/>
-                                    <ComboBox x:Name="txtRefDes_3" Margin="10,335,180,226" IsTextSearchEnabled="False" IsEditable="True" HorizontalAlignment="Left" VerticalAlignment="Top" VerticalContentAlignment="Center" Width="100" Height="23"
+                                    <ComboBox x:Name="txtRefDes_3" Margin="10,335,180,226" IsTextSearchEnabled="True" IsEditable="True" HorizontalAlignment="Left" VerticalAlignment="Top" VerticalContentAlignment="Center" Width="100" Height="23"
                                               SelectionChanged="refDesIndexChanged" GotFocus="txtGotFocus" LostFocus="txtLostFocus" KeyUp="txtMultiRefKeyUp"/>
                                     
 
