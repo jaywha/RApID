@@ -16,13 +16,16 @@ using System.IO.Ports;
 using System.Data.Sql;
 using System.Data.SqlClient;
 using System.Windows.Threading;
+using System.ComponentModel;
+using System.Runtime.CompilerServices;
+using RApID_Project_WPF.Classes;
 
 namespace RApID_Project_WPF
 {
     /// <summary>
     /// Interaction logic for frmQCDQE.xaml
     /// </summary>
-    public partial class frmQCDQE : Window
+    public partial class frmQCDQE : Window, INotifyPropertyChanged
     {
         SerialPort sp;
         DispatcherTimer tSPChecker;
@@ -32,6 +35,22 @@ namespace RApID_Project_WPF
 
         InitSplash initS = new InitSplash();
         StaticVars sVar = StaticVars.StaticVarsInstance();
+
+        public event PropertyChangedEventHandler PropertyChanged;
+        public static event PropertyChangedEventHandler StaticPropertyChanged;
+        private static void OnStaticPropertyChanged([CallerMemberName] string propName = "")
+            => StaticPropertyChanged?.Invoke(typeof(frmQCDQE), new PropertyChangedEventArgs(propName));
+
+        private static Themes _currentTheme;
+        public static Themes CurrentTheme
+        {
+            get => _currentTheme;
+            set {
+                _currentTheme = value;
+                OnStaticPropertyChanged();
+            }
+        }
+
 
         public frmQCDQE()
         {

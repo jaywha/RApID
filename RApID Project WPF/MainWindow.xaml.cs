@@ -36,6 +36,8 @@ namespace RApID_Project_WPF
 
             InitializeComponent();
 
+            Classes.SimpleThemeManager.CurrentThemeType = (Classes.Themes) Properties.Settings.Default.UserTheme;
+
 #if DEBUG
             lblDebug.Visibility = Visibility.Visible;
             btnTest.Visibility = Visibility.Visible;

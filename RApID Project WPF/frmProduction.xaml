@@ -16,6 +16,8 @@
         xmlns:uc="clr-namespace:RApID_Project_WPF.UserControls"
         xmlns:conv="clr-namespace:RApID_Project_WPF.UserControls.Converters"
         xmlns:sys="clr-namespace:System;assembly=mscorlib"
+        xmlns:innerThemes="clr-namespace:RApID_Project_WPF.Classes"
+        xmlns:local="clr-namespace:RApID_Project_WPF"
         x:Name="wndMain"
         Title="Production" Width="1104" Height="815" MinWidth="300" MinHeight="300" Loaded="Window_Loaded" Closing="Window_Closing">
     <Window.Resources>
@@ -103,12 +105,21 @@
 
         <conv:BoolToNotBoolConverter x:Key="NegateBoolean"/>
         <conv:BoolToStringConverter x:Key="StatusConv"/>
+        <innerThemes:SimpleThemeManager x:Key="themeManager"/>
+        <conv:ThemeToBackground x:Key="ThemeApplier"/>
     </Window.Resources>
 
     <md:DialogHost x:Name="dlgPRIHost" DialogClosing="dlgPRIHost_DialogClosing">
         <Viewbox Stretch="Uniform">
-
-            <Grid>
+            <Grid x:Name="grdMain" innerThemes:ThemeAttachedProperty.ThemeType="{Binding Path=(local:frmProduction.CurrentTheme), Mode=OneWay, UpdateSourceTrigger=PropertyChanged}">
+                <Grid.Background>
+                    <MultiBinding Converter="{StaticResource ThemeApplier}">
+                        <MultiBinding.Bindings>
+                            <Binding RelativeSource="{RelativeSource Self}"/>
+                            <Binding ElementName="grdMain" Path="(innerThemes:ThemeAttachedProperty.ThemeType)" Mode="OneWay" UpdateSourceTrigger="PropertyChanged"/>
+                        </MultiBinding.Bindings>
+                    </MultiBinding>
+                </Grid.Background>
                 <StackPanel Orientation="Horizontal">
                     <Label Content="Serial Number:" FontWeight="Bold" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="100,20,0,0" Height="39" Width="105" />
                     <TextBox x:Name="txtSerialNumber" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="0,22,0,0" Width="271" Height="37" PreviewTextInput="previewInput" KeyDown="txtSerialNumber_KeyDown"/>
@@ -118,10 +129,18 @@
                     <Button x:Name="btnComplete" Content="Complete" HorizontalAlignment="Right" VerticalAlignment="Top" Width="119" Height="59" Style="{StaticResource RepairButtons}" Click="btnComplete_Click"/>
                 </StackPanel>
 
-                <dragablz:TabablzControl x:Name="tcMain"  HorizontalAlignment="Left" VerticalAlignment="Top" Width="1085" Height="665" Margin="2,65,0,0" Grid.ColumnSpan="2">
+                <TabControl x:Name="tcMain"  HorizontalAlignment="Left" VerticalAlignment="Top" Width="1085" Height="665" Margin="2,65,0,0" Grid.ColumnSpan="2">
 
                     <TabItem Header="DataLog">
-                        <Grid Background="#FF463838">
+                        <Grid>
+                            <Grid.Background>
+                                <MultiBinding Converter="{StaticResource ThemeApplier}">
+                                    <MultiBinding.Bindings>
+                                        <Binding RelativeSource="{RelativeSource Self}"/>
+                                        <Binding ElementName="grdMain" Path="(innerThemes:ThemeAttachedProperty.ThemeType)" Mode="OneWay" UpdateSourceTrigger="PropertyChanged"/>
+                                    </MultiBinding.Bindings>
+                                </MultiBinding>
+                            </Grid.Background>
 
                             <Label Content="Tech Name" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="6,2,0,0" />
                             <TextBox Name="txtTechName" Margin="6,25,858,583" GotFocus="txtGotFocus" LostFocus="txtLostFocus"  />
@@ -158,9 +177,18 @@
                             <DataGrid Name="dgPrevRepairInfo" HorizontalAlignment="Left" VerticalAlignment="Top" Width="280" Height="140" Margin="6,475,0,0" BeginningEdit="dgBeginEdit"
                                       MouseDoubleClick="dgPrevRepairInfo_MouseDoubleClick"/>
 
-                            <dragablz:TabablzControl x:Name="tcUnitIssues" HorizontalAlignment="Left" VerticalAlignment="Top" Width="300" Height="605" Margin="300,11,0,0" ShowDefaultAddButton="True">
+                            <TabControl x:Name="tcUnitIssues" HorizontalAlignment="Left" VerticalAlignment="Top" Width="300" Height="605" Margin="300,11,0,0">
+                                <!--ShowDefaultAddButton="True"-->
                                 <TabItem Name="tiUI1" Header="Unit Issue #1">
-                                    <StackPanel Name="gridUI1" Background="#FF303030" Orientation="Vertical">
+                                    <StackPanel Name="gridUI1" Orientation="Vertical">
+                                        <StackPanel.Background>
+                                            <MultiBinding Converter="{StaticResource ThemeApplier}">
+                                                <MultiBinding.Bindings>
+                                                    <Binding RelativeSource="{RelativeSource Self}"/>
+                                                    <Binding ElementName="grdMain" Path="(innerThemes:ThemeAttachedProperty.ThemeType)" Mode="OneWay" UpdateSourceTrigger="PropertyChanged"/>
+                                                </MultiBinding.Bindings>
+                                            </MultiBinding>
+                                        </StackPanel.Background>
                                         <Label Content="Reported Issue:" />
                                         <ComboBox Name="cbReportedIssue" DropDownClosed="cbDDClosed"  />
 
@@ -275,10 +303,11 @@
                                         <Button Name="btnReset_3" Content="Reset Unit Issue #3" Width="275" Visibility="Visible" Click="btnReset_Click"/>
                                     </StackPanel>
                                 </TabItem>
-                            </dragablz:TabablzControl>
+                            </TabControl>
+                            <!--uc:ucIssueTabControl Margin="300,10,475,20" IsRepair="False" ReadOnly="False"/-->
 
                             <Label Content="Additional Comments:" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="605,10,0,0"/>
-                            <RichTextBox Name="rtbAdditionalComments" HorizontalAlignment="Left" VerticalAlignment="Top" Width="465" Height="215" Margin="605,40,0,0" GotFocus="rtbGotFocus" LostFocus="rtbLostFocus" Background="#FF040404" Foreground="#FF5DFF00">
+                            <RichTextBox Name="rtbAdditionalComments" HorizontalAlignment="Left" VerticalAlignment="Top" Width="465" Height="215" Margin="605,40,0,0" GotFocus="rtbGotFocus" LostFocus="rtbLostFocus" Background="#FF545454" Foreground="#FF60DE18">
                                 <FlowDocument>
                                     <Paragraph>
                                         <Run Text=""/>
@@ -303,7 +332,7 @@
                         <uc:ucAOITab x:Name="ucAOITab" SerialNumber="{Binding Path=Text, ElementName=txtSerialNumber, Mode=TwoWay}" VerticalAlignment="top" HorizontalAlignment="Left" Background="#FFACACAC"/>
                     </TabItem>
 
-                </dragablz:TabablzControl>
+                </TabControl>
 
                 <ToolBar Name="tbSPStatus" HorizontalAlignment="Stretch" Margin="0,740,0,0" VerticalAlignment="Top" Width="auto" Height="34" Header="Serial Port Status:" Grid.ColumnSpan="2">
                     <Label Name="tbPortStatus" Content="Port Status: Closed" Height="34" ToolBar.OverflowMode="Never" VerticalAlignment="Top" HorizontalAlignment="Left" Padding="5,7,5,0" />

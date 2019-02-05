@@ -1,5 +1,6 @@
 ﻿using EricStabileLibrary;
 using MaterialDesignThemes.Wpf;
+using RApID_Project_WPF.Classes;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -52,6 +53,20 @@ namespace RApID_Project_WPF
 
         public event PropertyChangedEventHandler PropertyChanged;
         private void OnPropertyChanged([CallerMemberName] string propName = "") => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propName));
+
+        public static event PropertyChangedEventHandler StaticPropertyChanged;
+        private static void OnStaticPropertyChanged([CallerMemberName] string propName = "") => StaticPropertyChanged?.Invoke(typeof(frmProduction), new PropertyChangedEventArgs(propName));
+
+        private static Themes _currentTheme;
+        public static Themes CurrentTheme
+        {
+            get =>_currentTheme;
+            set {
+                _currentTheme = value;
+                OnStaticPropertyChanged();
+            }
+        }
+
 
         public frmProduction()
         {

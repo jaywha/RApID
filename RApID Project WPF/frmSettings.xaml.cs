@@ -37,6 +37,30 @@ namespace RApID_Project_WPF
         public frmSettings()
         {
             InitializeComponent();
+
+            #region Theme Persistence Init
+            Dispatcher.BeginInvoke(System.Windows.Threading.DispatcherPriority.ApplicationIdle, new Action(() => {
+                switch (Properties.Settings.Default.UserTheme)
+                {
+                    case -1:
+                        rbtnDarkTheme.IsChecked = true;
+                        RadioButton_Checked(rbtnDarkTheme, null);
+                        break;
+                    case 0:
+                        rbtnDefaultTheme.IsChecked = true;
+                        RadioButton_Checked(rbtnDefaultTheme, null);
+                        break;
+                    case 1:
+                        rbtnLightTheme.IsChecked = true;
+                        RadioButton_Checked(rbtnLightTheme, null);
+                        break;
+                }
+
+                frmRepair.CurrentTheme = CurrentlyViewableTheme;
+                frmProduction.CurrentTheme = CurrentlyViewableTheme;
+                frmQCDQE.CurrentTheme = CurrentlyViewableTheme;
+            }));
+            #endregion
         }
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
@@ -442,37 +466,30 @@ namespace RApID_Project_WPF
             switch (rbtn.Name.Replace("rbtn",""))
             {
                 case "LightTheme":
-                    grpbxThemes.Background = SimpleThemeManager.LightThemeBackground;
-                    rbtnDefaultTheme.Foreground = Brushes.Gold;
-                    rbtnDarkTheme.Foreground = Brushes.Black;
-                    ThemeAttachedProperty.SetThemeType(innerGrid, Themes.Light);
-
                     CurrentlyViewableTheme = Themes.Light;
                     break;
                 case "DarkTheme":
-                    grpbxThemes.Background = SimpleThemeManager.DarkThemeBackground;
-                    rbtnDefaultTheme.Foreground = Brushes.Goldenrod;
-                    rbtnDarkTheme.Foreground = Brushes.LightSlateGray;
-                    ThemeAttachedProperty.SetThemeType(innerGrid, Themes.Dark);
-
                     CurrentlyViewableTheme = Themes.Dark;
                     break;
                 case "DefaultTheme":
                 default:
-                    grpbxThemes.Background = SimpleThemeManager.DefaultThemeBackground;
-                    rbtnDefaultTheme.Foreground = Brushes.Goldenrod;
-                    rbtnDarkTheme.Foreground = Brushes.LightSlateGray;
-                    ThemeAttachedProperty.SetThemeType(innerGrid, Themes.Default);
-
                     CurrentlyViewableTheme = Themes.Default;
                     break;
             }
+
+            ThemeAttachedProperty.SetThemeType(innerGrid, CurrentlyViewableTheme);
         }
 
         private void btnSaveTheme_Click(object sender, RoutedEventArgs e)
         {
             frmRepair.CurrentTheme = CurrentlyViewableTheme;
-            snkbrNotificationTray.MessageQueue.Enqueue("Saved current theme!");ctor 
+            frmProduction.CurrentTheme = CurrentlyViewableTheme;
+            frmQCDQE.CurrentTheme = CurrentlyViewableTheme;
+
+            Properties.Settings.Default.UserTheme = (int) CurrentlyViewableTheme;
+            Properties.Settings.Default.Save();
+
+            snkbrNotificationTray.MessageQueue.Enqueue("Saved current theme!");
         }
 
         #endregion

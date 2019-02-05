@@ -130,7 +130,7 @@
         <conv:ThemeToBackground x:Key="ThemeApplier"/>
     </Window.Resources>
     <Viewbox Stretch="Uniform">
-        <Grid x:Name="grdMain" innerThemes:ThemeAttachedProperty.ThemeType="{Binding ElementName=wndMain, Path=(local:frmRepair.CurrentTheme), Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+        <Grid x:Name="grdMain" innerThemes:ThemeAttachedProperty.ThemeType="{Binding Path=(local:frmRepair.CurrentTheme), Mode=OneWay, UpdateSourceTrigger=PropertyChanged}">
             <Grid.Background>
                 <MultiBinding Converter="{StaticResource ThemeApplier}">
                     <MultiBinding.Bindings>

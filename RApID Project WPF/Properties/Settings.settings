@@ -41,5 +41,8 @@
     <Setting Name="DefaultReportManagerLink" Type="System.String" Scope="User">
       <Value Profile="(Default)">http://eudb01/Reports/Pages/Folder.aspx?ItemPath=%2fRApID+(Repair+Database)&amp;ViewMode=List</Value>
     </Setting>
+    <Setting Name="UserTheme" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">0</Value>
+    </Setting>
   </Settings>
 </SettingsFile>

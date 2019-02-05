@@ -1,6 +1,9 @@
 ﻿<Window x:Class="RApID_Project_WPF.frmQCDQE"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:innerThemes="clr-namespace:RApID_Project_WPF.Classes"
+        xmlns:conv="clr-namespace:RApID_Project_WPF.UserControls.Converters"
+        xmlns:local="clr-namespace:RApID_Project_WPF"
         Title="QC/DQE" Height="772" Width="1125" MinWidth="300" MinHeight="300" Loaded="Window_Loaded" Closing="Window_Closing" Background="#FF808285">
     <Window.Resources>
         <Style x:Key="TextboxBaseStyle" TargetType="{x:Type TextBox}">
@@ -84,9 +87,19 @@
             <Setter Property="VerticalAlignment" Value="Top" />
         </Style>
 
+        <innerThemes:SimpleThemeManager x:Key="themeManager"/>
+        <conv:ThemeToBackground x:Key="ThemeApplier"/>
     </Window.Resources>
     <Viewbox Stretch="Uniform">
-        <Grid Background="#FF808285">
+        <Grid x:Name="grdMain" innerThemes:ThemeAttachedProperty.ThemeType="{Binding Path=(local:frmQCDQE.CurrentTheme), Mode=OneWay, UpdateSourceTrigger=PropertyChanged}">
+            <Grid.Background>
+                <MultiBinding Converter="{StaticResource ThemeApplier}">
+                    <MultiBinding.Bindings>
+                        <Binding RelativeSource="{RelativeSource Self}"/>
+                        <Binding ElementName="grdMain" Path="(innerThemes:ThemeAttachedProperty.ThemeType)" Mode="OneWay" UpdateSourceTrigger="PropertyChanged"/>
+                    </MultiBinding.Bindings>
+                </MultiBinding>
+            </Grid.Background>
             <Label Name="lblRepairBarcode" Content="Scan Repair Label:" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="0,10,0,0" FontWeight="Bold"/>
             <TextBox Name="txtRepairBarcode" HorizontalAlignment="Left" VerticalAlignment="Top" Height="23" Width="200" Margin="125,11,0,0" TextChanged="txtRepairBarcode_TextChanged" KeyDown="txtRepairBarcode_KeyDown"/>
             <CheckBox Name="cbxScanSwitch" Content="Check to enter Unit Serial Number instead" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="330,15,0,0" Click="cbxScanSwitch_Click"/>
@@ -95,8 +108,15 @@
             <Button Name="btnSubmit" Content="Complete" Margin="925,8,0,0" Style="{StaticResource RepairButtons}" Click="btnSubmit_Click" />
             <Button Name="btnReset" Content="Reset Form" Margin="1015,8,0,0" Style="{StaticResource RepairButtons}" Click="btnReset_Click" />
 
-            <Grid Name="gMainGrid" Background="#FFACACAC" Margin="5,52,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Height="650" Width="1102">
-
+            <Grid Name="grdInnerGrid" Margin="5,52,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Height="650" Width="1102">
+                <Grid.Background>
+                    <MultiBinding Converter="{StaticResource ThemeApplier}">
+                        <MultiBinding.Bindings>
+                            <Binding RelativeSource="{RelativeSource Self}"/>
+                            <Binding ElementName="grdMain" Path="(innerThemes:ThemeAttachedProperty.ThemeType)" Mode="OneWay" UpdateSourceTrigger="PropertyChanged"/>
+                        </MultiBinding.Bindings>
+                    </MultiBinding>
+                </Grid.Background>
                 <Label Content="Tech Name:" HorizontalAlignment="Left" Margin="6,8,0,0" VerticalAlignment="Top"/>
                 <TextBox Name="txtTechName" Margin="6,31,0,0" Style="{StaticResource TextboxBaseStyle}"/>
 
@@ -140,7 +160,15 @@
 
                 <TabControl HorizontalAlignment="Left" VerticalAlignment="Top" Width="300" Height="505" Margin="290,11,0,0">
                     <TabItem Name="tiUI1" Header="Unit Issue #1">
-                        <Grid Name="gUI1" Background="#FFA47C8C">
+                        <Grid Name="gUI1">
+                            <Grid.Background>
+                                <MultiBinding Converter="{StaticResource ThemeApplier}">
+                                    <MultiBinding.Bindings>
+                                        <Binding RelativeSource="{RelativeSource Self}"/>
+                                        <Binding ElementName="grdMain" Path="(innerThemes:ThemeAttachedProperty.ThemeType)" Mode="OneWay" UpdateSourceTrigger="PropertyChanged"/>
+                                    </MultiBinding.Bindings>
+                                </MultiBinding>
+                            </Grid.Background>
                             <Label Content="Reported Issue:" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10,10,0,0" />
                             <TextBox Name="txtReportedIssue" Margin="10,33,0,0" Style="{StaticResource TextboxUnitIssueStyle}" />
 
