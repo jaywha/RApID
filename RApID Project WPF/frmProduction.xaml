@@ -19,7 +19,7 @@
         xmlns:innerThemes="clr-namespace:RApID_Project_WPF.Classes"
         xmlns:local="clr-namespace:RApID_Project_WPF"
         x:Name="wndMain"
-        Title="Production" Width="1104" Height="815" MinWidth="300" MinHeight="300" Loaded="Window_Loaded" Closing="Window_Closing">
+        Title="Production" Width="950.796" Height="825.174" MinWidth="300" MinHeight="300" Loaded="Window_Loaded" Closing="Window_Closing">
     <Window.Resources>
         <Style x:Key="EOLComboBox" TargetType="{x:Type ComboBox}">
             <Setter Property="Width" Value="120" />
@@ -109,9 +109,9 @@
         <conv:ThemeToBackground x:Key="ThemeApplier"/>
     </Window.Resources>
 
-    <md:DialogHost x:Name="dlgPRIHost" DialogClosing="dlgPRIHost_DialogClosing">
+    <md:DialogHost x:Name="dlgPRIHost" CloseOnClickAway="True" CloseOnClickAwayParameter="FALSE">
         <Viewbox Stretch="Uniform">
-            <Grid x:Name="grdMain" innerThemes:ThemeAttachedProperty.ThemeType="{Binding Path=(local:frmProduction.CurrentTheme), Mode=OneWay, UpdateSourceTrigger=PropertyChanged}">
+            <Grid x:Name="grdMain" innerThemes:ThemeAttachedProperty.ThemeType="{Binding Path=(local:frmProduction.CurrentTheme), Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" Height="914">
                 <Grid.Background>
                     <MultiBinding Converter="{StaticResource ThemeApplier}">
                         <MultiBinding.Bindings>
@@ -120,17 +120,15 @@
                         </MultiBinding.Bindings>
                     </MultiBinding>
                 </Grid.Background>
-                <StackPanel Orientation="Horizontal">
+                <StackPanel Orientation="Horizontal" Margin="0,0,0,8">
                     <Label Content="Serial Number:" FontWeight="Bold" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="100,20,0,0" Height="39" Width="105" />
                     <TextBox x:Name="txtSerialNumber" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="0,22,0,0" Width="271" Height="37" PreviewTextInput="previewInput" KeyDown="txtSerialNumber_KeyDown"/>
-                    <Separator Width="311"/>
                     <Button x:Name="btnStartOver" Content="Start Over" HorizontalAlignment="Right" VerticalAlignment="Top" Width="128" Height="59" Style="{StaticResource RepairButtons}" Click="btnStartOver_Click"/>
                     <Separator Width="20"/>
                     <Button x:Name="btnComplete" Content="Complete" HorizontalAlignment="Right" VerticalAlignment="Top" Width="119" Height="59" Style="{StaticResource RepairButtons}" Click="btnComplete_Click"/>
                 </StackPanel>
 
-                <dragablz:TabablzControl x:Name="tcMain"  HorizontalAlignment="Left" VerticalAlignment="Top" Width="1085" Height="665" Margin="2,65,0,0" Grid.ColumnSpan="2">
-
+                <dragablz:TabablzControl x:Name="tcMain"  HorizontalAlignment="Left" VerticalAlignment="Top" Width="1085" Height="810" Margin="2,65,0,0">
                     <TabItem Header="DataLog">
                         <Grid>
                             <Grid.Background>
@@ -143,41 +141,40 @@
                             </Grid.Background>
 
                             <Label Content="Tech Name" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="6,2,0,0" />
-                            <TextBox Name="txtTechName" Margin="6,25,858,583" GotFocus="txtGotFocus" LostFocus="txtLostFocus"  />
+                            <TextBox Name="txtTechName" Margin="6,25,858,0" GotFocus="txtGotFocus" LostFocus="txtLostFocus" Height="39" VerticalAlignment="Top"  />
 
-                            <Label Content="Date Received" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="4,50,0,0" />
-                            <DatePicker Name="dtpDateReceived" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="6,74,0,0" Width="211" Height="29" />
+                            <Label Content="Date Received" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="4,64,0,0" />
+                            <DatePicker Name="dtpDateReceived" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="6,88,0,0" Width="211" Height="41" />
 
-                            <Label Content="Part Name:" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="6,103,0,0" />
-                            <TextBox Name="txtPartName" Margin="6,126,859,482" GotFocus="txtGotFocus" LostFocus="txtLostFocus" />
+                            <Label Content="Part Name:" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="6,130,0,0" />
+                            <TextBox Name="txtPartName" Margin="6,159,859,0" GotFocus="txtGotFocus" LostFocus="txtLostFocus" Height="36" VerticalAlignment="Top" />
                             <Button Name="btnLookupPartName" Content="?" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="257,114,0,0" Width="38" Height="37" ToolTip="Look Up Part Name" Click="btnLookupPartName_Click" />
 
-                            <Label Content="Part Number:" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="6,159,0,0" />
-                            <TextBox Name="txtPartNumber" Margin="92,156,918,448" GotFocus="txtGotFocus" LostFocus="txtLostFocus" />
+                            <Label Content="Part Number:" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="7,200,0,0" />
+                            <TextBox Name="txtPartNumber" Margin="92,198,864,0" GotFocus="txtGotFocus" LostFocus="txtLostFocus" Height="38" VerticalAlignment="Top" />
 
-                            <Label Content="Series:" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="162,159,0,0" />
-                            <TextBox Name="txtPartSeries" Margin="212,154,780,448" GotFocus="txtGotFocus" LostFocus="txtLostFocus" />
+                            <Label Content="Part Series:" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="4,251,0,0" />
+                            <TextBox Name="txtPartSeries" Margin="92,241,861,0" GotFocus="txtGotFocus" LostFocus="txtLostFocus" Height="34" VerticalAlignment="Top" />
 
-                            <Label Content="Commodity Sub-Class" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10,190,0,0" />
-                            <TextBox Name="txtCommSubClass" Margin="10,221,858,378" GotFocus="txtGotFocus" LostFocus="txtLostFocus" RenderTransformOrigin="0.5,0.5"  >
+                            <Label Content="Commodity Sub-Class" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="4,275,0,0" />
+                            <TextBox Name="txtCommSubClass" Margin="4,306,864,0" GotFocus="txtGotFocus" LostFocus="txtLostFocus" RenderTransformOrigin="0.5,0.5" Height="31" VerticalAlignment="Top"  >
                             </TextBox>
 
-                            <Label Content="Software Version" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="6,260,0,0" />
-                            <TextBox Name="txtSWVersion" Margin="10,286,928,321" GotFocus="txtGotFocus" LostFocus="txtLostFocus"  IsReadOnly="False" Height="26"/>
+                            <Label Content="Software Version" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="0,352,0,0" />
+                            <TextBox Name="txtSWVersion" Margin="0,376,938,0" GotFocus="txtGotFocus" LostFocus="txtLostFocus"  IsReadOnly="False" Height="26" VerticalAlignment="Top"/>
 
-                            <Label Content="Type of Return" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="7,312,0,0" />
-                            <TextBox Name="txtTOR" Text="Production" Margin="10,338,855,261"  />
+                            <Label Content="Type of Return" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="4,489,0,0" />
+                            <TextBox Name="txtTOR" Text="Production" Margin="4,518,861,0" Height="56" VerticalAlignment="Top"  />
 
-                            <Label Content="From Area" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10,377,0,0" />
-                            <ComboBox Name="cbFromArea" Margin="10,403,858,201" DropDownClosed="cbDDClosed" Height="29" />
+                            <Label Content="From Area" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="1,407,0,0" />
+                            <ComboBox Name="cbFromArea" Margin="4,150,861,0" DropDownClosed="cbDDClosed" Height="43" />
                             <CheckBox Name="cbxScrap" Content="SCRAP" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="226,414,0,0" Foreground="White" />
 
-                            <Label Content="Previous Repair Information" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="7,437,0,0" />
-                            <Label Content="Double Click on Record To View" FontStyle="Italic" FontSize="10" Margin="7,450,903,149" />
-                            <DataGrid Name="dgPrevRepairInfo" HorizontalAlignment="Left" VerticalAlignment="Top" Width="280" Height="140" Margin="6,475,0,0" BeginningEdit="dgBeginEdit"
+                            <Label Content="Previous Repair Information" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="6,595,0,0" />
+                            <DataGrid Name="dgPrevRepairInfo" HorizontalAlignment="Left" VerticalAlignment="Top" Width="280" Height="140" Margin="6,625,0,0" BeginningEdit="dgBeginEdit"
                                       MouseDoubleClick="dgPrevRepairInfo_MouseDoubleClick"/>
 
-                            <dragablz:TabablzControl x:Name="tcUnitIssues" HorizontalAlignment="Left" VerticalAlignment="Top" Width="352" Height="605" Margin="300,11,0,0" ShowDefaultAddButton="True">
+                            <dragablz:TabablzControl x:Name="tcUnitIssues" HorizontalAlignment="Left" VerticalAlignment="Top" Width="352" Height="754" Margin="300,11,0,0" ShowDefaultAddButton="True">
                                 <TabItem Name="tiUI1" Header="Unit Issue #1">
                                     <ScrollViewer VerticalScrollBarVisibility="Auto">
                                         <StackPanel Name="gridUI1" Orientation="Vertical">
@@ -221,7 +218,7 @@
                                                 </StackPanel>
                                             </StackPanel>
 
-                                            <StackPanel Orientation="Horizontal">
+                                            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
                                                 <StackPanel Orientation="Vertical">
                                                     <Label Name="lblRefDes" Content="Ref Designator" Visibility="Collapsed"/>
                                                     <Border x:Name="brdRefDes">
@@ -348,6 +345,7 @@
                                 <Label x:Name="lblBOMList" Content="BOM Parts List" HorizontalAlignment="Left" VerticalAlignment="Top" Width="128" ToolTip="From JUKI Sheet of BOM Excel File"/>
                                 <DataGrid x:Name="dgBOMList" HorizontalAlignment="Left" Height="328" VerticalAlignment="Top" Width="461" BeginningEdit="dgBeginEdit" MouseDoubleClick="dgBOMList_MouseDoubleClick"/>
                             </StackPanel>
+                            <Label Content="Double Click on Record To View" FontStyle="Italic" FontSize="10" Margin="3,611,907,0" Height="22" VerticalAlignment="Top" />
                         </Grid>
                     </TabItem>
 
@@ -362,7 +360,7 @@
 
                 </dragablz:TabablzControl>
 
-                <ToolBar Name="tbSPStatus" HorizontalAlignment="Stretch" Margin="0,740,0,0" VerticalAlignment="Top" Width="auto" Height="34" Header="Serial Port Status:" Grid.ColumnSpan="2">
+                <ToolBar Name="tbSPStatus" HorizontalAlignment="Stretch" Margin="2,880,-2,0" VerticalAlignment="Top" Width="auto" Height="34" Header="Serial Port Status:">
                     <Label Name="tbPortStatus" Content="Port Status: Closed" Height="34" ToolBar.OverflowMode="Never" VerticalAlignment="Top" HorizontalAlignment="Left" Padding="5,7,5,0" />
                     <Separator />
                     <Label Name="tbPortName" Content="Port Name:" Height="34" ToolBar.OverflowMode="Never" VerticalAlignment="Top" HorizontalAlignment="Left" Padding="5,7,5,0"/>

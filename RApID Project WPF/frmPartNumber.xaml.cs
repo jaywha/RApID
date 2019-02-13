@@ -9,22 +9,48 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using System.Data.SqlClient;
 using System.Data;
+using MaterialDesignThemes.Wpf;
 
 namespace RApID_Project_WPF
 {
     /// <summary>
     /// Interaction logic for frmPartNumber.xaml
     /// </summary>
-    public partial class frmPartNumber : Window
+    public partial class frmPartNumber : UserControl
     {
+
+        private object @lockDialogHostCloseEvent = new object();
+        public static readonly DependencyProperty DialogHostCloseProperty =
+            DependencyProperty.Register("DialogHostCloseEvent", typeof(EventHandler), typeof(frmPartNumber));
+
+        /// <summary> EventHandler property DialogHostClose </summary>
+        /// <remarks> To raise the event: ((EventHandler)GetValue(DialogHostClose))?.Invoke(object sender, EventArgs e) </remarks>
+        public event EventHandler DialogHostCloseEvent
+        {
+            add
+            {
+                lock (@lockDialogHostCloseEvent)
+                {
+                    SetValue(DialogHostCloseProperty, value);
+                }
+            }
+            remove
+            {
+                lock (@lockDialogHostCloseEvent)
+                {
+                    SetValue(DialogHostCloseProperty, null);
+                }
+            }
+        }
+
+
         StaticVars sVar = StaticVars.StaticVarsInstance();
         bool bIsProduction;
         DataSet ds = new DataSet();
         DataTable dt = new DataTable();
         csObjectHolder.csObjectHolder holder = csObjectHolder.csObjectHolder.ObjectHolderInstance();
 
-
-        public frmPartNumber(bool _bProduction)
+        public frmPartNumber(bool _bProduction, DialogHost caller = null)
         {
             InitializeComponent();
             bIsProduction = _bProduction;
@@ -140,7 +166,7 @@ namespace RApID_Project_WPF
                     var selItem = new DGVPARTNUMNAMEITEM() { PartNumber = drv[0].ToString(), PartName = drv[1].ToString(), PartSeries = csCrossClassInteraction.SeriesQuery(drv[0].ToString()) };
                     sVar.SelectedPartNumberPartName = selItem;
                     sVar.SelectedPartNumberPartName.PartNumberSelected = true;
-                    this.Close();
+                    ((EventHandler)GetValue(DialogHostCloseProperty))?.Invoke(sender, e);
                 }
                 catch { }
             }

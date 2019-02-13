@@ -1576,11 +1576,6 @@ namespace RApID_Project_WPF
         }
         #endregion
 
-        private void dlgPRIHost_DialogClosing(object sender, DialogClosingEventArgs eventArgs)
-        {
-
-        }
-
         private async void dgPrevRepairInfo_MouseDoubleClick(object sender, MouseButtonEventArgs e)
         {
             if (dgPrevRepairInfo.SelectedItem != null)

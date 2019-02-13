@@ -183,5 +183,10 @@ namespace RApID_Project_WPF
             csDisplayLog.DisplayLog(rtbLog, csLogging.LogState.NONE, lLogToView, true);
             cbFilters.SelectedIndex = -1;
         }
+
+        private void mnuiDeleteSelected_Click(object sender, RoutedEventArgs e)
+        {
+            lbFilterList.Items.Remove(lbFilterList.SelectedItem);
+        }
     }
 }

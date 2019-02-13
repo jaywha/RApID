@@ -1,24 +1,59 @@
 ﻿<Window x:Class="RApID_Project_WPF.frmViewFullLog"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:md="http://materialdesigninxaml.net/winfx/xaml/themes"
+        TextElement.Foreground="{DynamicResource MaterialDesignBody}"
+        TextElement.FontWeight="Regular"
+        TextElement.FontSize="12"
+        TextOptions.TextFormattingMode="Ideal" 
+        TextOptions.TextRenderingMode="Auto"        
+        Background="{DynamicResource MaterialDesignPaper}"
+        FontFamily="{DynamicResource MaterialDesignFont}"
+        xmlns:uc="clr-namespace:RApID_Project_WPF.UserControls"
+        xmlns:conv="clr-namespace:RApID_Project_WPF.UserControls.Converters"
+        xmlns:sys="clr-namespace:System;assembly=mscorlib"
+        xmlns:innerThemes="clr-namespace:RApID_Project_WPF.Classes"
+        xmlns:local="clr-namespace:RApID_Project_WPF"
+        
         Title="RApID Log Viewer" Height="600" Width="771" Loaded="Window_Loaded" WindowStartupLocation="CenterScreen">
-    <Grid>
+    <Window.Resources>
+        <innerThemes:SimpleThemeManager x:Key="themeManager"/>
+        <conv:ThemeToBackground x:Key="ThemeApplier"/>
+    </Window.Resources>
+    <Grid x:Name="grdMain" innerThemes:ThemeAttachedProperty.ThemeType="Dark">
+        <Grid.Background>
+            <MultiBinding Converter="{StaticResource ThemeApplier}">
+                <MultiBinding.Bindings>
+                    <Binding RelativeSource="{RelativeSource Self}"/>
+                    <Binding ElementName="grdMain" Path="(innerThemes:ThemeAttachedProperty.ThemeType)" Mode="OneWay" UpdateSourceTrigger="PropertyChanged"/>
+                </MultiBinding.Bindings>
+            </MultiBinding>
+        </Grid.Background>
         <Menu Height="30" HorizontalAlignment="Stretch" VerticalAlignment="Top" Width="auto" Margin="0,0,0,0">
         </Menu>
-        
+
         <Label Content="Technician List:" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="6,38,0,0" />
-        <ListBox Name="lbTechList" HorizontalAlignment="Left" Height="150" Margin="6,64,0,0" VerticalAlignment="Top" Width="240" MouseUp="lbTechList_MouseDoubleClick"/>
+        <ListBox Name="lbTechList" HorizontalAlignment="Left" Height="150" Margin="6,64,0,0" VerticalAlignment="Top" Width="240" MouseUp="lbTechList_MouseDoubleClick"
+                 Background="SlateGray" Foreground="Lime"/>
 
         <Label Content="Logs To View:" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="250,33,0,0" />
-        <ListBox Name="lbLogsToView" HorizontalAlignment="Left" VerticalAlignment="Top" Height="150" Width="287" Margin="251,64,0,0" MouseUp="lbLogsToView_MouseDoubleClick"/>
+        <ListBox Name="lbLogsToView" HorizontalAlignment="Left" VerticalAlignment="Top" Height="150" Width="287" Margin="251,64,0,0" MouseUp="lbLogsToView_MouseDoubleClick"
+                 Background="DarkGray" Foreground="Yellow"/>
 
         <Label Content="Log:" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="6,219,0,0" />
-        <RichTextBox Name="rtbLog" HorizontalAlignment="Left" VerticalAlignment="Top" Width="743" Height="314" VerticalScrollBarVisibility="Auto" Margin="6,245,0,0"/>
+        <RichTextBox Name="rtbLog" HorizontalAlignment="Left" VerticalAlignment="Top" Width="743" Height="314" VerticalScrollBarVisibility="Auto" Margin="6,245,0,0"
+                     Background="Gray" Foreground="White"/>
 
         <Label Content="Filters:" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="541,38,0,0" />
-        <ComboBox Name="cbFilters"  HorizontalAlignment="Left" Margin="543,64,0,0" VerticalAlignment="Top" Width="151"/>
-        <Button Name="btnAddFilter" Content="Add" HorizontalAlignment="Left" Margin="699,64,0,0" VerticalAlignment="Top" Width="50" Height="22" Click="btnAddFilter_Click"/>
-        <ListBox Name="lbFilterList" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="543,91,0,0" Width="206" Height="123" />
-        <Button Name="btnClearFilters" Content="Clear Filters" HorizontalAlignment="Left" Margin="674,219,0,0" VerticalAlignment="Top" Width="75" Height="22" Click="btnClearFilters_Click"/>
+        <ComboBox Name="cbFilters"  HorizontalAlignment="Left" Margin="543,64,0,0" VerticalAlignment="Top" Width="132"/>
+        <Button Name="btnAddFilter" Content="Add" HorizontalAlignment="Left" Margin="680,64,0,0" VerticalAlignment="Top" Width="73" Height="27" Click="btnAddFilter_Click"/>
+        <ListBox Name="lbFilterList" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="543,91,0,0" Width="206" Height="123">
+            <ListBox.ContextMenu>
+                <ContextMenu>
+                    <MenuItem x:Name="mnuiDeleteSelected" Click="mnuiDeleteSelected_Click">DELETE</MenuItem>
+                </ContextMenu>
+            </ListBox.ContextMenu>
+        </ListBox>
+        <Button Name="btnClearFilters" Content="Clear Filters" HorizontalAlignment="Left" Margin="626,219,0,0" VerticalAlignment="Top" Width="123" Height="22" Click="btnClearFilters_Click"/>
     </Grid>
 </Window>

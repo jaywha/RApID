@@ -47,36 +47,72 @@ namespace RApID_Project_WPF
         private void btnMutate_Click(object sender, RoutedEventArgs e)
         {
             var buttonTag = (sender as Button).Tag;
-            switch (buttonTag) {
-                case "ReportedIssue":
-                    unitIssue.ReportedIssue = csCrossClassInteraction.GenerateRandomString();
-                    break;
-                case "TestResult":
-                    unitIssue.TestResult = csCrossClassInteraction.GenerateRandomString();
-                    break;
-                case "TestResultAbort":
-                    unitIssue.AbortResult = csCrossClassInteraction.GenerateRandomString();
-                    break;
-                case "Cause":
-                    unitIssue.Cause = csCrossClassInteraction.GenerateRandomString();
-                    break;
-                case "Replacement":
-                    unitIssue.Replacement = csCrossClassInteraction.GenerateRandomString();
-                    break;
-                case "Issue":
-                    unitIssue.Issue = csCrossClassInteraction.GenerateRandomString();
-                    break;
-                case "Item":
-                    unitIssue.Item = csCrossClassInteraction.GenerateRandomString();
-                    break;
-                case "Problem":
-                    unitIssue.Problem = csCrossClassInteraction.GenerateRandomString();
-                    break;
-                default:
-                    Console.WriteLine($"Tag {buttonTag} wasn't found => Nothing to do here...");
-                    break;
+            if ((sender as Button).Name.Contains("TC"))
+            {
+                switch (buttonTag)
+                {
+                    case "ReportedIssue":
+                        tcUnitIssues[0].ReportedIssue = csCrossClassInteraction.GenerateRandomString();
+                        break;
+                    case "TestResult":
+                        tcUnitIssues[0].TestResult = csCrossClassInteraction.GenerateRandomString();
+                        break;
+                    case "TestResultAbort":
+                        tcUnitIssues[0].AbortResult = csCrossClassInteraction.GenerateRandomString();
+                        break;
+                    case "Cause":
+                        tcUnitIssues[0].Cause = csCrossClassInteraction.GenerateRandomString();
+                        break;
+                    case "Replacement":
+                        tcUnitIssues[0].Replacement = csCrossClassInteraction.GenerateRandomString();
+                        break;
+                    case "Issue":
+                        tcUnitIssues[0].Issue = csCrossClassInteraction.GenerateRandomString();
+                        break;
+                    case "Item":
+                        tcUnitIssues[0].Item = csCrossClassInteraction.GenerateRandomString();
+                        break;
+                    case "Problem":
+                        tcUnitIssues[0].Problem = csCrossClassInteraction.GenerateRandomString();
+                        break;
+                    default:
+                        Console.WriteLine($"Tag {buttonTag} wasn't found => Nothing to do here...");
+                        break;
+                }
             }
-            
+            else
+            {
+                switch (buttonTag)
+                {
+                    case "ReportedIssue":
+                        unitIssue.ReportedIssue = csCrossClassInteraction.GenerateRandomString();
+                        break;
+                    case "TestResult":
+                        unitIssue.TestResult = csCrossClassInteraction.GenerateRandomString();
+                        break;
+                    case "TestResultAbort":
+                        unitIssue.AbortResult = csCrossClassInteraction.GenerateRandomString();
+                        break;
+                    case "Cause":
+                        unitIssue.Cause = csCrossClassInteraction.GenerateRandomString();
+                        break;
+                    case "Replacement":
+                        unitIssue.Replacement = csCrossClassInteraction.GenerateRandomString();
+                        break;
+                    case "Issue":
+                        unitIssue.Issue = csCrossClassInteraction.GenerateRandomString();
+                        break;
+                    case "Item":
+                        unitIssue.Item = csCrossClassInteraction.GenerateRandomString();
+                        break;
+                    case "Problem":
+                        unitIssue.Problem = csCrossClassInteraction.GenerateRandomString();
+                        break;
+                    default:
+                        Console.WriteLine($"Tag {buttonTag} wasn't found => Nothing to do here...");
+                        break;
+                }
+            }            
         }
 
         private void unitIssue_DropDownEvent(object sender, EventArgs e)
@@ -148,7 +184,13 @@ namespace RApID_Project_WPF
             if(e.Key.Equals(Key.Enter))
             {
                 (sender as TextBox).IsEnabled = false;
-                MapRefDesToPartNum();
+                try
+                {
+                    MapRefDesToPartNum();
+                } catch(InvalidOperationException ioe)
+                {
+                    csExceptionLogger.csExceptionLogger.Write($"BadMapping-{(sender as TextBox).Text}",ioe);
+                }
             }
         }
 

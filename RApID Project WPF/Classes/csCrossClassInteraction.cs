@@ -1004,20 +1004,16 @@ namespace RApID_Project_WPF
         public static void LoadPartNumberForm(bool bProduction, List<TextBox> lTB)
         {
             var fpn = new frmPartNumber(bProduction);
-            try
-            {
-                MaterialDesignThemes.Wpf.DialogHost.Show(fpn);
-            } catch(Exception e)
-            {
-                csExceptionLogger.csExceptionLogger.Write("NoDialogHostFound", e);
-                fpn.ShowDialog();
-            }
-            if (sVar.SelectedPartNumberPartName.PartNumberSelected)
-            {
-                lTB[0].Text = sVar.SelectedPartNumberPartName.PartNumber;
-                lTB[1].Text = sVar.SelectedPartNumberPartName.PartName;
-                lTB[2].Text = sVar.SelectedPartNumberPartName.PartSeries;
-            }
+            fpn.DialogHostCloseEvent += delegate {
+                MaterialDesignThemes.Wpf.DialogHost.CloseDialogCommand.Execute(false, fpn.dgvPartNumber);
+                if (sVar.SelectedPartNumberPartName.PartNumberSelected)
+                {
+                    lTB[0].Text = sVar.SelectedPartNumberPartName.PartNumber;
+                    lTB[1].Text = sVar.SelectedPartNumberPartName.PartName;
+                    lTB[2].Text = sVar.SelectedPartNumberPartName.PartSeries;
+                }
+            };
+            MaterialDesignThemes.Wpf.DialogHost.Show(fpn);
         }
 
         /// <summary>

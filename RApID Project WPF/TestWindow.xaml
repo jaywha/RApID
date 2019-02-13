@@ -7,6 +7,7 @@
         xmlns:sys="clr-namespace:System;assembly=mscorlib"
         xmlns:UserControls="clr-namespace:RApID_Project_WPF.UserControls"
         xmlns:conv="clr-namespace:RApID_Project_WPF.UserControls.Converters"
+        xmlns:innerThemes="clr-namespace:RApID_Project_WPF.Classes"
         x:Class="RApID_Project_WPF.TestWindow"
         mc:Ignorable="d"
     
@@ -24,16 +25,18 @@
         <conv:BoolToStringConverter x:Key="StatusConv"/>
         <conv:VisibilityToBoolConverter x:Key="VisToBoolConv"/>
         <conv:CombiningConverter x:Key="VisStatusConv" Converter1="{StaticResource VisToBoolConv}" Converter2="{StaticResource StatusConv}"/>
+
+        <innerThemes:SimpleThemeManager x:Key="themeManager"/>
+        <conv:ThemeToBackground x:Key="ThemeApplier"/>
     </Window.Resources>
-    <Grid>
+    <Grid x:Name="grdMain" innerThemes:ThemeAttachedProperty.ThemeType="Default">
         <Grid.Background>
-            <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
-                <GradientStop Color="#FF4F3B3B" Offset="0.031"/>
-                <GradientStop Color="#FFAA8C8C" Offset="1"/>
-                <GradientStop Color="#FF444444" Offset="0.33"/>
-                <GradientStop Color="#FF797979" Offset="0.66"/>
-                <GradientStop Color="#FFA8A8A8" Offset="0.854"/>
-            </LinearGradientBrush>
+            <MultiBinding Converter="{StaticResource ThemeApplier}">
+                <MultiBinding.Bindings>
+                    <Binding RelativeSource="{RelativeSource Self}"/>
+                    <Binding ElementName="grdMain" Path="(innerThemes:ThemeAttachedProperty.ThemeType)" Mode="OneWay" UpdateSourceTrigger="PropertyChanged"/>
+                </MultiBinding.Bindings>
+            </MultiBinding>
         </Grid.Background>
         <Border BorderThickness="2" BorderBrush="Bisque" Margin="0,80,388,0" Height="59" VerticalAlignment="Top" HorizontalAlignment="Right" Width="166">
             <DockPanel>
@@ -41,9 +44,9 @@
                 <TextBox x:Name="txtSerialNumber" materialDesign:HintAssist.Hint="Barcode serial number..." HorizontalAlignment="Left" Height="28" TextWrapping="Wrap" VerticalAlignment="Top" Width="146" DockPanel.Dock="Bottom" Margin="10,0,0,0" KeyDown="txtSerialNumber_KeyDown"/>
             </DockPanel>
         </Border>
-        <UserControls:ucIssueTabControl x:Name="tcUnitIssues" Margin="10,10,569,10" ReadOnly="True" IsRepair="True" Visibility="Collapsed" />
+        <UserControls:ucIssueTabControl x:Name="tcUnitIssues" Margin="10,10,569,10" ReadOnly="True" IsRepair="True" />
         <UserControls:ucUnitIssue x:Name="unitIssue" HorizontalAlignment="Left" Height="Auto" Margin="10,10,0,10" Width="439" Foreground="White" LabelColor="White" 
-                                  DropDownEvent="unitIssue_DropDownEvent" AddPartReplaced="unitIssue_AddPartReplaced" ReadOnly="True" IsRepairForm="False"/>
+                                  DropDownEvent="unitIssue_DropDownEvent" AddPartReplaced="unitIssue_AddPartReplaced" ReadOnly="True" IsRepairForm="False"  Visibility="Collapsed"/>
 
         <Label Content="Read Only:" Foreground="Azure" Margin="0,10,301,0" HorizontalContentAlignment="Right" VerticalContentAlignment="Center" Width="74" HorizontalAlignment="Right" Height="31" VerticalAlignment="Top"/>
         <Label HorizontalAlignment="Right" Margin="0,10,196,0" VerticalAlignment="Top" Width="100" Height="30" BorderBrush="Orange" BorderThickness="2" Foreground="Azure">
@@ -58,7 +61,7 @@
         </Label>
         <Button Content="Toggle ReadOnly" Background="CornflowerBlue" Margin="0,10,10,0" VerticalAlignment="Top" Click="btnToggle_Click" Height="30" HorizontalAlignment="Right" Width="181" Foreground="WhiteSmoke"/>
 
-        <Border x:Name="brdProps"
+        <Border x:Name="brdProps" Visibility="{Binding ElementName=unitIssue, Path=Visibility, Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
                 Margin="0,144,10,140" 
                       materialDesign:ShadowAssist.ShadowDepth="Depth4" 
                       materialDesign:ShadowAssist.ShadowEdges="Bottom"
@@ -108,6 +111,57 @@
                 </Grid>
             </ScrollViewer>
         </Border>
+        <Border x:Name="brdTCProps" Visibility="{Binding ElementName=tcUnitIssues, Path=Visibility, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                Margin="0,144,10,140" 
+                      materialDesign:ShadowAssist.ShadowDepth="Depth4" 
+                      materialDesign:ShadowAssist.ShadowEdges="Bottom"
+                      materialDesign:ShadowAssist.Darken="True"
+                    BorderThickness="2"
+                    BorderBrush="Bisque" HorizontalAlignment="Right" Width="544">
+            <ScrollViewer VerticalScrollBarVisibility="Auto"
+                          Width="{Binding ElementName=brdTCProps, Path=Width, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                          Height="{Binding ElementName=brdTCProps, Path=Height, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+                <Grid x:Name="grdTCProperties"
+                      Width="{Binding ElementName=brdTCProps, Path=Width, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                          Height="{Binding ElementName=brdTCProps, Path=Height, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                      HorizontalAlignment="Left">
+                    <Label Content="Reported Issue: " Margin="10,-1,0,0" HorizontalContentAlignment="Right" VerticalContentAlignment="Center" Height="31" VerticalAlignment="Top" HorizontalAlignment="Left" Width="114" Foreground="#FF71E5FF"/>
+                    <Label Margin="129,1,165,0" VerticalAlignment="Top" Height="30" BorderBrush="Orange" BorderThickness="2" Foreground="Azure" ToolTip="{Binding ReportedIssue, ElementName=unitIssue, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Content="{Binding ReportedIssue, ElementName=tcUnitIssues[0].ReportedIssue, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                    <Button x:Name="btnTCReportedIssue" Content="Mutate" Foreground="Orange" Background="DarkOliveGreen" Margin="0,-1,34,0" VerticalAlignment="Top" Click="btnMutate_Click" Height="30" HorizontalAlignment="Right" Width="126"
+            IsEnabled="{Binding ReadOnly, ElementName=tcUnitIssues, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Tag="ReportedIssue"/>
+                    <Label Content="Test Result:" Margin="10,34,0,0" HorizontalContentAlignment="Right" VerticalContentAlignment="Center" Height="31" VerticalAlignment="Top" HorizontalAlignment="Left" Width="114" Foreground="#FF71E5FF"/>
+                    <Label Margin="129,36,165,0" VerticalAlignment="Top" Height="30" BorderBrush="Orange" BorderThickness="2" Foreground="Azure" ToolTip="{Binding TestResult, ElementName=unitIssue, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Content="{Binding TestResult, ElementName=tcUnitIssues[0].TestResult, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                    <Button x:Name="btnTCTestResult" Content="Mutate" Foreground="Orange" Background="DarkOliveGreen" Margin="0,34,34,0" VerticalAlignment="Top" Click="btnMutate_Click" Height="30" HorizontalAlignment="Right" Width="126"
+            IsEnabled="{Binding ReadOnly, ElementName=tcUnitIssues, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Tag="TestResult"/>
+                    <Label Content="Test Result Abort:" Margin="10,69,0,0" HorizontalContentAlignment="Right" VerticalContentAlignment="Center" Height="31" VerticalAlignment="Top" HorizontalAlignment="Left" Width="114" Foreground="#FF71E5FF"/>
+                    <Label Margin="129,71,165,0" VerticalAlignment="Top" Height="30" BorderBrush="Orange" BorderThickness="2" Foreground="Azure" ToolTip="{Binding AbortResult, ElementName=unitIssue, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Content="{Binding AbortResult, ElementName=tcUnitIssues[0].AbortResult, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                    <Button x:Name="btnTCAbortResult" Content="Mutate" Foreground="Orange" Background="DarkOliveGreen" Margin="0,69,34,0" VerticalAlignment="Top" Click="btnMutate_Click" Height="30" HorizontalAlignment="Right" Width="126"
+            IsEnabled="{Binding ReadOnly, ElementName=tcUnitIssues, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Tag="TestResultAbort"/>
+                    <Label Content="Cause:" Margin="10,104,0,0" HorizontalContentAlignment="Right" VerticalContentAlignment="Center" Height="31" VerticalAlignment="Top" HorizontalAlignment="Left" Width="114" Foreground="#FF71E5FF"/>
+                    <Label Margin="129,106,165,0" VerticalAlignment="Top" Height="30" BorderBrush="Orange" BorderThickness="2" Foreground="Azure" ToolTip="{Binding Cause, ElementName=unitIssue, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Content="{Binding Cause, ElementName=tcUnitIssues[0].Cause, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                    <Button x:Name="btnTCCause" Content="Mutate" Foreground="Orange" Background="DarkOliveGreen" Margin="0,104,34,0" VerticalAlignment="Top" Click="btnMutate_Click" Height="30" HorizontalAlignment="Right" Width="126"
+            IsEnabled="{Binding ReadOnly, ElementName=tcUnitIssues, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Tag="Cause"/>
+                    <Label Content="Replacement:" Margin="10,139,0,0" HorizontalContentAlignment="Right" VerticalContentAlignment="Center" Height="31" VerticalAlignment="Top" HorizontalAlignment="Left" Width="114" Foreground="#FF71E5FF"/>
+                    <Label Margin="129,141,165,0" VerticalAlignment="Top" Height="30" BorderBrush="Orange" BorderThickness="2" Foreground="Azure" ToolTip="{Binding Replacement, ElementName=unitIssue, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Content="{Binding Replacement, ElementName=tcUnitIssues[0].Replacement, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                    <Button x:Name="btnTCReplacement" Content="Mutate" Foreground="Orange" Background="DarkOliveGreen" Margin="0,139,34,0" VerticalAlignment="Top" Click="btnMutate_Click" Height="30" HorizontalAlignment="Right" Width="126"
+            IsEnabled="{Binding ReadOnly, ElementName=tcUnitIssues, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Tag="Replacement"/>
+                    <Label Content="Issue:" Margin="10,174,0,0" HorizontalContentAlignment="Right" VerticalContentAlignment="Center" Height="31" VerticalAlignment="Top" HorizontalAlignment="Left" Width="114" Foreground="#FF71E5FF"/>
+                    <Label Margin="129,176,165,0" VerticalAlignment="Top" Height="30" BorderBrush="Orange" BorderThickness="2" Foreground="Azure" ToolTip="{Binding Issue, ElementName=unitIssue, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Content="{Binding Issue, ElementName=tcUnitIssues[0].Issue, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                    <Button x:Name="btnTCIssue" Content="Mutate" Foreground="Orange" Background="DarkOliveGreen" Margin="0,174,34,0" VerticalAlignment="Top" Click="btnMutate_Click" Height="30" HorizontalAlignment="Right" Width="126"
+            IsEnabled="{Binding ReadOnly, ElementName=tcUnitIssues, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Tag="Issue"/>
+                    <Label Content="Item:" Margin="10,209,0,0" HorizontalContentAlignment="Right" VerticalContentAlignment="Center" Height="31" VerticalAlignment="Top" HorizontalAlignment="Left" Width="114" Foreground="#FF71E5FF"/>
+                    <Label Margin="129,211,165,0" VerticalAlignment="Top" Height="30" BorderBrush="Orange" BorderThickness="2" Foreground="Azure" ToolTip="{Binding Item, ElementName=unitIssue, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Content="{Binding Item, ElementName=tcUnitIssues[0].Item, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                    <Button x:Name="btnTCItem" Content="Mutate" Foreground="Orange" Background="DarkOliveGreen" Margin="0,210,34,0" VerticalAlignment="Top" Click="btnMutate_Click" Height="30" HorizontalAlignment="Right" Width="126"
+            IsEnabled="{Binding ReadOnly, ElementName=tcUnitIssues, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Tag="Item"/>
+                    <Label Content="Problem:" Margin="10,244,0,0" HorizontalContentAlignment="Right" VerticalContentAlignment="Center" Height="31" VerticalAlignment="Top" HorizontalAlignment="Left" Width="114" Foreground="#FF71E5FF"/>
+                    <Label Margin="129,246,165,0" VerticalAlignment="Top" Height="30" BorderBrush="Orange" BorderThickness="2" Foreground="Azure" ToolTip="{Binding Problem, ElementName=unitIssue, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Content="{Binding Problem, ElementName=tcUnitIssues[0].Problem, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                    <Button x:Name="btnTCProblem" Content="Mutate" Foreground="Orange" Background="DarkOliveGreen" Margin="0,245,34,0" VerticalAlignment="Top" Click="btnMutate_Click" Height="30" HorizontalAlignment="Right" Width="126"
+            IsEnabled="{Binding ReadOnly, ElementName=tcUnitIssues, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Tag="Problem"/>
+
+                </Grid>
+            </ScrollViewer>
+        </Border>
+        
         <Border BorderThickness="2" BorderBrush="ForestGreen" Margin="0,10,388,0" Padding="1px" Height="65" VerticalAlignment="Top" HorizontalAlignment="Right" Width="166">
             <StackPanel x:Name="stkOther" Orientation="Vertical">
                 <Label Content="Parent Window ComboBox" HorizontalAlignment="Left" VerticalAlignment="Top" Foreground="Azure"/>
