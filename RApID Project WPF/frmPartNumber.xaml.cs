@@ -18,8 +18,9 @@ namespace RApID_Project_WPF
     /// </summary>
     public partial class frmPartNumber : UserControl
     {
-
+        /// <summary> Will act as a mutex for setting the value of the backed event. </summary>
         private object @lockDialogHostCloseEvent = new object();
+        /// <summary> Will pipe the dialog close event to the invoking member for this control. </summary>
         public static readonly DependencyProperty DialogHostCloseProperty =
             DependencyProperty.Register("DialogHostCloseEvent", typeof(EventHandler), typeof(frmPartNumber));
 
@@ -183,6 +184,11 @@ namespace RApID_Project_WPF
         private void txtSearch_TextChanged(object sender, TextChangedEventArgs e)
         {
             searchDataTable();
+        }
+
+        private void uccPartNumber_PreviewKeyDown(object sender, KeyEventArgs e)
+        {
+            if(e.Key == Key.Escape) ((EventHandler)GetValue(DialogHostCloseProperty))?.Invoke(sender, e);
         }
     }
 }
