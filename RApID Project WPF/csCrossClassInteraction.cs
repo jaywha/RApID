@@ -3,23 +3,20 @@
  * Created By: Eric Stabile
  */
 
+using ExcelDataReader;
+using RApID_Project_WPF.UserControls;
 using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
-using System.Diagnostics;
+using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Threading;
-using System.Windows.Controls;
-using System.Windows.Data;
-using ExcelDataReader;
-using DesginatorPair = System.Tuple<System.Windows.Controls.Control, System.Windows.Controls.Control>;
 using System.Threading.Tasks;
 using System.Windows;
-using RApID_Project_WPF.UserControls;
-using System.Drawing;
-using System.Windows.Threading;
-using System.Runtime.Caching;
+using System.Windows.Controls;
+using System.Windows.Data;
+using DesginatorPair = System.Tuple<System.Windows.Controls.Control, System.Windows.Controls.Control>;
 //using MonkeyCache.FileStore;
 //using MonkeyCache;
 
@@ -130,6 +127,8 @@ namespace RApID_Project_WPF
                 return cbox.SelectedValue;
             else if (c is TextBox tbox /*or a SuggestBox since custom conversion*/)
                 return tbox.Text;
+            else if (c is RichTextBox rtbox)
+                return new System.Windows.Documents.TextRange(rtbox.Document.ContentStart, rtbox.Document.ContentEnd).Text;
             else
                 return null;
         }
@@ -147,6 +146,13 @@ namespace RApID_Project_WPF
                 tbox.Text = val as string;
             else if (c is Label lbl)
                 lbl.Content = val as string;
+            else if (c is RichTextBox rtbox)
+                rtbox.ReplaceText(rtbox.GetContent().ToString(), val as string);
+        }
+
+        public static void ReplaceText(this RichTextBox rtbox, string oldString, string newString)
+        {
+            //TODO: Need to remove oldString, set text to newString
         }
 
         /// <summary>
@@ -196,46 +202,12 @@ namespace RApID_Project_WPF
                 await Task.Factory.StartNew(new Action(() =>
                 {
                     if (progData != null) progData.Dispatcher.Invoke(() => progData.Visibility = Visibility.Visible);
-                    if (string.IsNullOrEmpty(filePath)) {
+                    if (string.IsNullOrEmpty(filePath))
+                    {
                         MainWindow.Notify.ShowBalloonTip("Couldn't find BOM File",
-                            "The BOM file path was empty! There're no autocomplete or quick links available.\nPlease alert Dex or Jay.", 
+                            "The BOM file path was empty! There're no autocomplete or quick links available.\nPlease alert Dex or Jay.",
                             Hardcodet.Wpf.TaskbarNotification.BalloonIcon.Warning);
                         return;
-                    }
-
-                    //var (exists, partNumbers, referenceDesignators) = CheckCache(filePath);
-                    if (false) {
-                        MainWindow.Notify.ShowBalloonTip($"Using Cached Data for {filePath.Substring(filePath.LastIndexOf('\\') + 1, 8)}",
-                            "The data was pulled from the cache.\nIf data is outdated, please notify Jay W.",
-                            Hardcodet.Wpf.TaskbarNotification.BalloonIcon.Info);
-                        /*PartNumbers = partNumbers.Split(',').ToList();
-                        ReferenceDesignators = referenceDesignators.Split(',').ToList();*/
-                    } else {
-                        using (var stream = File.Open(filePath, FileMode.Open, FileAccess.Read))
-                        {
-                            using (var reader = ExcelReaderFactory.CreateReader(stream))
-                            {
-                                while (reader.NextResult() && reader.Name != null && !reader.Name.Equals("JUKI"))
-                                { /*spin until JUKI sheet*/ }
-
-                                while (reader.Read() && !string.IsNullOrEmpty(reader.GetValue(0)?.ToString())
-                                                     && !string.IsNullOrEmpty(reader.GetValue(4)?.ToString()))
-                                {
-                                    var rd = reader.GetValue(0).ToString();
-                                    var pn = reader.GetValue(4).ToString();
-                                    ReferenceDesignators.Add(rd);
-                                    PartNumbers.Add(pn);
-
-                                    /*bomlist?.Dispatcher.Invoke(() => {
-                                        if (PartNumbers.Contains(pn)) {
-                                        }
-
-                                        bomlist.Items.Add(new MultiplePartsReplaced(rd, pn,
-                                            pn.Contains("NP") ? "NO PART" : frmProduction.csCrossClassInteraction.getPartReplacedPartDescription(pn)));
-                                    });*/
-                                }
-                            }
-                        }
                     }
 
                     foreach (var designator in designators)
@@ -254,8 +226,35 @@ namespace RApID_Project_WPF
                         }
                     }
 
-                    UpdateCache("PN", filePath);
-                    UpdateCache("RD", filePath);
+                    using (var stream = File.Open(filePath, FileMode.Open, FileAccess.Read))
+                    {
+                        using (var reader = ExcelReaderFactory.CreateReader(stream))
+                        {
+                            while (reader.NextResult() && reader.Name != null && !reader.Name.Equals("JUKI"))
+                            { /*spin until JUKI sheet*/ }
+
+                            progData.Dispatcher.Invoke(() => {
+                                progData.Maximum = reader.RowCount;
+                            });
+                            while (reader.Read() && !string.IsNullOrEmpty(reader.GetValue(0)?.ToString())
+                                                && !string.IsNullOrEmpty(reader.GetValue(4)?.ToString()))
+                            {
+                                var rd = reader.GetValue(0).ToString();
+                                var pn = reader.GetValue(4).ToString();
+                                ReferenceDesignators.Add(rd);
+                                PartNumbers.Add(pn);
+
+                                progData.Dispatcher.Invoke(()=> {
+                                    progData.Value++;
+                                });
+                                /*bomlist?.Dispatcher.Invoke(() =>
+                                {
+                                    bomlist.Items.Add(new MultiplePartsReplaced(rd, pn,
+                                        pn.Contains("NP") ? "NO PART" : GetPartReplacedPartDescription(pn)));
+                                });*/
+                            }
+                        }
+                    }
 
                     GC.Collect();
                     Thread.Sleep(500);
@@ -292,12 +291,12 @@ namespace RApID_Project_WPF
             var componentNumber = filePath.Substring(filePath.LastIndexOf('\\') + 1, 8);
             /*if (!Cache.Exists(componentNumber))
                 Cache.Add(componentNumber, filePath, TimeSpan.Parse("12:01:00"));*/
-            
+
             string data = "";
-            switch(cacheTarget)
+            switch (cacheTarget)
             {
                 case "PN":
-                    data = PartNumbers.Aggregate((curr,next) => $"{curr},{next}");
+                    data = PartNumbers.Aggregate((curr, next) => $"{curr},{next}");
                     break;
                 case "RD":
                     data = ReferenceDesignators.Aggregate((curr, next) => $"{curr},{next}");
@@ -853,7 +852,7 @@ namespace RApID_Project_WPF
         /// <summary>
         /// Queries the Beams table for information relevant to the serial number.
         /// </summary>
-        public static void BeamsQuery(string _sn, ComboBox cbBeams, ListView lsvToClear, bool isXDR = false) 
+        public static void BeamsQuery(string _sn, ComboBox cbBeams, ListView lsvToClear, bool isXDR = false)
         {
             cbBeams.Items.Clear();
             lsvToClear.Items.Clear();
@@ -1016,7 +1015,7 @@ namespace RApID_Project_WPF
         /// </summary>
         /// <param name="valToTest">Value that needs to be checked.</param>
         /// <returns>Returns String.Empty if the value is null or DBNull; otherwise, return the value passed in.</returns>
-        public static string EmptyIfNull(this string valToTest) 
+        public static string EmptyIfNull(this string valToTest)
             => string.IsNullOrEmpty(valToTest) || ((object)valToTest) == DBNull.Value ? string.Empty : valToTest;
 
         public static string unitIssuesValSubmit(ComboBox cbToCheck)
@@ -1177,7 +1176,7 @@ namespace RApID_Project_WPF
             var dMultiParts = new Dictionary<int, List<UnitIssueModel>>();
             var lIndividualIssues = new List<UnitIssueModel>();
 
-#region Split the overall list into two separate list: 1 with individual unit issues, 2 with same unit issue but different parts replaced/ref des
+            #region Split the overall list into two separate list: 1 with individual unit issues, 2 with same unit issue but different parts replaced/ref des
             int key = 0;
             UnitIssueModel rmi = null;
             for (int i = 0; i < _lrmi.Count; i++)
@@ -1224,14 +1223,14 @@ namespace RApID_Project_WPF
                     i--;
                 }
             }
-#endregion
+            #endregion
 
-#region Add individual unit issues to the combined list
+            #region Add individual unit issues to the combined list
             if (lIndividualIssues.Count > 0)
                 lCombinedRMI.AddRange(lIndividualIssues);
-#endregion
+            #endregion
 
-#region Combine all of the duplicated items by generating lists of parts replaced and ref designators for use in one unit issue
+            #region Combine all of the duplicated items by generating lists of parts replaced and ref designators for use in one unit issue
             if (dMultiParts.Keys.Count > 0)
             {
                 foreach (KeyValuePair<int, List<UnitIssueModel>> kvp in dMultiParts)
@@ -1263,7 +1262,7 @@ namespace RApID_Project_WPF
                     }
                 }
             }
-#endregion
+            #endregion
 
             return lCombinedRMI;
         }
@@ -1333,15 +1332,17 @@ namespace RApID_Project_WPF
             try
             {
                 (cbox.Template.FindName("PART_EditableTextBox", cbox) as TextBox).SelectAll();
-            } catch(Exception e)
+            }
+            catch (Exception e)
             {
                 csExceptionLogger.csExceptionLogger.Write("ComboBox_SelectAll", e);
 
                 try
                 {
-                    cbox.Focus();                    
+                    cbox.Focus();
                     cbox.RaiseEvent(new RoutedEventArgs(Control.MouseDoubleClickEvent));
-                } catch(Exception ie)
+                }
+                catch (Exception ie)
                 {
                     csExceptionLogger.csExceptionLogger.Write("ComboBox_SelectFail", ie);
                 }
@@ -1400,13 +1401,20 @@ namespace RApID_Project_WPF
         /// <param name="child"><see cref="UIElement"/> to remove</param>
         public static void RemoveChild(this DependencyObject parent, UIElement child)
         {
-            if (parent is Panel panel) {
+            if (parent is Panel panel)
+            {
                 panel.Children.Remove(child);
-            } else if (parent is Decorator decorator) {
+            }
+            else if (parent is Decorator decorator)
+            {
                 if (decorator.Child == child) decorator.Child = null;
-            } else if (parent is ContentPresenter contentPresenter) {
+            }
+            else if (parent is ContentPresenter contentPresenter)
+            {
                 if (contentPresenter.Content == child) contentPresenter.Content = null;
-            } else if (parent is ContentControl contentControl) {
+            }
+            else if (parent is ContentControl contentControl)
+            {
                 if (contentControl.Content == child) contentControl.Content = null;
             }
         }

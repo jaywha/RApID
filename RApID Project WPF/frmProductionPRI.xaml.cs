@@ -59,6 +59,10 @@ namespace RApID_Project_WPF
                         txtTOR.Text = reader["TypeOfReturn"].ToString().EmptyIfNull();
                         txtFromArea.Text = reader["FromArea"].ToString().EmptyIfNull();
 
+                        txtTechAct1.Text = reader["TechAct1"].ToString().EmptyIfNull();
+                        txtTechAct2.Text = reader["TechAct2"].ToString().EmptyIfNull();
+                        txtTechAct3.Text = reader["TechAct3"].ToString().EmptyIfNull();
+
                         if (reader["LogID"] != DBNull.Value)
                             logCmd.Parameters.AddWithValue("@logID",
                                 int.Parse(reader["LogID"].ToString().EmptyIfNull()));

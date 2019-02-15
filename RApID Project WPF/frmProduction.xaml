@@ -7,6 +7,12 @@
         x:Name="wndMain"
         Title="Production" Width="1104" Height="815" MinWidth="300" MinHeight="300" Background="#FF808285" Loaded="Window_Loaded" Closing="Window_Closing">
     <Window.Resources>
+        <Style x:Key="ComboBoxBaseStyle" TargetType="{x:Type ComboBox}">
+            <Setter Property="Width" Value="275" />
+            <Setter Property="HorizontalAlignment" Value="Left" />
+            <Setter Property="VerticalAlignment" Value="Top" />
+        </Style>
+        
         <Style x:Key="TextboxBaseStyle" TargetType="{x:Type TextBox}">
             <Setter Property="Width" Value="195" />
             <Setter Property="Height" Value="23" />
@@ -273,16 +279,33 @@
                         </TabControl>
 
                         <Label Content="Additional Comments:" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="605,10,0,0"/>
-                        <RichTextBox Name="rtbAdditionalComments" HorizontalAlignment="Left" VerticalAlignment="Top" Width="465" Height="215" Margin="605,40,0,0" GotFocus="rtbGotFocus" LostFocus="rtbLostFocus">
+                        <RichTextBox Name="rtbAdditionalComments" HorizontalAlignment="Left" VerticalAlignment="Top" Width="465" Height="89" Margin="605,40,0,0" GotFocus="rtbGotFocus" LostFocus="rtbLostFocus">
                             <FlowDocument>
                                 <Paragraph>
                                     <Run Text=""/>
                                 </Paragraph>
                             </FlowDocument>
                         </RichTextBox>
-                        <StackPanel Orientation="Vertical" Margin="605,270,0,6" Visibility="Collapsed">
-                            <Label x:Name="lblBOMList" Content="BOM Parts List" HorizontalAlignment="Left" VerticalAlignment="Top" Width="128" ToolTip="From JUKI Sheet of BOM Excel File"/>
-                            <DataGrid x:Name="dgBOMList" HorizontalAlignment="Left" Height="328" VerticalAlignment="Top" Width="461" BeginningEdit="dgBeginEdit" MouseDoubleClick="dgBOMList_MouseDoubleClick"/>
+
+                        <GroupBox Name="gbTechAct" Header="Technician Actions" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="605,134,0,0" Width="250" Height="206">
+                            <Grid>
+                                <Label Content="Technician Action #1" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10,10,0,0" />
+                                <ComboBox Name="cbTechAction1" Margin="10,35,0,0" DropDownClosed="cbDDClosed" Style="{StaticResource ComboBoxBaseStyle}" Width="225"/>
+
+                                <Label Content="Technician Action #2" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10,60,0,0" />
+                                <ComboBox Name="cbTechAction_2" Margin="10,85,0,0" DropDownClosed="cbDDClosed" Style="{StaticResource ComboBoxBaseStyle}" Width="225"/>
+
+                                <Label Content="Technician Action #3" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10,110,0,0" />
+                                <ComboBox Name="cbTechAction_3" Margin="10,135,0,0" DropDownClosed="cbDDClosed" Style="{StaticResource ComboBoxBaseStyle}" Width="225"/>
+                            </Grid>
+                        </GroupBox>
+
+                        <StackPanel Orientation="Vertical" Margin="605,365,0,6" Visibility="Collapsed">
+                            <StackPanel Orientation="Horizontal">
+                                <Label x:Name="lblBOMList" Content="BOM Parts List" HorizontalAlignment="Left" VerticalAlignment="Top" Width="128" ToolTip="From JUKI Sheet of BOM Excel File"/>
+                            </StackPanel>
+                            <DataGrid x:Name="dgBOMList" HorizontalAlignment="Left" Height="234" VerticalAlignment="Top" Width="461" BeginningEdit="dgBeginEdit" MouseDoubleClick="dgBOMList_MouseDoubleClick" 
+                                      ScrollViewer.VerticalScrollBarVisibility="Auto"/>
                         </StackPanel>
 
                     </Grid>
@@ -337,7 +360,7 @@
                         </Label>
                     </StackPanel>
                 </Label>
-                <ProgressBar x:Name="progMapper" Height="20" VerticalAlignment="Center" HorizontalAlignment="Right" Width="100" IsIndeterminate="True" Visibility="Collapsed"/>
+                <ProgressBar x:Name="progMapper" Height="20" VerticalAlignment="Center" HorizontalAlignment="Center" Width="100" Visibility="Collapsed" SmallChange="1" LargeChange="5"/>
                 <x:Code>
                     <![CDATA[
                         private void /*inline*/ LabelDoubleClick(object sender, System.Windows.RoutedEventArgs args) {

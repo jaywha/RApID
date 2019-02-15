@@ -108,6 +108,9 @@ namespace RApID_Project_WPF
             var lTestResult = new List<string>();
             var lTestResultAbort = new List<string>();
             var lFromArea = new List<string>();
+            var lTechAction1 = new List<string>();
+            var lTechAction2 = new List<string>();
+            var lTechAction3 = new List<string>();
             #endregion
 
             string query = "SELECT * FROM RApID_DropDowns;";
@@ -131,6 +134,16 @@ namespace RApID_Project_WPF
 
                         if (!string.IsNullOrEmpty(reader["FromArea"].ToString()))
                             lFromArea.Add(reader["FromArea"].ToString());
+
+                        if (!string.IsNullOrEmpty(reader["TechAction"].ToString()))
+                        {
+                            if (Convert.ToBoolean(reader["ShowTechActionInAll"]))
+                            {
+                                lTechAction1.Add(reader["TechAction"].ToString());
+                                lTechAction2.Add(reader["TechAction"].ToString());
+                                lTechAction3.Add(reader["TechAction"].ToString());
+                            }
+                        }
                     }
                 }
                 conn.Close();
@@ -139,14 +152,17 @@ namespace RApID_Project_WPF
                 cbTestResult.cbFill(lTestResult);
                 cbTestResultAbort.cbFill(lTestResultAbort);
                 cbFromArea.cbFill(lFromArea);
+                cbTechAction1.cbFill(lTechAction1);
 
                 cbReportedIssue_2.cbFill(lReportedIssue);
                 cbTestResult_2.cbFill(lTestResult);
                 cbTestResultAbort_2.cbFill(lTestResultAbort);
+                cbTechAction_2.cbFill(lTechAction2);
 
                 cbReportedIssue_3.cbFill(lReportedIssue);
                 cbTestResult_3.cbFill(lTestResult);
                 cbTestResultAbort_3.cbFill(lTestResultAbort);
+                cbTechAction_3.cbFill(lTechAction3);
 
                 buildIIP();
             }
@@ -176,10 +192,12 @@ namespace RApID_Project_WPF
                 {
                     while (reader.Read())
                     {
-                        var iipc = new IssueItemProblemCombinations();
-                        iipc.Issue = reader["Issue"].ToString();
-                        iipc.Item = reader["Item"].ToString();
-                        iipc.Problem = reader["Problem"].ToString();
+                        var iipc = new IssueItemProblemCombinations
+                        {
+                            Issue = reader["Issue"].ToString(),
+                            Item = reader["Item"].ToString(),
+                            Problem = reader["Problem"].ToString()
+                        };
                         lIIPC.Add(iipc);
                     }
                 }
@@ -226,7 +244,7 @@ namespace RApID_Project_WPF
         {
             try
             {
-                sVar.LogHandler.CheckDirectory(System.Environment.UserName);
+                sVar.LogHandler.CheckDirectory(Environment.UserName);
             }
             catch { }
         }
@@ -272,14 +290,17 @@ namespace RApID_Project_WPF
             cbReportedIssue.SelectedIndex = cbTestResult.SelectedIndex = cbTestResultAbort.SelectedIndex = cbIssue.SelectedIndex = cbItem.SelectedIndex = cbProblem.SelectedIndex = -1;
             txtMultiRefDes.Text = txtMultiPartNum.Text = string.Empty;
             dgMultipleParts.Items.Clear();
+            cbTechAction1.SelectedIndex = -1;
 
             cbReportedIssue_2.SelectedIndex = cbTestResult_2.SelectedIndex = cbTestResultAbort_2.SelectedIndex = cbIssue_2.SelectedIndex = cbItem_2.SelectedIndex = cbProblem_2.SelectedIndex = -1;
             txtMultiRefDes_2.Text = txtMultiPartNum_2.Text = string.Empty;
             dgMultipleParts_2.Items.Clear();
+            cbTechAction_2.SelectedIndex = -1;
 
             cbReportedIssue_3.SelectedIndex = cbTestResult_3.SelectedIndex = cbTestResultAbort_3.SelectedIndex = cbIssue_3.SelectedIndex = cbItem_3.SelectedIndex = cbProblem_3.SelectedIndex = -1;
             txtMultiRefDes_3.Text = txtMultiPartNum_3.Text = string.Empty;
             dgMultipleParts_3.Items.Clear();
+            cbTechAction_3.SelectedIndex = -1;
 
             cbItem.IsEnabled = cbProblem.IsEnabled = false;
             cbItem_2.IsEnabled = cbProblem_2.IsEnabled = false;
@@ -615,14 +636,14 @@ namespace RApID_Project_WPF
                             else
                             {
                                 var result = await mapper.FindFileAsync(".xls");
-                                csCrossClassInteraction.DoExcelOperations(result.Item1, progMapper,
+                                csCrossClassInteraction.DoExcelOperations(result.Item1, progMapper, dgBOMList,
                                 new Tuple<Control, Control>(txtMultiRefDes, txtMultiPartNum),
                                 new Tuple<Control, Control>(txtMultiRefDes_2, txtMultiPartNum_2),
                                 new Tuple<Control, Control>(txtMultiRefDes_3, txtMultiPartNum_3));
 
                                 BOMFileActive = true;
                             }
-                        }), DispatcherPriority.ContextIdle);
+                        }), DispatcherPriority.ApplicationIdle);
                     }));
                 }
             }
@@ -956,10 +977,10 @@ namespace RApID_Project_WPF
             string query = "INSERT INTO TechnicianSubmission " +
                            "(SerialNumber, Technician, DateReceived, PartName, PartNumber, Series, CommoditySubClass, SoftwareVersion, TypeOfReturn, FromArea, Scrap, " +
                            "ReportedIssue, TestResult, TestResultAbort, Issue, Item, Problem, RefDesignator, PartsReplaced, AdditionalComments, " +
-                           "DateSubmitted, SubmissionStatus, SaveID, Quantity) " +
+                           "DateSubmitted, SubmissionStatus, SaveID, Quantity, TechAct1, TechAct2, TechAct3) " +
                            "VALUES (@serialNum, @technician, @dateReceived, @partName, @partNumber, @partSeries, @commoditySubClass, @softwareVersion, @typeOfReturn, @fromArea, @scrap, " +
                            "@reportedIssue, @testResult, @testResultAbort, @issue, @item, @problem, @refDesignator, @partsReplaced, @additionalComments, " +
-                           "@dateSubmitted, @submissionStatus, @saveID, @quantity);";
+                           "@dateSubmitted, @submissionStatus, @saveID, @quantity, @ta1, @ta2, @ta3);";
 
             sVar.LogHandler.CreateLogAction("Attempting to submit the tech data into the TechnicianSubmission Table.", csLogging.LogState.NOTE);
             sVar.LogHandler.CreateLogAction("SQL QUERY: " + query, csLogging.LogState.SQLQUERY);
@@ -1000,6 +1021,18 @@ namespace RApID_Project_WPF
                 cmd.Parameters.AddWithValue("@submissionStatus", "COMPLETE"); //--Will always be 'COMPLETE' for Production
                 cmd.Parameters.AddWithValue("@saveID", "-1"); //--Will always be '-1' for Production.
                 cmd.Parameters.AddWithValue("@quantity", 1); //--Will always be 1 for Production.
+
+                if (!string.IsNullOrEmpty(cbTechAction1.Text))
+                    cmd.Parameters.AddWithValue("@ta1", cbTechAction1.Text);
+                else cmd.Parameters.AddWithValue("@ta1", DBNull.Value);
+
+                if (!string.IsNullOrEmpty(cbTechAction_2.Text))
+                    cmd.Parameters.AddWithValue("@ta2", cbTechAction1.Text);
+                else cmd.Parameters.AddWithValue("@ta2", DBNull.Value);
+
+                if (!string.IsNullOrEmpty(cbTechAction_3.Text))
+                    cmd.Parameters.AddWithValue("@ta3", cbTechAction1.Text);
+                else cmd.Parameters.AddWithValue("@ta3", DBNull.Value);
 
                 cmd.ExecuteNonQuery();
                 conn.Close();
@@ -1760,6 +1793,7 @@ namespace RApID_Project_WPF
         {
             sVar.LogHandler.CreateLogAction((ComboBox)sender, csLogging.LogState.DROPDOWNCLOSED);
 
+            var cmbx = (ComboBox)sender;
             var chosenOption = ((Control)sender).Name.ToString();
 
             if (!chosenOption.Equals("cbFromArea"))
@@ -1832,6 +1866,26 @@ namespace RApID_Project_WPF
                 else if (chosenOption.EndsWith("3"))
                 {
                     dispIIPElements(lblRefDes_3, txtMultiRefDes_3, lblPartNum_3, txtMultiPartNum_3, cbItem_3, cbProblem_3, dgMultipleParts_3, btnAddRefPart_3, brdRefDes_3);
+                }
+            }
+            else if (chosenOption.StartsWith("cbTechAction"))
+            {
+                var currString = rtbAdditionalComments.GetContent().ToString();
+
+                if (!chosenOption.Contains("_"))
+                {
+                    //Tech Action 1
+                    //rtbAdditionalComments.AppendText("Tech Action #1: " + cmbx.Text + Environment.NewLine);
+                }
+                else if (chosenOption.EndsWith("2"))
+                {
+                    //Tech Action 2
+                    //rtbAdditionalComments.AppendText("Tech Action #2: " + cmbx.Text + Environment.NewLine);
+                }
+                else if (chosenOption.EndsWith("3"))
+                {
+                    //Tech Action 3
+                    //rtbAdditionalComments.AppendText("Tech Action #3: " + cmbx.Text + Environment.NewLine);
                 }
             }
         }

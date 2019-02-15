@@ -3,7 +3,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:local="clr-namespace:RApID_Project_WPF" x:Class="RApID_Project_WPF.frmProductionPRI"
         xmlns:uc="clr-namespace:RApID_Project_WPF.UserControls" x:Name="wndMain"
-        Title="Production: Previous Repair Information" Width="836.458" Height="570.625" Loaded="Window_Loaded">
+        Title="Production: Previous Repair Information" Width="803.229" Height="572.917" Loaded="Window_Loaded">
     <Window.Resources>
         <Style x:Key="TextboxBaseStyle" TargetType="{x:Type TextBox}">
             <Setter Property="HorizontalAlignment" Value="Left" />
@@ -14,6 +14,14 @@
             <Setter Property="TextWrapping" Value="Wrap" />
             <Setter Property="IsReadOnly" Value="True" />
         </Style>
+
+        <Style x:Key="GBBaseStyle" TargetType="{x:Type GroupBox}">
+            <Setter Property="HorizontalAlignment" Value="Left" />
+            <Setter Property="VerticalAlignment" Value="Top" />
+            <Setter Property="Width" Value="215" />
+            <Setter Property="Height" Value="180" />
+        </Style>
+
         <Style x:Key="TextboxUnitIssueStyle" TargetType="{x:Type TextBox}">
             <Setter Property="HorizontalAlignment" Value="Left" />
             <Setter Property="VerticalAlignment" Value="Top" />
@@ -43,8 +51,8 @@
         </Style>
     </Window.Resources>
 
-    <Viewbox x:Name="vbxContainer" Width="{Binding Path=Width,ElementName=wndMain,Mode=TwoWay}" Height="{Binding Path=Height,ElementName=wndMain,Mode=TwoWay}">
-        <Grid Background="#FFDCD7D7" Width="{Binding Path=Width,ElementName=vbxContainer,Mode=TwoWay}" Height="{Binding Path=Height,ElementName=vbxContainer,Mode=TwoWay}">
+    <Viewbox x:Name="vbxContainer" Width="{Binding Path=Width,ElementName=wndMain,Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Height="{Binding Path=Height,ElementName=wndMain,Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+        <Grid Background="#FFDCD7D7" Width="{Binding Path=Width,ElementName=wndMain,Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Height="{Binding Path=Height,ElementName=wndMain,Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
             <Label Content="Technician Name:" Margin="0,0,0,0" Style="{StaticResource LabelBaseStyle}" />
             <TextBox x:Name="txtTechName" Margin="0,25,0,0" Style="{StaticResource TextboxBaseStyle}" />
 
@@ -75,11 +83,25 @@
             <Label Content="From Area:" Margin="0,450,0,0" Style="{StaticResource LabelBaseStyle}" />
             <TextBox x:Name="txtFromArea" Margin="0,475,0,0" Style="{StaticResource TextboxBaseStyle}" />
 
-            <uc:ucIssueTabControl x:Name="ucIssues" Margin="202,23,286.458,26.625" DesignHeight="495" DesignWidth="345" ReadOnly="True"/>
+            <uc:ucIssueTabControl x:Name="ucIssues" Margin="202,23,0,26.917" DesignHeight="495" DesignWidth="345" ReadOnly="True" HorizontalAlignment="Left" Width="437"/>
 
-            <Label Content="Additional Comments:" Margin="560,23,0,0" Style="{StaticResource LabelBaseStyle}" Width="144" Height="23" />
-            <RichTextBox x:Name="rtbAddComm" Margin="560,51,0,0" Style="{StaticResource RTBBaseStyle}" Width="245" Height="225" />
-            <uc:ucLogActionView x:Name="ucTechActions" Margin="555,288,0,48.625" HorizontalAlignment="Left" Width="250"/>
+            <Label Content="Additional Comments:" Margin="558,23,0,0" Style="{StaticResource LabelBaseStyle}" Width="144" Height="23" />
+            <RichTextBox x:Name="rtbAddComm" Margin="558,51,0,0" Style="{StaticResource RTBBaseStyle}" Width="215" Height="75" />
+            <GroupBox Name="gbTechActions" Margin="558,134,0,258.917" Header="Technician Actions" Style="{StaticResource GBBaseStyle}" Height="180" Width="215" HorizontalAlignment="Left">
+                <ScrollViewer VerticalScrollBarVisibility="Auto">
+                    <Grid>
+                        <Label Content="Technician Action #1:" Margin="0,0,0,0" Style="{StaticResource LabelBaseStyle}" />
+                        <TextBox Name="txtTechAct1" Margin="0,25,0,0" Style="{StaticResource TextboxBaseStyle}" />
+
+                        <Label Content="Technician Action #2:" Margin="0,50,0,0" Style="{StaticResource LabelBaseStyle}" />
+                        <TextBox Name="txtTechAct2" Margin="0,75,0,0" Style="{StaticResource TextboxBaseStyle}" />
+
+                        <Label Content="Technician Action #3:" Margin="0,100,0,0" Style="{StaticResource LabelBaseStyle}" />
+                        <TextBox Name="txtTechAct3" Margin="0,125,0,0" Style="{StaticResource TextboxBaseStyle}" />
+                    </Grid>
+                </ScrollViewer>
+            </GroupBox>
+            <uc:ucLogActionView x:Name="ucTechActions" Margin="558,324,0,26.917" HorizontalAlignment="Left" Width="215"/>
             <!--uc:ucUnitIssue x:Name="unitIssue" HorizontalAlignment="Left" Height="498" Margin="230,0,0,0" VerticalAlignment="Top" Width="300"/-->
         </Grid>
     </Viewbox>

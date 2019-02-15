@@ -53,10 +53,11 @@ namespace RApID_Project_WPF
                         $"[UEHandler]: {e.Message}\n" +
                         $"(Stack Trace)\n{new string('-', 20)}\n\n{e.StackTrace}\n\n{new string('-', 20)}\n" +
                         $"Will runtime terminate now? -> \'{(args.IsTerminating ? "Yes" : "No")}\'"
-                    ); if (e is TaskCanceledException) return;
+                    ); if (e is TaskCanceledException tce)
 #if !DEBUG
                         csExceptionLogger.csExceptionLogger.Write("Unhandled_Exception", e);
 #endif
+                    Console.WriteLine($"[UnhandledException] Task: {tce.Task.Id} | CanBeCanceled = {tce.CancellationToken.CanBeCanceled}\n\tSource -> {tce.Source}");
                 });
             AppDomain.CurrentDomain.FirstChanceException += new EventHandler<System.Runtime.ExceptionServices.FirstChanceExceptionEventArgs>(
                 delegate (object sender, System.Runtime.ExceptionServices.FirstChanceExceptionEventArgs args)
@@ -64,11 +65,12 @@ namespace RApID_Project_WPF
                     var e = args.Exception;
                     Console.WriteLine(
                         $"[UEHandler]: {e.Message}\n" +
-                        $"(Stack Trace)\n{new string('-', 20)}\n\n{e.StackTrace}\n"
-                    ); if (e is TaskCanceledException) return;
+                        $"(Stack Trace)\n{new string('-', 20)}\n\n{e.StackTrace}\n" 
+                    ); if (e is TaskCanceledException tce)
 #if !DEBUG
                         csExceptionLogger.csExceptionLogger.Write("Unhandled_Exception", e);
 #endif
+                        Console.WriteLine($"[FirstChanceException] Task ID: {tce.Task.Id} | CanBeCanceled = {tce.CancellationToken.CanBeCanceled}\n\tSource -> {tce.Source}");
                 });
         }
 
@@ -104,13 +106,6 @@ namespace RApID_Project_WPF
                 var uName = UserPrincipal.Current.DisplayName.Trim().Split(',');
 
                 Notify.ShowBalloonTip(msgTitle + $", {uName[1].Trim()} {uName[0].Trim()}!", msgWelcome, BalloonIcon.Info);
-            }));
-        }
-
-        protected internal async Task HookService()
-        {
-            await Task.Factory.StartNew(new Action(() => {
-                ServiceManager.InstallAndStart("RApID Service", "RApID Reporting Service", "RApID Service.exe");
             }));
         }
 
@@ -194,12 +189,10 @@ namespace RApID_Project_WPF
             {
                 /*Wide net to catch rouge threads...*/
                 Notify = null;
-
-                //ServiceManager.StopService("RApID Service");
             }
             catch (TaskCanceledException tce)
             {
-                Console.WriteLine($"Task ID: {tce.Task.Id} | CanBeCanceled = {tce.CancellationToken.CanBeCanceled}\n\tSource -> {tce.Source}");
+                Console.WriteLine($"[wndMain_Closed] Task ID: {tce.Task.Id} | CanBeCanceled = {tce.CancellationToken.CanBeCanceled}\n\tSource -> {tce.Source}");
             }
             finally
             {
