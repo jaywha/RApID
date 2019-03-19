@@ -528,11 +528,11 @@ namespace RApID_Project_WPF.UserControls
             dgReset.Visibility = Visibility.Collapsed;
         }
 
-        private void dispIIPElements(Label lblRefToDisp, Control txtRefToDisp, Label lblPartToDisp, Control txtPartToDisp, ComboBox cbItemToCompare, ComboBox cbProblemToCompare, DataGrid dgToEdit, Button btnAddToDG, Border borderError)
+        public void dispIIPElements(Label lblRefToDisp, Control txtRefToDisp, Label lblPartToDisp, Control txtPartToDisp, Control cbItemToCompare, Control cbProblemToCompare, DataGrid dgToEdit, Button btnAddToDG, Border borderError)
         {
             bool bDispAll = false;
 
-            if (cbItemToCompare.Text.Equals("Ref Designator Code"))
+            if (cbItemToCompare.GetContent().Equals("Ref Designator Code"))
             {
                 borderError.Visibility = Visibility.Visible;
                 lblRefToDisp.Visibility = Visibility.Visible;
@@ -546,7 +546,7 @@ namespace RApID_Project_WPF.UserControls
                 txtRefToDisp.Visibility = Visibility.Hidden;
             }
 
-            if (cbProblemToCompare.Text.Equals("Part Number"))
+            if (cbProblemToCompare.GetContent().Equals("Part Number"))
             {
                 lblPartToDisp.Visibility = Visibility.Visible;
                 txtPartToDisp.Visibility = Visibility.Visible;
@@ -619,7 +619,7 @@ namespace RApID_Project_WPF.UserControls
         }
 
         /// <summary>
-        /// Allows casting from <see cref="ucUnitIssue"/> to <see cref="TabItem"/> for use in <see cref="ucIssueTabControl"/>.
+        /// Allows implicitly casting from <see cref="ucUnitIssue"/> to <see cref="TabItem"/> for use in <see cref="ucIssueTabControl"/>.
         /// </summary>
         /// <param name="unitIssue">The given <see cref="ucUnitIssue"/> UserControl instance.</param>
         public static implicit operator TabItem(ucUnitIssue unitIssue)

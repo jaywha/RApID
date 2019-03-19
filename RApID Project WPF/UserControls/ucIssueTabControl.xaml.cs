@@ -176,6 +176,42 @@ namespace RApID_Project_WPF.UserControls
             }
         }
 
+        #region Utility Methods
+        public void CheckToDisableUITabs()
+        {
+            var bUIXDataFound = new List<bool>(tcTabs.Items.Count);
+
+            foreach (ucUnitIssue issue in Issues) {
+                foreach (UIElement uie in issue.stkMain.Children)
+                {
+                    if (uie.GetType().Name.Equals("ComboBox"))
+                    {
+                        var cb = (ComboBox)uie;
+                        if (!string.IsNullOrEmpty(cb.Text))
+                        {
+                            bUIXDataFound[int.Parse(issue.stkMain.Name)-1] = true;
+                        }
+                    }
+                }
+            }
+
+            //TODO: if no other datafound and X is enabled then resetunitissues on X and make it disabled
+
+            //Default to first tab if no other enabled tab has UI data.
+            if ((tcTabs.Items.Cast<TabItem>().Where(item=>item.IsEnabled == false).Count() == 0))
+                (tcTabs.Items[0] as TabItem).IsSelected = true;
+        }
+
+        /// <summary>
+        /// Controls enabling the Unit Issue Tabs.
+        /// </summary>
+        /// <param name="cmbx"></param>
+        public void HandleUnitIssues(ComboBox cmbx)
+        {
+            if (!string.IsNullOrEmpty(cmbx.Text))
+                (tcTabs.Items[tcTabs.SelectedIndex] as TabItem).IsEnabled = true;
+        }
+
         public ucUnitIssue Last() => Issues.Last();
 
         /// <summary> Applys a binding using the static <see cref="BindingOperations.SetBinding(DependencyObject, DependencyProperty, BindingBase)"/> for this class. </summary>
@@ -190,6 +226,7 @@ namespace RApID_Project_WPF.UserControls
                 Mode = BindingMode.TwoWay,
                 UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged
             });
-        
+
+        #endregion
     }
 }

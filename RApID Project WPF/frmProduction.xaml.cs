@@ -73,6 +73,7 @@ namespace RApID_Project_WPF
             InitializeComponent();
 
             ucUnitIssues.StaticVarsInstance = sVar;
+            ucUnitIssues.Issues.Add(new UserControls.ucUnitIssue(1));
         }
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
@@ -104,13 +105,13 @@ namespace RApID_Project_WPF
         #region Initialize Form
         private void buildDG()
         {
-            dgMultipleParts.dgBuildView(DataGridTypes.MULTIPLEPARTS);
-            dgMultipleParts_2.dgBuildView(DataGridTypes.MULTIPLEPARTS);
-            dgMultipleParts_3.dgBuildView(DataGridTypes.MULTIPLEPARTS);
+            ucUnitIssues[0].dgMultipleParts.dgBuildView(DataGridTypes.MULTIPLEPARTS);
+            /*dgMultipleParts_2.dgBuildView(DataGridTypes.MULTIPLEPARTS);
+            dgMultipleParts_3.dgBuildView(DataGridTypes.MULTIPLEPARTS);*/
             ucAOITab.dgAOI.dgBuildView(DataGridTypes.AOI);
             ucAOITab.dgDefectCodes.dgBuildView(DataGridTypes.DEFECTCODES);
             dgPrevRepairInfo.dgBuildView(DataGridTypes.PREVREPAIRINFO);
-            dgBOMList.dgBuildView(DataGridTypes.MULTIPLEPARTS);
+            //dgBOMList.dgBuildView(DataGridTypes.MULTIPLEPARTS);
         }
 
         private void initDataLog()
@@ -153,7 +154,7 @@ namespace RApID_Project_WPF
                 }
                 conn.Close();
 
-                cbReportedIssue.cbFill(lReportedIssue);
+                /*cbReportedIssue.cbFill(lReportedIssue);
                 cbTestResult.cbFill(lTestResult);
                 cbTestResultAbort.cbFill(lTestResultAbort);
                 cbFromArea.cbFill(lFromArea);
@@ -164,7 +165,7 @@ namespace RApID_Project_WPF
 
                 cbReportedIssue_3.cbFill(lReportedIssue);
                 cbTestResult_3.cbFill(lTestResult);
-                cbTestResultAbort_3.cbFill(lTestResultAbort);
+                cbTestResultAbort_3.cbFill(lTestResultAbort);*/
 
                 buildIIP();
             }
@@ -205,7 +206,7 @@ namespace RApID_Project_WPF
                 }
                 conn.Close();
 
-                for (int i = 0; i < lIIPC.Count; i++)
+                /*for (int i = 0; i < lIIPC.Count; i++)
                 {
                     if (!cbIssue.Items.Contains(lIIPC[i].Issue))
                         cbIssue.Items.Add(lIIPC[i].Issue);
@@ -215,7 +216,7 @@ namespace RApID_Project_WPF
 
                     if (!cbIssue_3.Items.Contains(lIIPC[i].Issue))
                         cbIssue_3.Items.Add(lIIPC[i].Issue);
-                }
+                }*/
 
             }
             catch (Exception ex)
@@ -271,8 +272,8 @@ namespace RApID_Project_WPF
             cbxScrap.IsChecked = false;
             dgPrevRepairInfo.Items.Clear();
             rtbAdditionalComments.Document.Blocks.Clear();
-            dgBOMList.ItemsSource = null;
-            dgBOMList.Items.Refresh();
+            /*dgBOMList.ItemsSource = null;
+            dgBOMList.Items.Refresh();*/
 
             ucEOLTab.lblEOL.Content = "End of Line";
             ucEOLTab.lblPOST.Content = "Post Burn-In";
@@ -289,28 +290,28 @@ namespace RApID_Project_WPF
         /// </summary>
         private void resetUnitIssues()
         {
-            cbReportedIssue.SelectedIndex = cbTestResult.SelectedIndex = cbTestResultAbort.SelectedIndex = cbIssue.SelectedIndex = cbItem.SelectedIndex = cbProblem.SelectedIndex = -1;
-            txtMultiRefDes.Text = txtMultiPartNum.Text = string.Empty;
-            dgMultipleParts.Items.Clear();
+            ucUnitIssues[0].txtReportedIssue.Text = ucUnitIssues[0].txtTestResult.Text = ucUnitIssues[0].txtTestResultAbort.Text = ucUnitIssues[0].txtIssue.Text = ucUnitIssues[0].txtItem.Text = ucUnitIssues[0].txtProblem.Text = string.Empty;
+            ucUnitIssues[0].cmbxRefDesignator.Text = ucUnitIssues[0].cmbxPartNumber.Text = string.Empty;
+            ucUnitIssues[0].dgMultipleParts.Items.Clear();
 
-            cbReportedIssue_2.SelectedIndex = cbTestResult_2.SelectedIndex = cbTestResultAbort_2.SelectedIndex = cbIssue_2.SelectedIndex = cbItem_2.SelectedIndex = cbProblem_2.SelectedIndex = -1;
+            /*cbReportedIssue_2.SelectedIndex = cbTestResult_2.SelectedIndex = cbTestResultAbort_2.SelectedIndex = cbIssue_2.SelectedIndex = cbItem_2.SelectedIndex = cbProblem_2.SelectedIndex = -1;
             txtMultiRefDes_2.Text = txtMultiPartNum_2.Text = string.Empty;
             dgMultipleParts_2.Items.Clear();
 
             cbReportedIssue_3.SelectedIndex = cbTestResult_3.SelectedIndex = cbTestResultAbort_3.SelectedIndex = cbIssue_3.SelectedIndex = cbItem_3.SelectedIndex = cbProblem_3.SelectedIndex = -1;
             txtMultiRefDes_3.Text = txtMultiPartNum_3.Text = string.Empty;
-            dgMultipleParts_3.Items.Clear();
+            dgMultipleParts_3.Items.Clear();*/
 
-            cbItem.IsEnabled = cbProblem.IsEnabled = false;
-            cbItem_2.IsEnabled = cbProblem_2.IsEnabled = false;
-            cbItem_3.IsEnabled = cbProblem_3.IsEnabled = false;
+            ucUnitIssues[0].txtItem.IsEnabled = ucUnitIssues[0].txtProblem.IsEnabled = false;
+            /*cbItem_2.IsEnabled = cbProblem_2.IsEnabled = false;
+            cbItem_3.IsEnabled = cbProblem_3.IsEnabled = false;*/
 
-            lblRefDes.Visibility = lblPartNum.Visibility = txtMultiRefDes.Visibility = txtMultiPartNum.Visibility = btnAddRefPart.Visibility = dgMultipleParts.Visibility = System.Windows.Visibility.Hidden;
-            lblRefDes_2.Visibility = lblPartNum_2.Visibility = txtMultiRefDes_2.Visibility = txtMultiPartNum_2.Visibility = btnAddRefPart_2.Visibility = dgMultipleParts_2.Visibility = System.Windows.Visibility.Hidden;
-            lblRefDes_3.Visibility = lblPartNum_3.Visibility = txtMultiRefDes_3.Visibility = txtMultiPartNum_3.Visibility = btnAddRefPart_3.Visibility = dgMultipleParts_3.Visibility = System.Windows.Visibility.Hidden;
+            ucUnitIssues[0].lblRefDes.Visibility = ucUnitIssues[0].lblPartReplaced.Visibility = ucUnitIssues[0].cmbxRefDesignator.Visibility = ucUnitIssues[0].cmbxPartNumber.Visibility = ucUnitIssues[0].btnAddPartsReplaced.Visibility = ucUnitIssues[0].dgMultipleParts.Visibility = Visibility.Hidden;
+            /*lblRefDes_2.Visibility = lblPartNum_2.Visibility = txtMultiRefDes_2.Visibility = txtMultiPartNum_2.Visibility = btnAddRefPart_2.Visibility = dgMultipleParts_2.Visibility = System.Windows.Visibility.Hidden;
+            lblRefDes_3.Visibility = lblPartNum_3.Visibility = txtMultiRefDes_3.Visibility = txtMultiPartNum_3.Visibility = btnAddRefPart_3.Visibility = dgMultipleParts_3.Visibility = System.Windows.Visibility.Hidden;*/
 
-            tiUI2.IsEnabled = tiUI3.IsEnabled = false;
-            tiUI1.IsSelected = true;
+            //tiUI2.IsEnabled = tiUI3.IsEnabled = false;
+            (ucUnitIssues.tcTabs.Items[0] as TabItem).IsSelected = true;
         }
 
         /// <summary>
@@ -319,100 +320,16 @@ namespace RApID_Project_WPF
         /// <param name="iUIReset">Which tab do I reset?</param>
         private void resetUnitIssues(int iUIReset)
         {
-            switch (iUIReset)
-            {
-                case 1:
-                    cbReportedIssue.SelectedIndex = cbTestResult.SelectedIndex = cbTestResultAbort.SelectedIndex = cbIssue.SelectedIndex = cbItem.SelectedIndex = cbProblem.SelectedIndex = -1;
-                    txtMultiRefDes.Text = txtMultiPartNum.Text = string.Empty;
-                    dgMultipleParts.ItemsSource = null;
-                    txtMultiRefDes.ItemsSource = null;
-                    txtMultiPartNum.ItemsSource = null;
-                    cbItem.IsEnabled = cbProblem.IsEnabled = false;
-                    lblRefDes.Visibility = sepDGMargin.Visibility = sepRefDesPartNum.Visibility = lblPartNum.Visibility = txtMultiRefDes.Visibility = txtMultiPartNum.Visibility = btnAddRefPart.Visibility = dgMultipleParts.Visibility = Visibility.Collapsed;
-                    brdRefDes.BorderThickness = new Thickness(0.0);
-                    break;
-                case 2:
-                    cbReportedIssue_2.SelectedIndex = cbTestResult_2.SelectedIndex = cbTestResultAbort_2.SelectedIndex = cbIssue_2.SelectedIndex = cbItem_2.SelectedIndex = cbProblem_2.SelectedIndex = -1;
-                    txtMultiRefDes_2.Text = txtMultiPartNum_2.Text = string.Empty;
-                    dgMultipleParts_2.ItemsSource = null;
-                    txtMultiRefDes_2.ItemsSource = null;
-                    txtMultiPartNum_2.ItemsSource = null;
-                    cbItem_2.IsEnabled = cbProblem_2.IsEnabled = false;
-                    lblRefDes_2.Visibility = lblPartNum_2.Visibility = txtMultiRefDes_2.Visibility = txtMultiPartNum_2.Visibility = btnAddRefPart_2.Visibility = dgMultipleParts_2.Visibility = Visibility.Collapsed;
-                    brdRefDes_2.BorderThickness = new Thickness(0.0);
-                    break;
-                case 3:
-                    cbReportedIssue_3.SelectedIndex = cbTestResult_3.SelectedIndex = cbTestResultAbort_3.SelectedIndex = cbIssue_3.SelectedIndex = cbItem_3.SelectedIndex = cbProblem_3.SelectedIndex = -1;
-                    txtMultiRefDes_3.Text = txtMultiPartNum_3.Text = string.Empty;
-                    dgMultipleParts_3.ItemsSource = null;
-                    txtMultiRefDes_3.ItemsSource = null;
-                    txtMultiPartNum_3.ItemsSource = null;
-                    cbItem_3.IsEnabled = cbProblem_3.IsEnabled = false;
-                    lblRefDes_3.Visibility = lblPartNum_3.Visibility = txtMultiRefDes_3.Visibility = txtMultiPartNum_3.Visibility = btnAddRefPart_3.Visibility = dgMultipleParts_3.Visibility = Visibility.Collapsed;
-                    brdRefDes_3.BorderThickness = new Thickness(0.0);
-                    break;
-            }
-        }
+            //TODO: Multiple Issues
 
-        /// <summary>
-        /// Check to see if a Unit Issue tab meets the criteria to be disabled.
-        /// </summary>
-        private void checkToDisableUITabs()
-        {
-            bool bUI3DataFound = false;
-            bool bUI2DataFound = false;
-            bool bUI1DataFound = false;
-
-            foreach (UIElement uie in gridUI3.Children)
-            {
-                if (uie.GetType().Name.Equals("ComboBox"))
-                {
-                    var cb = (ComboBox)uie;
-                    if (!string.IsNullOrEmpty(cb.Text))
-                    {
-                        bUI3DataFound = true;
-                    }
-                }
-            }
-
-            foreach (UIElement uie in gridUI2.Children)
-            {
-                if (uie.GetType().Name.Equals("ComboBox"))
-                {
-                    var cb = (ComboBox)uie;
-                    if (!string.IsNullOrEmpty(cb.Text))
-                    {
-                        bUI2DataFound = true;
-                    }
-                }
-            }
-
-            foreach (UIElement uie in gridUI1.Children)
-            {
-                if (uie.GetType().Name.Equals("ComboBox"))
-                {
-                    var cb = (ComboBox)uie;
-                    if (!string.IsNullOrEmpty(cb.Text))
-                    {
-                        bUI1DataFound = true;
-                    }
-                }
-            }
-
-            if (!bUI3DataFound && !bUI2DataFound && tiUI3.IsEnabled)
-            {
-                resetUnitIssues(3);
-                tiUI3.IsEnabled = false;
-            }
-
-            if (!bUI2DataFound && !bUI1DataFound && tiUI2.IsEnabled)
-            {
-                resetUnitIssues(2);
-                tiUI2.IsEnabled = false;
-            }
-
-            if (!tiUI3.IsEnabled && !tiUI2.IsEnabled)
-                tiUI1.IsSelected = true;
+            ucUnitIssues[0].txtReportedIssue.Text = ucUnitIssues[0].txtTestResult.Text = ucUnitIssues[0].txtTestResultAbort.Text = ucUnitIssues[0].txtIssue.Text = ucUnitIssues[0].txtItem.Text = ucUnitIssues[0].txtProblem.Text = string.Empty;
+            ucUnitIssues[0].cmbxRefDesignator.Text = ucUnitIssues[0].cmbxPartNumber.Text = string.Empty;
+            ucUnitIssues[0].dgMultipleParts.ItemsSource = null;
+            ucUnitIssues[0].cmbxRefDesignator.ItemsSource = null;
+            ucUnitIssues[0].cmbxPartNumber.ItemsSource = null;
+            ucUnitIssues[0].txtItem.IsEnabled = ucUnitIssues[0].txtProblem.IsEnabled = false;
+            ucUnitIssues[0].lblRefDes.Visibility = /*sepDGMargin.Visibility = sepRefDesPartNum.Visibility = */ ucUnitIssues[0].lblPartReplaced.Visibility = ucUnitIssues[0].cmbxRefDesignator.Visibility = ucUnitIssues[0].cmbxPartNumber.Visibility = ucUnitIssues[0].btnAddPartsReplaced.Visibility = ucUnitIssues[0].dgMultipleParts.Visibility = Visibility.Collapsed;
+            ucUnitIssues[0].brdRefDes.BorderThickness = new Thickness(0.0);
         }
 
         /// <summary>
@@ -424,9 +341,9 @@ namespace RApID_Project_WPF
         {
             Panel gToCheck = null;
 
-            if (iUITab == 1) gToCheck = gridUI1;
-            else if (iUITab == 2) gToCheck = gridUI2;
-            else if (iUITab == 3) gToCheck = gridUI3;
+            if (iUITab == 1) gToCheck = ucUnitIssues[0].stkMain;
+            /*else if (iUITab == 2) gToCheck = gridUI2;
+            else if (iUITab == 3) gToCheck = gridUI3;*/
 
             if (gToCheck != null)
             {
@@ -488,6 +405,7 @@ namespace RApID_Project_WPF
             }
         }
 
+        //TODO: Place this region into the contorl as well
         #region Issue Item and Problem Section
 
         private void fillItemCB(ComboBox cbIssueEdit, ComboBox cbItemEdit, ComboBox cbProblemEdit)
@@ -534,12 +452,12 @@ namespace RApID_Project_WPF
 
         private void fillProblemCB(List<IssueItemProblemCombinations> lNarrowedDownList, ComboBox cbProblemEdit)
         {
-            if (!cbProblemEdit.Name.Contains("_"))
-                resetIIPItems(false, cbItem, cbProblem, txtMultiRefDes, lblRefDes, txtMultiPartNum, lblPartNum, btnAddRefPart, dgMultipleParts, brdRefDes);
-            else if (cbProblemEdit.Name.EndsWith("2"))
+            //if (!cbProblemEdit.Name.Contains("_"))
+                resetIIPItems(false, ucUnitIssues[0].txtItem, ucUnitIssues[0].txtProblem, ucUnitIssues[0].cmbxRefDesignator, ucUnitIssues[0].lblRefDes, ucUnitIssues[0].cmbxPartNumber, ucUnitIssues[0].lblPartReplaced, ucUnitIssues[0].btnAddPartsReplaced, ucUnitIssues[0].dgMultipleParts, ucUnitIssues[0].brdRefDes);
+            /*else if (cbProblemEdit.Name.EndsWith("2"))
                 resetIIPItems(false, cbItem_2, cbProblem_2, txtMultiRefDes_2, lblRefDes_2, txtMultiPartNum_2, lblPartNum_2, btnAddRefPart_2, dgMultipleParts_2, brdRefDes_2);
             else if (cbProblemEdit.Name.EndsWith("3"))
-                resetIIPItems(false, cbItem_3, cbProblem_3, txtMultiRefDes_3, lblRefDes_3, txtMultiPartNum_3, lblPartNum_3, btnAddRefPart_3, dgMultipleParts_3, brdRefDes_3);
+                resetIIPItems(false, cbItem_3, cbProblem_3, txtMultiRefDes_3, lblRefDes_3, txtMultiPartNum_3, lblPartNum_3, btnAddRefPart_3, dgMultipleParts_3, brdRefDes_3);*/
 
             for (int i = 0; i < lNarrowedDownList.Count; i++)
             {
@@ -550,12 +468,15 @@ namespace RApID_Project_WPF
             cbProblemEdit.IsEnabled = true;
         }
 
-        private void resetIIPItems(bool bResetAll, ComboBox cbItemReset, ComboBox cbProblemReset, Control txtRefReset, Label lblRefReset, Control txtPartReset, Label lblPartReset, Button btnAddReset, DataGrid dgReset, Border borderError)
+        private void resetIIPItems(bool bResetAll, Control cbItemReset, Control cbProblemReset, Control txtRefReset, Label lblRefReset, Control txtPartReset, Label lblPartReset, Button btnAddReset, DataGrid dgReset, Border borderError)
         {
             if (bResetAll)
             {
-                cbItemReset.Items.Clear();
-                cbItemReset.SelectedIndex = -1;
+                if (cbItemReset is ComboBox cmbxItemReset) {
+                    cmbxItemReset.Items.Clear();
+                    cmbxItemReset.SelectedIndex = -1;
+                }
+                
                 cbItemReset.IsEnabled = false;
                 txtRefReset.SetContent(string.Empty);
                 lblRefReset.Visibility = Visibility.Hidden;
@@ -563,8 +484,11 @@ namespace RApID_Project_WPF
                 borderError.Visibility = Visibility.Hidden;
             }
 
-            cbProblemReset.Items.Clear();
-            cbProblemReset.SelectedIndex = -1;
+            if (cbProblemReset is ComboBox cmbxProblemReset)
+            {
+                cmbxProblemReset.Items.Clear();
+                cmbxProblemReset.SelectedIndex = -1;
+            }
             cbProblemReset.IsEnabled = false;
             txtPartReset.SetContent(string.Empty);
             dgReset.Items.Clear();
@@ -572,47 +496,8 @@ namespace RApID_Project_WPF
             txtPartReset.Visibility = Visibility.Hidden;
             btnAddReset.Visibility = Visibility.Collapsed;
             dgReset.Visibility = Visibility.Collapsed;
-            sepDGMargin.Visibility = Visibility.Collapsed;
-            sepRefDesPartNum.Visibility = Visibility.Collapsed;
-        }
-
-        private void dispIIPElements(Label lblRefToDisp, Control txtRefToDisp, Label lblPartToDisp, Control txtPartToDisp, ComboBox cbItemToCompare, ComboBox cbProblemToCompare, DataGrid dgToEdit, Button btnAddToDG, Border borderError)
-        {
-            bool bDispAll = false;
-
-            if (cbItemToCompare.Text.Equals("Ref Designator Code"))
-            {
-                borderError.Visibility = Visibility.Visible;
-                lblRefToDisp.Visibility = Visibility.Visible;
-                txtRefToDisp.Visibility = Visibility.Visible;
-                bDispAll = true;
-            }
-            else
-            {
-                borderError.Visibility = Visibility.Hidden;
-                lblRefToDisp.Visibility = Visibility.Hidden;
-                txtRefToDisp.Visibility = Visibility.Hidden;
-            }
-
-            if (cbProblemToCompare.Text.Equals("Part Number"))
-            {
-                lblPartToDisp.Visibility = Visibility.Visible;
-                txtPartToDisp.Visibility = Visibility.Visible;
-                bDispAll = true;
-            }
-            else
-            {
-                lblPartToDisp.Visibility = Visibility.Hidden;
-                txtPartToDisp.Visibility = Visibility.Hidden;
-            }
-
-            if (bDispAll)
-            {
-                btnAddToDG.Visibility = Visibility.Visible;
-                dgToEdit.Visibility = Visibility.Visible;
-                sepRefDesPartNum.Visibility = Visibility.Visible;
-                sepDGMargin.Visibility = Visibility.Visible;
-            }
+            /*sepDGMargin.Visibility = Visibility.Collapsed;
+            sepRefDesPartNum.Visibility = Visibility.Collapsed;*/
         }
 
         #endregion
@@ -640,9 +525,9 @@ namespace RApID_Project_WPF
                             {
                                 var result = await mapper.FindFileAsync(".xls");
                                 csCrossClassInteraction.DoExcelOperations(result.Item1, progMapper,
-                                new Tuple<Control, Control>(txtMultiRefDes, txtMultiPartNum),
-                                new Tuple<Control, Control>(txtMultiRefDes_2, txtMultiPartNum_2),
-                                new Tuple<Control, Control>(txtMultiRefDes_3, txtMultiPartNum_3));
+                                new Tuple<Control, Control>(ucUnitIssues[0].cmbxRefDesignator, ucUnitIssues[0].cmbxPartNumber));
+                                /*new Tuple<Control, Control>(txtMultiRefDes_2, txtMultiPartNum_2),
+                                new Tuple<Control, Control>(txtMultiRefDes_3, txtMultiPartNum_3));*/
 
                                 BOMFileActive = true;
                             }
@@ -818,13 +703,14 @@ namespace RApID_Project_WPF
         /// If there is, it will add it to the datagrid after it verifies the part replaced has a part description
         /// </summary>
         /// <returns></returns>
-        private bool checkForRefDesPartRep()
+        // TODO: Ensure User Control does all of this
+        /*private bool checkForRefDesPartRep()
         {
             bool bCanSubmit = true;
             string sWarning = "Submission Criteria not met.\n";
 
             #region Unit Issue 1
-            if (!string.IsNullOrEmpty(txtMultiPartNum.Text))
+            if (!string.IsNullOrEmpty(txtMultiRefDes.Text))
             {
                 string _sPRPD = csCrossClassInteraction.GetPartReplacedPartDescription(txtMultiPartNum.Text);
 
@@ -904,7 +790,7 @@ namespace RApID_Project_WPF
             }
 
             return bCanSubmit;
-        }
+        }*/
 
         /// <summary>
         /// Checks to see if the submission criteria has been met.
@@ -948,13 +834,13 @@ namespace RApID_Project_WPF
             }
 
             bool bUnitIssueFound = false;
-            if (!string.IsNullOrEmpty(cbReportedIssue.Text))
+            if (!string.IsNullOrEmpty(ucUnitIssues[0].ReportedIssue))
                 bUnitIssueFound = true;
-            if (!string.IsNullOrEmpty(cbTestResult.Text))
+            if (!string.IsNullOrEmpty(ucUnitIssues[0].TestResult))
                 bUnitIssueFound = true;
-            if (!string.IsNullOrEmpty(cbTestResultAbort.Text))
+            if (!string.IsNullOrEmpty(ucUnitIssues[0].AbortResult))
                 bUnitIssueFound = true;
-            if (!string.IsNullOrEmpty(cbIssue.Text))
+            if (!string.IsNullOrEmpty(ucUnitIssues[0].Issue))
                 bUnitIssueFound = true;
 
             if (!bUnitIssueFound)
@@ -1162,17 +1048,17 @@ namespace RApID_Project_WPF
         {
             var pmuiReturn = new UnitIssueModel();
 
-            if (tiUI1.IsEnabled && (iUIData == 0 || iUIData == 1)) //-Will always be enabled but doing 'if' to be uniform
+            if (ucUnitIssues[0].stkMain.IsEnabled && (iUIData == 0 || iUIData == 1)) //-Will always be enabled but doing 'if' to be uniform
             {
-                pmuiReturn.ReportedIssue = csCrossClassInteraction.unitIssuesValSubmit(cbReportedIssue);
-                pmuiReturn.TestResult += csCrossClassInteraction.unitIssuesValSubmit(cbTestResult);
-                pmuiReturn.TestResultAbort += csCrossClassInteraction.unitIssuesValSubmit(cbTestResultAbort);
-                pmuiReturn.Issue += csCrossClassInteraction.unitIssuesValSubmit(cbIssue);
-                pmuiReturn.Item += csCrossClassInteraction.unitIssuesValSubmit(cbItem);
-                pmuiReturn.Problem += csCrossClassInteraction.unitIssuesValSubmit(cbProblem);
+                pmuiReturn.ReportedIssue = csCrossClassInteraction.unitIssuesValSubmit(ucUnitIssues[0].ReportedIssue);
+                pmuiReturn.TestResult += csCrossClassInteraction.unitIssuesValSubmit(ucUnitIssues[0].TestResult);
+                pmuiReturn.TestResultAbort += csCrossClassInteraction.unitIssuesValSubmit(ucUnitIssues[0].AbortResult);
+                pmuiReturn.Issue += csCrossClassInteraction.unitIssuesValSubmit(ucUnitIssues[0].Issue);
+                pmuiReturn.Item += csCrossClassInteraction.unitIssuesValSubmit(ucUnitIssues[0].Item);
+                pmuiReturn.Problem += csCrossClassInteraction.unitIssuesValSubmit(ucUnitIssues[0].Problem);
             }
 
-            if (tiUI2.IsEnabled && checkForUITabData(2) && (iUIData == 0 || iUIData == 2))
+            /*if (tiUI2.IsEnabled && checkForUITabData(2) && (iUIData == 0 || iUIData == 2))
             {
                 pmuiReturn.ReportedIssue = csCrossClassInteraction.unitIssuesValSubmit(cbReportedIssue_2);
                 pmuiReturn.TestResult += csCrossClassInteraction.unitIssuesValSubmit(cbTestResult_2);
@@ -1190,7 +1076,7 @@ namespace RApID_Project_WPF
                 pmuiReturn.Issue += csCrossClassInteraction.unitIssuesValSubmit(cbIssue_3);
                 pmuiReturn.Item += csCrossClassInteraction.unitIssuesValSubmit(cbItem_3);
                 pmuiReturn.Problem += csCrossClassInteraction.unitIssuesValSubmit(cbProblem_3);
-            }
+            }*/
 
             pmuiReturn.ReportedIssue = pmuiReturn.ReportedIssue.TrimEnd(new char[] { ',', ' ' });
             pmuiReturn.TestResult = pmuiReturn.TestResult.TrimEnd(new char[] { ',', ' ' });
@@ -1213,12 +1099,12 @@ namespace RApID_Project_WPF
         {
             var mpr = new MultiplePartsReplaced();
 
-            if (tiUI1.IsEnabled)
+            if ((ucUnitIssues.tcTabs.Items[0] as TabItem).IsEnabled)
             {
-                mpr = csCrossClassInteraction.getMPRString(dgMultipleParts, mpr);
+                mpr = csCrossClassInteraction.getMPRString(ucUnitIssues[0].dgMultipleParts, mpr);
             }
 
-            if (tiUI2.IsEnabled && checkForUITabData(2))
+            /*if (tiUI2.IsEnabled && checkForUITabData(2))
             {
                 mpr = csCrossClassInteraction.getMPRString(dgMultipleParts_2, mpr);
             }
@@ -1226,7 +1112,7 @@ namespace RApID_Project_WPF
             if (tiUI3.IsEnabled && checkForUITabData(3))
             {
                 mpr = csCrossClassInteraction.getMPRString(dgMultipleParts_3, mpr);
-            }
+            }*/
 
             return mpr;
         }
@@ -1240,13 +1126,13 @@ namespace RApID_Project_WPF
         {
             var mpr = new List<MultiplePartsReplaced>(); //NOTE: Houses the entire list of MultiplePartsReplaced.
 
-            if (tiUI1.IsEnabled && iUIData == 1)
+            if ((ucUnitIssues.tcTabs.Items[0] as TabItem).IsEnabled && iUIData == 1)
             {
-                var res = mpr.Concat(csCrossClassInteraction.getMPRList(dgMultipleParts));
+                var res = mpr.Concat(csCrossClassInteraction.getMPRList(ucUnitIssues[0].dgMultipleParts));
                 mpr = res.ToList();
             }
 
-            if (tiUI2.IsEnabled && checkForUITabData(2) && iUIData == 2)
+            /*if (tiUI2.IsEnabled && checkForUITabData(2) && iUIData == 2)
             {
                 var res = mpr.Concat(csCrossClassInteraction.getMPRList(dgMultipleParts_2));
                 mpr = res.ToList();
@@ -1256,7 +1142,7 @@ namespace RApID_Project_WPF
             {
                 var res = mpr.Concat(csCrossClassInteraction.getMPRList(dgMultipleParts_3));
                 mpr = res.ToList();
-            }
+            }*/
 
             return mpr;
         }
@@ -1279,38 +1165,14 @@ namespace RApID_Project_WPF
             return lMPUI;
         }
 
-        /// <summary>
-        /// Controls enabling the Unit Issue Tabs.
-        /// </summary>
-        /// <param name="cb"></param>
-        private void handleUnitIssues(ComboBox cb)
-        {
-            string[] splitters = { "_" };
-
-            if (cb.Name.Contains("_")) //NOTE: Will be Unit Issue 2 or 3
-            {
-                string[] sSplit = cb.Name.Split(splitters, StringSplitOptions.RemoveEmptyEntries);
-                if (sSplit[1].Equals("2"))
-                {
-                    if (!string.IsNullOrEmpty(cb.Text))
-                        tiUI3.IsEnabled = true;
-                }
-            }
-            else
-            {
-                if (!string.IsNullOrEmpty(cb.Text))
-                    tiUI2.IsEnabled = true;
-            }
-        }
-
-        private void keepReportedIssueUpdated(ComboBox cb)
+        /*private void keepReportedIssueUpdated(ComboBox cb)
         {
             cbReportedIssue.Text = cb.Text;
             if (tiUI2.IsEnabled)
                 cbReportedIssue_2.Text = cb.Text;
             if (tiUI3.IsEnabled)
                 cbReportedIssue_3.Text = cb.Text;
-        }
+        }*/
 
         #region Events
 
@@ -1354,26 +1216,24 @@ namespace RApID_Project_WPF
         {
             sVar.LogHandler.CreateLogAction((Button)sender, csLogging.LogState.CLICK);
 
-            if (checkForRefDesPartRep())
-            {
-                ArrayList alResults = canSubmit();
+            ArrayList alResults = canSubmit();
 
-                if ((bool)alResults[0])
-                {
-                    sVar.LogHandler.CreateLogAction("The submission criteria has been met.", csLogging.LogState.NOTE);
-                    submitData();
-                    sVar.LogHandler.writeLogToFile();
-                    resetForm(true);
-                }
-                else
-                {
-                    MessageBox.Show(alResults[1].ToString(), "Submission Criteria Not Met", MessageBoxButton.OK, MessageBoxImage.Warning);
-                    sVar.LogHandler.CreateLogAction("The submission criteria was not met.\n" + alResults[1].ToString(), csLogging.LogState.WARNING);
-                }
+            if ((bool)alResults[0])
+            {
+                sVar.LogHandler.CreateLogAction("The submission criteria has been met.", csLogging.LogState.NOTE);
+                submitData();
+                sVar.LogHandler.writeLogToFile();
+                resetForm(true);
+            }
+            else
+            {
+                MessageBox.Show(alResults[1].ToString(), "Submission Criteria Not Met", MessageBoxButton.OK, MessageBoxImage.Warning);
+                sVar.LogHandler.CreateLogAction("The submission criteria was not met.\n" + alResults[1].ToString(), csLogging.LogState.WARNING);
             }
         }
+        
 
-        private void btnAddRefPart_Click(object sender, RoutedEventArgs e)
+        /*private void btnAddRefPart_Click(object sender, RoutedEventArgs e)
         {
             if (((Control)sender).Name.Contains("_"))
             {
@@ -1552,7 +1412,7 @@ namespace RApID_Project_WPF
                     }
                 }
             }
-        }
+        }*/
 
         private void btnReset_Click(object sender, RoutedEventArgs e)
         {
@@ -1561,17 +1421,17 @@ namespace RApID_Project_WPF
             if (((Control)sender).Name.ToString().Equals("btnReset"))
             {
                 resetUnitIssues(1);
-                checkToDisableUITabs();
+                ucUnitIssues.CheckToDisableUITabs();
             }
             else if (((Control)sender).Name.ToString().Equals("btnReset_2"))
             {
                 resetUnitIssues(2);
-                checkToDisableUITabs();
+                ucUnitIssues.CheckToDisableUITabs();
             }
             else if (((Control)sender).Name.ToString().Equals("btnReset_3"))
             {
                 resetUnitIssues(3);
-                checkToDisableUITabs();
+                ucUnitIssues.CheckToDisableUITabs();
             }
         }
         #endregion
@@ -1754,7 +1614,7 @@ namespace RApID_Project_WPF
             csCrossClassInteraction.checkForValidRefDes(tbox);*/
         }
 
-        private void dataGrid_KeyUp(object sender, KeyEventArgs e)
+        /*private void dataGrid_KeyUp(object sender, KeyEventArgs e)
         {
             var grid = ((DataGrid)sender);
 
@@ -1764,7 +1624,7 @@ namespace RApID_Project_WPF
                 if (row != null) { row.Foreground = Brushes.Black; row.Background = Brushes.White; }
                 grid.Items.Remove(grid.SelectedItem);
             }
-        }
+        }*/
 
         #region Log Actions
         private void rtbGotFocus(object sender, RoutedEventArgs e)
@@ -1794,21 +1654,21 @@ namespace RApID_Project_WPF
             var chosenOption = ((Control)sender).Name.ToString();
 
             if (!chosenOption.Equals("cbFromArea"))
-                handleUnitIssues((ComboBox)sender);
+                ucUnitIssues.HandleUnitIssues(((ComboBox)sender));
 
             if (chosenOption.Equals("cbReportedIssue"))
             {
-                cbReportedIssue_2.Text = cbReportedIssue_3.Text = cbReportedIssue.Text;
+                //TODO: Set all unitissues to the same Reported Issue?
             }
 
             //NOTE: Need to handle the Issue, Item and Problem items separately
             if (chosenOption.StartsWith("cbIssue"))
             {
-                if (!chosenOption.Contains("_"))
-                {
-                    resetIIPItems(true, cbItem, cbProblem, txtMultiRefDes, lblRefDes, txtMultiPartNum, lblPartNum, btnAddRefPart, dgMultipleParts, brdRefDes);
-                    fillItemCB(cbIssue, cbItem, cbProblem);
-                }
+                /*if (!chosenOption.Contains("_"))
+                {*/
+                    resetIIPItems(false, ucUnitIssues[0].txtItem, ucUnitIssues[0].txtProblem, ucUnitIssues[0].cmbxRefDesignator, ucUnitIssues[0].lblRefDes, ucUnitIssues[0].cmbxPartNumber, ucUnitIssues[0].lblPartReplaced, ucUnitIssues[0].btnAddPartsReplaced, ucUnitIssues[0].dgMultipleParts, ucUnitIssues[0].brdRefDes);
+                    ucUnitIssues[0].FillUnitIssue(ucUnitIssues[0].Issue, ucUnitIssues[0].Item, ucUnitIssues[0].Problem);
+                /*}
                 else if (chosenOption.EndsWith("2"))
                 {
                     resetIIPItems(true, cbItem_2, cbProblem_2, txtMultiRefDes_2, lblRefDes_2, txtMultiPartNum_2, lblPartNum_2, btnAddRefPart_2, dgMultipleParts_2, brdRefDes_2);
@@ -1818,19 +1678,19 @@ namespace RApID_Project_WPF
                 {
                     resetIIPItems(true, cbItem_3, cbProblem_3, txtMultiRefDes_3, lblRefDes_3, txtMultiPartNum_3, lblPartNum_3, btnAddRefPart_3, dgMultipleParts_3, brdRefDes_3);
                     fillItemCB(cbIssue_3, cbItem_3, cbProblem_3);
-                }
+                }*/
             }
             else if (chosenOption.StartsWith("cbItem"))
             {
-                if (!chosenOption.Contains("_"))
-                {
-                    if (!string.IsNullOrEmpty(cbItem.Text))
+                /*if (!chosenOption.Contains("_"))
+                {*/
+                    if (!string.IsNullOrEmpty(ucUnitIssues[0].Item))
                     {
-                        resetIIPItems(false, cbItem, cbProblem, txtMultiRefDes, lblRefDes, txtMultiPartNum, lblPartNum, btnAddRefPart, dgMultipleParts, brdRefDes);
-                        fillProblemCB(cbIssue, cbItem, cbProblem);
-                        dispIIPElements(lblRefDes, txtMultiRefDes, lblPartNum, txtMultiPartNum, cbItem, cbProblem, dgMultipleParts, btnAddRefPart, brdRefDes);
+                        resetIIPItems(false, ucUnitIssues[0].txtItem, ucUnitIssues[0].txtProblem, ucUnitIssues[0].cmbxRefDesignator, ucUnitIssues[0].lblRefDes, ucUnitIssues[0].cmbxPartNumber, ucUnitIssues[0].lblPartReplaced, ucUnitIssues[0].btnAddPartsReplaced, ucUnitIssues[0].dgMultipleParts, ucUnitIssues[0].brdRefDes);
+                        ucUnitIssues[0].FillUnitIssue(ucUnitIssues[0].Issue, ucUnitIssues[0].Item, ucUnitIssues[0].Problem);
+                        ucUnitIssues[0].dispIIPElements(ucUnitIssues[0].lblRefDes, ucUnitIssues[0].cmbxRefDesignator, ucUnitIssues[0].lblPartReplaced, ucUnitIssues[0].cmbxPartNumber, ucUnitIssues[0].txtItem, ucUnitIssues[0].txtProblem, ucUnitIssues[0].dgMultipleParts, ucUnitIssues[0].btnAddPartsReplaced, ucUnitIssues[0].brdRefDes);
                     }
-                }
+                /*}
                 else if (chosenOption.EndsWith("2"))
                 {
                     if (!string.IsNullOrEmpty(cbItem_2.Text))
@@ -1848,14 +1708,14 @@ namespace RApID_Project_WPF
                         fillProblemCB(cbIssue_3, cbItem_3, cbProblem_3);
                         dispIIPElements(lblRefDes_3, txtMultiRefDes_3, lblPartNum_3, txtMultiPartNum_3, cbItem_3, cbProblem_3, dgMultipleParts_3, btnAddRefPart_3, brdRefDes_3);
                     }
-                }
+                }*/
             }
             else if (chosenOption.StartsWith("cbProblem"))
             {
-                if (!chosenOption.Contains("_"))
-                {
-                    dispIIPElements(lblRefDes, txtMultiRefDes, lblPartNum, txtMultiPartNum, cbItem, cbProblem, dgMultipleParts, btnAddRefPart, brdRefDes);
-                }
+                /*if (!chosenOption.Contains("_"))
+                {*/
+                ucUnitIssues[0].dispIIPElements(ucUnitIssues[0].lblRefDes, ucUnitIssues[0].cmbxRefDesignator, ucUnitIssues[0].lblPartReplaced, ucUnitIssues[0].cmbxPartNumber, ucUnitIssues[0].txtItem, ucUnitIssues[0].txtProblem, ucUnitIssues[0].dgMultipleParts, ucUnitIssues[0].btnAddPartsReplaced, ucUnitIssues[0].brdRefDes);
+                /*}
                 else if (chosenOption.EndsWith("2"))
                 {
                     dispIIPElements(lblRefDes_2, txtMultiRefDes_2, lblPartNum_2, txtMultiPartNum_2, cbItem_2, cbProblem_2, dgMultipleParts_2, btnAddRefPart_2, brdRefDes_2);
@@ -1863,7 +1723,7 @@ namespace RApID_Project_WPF
                 else if (chosenOption.EndsWith("3"))
                 {
                     dispIIPElements(lblRefDes_3, txtMultiRefDes_3, lblPartNum_3, txtMultiPartNum_3, cbItem_3, cbProblem_3, dgMultipleParts_3, btnAddRefPart_3, brdRefDes_3);
-                }
+                }*/
             }
         }
         #endregion
@@ -1886,7 +1746,7 @@ namespace RApID_Project_WPF
             MainWindow.GlobalInstance.MakeFocus();
         }
 
-        private void refDesIndexChanged(object sender, SelectionChangedEventArgs e)
+        /*private void refDesIndexChanged(object sender, SelectionChangedEventArgs e)
         {
             if (sender is Control c && c.Name.Contains("_"))
             {
@@ -1903,9 +1763,9 @@ namespace RApID_Project_WPF
             {
                 txtMultiPartNum.SelectedIndex = txtMultiRefDes.SelectedIndex;
             }
-        }
+        }*/
 
-        private void dgBOMList_MouseDoubleClick(object sender, MouseButtonEventArgs e)
+        /*private void dgBOMList_MouseDoubleClick(object sender, MouseButtonEventArgs e)
         {
             var targetGrid = (DataGrid)(tcUnitIssues.SelectedContent as Grid).FindName($"dgMultipleParts{(tcUnitIssues.SelectedIndex > 0 ? $"_{tcUnitIssues.SelectedIndex + 1}" : "")}");
             var item = (MultiplePartsReplaced)dgBOMList.SelectedItem;
@@ -1954,6 +1814,6 @@ namespace RApID_Project_WPF
             {
                 PrevGrid = tcUnitIssues.SelectedContent as Grid ?? null;
             }
-        }
+        }*/
     }
 }

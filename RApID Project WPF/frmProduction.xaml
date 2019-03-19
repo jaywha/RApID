@@ -174,7 +174,7 @@
                             <DataGrid Name="dgPrevRepairInfo" HorizontalAlignment="Left" VerticalAlignment="Top" Width="280" Height="140" Margin="6,625,0,0" BeginningEdit="dgBeginEdit"
                                       MouseDoubleClick="dgPrevRepairInfo_MouseDoubleClick"/>
 
-                            <dragablz:TabablzControl x:Name="tcUnitIssues" HorizontalAlignment="Left" VerticalAlignment="Top" Width="352" Height="754" Margin="300,11,0,0" ShowDefaultAddButton="True">
+                            <!--<dragablz:TabablzControl x:Name="tcUnitIssues" HorizontalAlignment="Left" VerticalAlignment="Top" Width="352" Height="754" Margin="300,11,0,0" ShowDefaultAddButton="True">
                                 <TabItem Name="tiUI1" Header="Unit Issue #1">
                                     <ScrollViewer VerticalScrollBarVisibility="Auto">
                                         <StackPanel Name="gridUI1" Orientation="Vertical">
@@ -256,7 +256,15 @@
                                 </TabItem>
 
                                 <TabItem Name="tiUI2" Header="Unit Issue #2" IsEnabled="False">
-                                    <StackPanel Name="gridUI2" Background="#FF303030" Orientation="Vertical">
+                                    <StackPanel Name="gridUI2" Orientation="Vertical">
+                                        <StackPanel.Background>
+                                            <MultiBinding Converter="{StaticResource ThemeApplier}">
+                                                <MultiBinding.Bindings>
+                                                    <Binding RelativeSource="{RelativeSource Self}"/>
+                                                    <Binding ElementName="grdMain" Path="(innerThemes:ThemeAttachedProperty.ThemeType)" Mode="OneWay" UpdateSourceTrigger="PropertyChanged"/>
+                                                </MultiBinding.Bindings>
+                                            </MultiBinding>
+                                        </StackPanel.Background>
                                         <Label Content="Reported Issue:" />
                                         <ComboBox Name="cbReportedIssue_2" DropDownClosed="cbDDClosed"  />
 
@@ -292,8 +300,16 @@
                                     </StackPanel>
                                 </TabItem>
 
-                                <TabItem Name="tiUI3" Header="Unit Issue #1" IsEnabled="False">
-                                    <StackPanel Name="gridUI3" Background="#FF303030" Orientation="Vertical">
+                                <TabItem Name="tiUI3" Header="Unit Issue #3" IsEnabled="False">
+                                    <StackPanel Name="gridUI3" Orientation="Vertical">
+                                        <StackPanel.Background>
+                                            <MultiBinding Converter="{StaticResource ThemeApplier}">
+                                                <MultiBinding.Bindings>
+                                                    <Binding RelativeSource="{RelativeSource Self}"/>
+                                                    <Binding ElementName="grdMain" Path="(innerThemes:ThemeAttachedProperty.ThemeType)" Mode="OneWay" UpdateSourceTrigger="PropertyChanged"/>
+                                                </MultiBinding.Bindings>
+                                            </MultiBinding>
+                                        </StackPanel.Background>
                                         <Label Content="Reported Issue:" />
                                         <ComboBox Name="cbReportedIssue_3" DropDownClosed="cbDDClosed"  />
 
@@ -328,8 +344,8 @@
                                         <Button Name="btnReset_3" Content="Reset Unit Issue #3" Width="275" Visibility="Visible" Click="btnReset_Click"/>
                                     </StackPanel>
                                 </TabItem>
-                            </dragablz:TabablzControl>
-                            <!--uc:ucIssueTabControl Margin="300,10,475,20" IsRepair="False" ReadOnly="False"/-->
+                            </dragablz:TabablzControl>-->
+                            <uc:ucIssueTabControl Margin="300,10,475,0" IsRepair="False" ReadOnly="False" Height="575" VerticalAlignment="Top" />
 
                             <Label Content="Additional Comments:" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="657,11,0,0"/>
                             <RichTextBox Name="rtbAdditionalComments" HorizontalAlignment="Left" VerticalAlignment="Top" Width="413" Height="215" Margin="657,40,0,0" GotFocus="rtbGotFocus" LostFocus="rtbLostFocus" Background="#FF545454" Foreground="#FF60DE18">
@@ -340,11 +356,11 @@
                                 </FlowDocument>
                             </RichTextBox>
 
-                            <uc:ucIssueTabControl x:Name="ucUnitIssues" Height="363" Margin="667,260,69,0" VerticalAlignment="Top" Visibility="Hidden"/>
-                            <StackPanel Orientation="Vertical" Margin="605,270,0,6" Visibility="Collapsed">
+                            <uc:ucIssueTabControl x:Name="ucUnitIssues" Height="325" Margin="667,260,69,0" VerticalAlignment="Top" Visibility="Hidden"/>
+                            <!--StackPanel Orientation="Vertical" Margin="605,270,0,6" Visibility="Collapsed">
                                 <Label x:Name="lblBOMList" Content="BOM Parts List" HorizontalAlignment="Left" VerticalAlignment="Top" Width="128" ToolTip="From JUKI Sheet of BOM Excel File"/>
                                 <DataGrid x:Name="dgBOMList" HorizontalAlignment="Left" Height="328" VerticalAlignment="Top" Width="461" BeginningEdit="dgBeginEdit" MouseDoubleClick="dgBOMList_MouseDoubleClick"/>
-                            </StackPanel>
+                            </StackPanel-->
                             <Label Content="Double Click on Record To View" FontStyle="Italic" FontSize="10" Margin="3,611,907,0" Height="22" VerticalAlignment="Top" />
                         </Grid>
                     </TabItem>
