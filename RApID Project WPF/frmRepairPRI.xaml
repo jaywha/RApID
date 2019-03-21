@@ -102,7 +102,7 @@
             <Label Content="Hours on Unit:" Margin="0,500,0,0" Style="{StaticResource LabelBaseStyle}" />
             <TextBox Name="txtHOU" Margin="0,525,0,0" Style="{StaticResource TextboxBaseStyle}" />
 
-            <uc:ucIssueTabControl x:Name="ucIssues" Margin="202,23,374,125" DesignHeight="430" DesignWidth="345" ReadOnly="True" />
+            <uc:ucIssueTabControl x:Name="ucIssues" Margin="202,10,374,125" DesignHeight="430" DesignWidth="345" ReadOnly="True" />
 
             <Label Content="Additional Comments:" Margin="200,450,0,0" Style="{StaticResource LabelBaseStyle}" />
             <RichTextBox Name="rtbAddComm" Margin="200,475,0,0" Style="{StaticResource RTBBaseStyle}" Width="326" />
@@ -138,6 +138,17 @@
 
             <Label Content="Full QC/DQE Comments:" Margin="531,325,0,0" Style="{StaticResource LabelBaseStyle}" />
             <RichTextBox Name="rtbQCDQEComments" Margin="531,350,0,0" Style="{StaticResource QCDQERTB}" Width="359" Height="200" />
+            <Button x:Name="btnViewLog" Content="View PRI Log" HorizontalAlignment="Left" Margin="531,10,0,0" VerticalAlignment="Top" 
+                    Width="140" Height="40" Foreground="White" Click="BtnViewLog_Click" Visibility="Collapsed">
+                <Button.Background>
+                    <LinearGradientBrush EndPoint="0,1" StartPoint="0,0">
+                        <GradientStop Color="#FF94B9D8" Offset="0"/>
+                        <GradientStop Color="#FF2F6DA2" Offset="0.611"/>
+                        <GradientStop Color="#FF5E92BD" Offset="0.272"/>
+                        <GradientStop Color="#FF0C4678" Offset="1"/>
+                    </LinearGradientBrush>
+                </Button.Background>
+            </Button>
         </Grid>
     </Viewbox>
 </Window>

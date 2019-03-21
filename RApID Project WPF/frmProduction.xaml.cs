@@ -626,12 +626,8 @@ namespace RApID_Project_WPF
                         {
                             if (!mapper.GetData(txtSerialNumber.Text))
                             {
-#if DEBUG
-                                throw new InvalidOperationException("Couldn't find data for this barcode!");
-#else
-                                    MessageBox.Show("Couldn't find the barcode's entry in the database.\nPlease enter information manually.", 
+                                MessageBox.Show("Couldn't find the barcode's entry in the database.\nPlease enter information manually.", 
                                         "Soft Error - BOM Lookup", MessageBoxButton.OK, MessageBoxImage.Warning);
-#endif
                             }
                             else
                             {
@@ -660,9 +656,8 @@ namespace RApID_Project_WPF
         private void beginSerialNumberSearch()
         {
             resetForm(false);
-            sVar.LogHandler.LogCreation = DateTime.Now;
 
-            MapRefDesToPartNum();
+            sVar.LogHandler.LogCreation = DateTime.Now;
 
             if (!string.IsNullOrEmpty(txtSerialNumber.Text))
             {
@@ -671,6 +666,8 @@ namespace RApID_Project_WPF
                 fillDataLog();
                 ucEOLTab.Fill();
                 ucAOITab.Fill();
+
+                MapRefDesToPartNum();
             }
         }
 
@@ -977,10 +974,10 @@ namespace RApID_Project_WPF
             string query = "INSERT INTO TechnicianSubmission " +
                            "(SerialNumber, Technician, DateReceived, PartName, PartNumber, Series, CommoditySubClass, SoftwareVersion, TypeOfReturn, FromArea, Scrap, " +
                            "ReportedIssue, TestResult, TestResultAbort, Issue, Item, Problem, RefDesignator, PartsReplaced, AdditionalComments, " +
-                           "DateSubmitted, SubmissionStatus, SaveID, Quantity, TechAct1, TechAct2, TechAct3) " +
+                           "DateSubmitted, SubmissionStatus, SaveID, Quantity, TechAct1, TechAct2, TechAct3, LogID) " +
                            "VALUES (@serialNum, @technician, @dateReceived, @partName, @partNumber, @partSeries, @commoditySubClass, @softwareVersion, @typeOfReturn, @fromArea, @scrap, " +
                            "@reportedIssue, @testResult, @testResultAbort, @issue, @item, @problem, @refDesignator, @partsReplaced, @additionalComments, " +
-                           "@dateSubmitted, @submissionStatus, @saveID, @quantity, @ta1, @ta2, @ta3);";
+                           "@dateSubmitted, @submissionStatus, @saveID, @quantity, @ta1, @ta2, @ta3, @logID);";
 
             sVar.LogHandler.CreateLogAction("Attempting to submit the tech data into the TechnicianSubmission Table.", csLogging.LogState.NOTE);
             sVar.LogHandler.CreateLogAction("SQL QUERY: " + query, csLogging.LogState.SQLQUERY);
@@ -991,6 +988,7 @@ namespace RApID_Project_WPF
             {
                 conn.Open();
 
+                cmd.Parameters.AddWithValue("@logID", csSerialization.CurrLogIDToUse);
                 cmd.Parameters.AddWithValue("@serialNum", txtSerialNumber.Text.ToString().TrimEnd());
                 cmd.Parameters.AddWithValue("@technician", txtTechName.Text.ToString());
                 cmd.Parameters.AddWithValue("@dateReceived", dtpDateReceived.SelectedDate.Value.ToString("MM/dd/yyyy"));
@@ -1409,7 +1407,7 @@ namespace RApID_Project_WPF
                             brdRefDes_2.BorderThickness = new Thickness(0.0);
                         }
 
-                        if (!txtMultiRefDes_2.Items.Contains(txtMultiRefDes_2.Text))
+                        if (BOMFileActive && !txtMultiRefDes_2.Items.Contains(txtMultiRefDes_2.Text))
                         {
                             string sWarning = string.Format($"The Reference Designator entered ( {txtMultiRefDes_2.Text} ) does not exist.\n" +
                                 "Please verify the Part Number and try again.");
@@ -1422,7 +1420,7 @@ namespace RApID_Project_WPF
 
                         string _sPRPD = csCrossClassInteraction.GetPartReplacedPartDescription(txtMultiPartNum_2.Text);
 
-                        if (string.IsNullOrEmpty(_sPRPD) && !string.IsNullOrEmpty(txtMultiPartNum_2.Text))
+                        if (BOMFileActive && string.IsNullOrEmpty(_sPRPD) && !string.IsNullOrEmpty(txtMultiPartNum_2.Text))
                         {
                             string sWarning = string.Format("The Part Replaced entered ( {0} ) does not exist. Please verify the Part Number and try again.", txtMultiPartNum_2.Text);
                             sVar.LogHandler.CreateLogAction(sWarning, csLogging.LogState.WARNING);
@@ -1467,7 +1465,7 @@ namespace RApID_Project_WPF
                             brdRefDes_3.BorderThickness = new Thickness(0.0);
                         }
 
-                        if (!txtMultiRefDes_3.Items.Contains(txtMultiRefDes_3.Text))
+                        if (BOMFileActive && !txtMultiRefDes_3.Items.Contains(txtMultiRefDes_3.Text))
                         {
                             string sWarning = string.Format($"The Reference Designator entered ( {txtMultiRefDes_3.Text} ) does not exist.\n" +
                                 "Please verify the Part Number and try again.");
@@ -1480,7 +1478,7 @@ namespace RApID_Project_WPF
 
                         string _sPRPD = csCrossClassInteraction.GetPartReplacedPartDescription(txtMultiPartNum_3.Text);
 
-                        if (string.IsNullOrEmpty(_sPRPD) && !string.IsNullOrEmpty(txtMultiPartNum_3.Text))
+                        if (BOMFileActive && string.IsNullOrEmpty(_sPRPD) && !string.IsNullOrEmpty(txtMultiPartNum_3.Text))
                         {
                             string sWarning = string.Format("The Part Replaced entered ( {0} ) does not exist. Please verify the Part Number and try again.", txtMultiPartNum_3.Text);
                             sVar.LogHandler.CreateLogAction(sWarning, csLogging.LogState.WARNING);
@@ -1526,7 +1524,7 @@ namespace RApID_Project_WPF
                         brdRefDes.BorderThickness = new Thickness(0.0);
                     }
 
-                    if (!txtMultiRefDes.Items.Contains(txtMultiRefDes.Text))
+                    if (BOMFileActive & !txtMultiRefDes.Items.Contains(txtMultiRefDes.Text))
                     {
                         string sWarning = string.Format($"The Reference Designator entered ( {txtMultiRefDes.Text} ) does not exist.\n" +
                             "Please verify the Part Number and try again.");
@@ -1539,7 +1537,7 @@ namespace RApID_Project_WPF
 
                     string _sPRPD = csCrossClassInteraction.GetPartReplacedPartDescription(txtMultiPartNum.Text);
 
-                    if (string.IsNullOrEmpty(_sPRPD) && !string.IsNullOrEmpty(txtMultiPartNum.Text))
+                    if (BOMFileActive & string.IsNullOrEmpty(_sPRPD) && !string.IsNullOrEmpty(txtMultiPartNum.Text))
                     {
                         string sWarning = string.Format("The Part Replaced entered ( {0} ) does not exist. Please verify the Part Number and try again.", txtMultiPartNum.Text);
                         sVar.LogHandler.CreateLogAction(sWarning, csLogging.LogState.WARNING);
@@ -1584,6 +1582,9 @@ namespace RApID_Project_WPF
             }
         }
         #endregion
+
+        private void dgBeginEdit(object sender, DataGridBeginningEditEventArgs e)
+            => e.Cancel = true;
 
         private void dgPrevRepairInfo_MouseDoubleClick(object sender, MouseButtonEventArgs e)
         {
@@ -1732,11 +1733,6 @@ namespace RApID_Project_WPF
                 }
             }
             catch { }
-        }
-
-        private void dgBeginEdit(object sender, DataGridBeginningEditEventArgs e)
-        {
-            e.Cancel = true;
         }
 
         private void txtMultiRefKeyUp(object sender, KeyEventArgs e)

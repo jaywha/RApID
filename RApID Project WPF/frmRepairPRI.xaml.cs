@@ -1,17 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
 using System.Data.SqlClient;
+using EricStabileLibrary;
 
 namespace RApID_Project_WPF
 {
@@ -23,7 +16,7 @@ namespace RApID_Project_WPF
         PreviousRepairInformation PRI;
         csObjectHolder.csObjectHolder holder = csObjectHolder.csObjectHolder.ObjectHolderInstance();
         CustomerInformation CurrentCustomer;
-
+        UserControls.ucLogActionView PRILogView = new UserControls.ucLogActionView();
 
         public frmRepairPRI(PreviousRepairInformation _pri)
         {
@@ -35,13 +28,7 @@ namespace RApID_Project_WPF
         {
             try
             {
-                if (PRI == null)
-                    Close();
-
-                if (!loadPRI())
-                    Close();
-                else
-                    ucIssues = null;
+                if (PRI == null || !loadPRI()) { Close(); }
             } catch (Exception ex)
             {
                 csExceptionLogger.csExceptionLogger.Write("frmRepairPRI-Window_Loaded", ex);
@@ -54,10 +41,14 @@ namespace RApID_Project_WPF
             var conn = new SqlConnection(holder.RepairConnectionString);
 
             string query = "SELECT * FROM TechnicianSubmission WHERE ID = '" + PRI.ID + "'";
+            string logQuery = "SELECT * FROM TechLogs WHERE ID = @logID";
+            string actionQuery = "SELECT * FROM TechLogActions WHERE ActionID = @aid";
             string customerQuery = "SELECT * FROM RepairCustomerInformation WHERE CustomerNumber = @CustNum";
            
             var cmd = new SqlCommand(query, conn);
             var customerCmd = new SqlCommand(customerQuery, conn);
+            var logCmd = new SqlCommand(logQuery, conn); logCmd.Parameters.Add("@logID", System.Data.SqlDbType.Int);
+            var actionCmd = new SqlCommand(actionQuery, conn); actionCmd.Parameters.Add("@aid", System.Data.SqlDbType.Int);
 
             try
             {
@@ -67,30 +58,30 @@ namespace RApID_Project_WPF
                 {
                     while(reader.Read())
                     {
-                        sUnitID = csCrossClassInteraction.EmptyIfNull(reader["ID"].ToString());
+                        sUnitID = reader["ID"].ToString().EmptyIfNull();
 
-                        txtTechName.Text = csCrossClassInteraction.EmptyIfNull(reader["Technician"].ToString());
-                        txtDateReceived.Text = csCrossClassInteraction.EmptyIfNull(reader["DateReceived"].ToString());
-                        txtDateSubmitted.Text = csCrossClassInteraction.EmptyIfNull(reader["DateSubmitted"].ToString());
-                        txtPartName.Text = csCrossClassInteraction.EmptyIfNull(reader["PartName"].ToString());
-                        txtPartNumber.Text = csCrossClassInteraction.EmptyIfNull(reader["PartNumber"].ToString());
-                        txtPartSeries.Text = csCrossClassInteraction.EmptyIfNull(reader["Series"].ToString());
-                        txtCommSubClass.Text = csCrossClassInteraction.EmptyIfNull(reader["CommoditySubClass"].ToString());
-                        txtSW.Text = csCrossClassInteraction.EmptyIfNull(reader["SoftwareVersion"].ToString());
-                        txtTOR.Text = csCrossClassInteraction.EmptyIfNull(reader["TypeOfReturn"].ToString());
-                        txtTOF.Text = csCrossClassInteraction.EmptyIfNull(reader["TypeOfFailure"].ToString());
-                        txtHOU.Text = csCrossClassInteraction.EmptyIfNull(reader["HoursOnUnit"].ToString());
+                        txtTechName.Text = reader["Technician"].ToString().EmptyIfNull();
+                        txtDateReceived.Text = reader["DateReceived"].ToString().EmptyIfNull();
+                        txtDateSubmitted.Text = reader["DateSubmitted"].ToString().EmptyIfNull();
+                        txtPartName.Text = reader["PartName"].ToString().EmptyIfNull();
+                        txtPartNumber.Text = reader["PartNumber"].ToString().EmptyIfNull();
+                        txtPartSeries.Text = reader["Series"].ToString().EmptyIfNull();
+                        txtCommSubClass.Text = reader["CommoditySubClass"].ToString().EmptyIfNull();
+                        txtSW.Text = reader["SoftwareVersion"].ToString().EmptyIfNull();
+                        txtTOR.Text = reader["TypeOfReturn"].ToString().EmptyIfNull();
+                        txtTOF.Text = reader["TypeOfFailure"].ToString().EmptyIfNull();
+                        txtHOU.Text = reader["HoursOnUnit"].ToString().EmptyIfNull();
 
-                        rtbAddComm.AppendText(csCrossClassInteraction.EmptyIfNull(reader["AdditionalComments"].ToString()));
-                        txtTechAct1.Text = csCrossClassInteraction.EmptyIfNull(reader["TechAct1"].ToString());
-                        txtTechAct2.Text = csCrossClassInteraction.EmptyIfNull(reader["TechAct2"].ToString());
-                        txtTechAct3.Text = csCrossClassInteraction.EmptyIfNull(reader["TechAct3"].ToString());
+                        rtbAddComm.AppendText(reader["AdditionalComments"].ToString().EmptyIfNull());
+                        txtTechAct1.Text = reader["TechAct1"].ToString().EmptyIfNull();
+                        txtTechAct2.Text = reader["TechAct2"].ToString().EmptyIfNull();
+                        txtTechAct3.Text = reader["TechAct3"].ToString().EmptyIfNull();
 
-                        txtCustNum.Text = csCrossClassInteraction.EmptyIfNull(reader["CustomerNumber"].ToString());
+                        txtCustNum.Text = reader["CustomerNumber"].ToString().EmptyIfNull();
                         if(!string.IsNullOrEmpty(txtCustNum.Text))
                             customerCmd.Parameters.AddWithValue("@CustNum", int.Parse(txtCustNum.Text));
 
-                        rtbQCDQEComments.AppendText(csCrossClassInteraction.EmptyIfNull(reader["QCDQEComments"].ToString()));
+                        rtbQCDQEComments.AppendText(reader["QCDQEComments"].ToString().EmptyIfNull());
                     }
                 }
 
@@ -103,16 +94,16 @@ namespace RApID_Project_WPF
                             txtCustName.Text = customerReader["CustomerName"].ToString();
                             CurrentCustomer = new CustomerInformation()
                             {
-                                CustomerNumber = csCrossClassInteraction.EmptyIfNull(customerReader["CustomerNumber"].ToString()),
-                                CustomerName = csCrossClassInteraction.EmptyIfNull(customerReader["CustomerName"].ToString()),
-                                CustomerAddy1 = csCrossClassInteraction.EmptyIfNull(customerReader["CustomerAddressLine1"].ToString()),
-                                CustomerAddy2 = csCrossClassInteraction.EmptyIfNull(customerReader["CustomerAddressLine2"].ToString()),
-                                CustomerAddy3 = csCrossClassInteraction.EmptyIfNull(customerReader["CustomerAddressLine3"].ToString()),
-                                CustomerAddy4 = csCrossClassInteraction.EmptyIfNull(customerReader["CustomerAddressLine4"].ToString()),
-                                CustomerCity = csCrossClassInteraction.EmptyIfNull(customerReader["CustomerCity"].ToString()),
-                                CustomerState = csCrossClassInteraction.EmptyIfNull(customerReader["CustomerState"].ToString()),
-                                CustomerPostalCode = csCrossClassInteraction.EmptyIfNull(customerReader["CustomerPostalCode"].ToString()),
-                                CustomerCountryCode = csCrossClassInteraction.EmptyIfNull(customerReader["CustomerCountryCode"].ToString())
+                                CustomerNumber = customerReader["CustomerNumber"].ToString().EmptyIfNull(),
+                                CustomerName = customerReader["CustomerName"].ToString().EmptyIfNull(),
+                                CustomerAddy1 = customerReader["CustomerAddressLine1"].ToString().EmptyIfNull(),
+                                CustomerAddy2 = customerReader["CustomerAddressLine2"].ToString().EmptyIfNull(),
+                                CustomerAddy3 = customerReader["CustomerAddressLine3"].ToString().EmptyIfNull(),
+                                CustomerAddy4 = customerReader["CustomerAddressLine4"].ToString().EmptyIfNull(),
+                                CustomerCity = customerReader["CustomerCity"].ToString().EmptyIfNull(),
+                                CustomerState = customerReader["CustomerState"].ToString().EmptyIfNull(),
+                                CustomerPostalCode = customerReader["CustomerPostalCode"].ToString().EmptyIfNull(),
+                                CustomerCountryCode = customerReader["CustomerCountryCode"].ToString().EmptyIfNull()
                             };
                         }
                     }
@@ -143,7 +134,49 @@ namespace RApID_Project_WPF
                         if (lRMI.Count > ucIndex) ucIssues.AddTabItem();
                     }
                 }
-                
+
+                if (logCmd.Parameters[0].Value == null || logCmd.Parameters[0].Value == DBNull.Value)
+                {
+                    conn.Close();
+                    return true;
+                }
+
+                btnViewLog.Visibility = Visibility.Visible;
+
+                using (var reader = logCmd.ExecuteReader())
+                {
+                    reader.Read(); // only one record
+
+                    actionCmd.Parameters.AddWithValue("@aid", reader["ActionID"].ToString().EmptyIfNull());
+
+                    PRILogView.LogToView = new csLog()
+                    {
+                        Tech = reader["Tech"].ToString().EmptyIfNull(),
+                        LogCreationTime = DateTime.Parse(reader["LogCreationTime"].ToString().EmptyIfNull()),
+                        LogSubmitTime = DateTime.Parse(reader["LogSubmitTime"].ToString().EmptyIfNull())
+                    };
+                }
+
+                using (var reader = actionCmd.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        var @action = new csLogAction()
+                        {
+                            ControlType = reader["ControlType"].ToString().EmptyIfNull(),
+                            ControlName = reader["ControlName"].ToString().EmptyIfNull(),
+                            ControlContent = reader["ControlContent"].ToString().EmptyIfNull(),
+                            EventType = (csLogging.LogState)Enum.Parse(typeof(csLogging.LogState),
+                                reader["LogState"].ToString().EmptyIfNull()),
+                            EventTiming = DateTime.Parse(reader["EventTiming"].ToString().EmptyIfNull()),
+                            LogNote = reader["LogNote"].ToString().EmptyIfNull(),
+                            LogError = reader.GetBoolean(reader.GetOrdinal("LogError"))
+                        };
+
+                        PRILogView.LogToView.lActions.Add(@action);
+                    }
+                }
+
 
                 return true;
             }
@@ -161,7 +194,9 @@ namespace RApID_Project_WPF
         private void gbCustomerInfo_PreviewMouseDoubleClick(object sender, MouseButtonEventArgs e)
         {
             var fullInfo = new frmFullCustomerInformation(CurrentCustomer);
-            fullInfo.Closed += delegate { gbCustomerInfo.IsEnabled = true; };
+            fullInfo.Closed += delegate {
+                gbCustomerInfo.IsEnabled = true;
+            };
             fullInfo.Show();
             gbCustomerInfo.IsEnabled = false;
         }
@@ -176,6 +211,12 @@ namespace RApID_Project_WPF
         {
             gbCustomerInfo.Header = "Customer Information";
             gbCustomerInfo.Background = Brushes.LightGray;
+        }
+
+        private void BtnViewLog_Click(object sender, RoutedEventArgs e)
+        {
+            var frm = new Window() { Content = PRILogView };
+            (frm.Content as UserControls.ucLogActionView).InitView();
         }
     }
 }

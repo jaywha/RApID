@@ -171,7 +171,7 @@
 
                         <Label Name="lblPrevRepairInfo" Content="Previous Repair Information:" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="6,481,0,0" />
                         <Label Name="lblPrevRepairMoreInfo" Content="Double Click on Record To View" FontStyle="Italic" FontSize="10" Margin="6,495,0,0"/>
-                        <DataGrid Name="dgPrevRepairInfo" HorizontalAlignment="Left" Margin="6,515,0,0" VerticalAlignment="Top" Width="280" Height="115" BeginningEdit="dgBeginEdit" MouseDoubleClick="dgPrevRepairInfo_MouseDoubleClick"/>
+                        <DataGrid Name="dgPrevRepairInfo" HorizontalAlignment="Left" Margin="6,515,0,0" VerticalAlignment="Top" Width="280" Height="115" IsReadOnly="True" MouseDoubleClick="dgPrevRepairInfo_MouseDoubleClick"/>
 
                         <Label Content="Type of Return:" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="6,295,0,0" />
                         <ComboBox Name="cbTOR" Margin="6,318,0,0" DropDownClosed="cbDDClosed" Style="{StaticResource ComboBoxBaseStyle}" Width="100"/>
@@ -213,7 +213,14 @@
                                               IsEnabled="{Binding ElementName=wndMain, Path=BOMFileActive, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged,Converter={StaticResource NegateBoolean}}"/>
                                     <Button Name="btnAddMultiParts" Content="Add" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="220,335,0,0" Width="65" Height="23" Click="btnAddMultiParts_Click" />
 
-                                    <DataGrid Name="dgMultipleParts" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10,370,0,0" Width="275" Height="180" IsReadOnly="True" BeginningEdit="dgBeginEdit" />
+                                    <DataGrid Name="dgMultipleParts" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10,370,0,0" Width="275" Height="180" BeginningEdit="dgBeginEdit"
+                                              CanUserDeleteRows="True">
+                                        <DataGrid.ContextMenu>
+                                            <ContextMenu>
+                                                <MenuItem x:Name="mnuiDeleteRow" Header="Delete Row" Click="MnuiDeleteRow_Click"/>
+                                            </ContextMenu>
+                                        </DataGrid.ContextMenu>
+                                    </DataGrid>
                                     <Button Name="btnReset" Content="Reset Unit Issue #1" Margin="10,555,0,0" Style="{StaticResource UnitIssueButtons}" Click="btnReset_Click" />
                                 </Grid>
                             </TabItem>
@@ -248,7 +255,14 @@
                                               IsEnabled="{Binding ElementName=wndMain, Path=BOMFileActive, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged,Converter={StaticResource NegateBoolean}}" />
                                     <Button Name="btnAddMultiParts_2" Content="Add" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="220,335,0,0" Width="65" Height="23" Click="btnAddMultiParts_Click" />
 
-                                    <DataGrid Name="dgMultipleParts_2" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10,370,0,0" Width="275" Height="180" IsReadOnly="True" BeginningEdit="dgBeginEdit" />
+                                    <DataGrid Name="dgMultipleParts_2" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10,370,0,0" Width="275" Height="180" IsReadOnly="True" BeginningEdit="dgBeginEdit" 
+                                              CanUserDeleteRows="True">
+                                        <DataGrid.ContextMenu>
+                                            <ContextMenu>
+                                                <MenuItem x:Name="mnuiDeleteRow_2" Header="Delete Row" Click="MnuiDeleteRow_Click"/>
+                                            </ContextMenu>
+                                        </DataGrid.ContextMenu>
+                                    </DataGrid>
                                     <Button Name="btnReset_2" Content="Reset Unit Issue #2" Margin="10,555,0,0" Style="{StaticResource UnitIssueButtons}" Click="btnReset_Click" />
                                 </Grid>
                             </TabItem>
@@ -283,7 +297,14 @@
                                               IsEnabled="{Binding ElementName=wndMain, Path=BOMFileActive, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged,Converter={StaticResource NegateBoolean}}" />
                                     <Button Name="btnAddMultiParts_3" Content="Add" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="220,335,0,0" Width="65" Height="23" Click="btnAddMultiParts_Click" />
 
-                                    <DataGrid Name="dgMultipleParts_3" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10,370,0,0" Width="275" Height="180" IsReadOnly="True" BeginningEdit="dgBeginEdit" />
+                                    <DataGrid Name="dgMultipleParts_3" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10,370,0,0" Width="275" Height="180" IsReadOnly="True" BeginningEdit="dgBeginEdit" 
+                                              CanUserDeleteRows="True" >
+                                        <DataGrid.ContextMenu>
+                                            <ContextMenu>
+                                                <MenuItem x:Name="mnuiDeleteRow_3" Header="Delete Row" Click="MnuiDeleteRow_Click"/>
+                                            </ContextMenu>
+                                        </DataGrid.ContextMenu>
+                                    </DataGrid>
                                     <Button Name="btnReset_3" Content="Reset Unit Issue #3" Margin="10,555,0,0" Style="{StaticResource UnitIssueButtons}" Click="btnReset_Click" />
                                 </Grid>
                             </TabItem>

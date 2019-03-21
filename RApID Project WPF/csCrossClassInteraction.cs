@@ -1011,7 +1011,7 @@ namespace RApID_Project_WPF
         }
 
         /// <summary>
-        /// Checks to see if the string passed in is null or equal to <see cref="DBNull"/>.
+        /// Checks to see if the calling string is null or equal to <see cref="DBNull"/>.
         /// </summary>
         /// <param name="valToTest">Value that needs to be checked.</param>
         /// <returns>Returns String.Empty if the value is null or DBNull; otherwise, return the value passed in.</returns>

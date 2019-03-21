@@ -2,8 +2,6 @@
 using System.Windows;
 using System.Data.SqlClient;
 using EricStabileLibrary;
-using RApID_Project_WPF.UserControls;
-using System.Linq;
 
 namespace RApID_Project_WPF
 {
@@ -36,8 +34,8 @@ namespace RApID_Project_WPF
             string unitIssueQuery = $"SELECT * FROM TechnicianUnitIssues WHERE ID = '{PRI.ID}'";
 
             var cmd = new SqlCommand(query, conn);
-            var logCmd = new SqlCommand(logQuery, conn); logCmd.Parameters.Add("@logID", System.Data.SqlDbType.Int);
-            var actionCmd = new SqlCommand(actionQuery, conn); actionCmd.Parameters.Add("@aid", System.Data.SqlDbType.Int);
+            var logCmd = new SqlCommand(logQuery, conn);
+            var actionCmd = new SqlCommand(actionQuery, conn);
             var unitIssueCmd = new SqlCommand(unitIssueQuery, conn);
 
             try
@@ -115,32 +113,35 @@ namespace RApID_Project_WPF
                     return true;
                 }
 
+                ucTechActions.Visibility = Visibility.Visible;
+
                 using (var reader = logCmd.ExecuteReader())
                 {
                     reader.Read(); // only one record
 
-                    actionCmd.Parameters.AddWithValue("@aid", csCrossClassInteraction.EmptyIfNull(reader["ActionID"].ToString()));
+                    actionCmd.Parameters.AddWithValue("@aid", reader["ActionID"].ToString().EmptyIfNull());
 
                     ucTechActions.LogToView = new csLog() {                        
-                        Tech = csCrossClassInteraction.EmptyIfNull(reader["Tech"].ToString()),
-                        LogCreationTime = DateTime.Parse(csCrossClassInteraction.EmptyIfNull(reader["LogCreationTime"].ToString())),
-                        LogSubmitTime = DateTime.Parse(csCrossClassInteraction.EmptyIfNull(reader["LogSubmitTime"].ToString()))
+                        Tech = reader["Tech"].ToString().EmptyIfNull(),
+                        LogCreationTime = DateTime.Parse(reader["LogCreationTime"].ToString().EmptyIfNull()),
+                        LogSubmitTime = DateTime.Parse(reader["LogSubmitTime"].ToString().EmptyIfNull())
                     };
                 }
 
-                using(var reader = actionCmd.ExecuteReader())
+                ucTechActions.LogToView.lActions = new System.Collections.Generic.List<csLogAction>();
+                using (var reader = actionCmd.ExecuteReader())
                 {
                     while(reader.Read())
                     {
                         var @action = new csLogAction()
                         {
-                            ControlType = csCrossClassInteraction.EmptyIfNull(reader["ControlType"].ToString()),
-                            ControlName = csCrossClassInteraction.EmptyIfNull(reader["ControlName"].ToString()),
-                            ControlContent = csCrossClassInteraction.EmptyIfNull(reader["ControlContent"].ToString()),
+                            ControlType = reader["ControlType"].ToString().EmptyIfNull(),
+                            ControlName = reader["ControlName"].ToString().EmptyIfNull(),
+                            ControlContent = reader["ControlContent"].ToString().EmptyIfNull(),
                             EventType = (csLogging.LogState) Enum.Parse(typeof(csLogging.LogState),
-                                csCrossClassInteraction.EmptyIfNull(reader["LogState"].ToString())),
-                            EventTiming = DateTime.Parse(csCrossClassInteraction.EmptyIfNull(reader["EventTiming"].ToString())),
-                            LogNote = csCrossClassInteraction.EmptyIfNull(reader["LogNote"].ToString()),
+                                reader["LogState"].ToString().EmptyIfNull()),
+                            EventTiming = DateTime.Parse(reader["EventTiming"].ToString().EmptyIfNull()),
+                            LogNote = reader["LogNote"].ToString().EmptyIfNull(),
                             LogError = reader.GetBoolean(reader.GetOrdinal("LogError"))
                         };
 

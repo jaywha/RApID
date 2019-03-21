@@ -67,7 +67,6 @@
             <Setter Property="Width" Value="55"/>
             <Setter Property="Height" Value="30"/>
         </Style>
-        <uc:HeightToHeightConverter x:Key="DoubleConverter"/>
     </Window.Resources>
     <Window.Background>
         <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
@@ -75,27 +74,6 @@
             <GradientStop Color="#FF8E9EAB" Offset="1"/>
         </LinearGradientBrush>
     </Window.Background>
-    <Window.Triggers>
-        <EventTrigger SourceName="btnShake" RoutedEvent="Button.Click">
-            <EventTrigger.Actions>
-                <BeginStoryboard>
-                    <Storyboard TargetProperty="Left">
-                        <DoubleAnimation From="{Binding ElementName=wndMain,Path=Left,Mode=TwoWay}" Duration="0:0:0.05"
-                                             AutoReverse="True" RepeatBehavior="3x"
-                                             FillBehavior="Stop">
-                            <DoubleAnimation.To>
-                                <Binding ElementName="wndMain" Path="Left" Mode="TwoWay" Converter="{StaticResource DoubleConverter}">
-                                    <Binding.ConverterParameter>
-                                        <sys:Double>0.9708737864</sys:Double>
-                                    </Binding.ConverterParameter>
-                                </Binding>
-                            </DoubleAnimation.To>
-                        </DoubleAnimation>
-                    </Storyboard>
-                </BeginStoryboard>
-            </EventTrigger.Actions>
-        </EventTrigger>
-    </Window.Triggers>
     <Grid>
         <Label x:Name="lblTitle" Margin="110,0,94,0" Width="240" Height="78" HorizontalAlignment="Center" VerticalAlignment="Top" 
                HorizontalContentAlignment="Center" VerticalContentAlignment="Center">
@@ -139,7 +117,7 @@
                 </ContextMenu>
             </tb:TaskbarIcon.ContextMenu>
         </tb:TaskbarIcon>
-        <Button x:Name="btnShake" Content="Hello" HorizontalAlignment="Left" Margin="10,325,0,0" VerticalAlignment="Top" Width="75" Visibility="Collapsed"/>
+        <Button x:Name="btnShake" Content="Hello" HorizontalAlignment="Left" Margin="10,325,0,0" VerticalAlignment="Top" Width="75" Visibility="Collapsed" Click="BtnShake_Click"/>
         <Button x:Name="btnTest" Margin="311,8,10,291" RenderTransformOrigin="0.5,0.5" Content="Test" Click="Button_Click" Style="{StaticResource MainMenuButton}" Height="Auto" Width="Auto" Visibility="Collapsed"/>
         <Label x:Name="lblDebug" Content="D E B U G" HorizontalAlignment="Left" Margin="194,43,0,0" VerticalAlignment="Top" FontFamily="BigNoodleTooOblique" FontSize="24" Foreground="#FF0C0CF8" Panel.ZIndex="1" UseLayoutRounding="False" Cursor="Pen" Visibility="Collapsed">
             <Label.Effect>

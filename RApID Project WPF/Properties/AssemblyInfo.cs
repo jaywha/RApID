@@ -8,11 +8,11 @@ using System.Windows;
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 [assembly: AssemblyTitle("RApID Project WPF")]
-[assembly: AssemblyDescription("")]
+[assembly: AssemblyDescription("Repair and external rework program reporting")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("")]
+[assembly: AssemblyCompany("Humminbird")]
 [assembly: AssemblyProduct("RApID Project WPF")]
-[assembly: AssemblyCopyright("Copyright ©  2016")]
+[assembly: AssemblyCopyright("Copyright ©  2016-2019")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
@@ -51,7 +51,7 @@ using System.Windows;
 // You can specify all the values or you can default the Build and Revision Numbers 
 // by using the '*' as shown below:
 // [assembly: AssemblyVersion("1.0.*")]
-[assembly: AssemblyVersion("1.0.1.0")]
+[assembly: AssemblyVersion("1.0.2.*")]
 [assembly: AssemblyFileVersion("1.0.0.0")]
 [assembly: Guid("b6abd8c8-63a8-4c15-8841-4f03e1be3ab5")]
 [assembly: NeutralResourcesLanguage("en-US")]

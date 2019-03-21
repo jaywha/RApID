@@ -66,6 +66,7 @@ namespace RApID_Project_WPF.UserControls
             CreateDate = LogToView.LogCreationTime.ToShortDateString();
             SubmitDate = LogToView.LogSubmitTime.ToShortDateString();
 
+            rtbLogBox.Document.Blocks.Clear();
             csDisplayLog.DisplayLog(rtbLogBox, csLogging.LogState.NONE, LogToView, false);
         }
 

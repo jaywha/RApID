@@ -134,6 +134,8 @@ namespace EricStabileLibrary
     /// </summary>
     public static class csSerialization
     {
+        public static int CurrLogIDToUse = 0;
+
         /// <summary>
         /// Used to serialize a file.
         /// </summary>
@@ -168,11 +170,11 @@ namespace EricStabileLibrary
                             {
                                 actionID = reader.GetInt32(0) + 1;
                             }
-                            else throw new IOException("ActionID could not be set.\nPlease confirm validity in the Database");
+                            else throw new IOException("ActionID could not be set.\nPlease confirm validity in the Database.");
                         }
                     }
 
-                    /* [2.] Insert initial log details in into TechLogs table. */
+                    /* [2.] Insert initial log details into TechLogs table. */
                     using (var cmd = new SqlCommand("INSERT INTO TechLogs (ActionID, Tech, LogCreationTime, LogSubmitTime) " +
                         "VALUES (@aid, @tech, @createtime, @submittime)", conn))
                     {
@@ -185,7 +187,18 @@ namespace EricStabileLibrary
                         if (cmd.ExecuteNonQuery() == 0) return false;
                     }
 
-                    /* [3.] Insert all relevant actions into TechLogActions table with ActionID as the pairing column. */
+                    /* [3.] Get newest LogID after instering log entry (Auto Increment ID)*/
+                    using(var cmd  = new SqlCommand("SELECT ID FROM TechLogs ORDER BY ID DESC", conn))
+                    {
+                        using (var reader = cmd.ExecuteReader())
+                            if (reader.Read())
+                            {
+                                CurrLogIDToUse = reader.GetInt32(0) + 1;
+                            }
+                            else throw new IOException("LogID could not be set.\nPlease confirm validity in the Database.");
+                    }
+
+                    /* [4.] Insert all relevant actions into TechLogActions table with ActionID as the pairing column. */
                     foreach (var action in csL.lActions)
                     {
                         using (var cmd = new SqlCommand("INSERT INTO TechLogActions (ActionID, ControlType, ControlName, " +

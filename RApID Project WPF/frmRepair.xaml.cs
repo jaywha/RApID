@@ -39,6 +39,8 @@ namespace RApID_Project_WPF
         List<EndUse> lEndUse;
 
         bool bTimerRebootAttempt = false; //NOTE: tSPChecker will attempt to reboot itself once if it gets disconnected. This flag will be used to track that.
+        bool bInvalidSN = false;
+        bool bStop = false;
 
         private string sRPNum = string.Empty;
         string sUserDepartmentNumber = "";
@@ -546,9 +548,27 @@ namespace RApID_Project_WPF
             return false;
         }
 
+        private void beginSerialNumberSearch()
+        {
+            resetForm(false);
+            vSleep(500);
+
+            sVar.LogHandler.LogCreation = DateTime.Now;
+            if (!string.IsNullOrEmpty(txtBarcode.Text))
+            {
+                sVar.LogHandler.CreateLogAction("**** This is a Repair Log ****", csLogging.LogState.NOTE);
+                sVar.LogHandler.CreateLogAction("The Serial Number related to this log is: " + txtBarcode.Text.TrimEnd(), csLogging.LogState.NOTE);
+                fillDataLog();
+                ucEOLTab.Fill();
+                ucAOITab.Fill();
+
+                MapRefDesToPartNum();
+            }
+        }
+
         private void fillDataLog()
         {
-            QueryProduction();
+            QueryProduction(); if (bStop) { return; }
 
             if (!string.IsNullOrEmpty(txtPartNumber.Text))
             {
@@ -565,16 +585,11 @@ namespace RApID_Project_WPF
 
         private void QueryProduction()
         {
-            string query = "";
-
-            var repairLabel = (lblRPNumber.Content?.ToString().Replace("RP Number: ", "").StartsWith("SV"));
-            if ((repairLabel.HasValue && repairLabel.Value)
-                || txtSeries.Text.Contains("XDR")) // this is a transducer so lets do something different
-                query = "SELECT PartNumber FROM tblXducerTestResults WHERE SerialNumber = '" + txtBarcode.Text + "';";
-            else query = "SELECT Assy FROM Production3 WHERE SerialNum = '" + txtBarcode.Text + "';";
-
-
+            string query = "SELECT Model FROM Production WHERE SerialNum = '" + txtBarcode.Text + "';";
             string sProdQueryResults = csCrossClassInteraction.ProductionQuery(query);
+
+            CheckForXDucer(ref sProdQueryResults);
+
             if (sProdQueryResults.ToLower().Contains("rev"))
             {
                 csCrossClassInteraction.LoadPartNumberForm(false, new List<TextBox> { txtPartNumber, txtPartName, txtSeries });
@@ -584,6 +599,52 @@ namespace RApID_Project_WPF
                 sVar.LogHandler.CreateLogAction("Part Number '" + sProdQueryResults + "' was found.", csLogging.LogState.NOTE);
                 txtPartNumber.Text = sProdQueryResults;
                 QueryItemMaster();
+            }
+        }
+
+        /// <summary>
+        /// Ensures a part number was found for Xducers
+        /// </summary>
+        /// <param name="sProdQueryResults">empty string but variable reference</param>        
+        public void CheckForXDucer(ref string sProdQueryResults)
+        {
+            string sub = "";
+            string msg = "";
+
+            if (string.IsNullOrWhiteSpace(sProdQueryResults))
+            {
+                string query2 = "SELECT PartNumber FROM tblXducerTestResults WHERE SerialNumber = '" + txtBarcode.Text + "';";
+                string sProdQuery2Results = csCrossClassInteraction.ProductionQuery(query2);
+
+                if (string.IsNullOrWhiteSpace(sProdQuery2Results))
+                {
+                    var ans = MessageBox.Show("We couldn't find the serial number in the final test database.\n" +
+                        "An email will be sent to Production Engineering.",
+                        "Invalid Serial Number", MessageBoxButton.YesNoCancel, MessageBoxImage.Warning);
+                    if (ans == MessageBoxResult.Cancel) { resetForm(true); bStop = true; return; }
+                    else if (ans == MessageBoxResult.Yes)
+                    {
+                        sub = $"RApID Warning - {Environment.MachineName} under {Environment.UserName}";
+                        msg = "<h1>Xducer not final tested</h1>" +
+                            $"<h2>SN# := {txtBarcode.Text}</h2><hr>";
+                        bInvalidSN = true;
+                    }
+
+                    string query3 = "SELECT PartNumber FROM tblXducerTestResultsBenchTest WHERE SerialNumber = '" + txtBarcode.Text + "';";
+                    string sProdQuery3Results = csCrossClassInteraction.ProductionQuery(query3);
+
+                    if (!string.IsNullOrWhiteSpace(sProdQuery3Results))
+                    {
+                        sProdQueryResults = sProdQuery3Results;
+                    }
+
+                    if (bInvalidSN)
+                    {
+                        var clr = string.IsNullOrWhiteSpace(sProdQuery3Results) ? "red" : "green";
+                        var not = string.IsNullOrWhiteSpace(sProdQuery3Results) ? "not" : "";
+                        Mailman.SendEmail(sub, msg + $"<p style=\"color:{clr}\">SN {not} found in initial test.</p>");
+                    }
+                }
             }
         }
 
@@ -877,7 +938,8 @@ namespace RApID_Project_WPF
                 conn.Open();
 
                 cmd.Parameters.AddWithValue("@Technician", txtTechName.Text.ToString().TrimEnd());
-                cmd.Parameters.AddWithValue("@DateReceived", dtpDateReceived.SelectedDate.Value.ToString("MM/dd/yyyy"));
+                cmd.Parameters.AddWithValue("@DateReceived", 
+                    dtpDateReceived.SelectedDate?.ToString("MM/dd/yyyy") ?? DateTime.Now.AddDays(-1.0).ToString());
                 cmd.Parameters.AddWithValue("@PartName", txtPartName.Text.ToString().TrimEnd());
                 cmd.Parameters.AddWithValue("@PartNumber", txtPartNumber.Text.ToString().TrimEnd());
                 cmd.Parameters.AddWithValue("@CommoditySubClass", txtCommSubClass.Text.ToString().TrimEnd());
@@ -895,7 +957,7 @@ namespace RApID_Project_WPF
                     cmd.Parameters.AddWithValue("@HoursOnUnit", DBNull.Value);
                 else cmd.Parameters.AddWithValue("@HoursOnUnit", Convert.ToInt32(txtHOU.Text));
 
-                cmd.Parameters.AddWithValue("@ReportedIssue", csCrossClassInteraction.EmptyIfNull(cbReportedIssue.Text));
+                cmd.Parameters.AddWithValue("@ReportedIssue", cbReportedIssue.Text.EmptyIfNull());
 
                 #region Unit Issues
                 UnitIssueModel lUI = getUnitIssueString(0);
@@ -907,7 +969,8 @@ namespace RApID_Project_WPF
                 cmd.Parameters.AddWithValue("@RefDesignator", csCrossClassInteraction.EmptyIfNull(lUI.MultiPartsReplaced[0].RefDesignator));
                 #endregion
 
-                cmd.Parameters.AddWithValue("@AdditionalComments", new TextRange(rtbAdditionalComments.Document.ContentStart, rtbAdditionalComments.Document.ContentEnd).Text.ToString());
+                cmd.Parameters.AddWithValue("@AdditionalComments", new TextRange(rtbAdditionalComments.Document?.ContentStart, rtbAdditionalComments.Document?.ContentEnd)
+                    ?.Text.ToString() ?? "");
 
                 if (string.IsNullOrEmpty(txtCustomerNumber.Text))
                     cmd.Parameters.AddWithValue("@CustomerNumber", DBNull.Value);
@@ -966,7 +1029,7 @@ namespace RApID_Project_WPF
                 sVar.LogHandler.CreateLogAction("Submission Successful!", csLogging.LogState.NOTE);
 
                 int readerID = csCrossClassInteraction.GetDBIDValue("SELECT ID FROM TechnicianSubmission WHERE Technician = '" + txtTechName.Text + "' AND DateSubmitted = '" + dtSubmission + "' AND SerialNumber = '" + txtBarcode.Text + "';");
-                if (readerID > 0)
+                if (readerID > 0 && dgMultipleParts.Items.Count > 0)
                 {
                     submitMultipleUnitData(readerID);
                 }
@@ -1261,12 +1324,8 @@ namespace RApID_Project_WPF
                     {
                         if (!mapper.GetData(txtBarcode.Text))
                         {
-#if DEBUG
-                                throw new InvalidOperationException("Couldn't find data for this barcode!");
-#else
                             MessageBox.Show("Couldn't find the barcode's entry in the database.\nPlease enter information manually.", "Soft Error - BOM Lookup"
-                                , MessageBoxButton.OK, MessageBoxImage.Warning);
-#endif                            
+                                , MessageBoxButton.OK, MessageBoxImage.Warning);                         
                         } else {
                             var result = await mapper.FindFileAsync(".xls");
                             csCrossClassInteraction.DoExcelOperations(result.Item1, progMapper,
@@ -1285,25 +1344,6 @@ namespace RApID_Project_WPF
             {
                 csExceptionLogger.csExceptionLogger.Write("BadBarcode-MapRefDesToPartNum", ioe);
                 return;
-            }
-        }
-
-        private void beginSerialNumberSearch()
-        {
-            resetForm(false);
-            vSleep(500);
-
-            MapRefDesToPartNum();
-
-            sVar.LogHandler.LogCreation = DateTime.Now;
-
-            if (!string.IsNullOrEmpty(txtBarcode.Text))
-            {
-                sVar.LogHandler.CreateLogAction("**** This is a Repair Log ****", csLogging.LogState.NOTE);
-                sVar.LogHandler.CreateLogAction("The Serial Number related to this log is: " + txtBarcode.Text.TrimEnd(), csLogging.LogState.NOTE);
-                fillDataLog();
-                ucEOLTab.Fill();
-                ucAOITab.Fill();
             }
         }
 
@@ -2307,6 +2347,21 @@ namespace RApID_Project_WPF
             DateTime dt = DateTime.Now.AddMilliseconds(iSleepTime);
             while (DateTime.Now < dt)
             { }
+        }
+
+        private void MnuiDeleteRow_Click(object sender, RoutedEventArgs e)
+        {
+            switch(tabcUnitIssues.SelectedIndex) {
+                case 0:
+                    dgMultipleParts.Items.RemoveAt(dgMultipleParts.SelectedIndex);
+                    break;
+                case 1:
+                    dgMultipleParts_2.Items.RemoveAt(dgMultipleParts_2.SelectedIndex);
+                    break;
+                case 2:
+                    dgMultipleParts_3.Items.RemoveAt(dgMultipleParts_3.SelectedIndex);
+                    break;
+            }
         }
     }
 }

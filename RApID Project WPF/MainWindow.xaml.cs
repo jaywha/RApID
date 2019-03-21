@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using System.Security.Permissions;
 using System.Windows.Controls.Primitives;
 using System.Collections.Generic;
+using System.Windows.Media.Animation;
 
 namespace RApID_Project_WPF
 {
@@ -24,6 +25,7 @@ namespace RApID_Project_WPF
         public static MainWindow GlobalInstance;
 
         public List<string> Suggestions = new List<string>() { "Test", "Another Test" };
+        public string FullName = "";
 
         [SecurityPermission(SecurityAction.Demand, Flags = SecurityPermissionFlag.ControlAppDomain)]
         public MainWindow()
@@ -36,41 +38,59 @@ namespace RApID_Project_WPF
 
             InitializeComponent();
 
-#if DEBUG
-            lblDebug.Visibility = Visibility.Visible;
-            btnTest.Visibility = Visibility.Visible;
-            btnClearCache.Visibility = Visibility.Visible;
-#endif
+            #if DEBUG
+                lblDebug.Visibility = Visibility.Visible;
+                btnTest.Visibility = Visibility.Visible;
+                btnClearCache.Visibility = Visibility.Visible;
+            #endif
 
             Notify = notifyRapid;
             GlobalInstance = this;
 
-            // fixes visual studio exception on stopping debugging
+            // attempted to fix visual studio exception on stopping debugging
             AppDomain.CurrentDomain.UnhandledException += new UnhandledExceptionEventHandler(
                 delegate (object sender, UnhandledExceptionEventArgs args) {
                     var e = ((Exception)args.ExceptionObject);
-                    Console.WriteLine(
-                        $"[UEHandler]: {e.Message}\n" +
+                    var out_msg = $"[UEHandler]: {e.Message}\n" +
                         $"(Stack Trace)\n{new string('-', 20)}\n\n{e.StackTrace}\n\n{new string('-', 20)}\n" +
-                        $"Will runtime terminate now? -> \'{(args.IsTerminating ? "Yes" : "No")}\'"
-                    ); if (e is TaskCanceledException tce)
-#if !DEBUG
-                        csExceptionLogger.csExceptionLogger.Write("Unhandled_Exception", e);
-#endif
-                    Console.WriteLine($"[UnhandledException] Task: {tce.Task.Id} | CanBeCanceled = {tce.CancellationToken.CanBeCanceled}\n\tSource -> {tce.Source}");
+                        $"Will runtime terminate now? -> \'{(args.IsTerminating ? "Yes" : "No")}\'";
+
+                    Console.WriteLine(out_msg);
+                    #if !DEBUG
+                        Mailman.SendEmail(subject: "", body: "", exception: e);
+                    #endif
+
+                    if (e is TaskCanceledException tce)
+                    {
+                        var err_msg = $"[UnhandledException] Task: {tce.Task.Id} | CanBeCanceled = {tce.CancellationToken.CanBeCanceled}\n\tSource -> {tce.Source}";
+                        #if !DEBUG
+                            csExceptionLogger.csExceptionLogger.Write("Unhandled_Exception", e);
+                        #endif
+                        
+                        Console.WriteLine(err_msg);
+                    }
+
                 });
             AppDomain.CurrentDomain.FirstChanceException += new EventHandler<System.Runtime.ExceptionServices.FirstChanceExceptionEventArgs>(
                 delegate (object sender, System.Runtime.ExceptionServices.FirstChanceExceptionEventArgs args)
                 {
                     var e = args.Exception;
-                    Console.WriteLine(
-                        $"[UEHandler]: {e.Message}\n" +
-                        $"(Stack Trace)\n{new string('-', 20)}\n\n{e.StackTrace}\n" 
-                    ); if (e is TaskCanceledException tce)
-#if !DEBUG
-                        csExceptionLogger.csExceptionLogger.Write("Unhandled_Exception", e);
-#endif
-                        Console.WriteLine($"[FirstChanceException] Task ID: {tce.Task.Id} | CanBeCanceled = {tce.CancellationToken.CanBeCanceled}\n\tSource -> {tce.Source}");
+                    var out_msg = $"[UEHandler]: {e.Message}\n" +
+                        $"(Stack Trace)\n{new string('-', 20)}\n\n{e.StackTrace}\n";
+
+                    Console.WriteLine(out_msg);
+                    #if !DEBUG
+                        Mailman.SendEmail(subject: "", body: "", exception: e);
+                    #endif
+
+                    if (e is TaskCanceledException tce)
+                    {
+                        var err_msg = $"[FirstChanceException] Task ID: {tce.Task.Id} | CanBeCanceled = {tce.CancellationToken.CanBeCanceled}\n\tSource -> {tce.Source}";
+                        #if !DEBUG
+                            csExceptionLogger.csExceptionLogger.Write("Unhandled_Exception", e);
+                        #endif
+                        Console.WriteLine(err_msg);
+                    }
                 });
         }
 
@@ -82,8 +102,6 @@ namespace RApID_Project_WPF
             Title = "RApID: v." + s;
 
             await WelcomeUser();
-
-            //await HookService();
         }
 
         protected internal async Task WelcomeUser()
@@ -104,8 +122,8 @@ namespace RApID_Project_WPF
 
             await Task.Factory.StartNew(new Action(() => {
                 var uName = UserPrincipal.Current.DisplayName.Trim().Split(',');
-
-                Notify.ShowBalloonTip(msgTitle + $", {uName[1].Trim()} {uName[0].Trim()}!", msgWelcome, BalloonIcon.Info);
+                FullName = uName[1].Trim() + uName[0].Trim();
+                Notify.ShowBalloonTip(msgTitle + $", {FullName}!", msgWelcome, BalloonIcon.Info);
             }));
         }
 
@@ -211,5 +229,22 @@ namespace RApID_Project_WPF
         }
 
         private void Button_Click(object sender, RoutedEventArgs e) => new TestWindow { Owner = this, WindowStartupLocation = WindowStartupLocation.CenterOwner }.Show();
+
+        private void BtnShake_Click(object sender, RoutedEventArgs e)
+        {
+            var anime = new Storyboard();
+            
+            anime.Children.Add
+            (
+                new DoubleAnimation(wndMain.Left, wndMain.Left / 0.9708737864,
+                    new Duration(new TimeSpan(0, 0, 0, 0, 50))
+                ) {
+                    AutoReverse = true,
+                    RepeatBehavior = new RepeatBehavior(3.0),
+                    FillBehavior = FillBehavior.Stop
+                }
+            );
+            BeginStoryboard(anime);
+        }
     }
 }

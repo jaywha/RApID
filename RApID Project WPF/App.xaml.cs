@@ -14,9 +14,10 @@ namespace RApID_Project_WPF
         {
             try
             {
-               //Barrel.ApplicationId = AppDomain.CurrentDomain.FriendlyName;
+                //Barrel.ApplicationId = AppDomain.CurrentDomain.FriendlyName;
+                GetNetLib.VersionTest.InstallIfLowerThan45();
             } catch (Exception e) {
-                MessageBox.Show("The cache library is causing the issue.", "DEBUGGING MESSAGE", MessageBoxButton.OK, MessageBoxImage.Stop);
+                MessageBox.Show("The cache library is causing an issue.", "DEBUGGING MESSAGE", MessageBoxButton.OK, MessageBoxImage.Stop);
                 csExceptionLogger.csExceptionLogger.Write("MonkeyCacheIssues", e);
             } finally
             {
