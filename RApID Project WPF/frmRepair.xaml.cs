@@ -39,7 +39,6 @@ namespace RApID_Project_WPF
         List<EndUse> lEndUse;
 
         bool bTimerRebootAttempt = false; //NOTE: tSPChecker will attempt to reboot itself once if it gets disconnected. This flag will be used to track that.
-        bool bInvalidSN = false;
         bool bStop = false;
 
         private string sRPNum = string.Empty;
@@ -568,7 +567,7 @@ namespace RApID_Project_WPF
 
         private void fillDataLog()
         {
-            QueryProduction(); if (bStop) { return; }
+            QueryProduction(); if (bStop) return; 
 
             if (!string.IsNullOrEmpty(txtPartNumber.Text))
             {
@@ -588,7 +587,7 @@ namespace RApID_Project_WPF
             string query = "SELECT Model FROM Production WHERE SerialNum = '" + txtBarcode.Text + "';";
             string sProdQueryResults = csCrossClassInteraction.ProductionQuery(query);
 
-            CheckForXDucer(ref sProdQueryResults);
+            CheckForXDucer(ref sProdQueryResults); if (bStop) return;
 
             if (sProdQueryResults.ToLower().Contains("rev"))
             {
@@ -619,15 +618,11 @@ namespace RApID_Project_WPF
                 if (string.IsNullOrWhiteSpace(sProdQuery2Results))
                 {
                     var ans = MessageBox.Show("We couldn't find the serial number in the final test database.\n" +
-                        "An email will be sent to Production Engineering.",
-                        "Invalid Serial Number", MessageBoxButton.YesNoCancel, MessageBoxImage.Warning);
-                    if (ans == MessageBoxResult.Cancel) { resetForm(true); bStop = true; return; }
-                    else if (ans == MessageBoxResult.Yes)
-                    {
-                        sub = $"RApID Warning - {Environment.MachineName} under {Environment.UserName}";
-                        msg = "<h1>Xducer not final tested</h1>" +
-                            $"<h2>SN# := {txtBarcode.Text}</h2><hr>";
-                        bInvalidSN = true;
+                        "That means this Xducer wasn't bench tested." +
+                        "Would you like to continue?",
+                        "Untested Serial Number", MessageBoxButton.YesNo, MessageBoxImage.Warning);
+                    if (ans == MessageBoxResult.No) {
+                        resetForm(true); bStop = true; return;
                     }
 
                     string query3 = "SELECT PartNumber FROM tblXducerTestResultsBenchTest WHERE SerialNumber = '" + txtBarcode.Text + "';";
@@ -636,13 +631,6 @@ namespace RApID_Project_WPF
                     if (!string.IsNullOrWhiteSpace(sProdQuery3Results))
                     {
                         sProdQueryResults = sProdQuery3Results;
-                    }
-
-                    if (bInvalidSN)
-                    {
-                        var clr = string.IsNullOrWhiteSpace(sProdQuery3Results) ? "red" : "green";
-                        var not = string.IsNullOrWhiteSpace(sProdQuery3Results) ? "not" : "";
-                        Mailman.SendEmail(sub, msg + $"<p style=\"color:{clr}\">SN {not} found in initial test.</p>");
                     }
                 }
             }
@@ -1029,7 +1017,7 @@ namespace RApID_Project_WPF
                 sVar.LogHandler.CreateLogAction("Submission Successful!", csLogging.LogState.NOTE);
 
                 int readerID = csCrossClassInteraction.GetDBIDValue("SELECT ID FROM TechnicianSubmission WHERE Technician = '" + txtTechName.Text + "' AND DateSubmitted = '" + dtSubmission + "' AND SerialNumber = '" + txtBarcode.Text + "';");
-                if (readerID > 0 && dgMultipleParts.Items.Count > 0)
+                if (readerID > 0)
                 {
                     submitMultipleUnitData(readerID);
                 }
@@ -1108,7 +1096,7 @@ namespace RApID_Project_WPF
                         cmd.Parameters.AddWithValue("@testResultAbort", csCrossClassInteraction.unitStripNF(lRMI[i].TestResultAbort));
                         cmd.Parameters.AddWithValue("@cause", csCrossClassInteraction.unitStripNF(lRMI[i].Cause));
                         cmd.Parameters.AddWithValue("@replacement", csCrossClassInteraction.unitStripNF(lRMI[i].Replacement));
-                        cmd.Parameters.AddWithValue("partsReplaced", DBNull.Value);
+                        cmd.Parameters.AddWithValue("@partsReplaced", DBNull.Value);
                         cmd.Parameters.AddWithValue("@refDesignator", DBNull.Value);
                         cmd.Parameters.AddWithValue("@prpd", DBNull.Value);
                         cmd.ExecuteNonQuery();
@@ -1143,7 +1131,7 @@ namespace RApID_Project_WPF
                             cmd.Parameters.AddWithValue("@testResultAbort", csCrossClassInteraction.unitStripNF(lRMI[i].TestResultAbort));
                             cmd.Parameters.AddWithValue("@cause", csCrossClassInteraction.unitStripNF(lRMI[i].Cause));
                             cmd.Parameters.AddWithValue("@replacement", csCrossClassInteraction.unitStripNF(lRMI[i].Replacement));
-                            cmd.Parameters.AddWithValue("partsReplaced", csCrossClassInteraction.unitStripNF(lRMI[i].MultiPartsReplaced[j].PartReplaced));
+                            cmd.Parameters.AddWithValue("@partsReplaced", csCrossClassInteraction.unitStripNF(lRMI[i].MultiPartsReplaced[j].PartReplaced));
                             cmd.Parameters.AddWithValue("@refDesignator", csCrossClassInteraction.unitStripNF(lRMI[i].MultiPartsReplaced[j].RefDesignator));
                             cmd.Parameters.AddWithValue("@prpd", csCrossClassInteraction.unitStripNF(lRMI[i].MultiPartsReplaced[j].PartsReplacedPartDescription));
                             cmd.ExecuteNonQuery();
