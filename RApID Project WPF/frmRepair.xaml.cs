@@ -584,7 +584,7 @@ namespace RApID_Project_WPF
 
         private void QueryProduction()
         {
-            string query = "SELECT Model FROM Production WHERE SerialNum = '" + txtBarcode.Text + "';";
+            string query = "SELECT Assy FROM Production3 WHERE SerialNum = '" + txtBarcode.Text + "';";
             string sProdQueryResults = csCrossClassInteraction.ProductionQuery(query);
 
             CheckForXDucer(ref sProdQueryResults); if (bStop) return;
@@ -607,9 +607,6 @@ namespace RApID_Project_WPF
         /// <param name="sProdQueryResults">empty string but variable reference</param>        
         public void CheckForXDucer(ref string sProdQueryResults)
         {
-            string sub = "";
-            string msg = "";
-
             if (string.IsNullOrWhiteSpace(sProdQueryResults))
             {
                 string query2 = "SELECT PartNumber FROM tblXducerTestResults WHERE SerialNumber = '" + txtBarcode.Text + "';";

@@ -154,7 +154,8 @@
                         <TextBox Name="txtPartNumber" Margin="7,174,0,0" GotFocus="txtGotFocus" LostFocus="txtLostFocus" Style="{StaticResource TextboxBaseStyle}" Width="125"/>
 
                         <Label Content="Part Series:" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="135,151,0,0"/>
-                        <TextBox Name="txtSeries" Margin="135,174,0,0" GotFocus="txtGotFocus" LostFocus="txtLostFocus" Style="{StaticResource TextboxBaseStyle}" Width="125"/>
+                        <TextBox Name="txtSeries" Margin="135,174,0,0" GotFocus="txtGotFocus" LostFocus="txtLostFocus" Style="{StaticResource TextboxBaseStyle}" Width="151"
+                                 Height="42"/>
 
                         <Label Content="Commodity Sub-Class:" HorizontalAlignment="Left" Margin="6,199,0,0" VerticalAlignment="Top"/>
                         <TextBox Name="txtCommSubClass" Margin="6,222,0,0" GotFocus="txtGotFocus" LostFocus="txtLostFocus" Style="{StaticResource TextboxBaseStyle}"/>
