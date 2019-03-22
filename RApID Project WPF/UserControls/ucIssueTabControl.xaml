@@ -18,7 +18,8 @@
     </UserControl.Resources>
     <Grid>
         <TabControl x:Name="tcTabs" Style="{StaticResource TCBaseStyle}" ItemsSource="{Binding}" SelectionChanged="tcTabs_SelectionChanged" 
-                    Width="{Binding Path=DesignWidth,ElementName=uccIssueTabControl,Mode=TwoWay}" Height="{Binding Path=DesignHeight,ElementName=uccIssueTabControl,Mode=TwoWay}">
+                    Width="{Binding Path=DesignWidth,ElementName=uccIssueTabControl,Mode=TwoWay}" Height="{Binding Path=DesignHeight,ElementName=uccIssueTabControl,Mode=TwoWay}"
+                    VirtualizingPanel.VirtualizationMode="Recycling" VirtualizingPanel.IsVirtualizing="True">
             <TabControl.Resources>
                 <DataTemplate x:Key="TabHeader" DataType="TabItem">
                     <DockPanel>

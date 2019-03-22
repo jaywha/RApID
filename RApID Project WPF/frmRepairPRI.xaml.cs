@@ -186,6 +186,7 @@ namespace RApID_Project_WPF
                     conn.Close();
 
                 MessageBox.Show("Error loading the previous repair information for this submission.\nError Message: " + ex.Message, "Load Issue", MessageBoxButton.OK, MessageBoxImage.Error);
+                csExceptionLogger.csExceptionLogger.Write("RepairPRI_Issues", ex);
 
                 return false;
             }

@@ -215,7 +215,7 @@ namespace RApID_Project_WPF.UserControls
             tc.DataContext = null;            
             var result = (TResult) operation.DynamicInvoke(args);
             if (tiNewTab == null) tiNewTab = _backupNewTab;
-            _tabItems.Add(tiNewTab);
+            if (!_tabItems.Contains(tiNewTab)) _tabItems.Add(tiNewTab);
             tc.DataContext = _tabItems;
 
             return result;
@@ -231,7 +231,7 @@ namespace RApID_Project_WPF.UserControls
             tc.DataContext = null;
             var result = operation.Invoke();
             if (tiNewTab == null) tiNewTab = _backupNewTab;
-            _tabItems.Add(tiNewTab);
+            if (!_tabItems.Contains(tiNewTab)) _tabItems.Add(tiNewTab);
             tc.DataContext = _tabItems;
 
             return result;

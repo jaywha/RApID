@@ -75,16 +75,12 @@
         </LinearGradientBrush>
     </Window.Background>
     <Grid>
-        <Label x:Name="lblTitle" Margin="110,0,94,0" Width="240" Height="78" HorizontalAlignment="Center" VerticalAlignment="Top" 
-               HorizontalContentAlignment="Center" VerticalContentAlignment="Center">
-            <TextBlock Text="RApID" FontFamily="MoolBoran" FontWeight="Bold" FontSize="64" Foreground="#FFCB8B2E" HorizontalAlignment="Center" VerticalAlignment="Center" Width="217"
-                       TextAlignment="Center" Height="74">
-                <TextBlock.Effect>
-                    <DropShadowEffect ShadowDepth="5" Direction="325" Color="Gray" Opacity="0.85" BlurRadius="4" />
-                </TextBlock.Effect>
-            </TextBlock>
-        </Label>
-        <Label x:Name="lblTitleDef" Content="RepAIr Data" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10,50,0,0" Width="100" FontFamily="Arial" FontSize="16" Visibility="Hidden"/>
+        <TextBlock x:Name="tbTitle" Text="RApID" FontFamily="Nyala" FontWeight="Bold" FontSize="64" Foreground="#FFCB8B2E" HorizontalAlignment="Center" VerticalAlignment="Top" Width="217"
+                    TextAlignment="Center" Height="74" Margin="110,0,94,0" FontStyle="Italic">
+            <TextBlock.Effect>
+                <DropShadowEffect ShadowDepth="5" Direction="325" Color="Gray" Opacity="0.85" BlurRadius="4" />
+            </TextBlock.Effect>
+        </TextBlock>
         <Button x:Name="btnRework" Content="Production" HorizontalAlignment="Left" Margin="10,90,0,0" VerticalAlignment="Top" Width="200" Height="100" Style="{StaticResource MainMenuButton}" Click="btnClicks" FontFamily="Arial" ToolTip="Board Rework - Electrical Techs."/>
         <Button x:Name="btnRepair" Content="Repair" HorizontalAlignment="Right" Margin="0,90,10,0" VerticalAlignment="Top" Width="200" Height="100" Style="{StaticResource MainMenuButton}" Click="btnClicks" FontFamily="Arial" ToolTip="Customer Service - Board &amp; Accessory Repair"/>
         <Button x:Name="btnQCDQE" Content="QC/DQE" HorizontalAlignment="Left" Margin="10,195,0,0" VerticalAlignment="Top" Width="200" Height="100" Style="{StaticResource MainMenuButton}" Click="btnClicks" FontFamily="Arial" ToolTip="Design Qualfication Eng. - ERAP &amp; Pilot Repair"/>
@@ -118,7 +114,7 @@
             </tb:TaskbarIcon.ContextMenu>
         </tb:TaskbarIcon>
         <Button x:Name="btnShake" Content="Hello" HorizontalAlignment="Left" Margin="10,325,0,0" VerticalAlignment="Top" Width="75" Visibility="Collapsed" Click="BtnShake_Click"/>
-        <Button x:Name="btnTest" Margin="311,8,10,291" RenderTransformOrigin="0.5,0.5" Content="Test" Click="Button_Click" Style="{StaticResource MainMenuButton}" Height="Auto" Width="Auto" Visibility="Collapsed"/>
+        <Button x:Name="btnTest" Margin="10,300,311,13" RenderTransformOrigin="0.5,0.5" Content="Test" Click="Button_Click" Style="{StaticResource MainMenuButton}" Height="Auto" Width="Auto" Visibility="Collapsed"/>
         <Label x:Name="lblDebug" Content="D E B U G" HorizontalAlignment="Left" Margin="194,43,0,0" VerticalAlignment="Top" FontFamily="BigNoodleTooOblique" FontSize="24" Foreground="#FF0C0CF8" Panel.ZIndex="1" UseLayoutRounding="False" Cursor="Pen" Visibility="Collapsed">
             <Label.Effect>
                 <DropShadowEffect BlurRadius="4" Direction="335" Opacity="0.65" ShadowDepth="8"/>

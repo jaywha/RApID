@@ -1,4 +1,5 @@
-﻿using System;
+﻿using EricStabileLibrary;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -15,7 +16,6 @@ using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Threading;
-using EricStabileLibrary;
 
 namespace RApID_Project_WPF
 {
@@ -46,7 +46,8 @@ namespace RApID_Project_WPF
         string sDQE_DeptNum = "320900";
         double dLineNumber;
         private bool _BomFileActive = false;
-        public bool BOMFileActive {
+        public bool BOMFileActive
+        {
             get => _BomFileActive;
             set
             {
@@ -59,7 +60,7 @@ namespace RApID_Project_WPF
         #endregion
 
         public event PropertyChangedEventHandler PropertyChanged;
-        private void OnPropertyChanged([CallerMemberName] string propName = "") 
+        private void OnPropertyChanged([CallerMemberName] string propName = "")
             => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propName));
 
         public frmRepair(bool bRework)
@@ -69,7 +70,7 @@ namespace RApID_Project_WPF
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
-            Hide();            
+            Hide();
             initS.InitSplash1("Initializing Form...");
             buildDGViews();
             csSplashScreenHelper.ShowText("Loading DataLog...");
@@ -142,13 +143,14 @@ namespace RApID_Project_WPF
             var lTestResultAbort = new List<string>();
             var lCause = new List<string>();
             var lReplacement = new List<string>();
+            var lBoolShowAll = new Dictionary<string,bool>();
             var lTechAction1 = new List<string>();
             var lTechAction2 = new List<string>();
             var lTechAction3 = new List<string>();
             #endregion
 
             string query1 = "SELECT * FROM RApID_DropDowns";
-            string query2 = "SELECT PC1 FROM JDECodes";
+            string query2 = "SELECT PC1, PC2 FROM JDECodes";
 
             var conn = new SqlConnection(holder.RepairConnectionString);
             var cmd = new SqlCommand(query1, conn);
@@ -181,17 +183,16 @@ namespace RApID_Project_WPF
                         {
                             if (Convert.ToBoolean(reader["ShowTechActionInAll"]))
                             {
-                                lTechAction1.Add(reader["TechAction"].ToString());
-                                lTechAction2.Add(reader["TechAction"].ToString());
-                                lTechAction3.Add(reader["TechAction"].ToString());
+                                lBoolShowAll.Add(reader["TechAction"].ToString(),
+                                    (bool) reader["ShowTechActionInAll"]);
                             }
-                            else lTechAction1.Add(reader["TechAction"].ToString());
                         }
                     }
                 }
                 conn.Close();
 
                 cmd = new SqlCommand(query2, conn);
+                var index = 0;
 
                 conn.Open();
 
@@ -201,6 +202,17 @@ namespace RApID_Project_WPF
                     {
                         if (!string.IsNullOrEmpty(reader[0].ToString()))
                             lReportedIssue.Add(reader[0].ToString());
+                        if (!string.IsNullOrEmpty(reader["PC2"].ToString()))
+                        {
+                            if (lBoolShowAll.Keys.Contains(reader["PC2"].ToString()) 
+                                && lBoolShowAll[reader["PC2"].ToString()])
+                            {
+                                lTechAction1.Add(reader["PC2"].ToString());
+                                lTechAction2.Add(reader["PC2"].ToString());
+                                lTechAction3.Add(reader["PC2"].ToString());
+                            }
+                            else lTechAction1.Add(reader["PC2"].ToString());
+                        }
                     }
                 }
 
@@ -379,8 +391,8 @@ namespace RApID_Project_WPF
             ucEOLTab.lblEOL.Content = "End of Line";
             ucEOLTab.lblPOST.Content = "Post Burn In";
 
-            if(OrigPartSource != null) OrigPartSource.Clear();
-            if(OrigRefSource != null) OrigRefSource.Clear();
+            if (OrigPartSource != null) OrigPartSource.Clear();
+            if (OrigRefSource != null) OrigRefSource.Clear();
 
             cbReportedIssue.SelectedIndex = -1;
             resetUnitIssues();
@@ -423,7 +435,7 @@ namespace RApID_Project_WPF
                     var cb = (ComboBox)uie;
                     cb.SelectedIndex = -1;
                     cb.Text = "";
-                    if (uie is ComboBox cbx && cbx.Name.Contains("txt")) cbx.ItemsSource = new List<string>() {""};
+                    if (uie is ComboBox cbx && cbx.Name.Contains("txt")) cbx.ItemsSource = new List<string>() { "" };
                 }
                 if (uie.GetType().Name.Equals("TextBox"))
                 {
@@ -567,7 +579,7 @@ namespace RApID_Project_WPF
 
         private void fillDataLog()
         {
-            QueryProduction(); if (bStop) return; 
+            QueryProduction(); if (bStop) return;
 
             if (!string.IsNullOrEmpty(txtPartNumber.Text))
             {
@@ -584,10 +596,13 @@ namespace RApID_Project_WPF
 
         private void QueryProduction()
         {
-            string query = "SELECT Assy FROM Production3 WHERE SerialNum = '" + txtBarcode.Text + "';";
-            string sProdQueryResults = csCrossClassInteraction.ProductionQuery(query);
+            string query = "SELECT Xducer, Model FROM Production WHERE SerialNum = '" + txtBarcode.Text + "';";
+            var conn = new SqlConnection(holder.HummingBirdConnectionString); conn.Open();
+            var reader = new SqlCommand(query, conn).ExecuteReader(); reader.Read();
+            bool isXducer = reader.IsDBNull(0) ? false : reader.GetBoolean(0);
+            string sProdQueryResults = reader.IsDBNull(1) ? "" : reader.GetString(1); conn.Close();
 
-            CheckForXDucer(ref sProdQueryResults); if (bStop) return;
+            CheckForXDucer(ref sProdQueryResults, isXducer); if (bStop) return;
 
             if (sProdQueryResults.ToLower().Contains("rev"))
             {
@@ -604,18 +619,20 @@ namespace RApID_Project_WPF
         /// <summary>
         /// Ensures a part number was found for Xducers
         /// </summary>
-        /// <param name="sProdQueryResults">empty string but variable reference</param>        
-        public void CheckForXDucer(ref string sProdQueryResults)
+        /// <param name="sProdQueryResults">empty string but variable reference</param>
+        /// <param name="isXudcer"></param>
+        public void CheckForXDucer(ref string sProdQueryResults, bool isXudcer)
         {
-            if (string.IsNullOrWhiteSpace(sProdQueryResults))
-            {
+            if (isXudcer) {
+                #region Xducer Path
                 string query2 = "SELECT PartNumber FROM tblXducerTestResults WHERE SerialNumber = '" + txtBarcode.Text + "';";
                 string sProdQuery2Results = csCrossClassInteraction.ProductionQuery(query2);
 
-                if (string.IsNullOrWhiteSpace(sProdQuery2Results))
-                {
+                if (!string.IsNullOrWhiteSpace(sProdQuery2Results)){
+                    sProdQueryResults = sProdQuery2Results;
+                } else {
                     var ans = MessageBox.Show("We couldn't find the serial number in the final test database.\n" +
-                        "That means this Xducer wasn't bench tested." +
+                        "That means this Xducer wasn't final tested." +
                         "Would you like to continue?",
                         "Untested Serial Number", MessageBoxButton.YesNo, MessageBoxImage.Warning);
                     if (ans == MessageBoxResult.No) {
@@ -625,11 +642,21 @@ namespace RApID_Project_WPF
                     string query3 = "SELECT PartNumber FROM tblXducerTestResultsBenchTest WHERE SerialNumber = '" + txtBarcode.Text + "';";
                     string sProdQuery3Results = csCrossClassInteraction.ProductionQuery(query3);
 
-                    if (!string.IsNullOrWhiteSpace(sProdQuery3Results))
-                    {
+                    if (!string.IsNullOrWhiteSpace(sProdQuery3Results)) {
                         sProdQueryResults = sProdQuery3Results;
                     }
                 }
+                #endregion
+            } else {
+                #region Unit Path
+
+                string query2 = "SELECT Assy FROM Production3 WHERE SerialNum = '" + txtBarcode.Text + "';";
+                string sProdQuery2Results = csCrossClassInteraction.ProductionQuery(query2);
+
+                if(!string.IsNullOrWhiteSpace(sProdQuery2Results)) {
+                    sProdQueryResults = sProdQuery2Results;
+                }
+                #endregion
             }
         }
 
@@ -923,7 +950,7 @@ namespace RApID_Project_WPF
                 conn.Open();
 
                 cmd.Parameters.AddWithValue("@Technician", txtTechName.Text.ToString().TrimEnd());
-                cmd.Parameters.AddWithValue("@DateReceived", 
+                cmd.Parameters.AddWithValue("@DateReceived",
                     dtpDateReceived.SelectedDate?.ToString("MM/dd/yyyy") ?? DateTime.Now.AddDays(-1.0).ToString());
                 cmd.Parameters.AddWithValue("@PartName", txtPartName.Text.ToString().TrimEnd());
                 cmd.Parameters.AddWithValue("@PartNumber", txtPartNumber.Text.ToString().TrimEnd());
@@ -1310,8 +1337,10 @@ namespace RApID_Project_WPF
                         if (!mapper.GetData(txtBarcode.Text))
                         {
                             MessageBox.Show("Couldn't find the barcode's entry in the database.\nPlease enter information manually.", "Soft Error - BOM Lookup"
-                                , MessageBoxButton.OK, MessageBoxImage.Warning);                         
-                        } else {
+                                , MessageBoxButton.OK, MessageBoxImage.Warning);
+                        }
+                        else
+                        {
                             var result = await mapper.FindFileAsync(".xls");
                             csCrossClassInteraction.DoExcelOperations(result.Item1, progMapper,
                             new Tuple<Control, Control>(txtRefDes, txtPartReplaced),
@@ -1322,10 +1351,11 @@ namespace RApID_Project_WPF
                             OrigPartSource = (List<string>)txtPartReplaced.ItemsSource;
                             BOMFileActive = true;
                         }
-                        }), DispatcherPriority.Background);
+                    }), DispatcherPriority.Background);
                     }));
                 }
-            } catch(InvalidOperationException ioe)
+            }
+            catch (InvalidOperationException ioe)
             {
                 csExceptionLogger.csExceptionLogger.Write("BadBarcode-MapRefDesToPartNum", ioe);
                 return;
@@ -1563,7 +1593,7 @@ namespace RApID_Project_WPF
             bool bExistingCustomer = false;
             bool bNoSearchError = true;
 
-#region Check To See If Customer Exists
+            #region Check To See If Customer Exists
 
             string query = "SELECT CustomerNumber FROM RepairCustomerInformation WHERE CustomerNumber = '" + cInfo.CustomerNumber + "'";
             var conn = new SqlConnection(holder.RepairConnectionString);
@@ -1593,7 +1623,7 @@ namespace RApID_Project_WPF
                 bNoSearchError = false;
             }
 
-#endregion
+            #endregion
 
             if (bNoSearchError)
             {
@@ -1734,7 +1764,7 @@ namespace RApID_Project_WPF
             else return false;
         }
 
-#region Button Clicks
+        #region Button Clicks
         private void btnComplete_Click(object sender, RoutedEventArgs e)
         {
             sVar.LogHandler.CreateLogAction((Button)sender, csLogging.LogState.CLICK);
@@ -1938,16 +1968,17 @@ namespace RApID_Project_WPF
                 {
                     sVar.LogHandler.CreateLogAction((Button)sender, csLogging.LogState.CLICK);
 
-                    if(BOMFileActive && (!txtRefDes.Items.Contains(txtRefDes.Text)
+                    if (BOMFileActive && (!txtRefDes.Items.Contains(txtRefDes.Text)
                         || dgMultipleParts.Items
                         .OfType<MultiplePartsReplaced>()
                         .Where(mpr => mpr.RefDesignator.Equals(txtRefDes.Text)).Count() > 0))
                     {
                         brdRefDes.BorderBrush = Brushes.Red;
                         brdRefDes.BorderThickness = new Thickness(1.0);
-                        MessageBox.Show("Invalid Ref Designator",$"{txtRefDes.Text} is not a valid designator!",MessageBoxButton.OK,MessageBoxImage.Warning);
+                        MessageBox.Show("Invalid Ref Designator", $"{txtRefDes.Text} is not a valid designator!", MessageBoxButton.OK, MessageBoxImage.Warning);
                         return;
-                    } else
+                    }
+                    else
                     {
                         brdRefDes.BorderBrush = null;
                         brdRefDes.BorderThickness = new Thickness(0.0);
@@ -1971,7 +2002,7 @@ namespace RApID_Project_WPF
                         else if (!string.IsNullOrEmpty(mpr.PartReplaced) && string.IsNullOrEmpty(mpr.RefDesignator))
                             sVar.LogHandler.CreateLogAction($"Adding Part Replaced '{mpr.PartReplaced}' to dgMultipleParts. Ref Designator is empty.", csLogging.LogState.NOTE);
                         else sVar.LogHandler.CreateLogAction($"Adding Part Replaced '{mpr.PartReplaced}' and Ref Designator '{mpr.RefDesignator}' to dgMultipleParts.", csLogging.LogState.NOTE);
-                                                
+
                         dgMultipleParts.Items.Add(mpr);
                         txtPartReplaced.Text = txtRefDes.Text = string.Empty;
                     }
@@ -2030,7 +2061,7 @@ namespace RApID_Project_WPF
             if (!string.IsNullOrEmpty(txtPartNumber.Text))
                 fillCommoditySubClass();
         }
-#endregion
+        #endregion
 
         private void cbxScrap_Click(object sender, RoutedEventArgs e)
         {
@@ -2054,6 +2085,12 @@ namespace RApID_Project_WPF
                 {
                     Owner = this
                 };
+                pri.Closing += delegate
+                {
+                    dgPrevRepairInfo.Dispatcher.Invoke(() =>
+                    dgPrevRepairInfo.IsEnabled = true);
+                };
+                dgPrevRepairInfo.IsEnabled = false;
                 pri.Show();
                 Activate();
             }
@@ -2084,7 +2121,7 @@ namespace RApID_Project_WPF
             e.Handled = regex.IsMatch(e.Text);
         }
 
-#region Serial Port Actions
+        #region Serial Port Actions
         private void serialPortStatusUpdate()
         {
             if (sp != null && sp.IsOpen)
@@ -2247,12 +2284,12 @@ namespace RApID_Project_WPF
             }
             catch { }
         }
-#endregion
+        #endregion
 
         private void dgBeginEdit(object sender, DataGridBeginningEditEventArgs e)
             => e.Cancel = true;
 
-#region Log Actions
+        #region Log Actions
         private void txtGotFocus(object sender, RoutedEventArgs e)
         {
             if (sender is ComboBox c)
@@ -2310,7 +2347,7 @@ namespace RApID_Project_WPF
                 }
             }
         }
-#endregion
+        #endregion
 
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
@@ -2336,7 +2373,8 @@ namespace RApID_Project_WPF
 
         private void MnuiDeleteRow_Click(object sender, RoutedEventArgs e)
         {
-            switch(tabcUnitIssues.SelectedIndex) {
+            switch (tabcUnitIssues.SelectedIndex)
+            {
                 case 0:
                     dgMultipleParts.Items.RemoveAt(dgMultipleParts.SelectedIndex);
                     break;
