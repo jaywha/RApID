@@ -232,19 +232,14 @@ namespace RApID_Project_WPF
 
         private void BtnShake_Click(object sender, RoutedEventArgs e)
         {
-            var anime = new Storyboard();
-            
-            anime.Children.Add
-            (
-                new DoubleAnimation(wndMain.Left, wndMain.Left / 0.9708737864,
-                    new Duration(new TimeSpan(0, 0, 0, 0, 50))
-                ) {
+            var anime 
+                = new DoubleAnimation(wndMain.Left, wndMain.Left / 0.9708737864, new Duration(new TimeSpan(0, 0, 0, 0, 50)))
+                {
                     AutoReverse = true,
                     RepeatBehavior = new RepeatBehavior(3.0),
                     FillBehavior = FillBehavior.Stop
-                }
-            );
-            BeginStoryboard(anime);
+                };
+            BeginAnimation(LeftProperty, anime);
         }
     }
 }

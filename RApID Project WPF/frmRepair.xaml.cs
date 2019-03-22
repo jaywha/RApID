@@ -2090,7 +2090,10 @@ namespace RApID_Project_WPF
                     dgPrevRepairInfo.Dispatcher.Invoke(() =>
                     dgPrevRepairInfo.IsEnabled = true);
                 };
-                dgPrevRepairInfo.IsEnabled = false;
+                pri.Loaded += delegate
+                {
+                    dgPrevRepairInfo.IsEnabled = false;
+                };
                 pri.Show();
                 Activate();
             }
