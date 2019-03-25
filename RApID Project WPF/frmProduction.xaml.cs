@@ -1588,14 +1588,20 @@ namespace RApID_Project_WPF
 
         private void dgPrevRepairInfo_MouseDoubleClick(object sender, MouseButtonEventArgs e)
         {
-            if (dgPrevRepairInfo.SelectedItem != null)
+            try
             {
-                var pri = new frmProductionPRI((PreviousRepairInformation)dgPrevRepairInfo.SelectedItem)
+                if (dgPrevRepairInfo.SelectedItem != null)
                 {
-                    Owner = this
-                };
-                pri.Show();
-                Activate();
+                    var pri = new frmProductionPRI((PreviousRepairInformation)dgPrevRepairInfo.SelectedItem)
+                    {
+                        Owner = this
+                    };
+                    pri.Show();
+                    Activate();
+                }
+            } catch(ArgumentOutOfRangeException aoore)
+            {
+                csExceptionLogger.csExceptionLogger.Write("ProductionPRI_RandomCrahsing", aoore);
             }
         }
 

@@ -88,11 +88,30 @@ namespace RApID_Project_WPF
 
                 using(var reader = unitIssueCmd.ExecuteReader())
                 {
-                    int index = 1;
                     while(reader.Read())
                     {
-                        ucIssues.AddTabItem();
-                        ucIssues[index++].FillUnitIssue(null,
+                        if(string.IsNullOrEmpty(ucIssues[0].ReportedIssue)) {
+                            #region First Issue
+                            ucIssues[0].FillUnitIssue(
+                                reader["ReportedIssue"].ToString().EmptyIfNull(),
+                                reader["TestResult"].ToString().EmptyIfNull(),
+                                reader["TestResultAbort"].ToString().EmptyIfNull(),
+                                reader["Cause"].ToString().EmptyIfNull(),
+                                reader["Replacement"].ToString().EmptyIfNull(),
+                                reader["Issue"].ToString().EmptyIfNull(),
+                                reader["Item"].ToString().EmptyIfNull(),
+                                reader["Problem"].ToString().EmptyIfNull()
+                            );
+                            ucIssues[0].AddUnitIssuePart(
+                                reader["PartsReplaced"].ToString(),
+                                reader["RefDesignator"].ToString()
+                            );
+                            #endregion  
+                            continue;
+                        }
+
+                        var (Tab, ActualTabIndex) = ucIssues.AddTabItem();
+                        ucIssues[ActualTabIndex].FillUnitIssue(
                             reader["ReportedIssue"].ToString().EmptyIfNull(),
                             reader["TestResult"].ToString().EmptyIfNull(),
                             reader["TestResultAbort"].ToString().EmptyIfNull(),
@@ -100,14 +119,18 @@ namespace RApID_Project_WPF
                             reader["Replacement"].ToString().EmptyIfNull(),
                             reader["Issue"].ToString().EmptyIfNull(),
                             reader["Item"].ToString().EmptyIfNull(),
-                            reader["Problem"].ToString().EmptyIfNull(),
+                            reader["Problem"].ToString().EmptyIfNull()
+                        );
+                        ucIssues[ActualTabIndex].AddUnitIssuePart(
                             reader["PartsReplaced"].ToString(),
                             reader["RefDesignator"].ToString()
                         );
                     }
                 }
 
-                if (logCmd.Parameters[0].Value == null || logCmd.Parameters[0].Value == DBNull.Value)
+                if (logCmd.Parameters.Count == 0
+                    || logCmd.Parameters[0].Value == null
+                    || logCmd.Parameters[0].Value == DBNull.Value)
                 {
                     conn.Close();
                     return true;

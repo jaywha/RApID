@@ -604,16 +604,10 @@ namespace RApID_Project_WPF
 
             CheckForXDucer(ref sProdQueryResults, isXducer); if (bStop) return;
 
-            if (sProdQueryResults.ToLower().Contains("rev"))
-            {
-                csCrossClassInteraction.LoadPartNumberForm(false, new List<TextBox> { txtPartNumber, txtPartName, txtSeries });
-            }
-            else
-            {
-                sVar.LogHandler.CreateLogAction("Part Number '" + sProdQueryResults + "' was found.", csLogging.LogState.NOTE);
-                txtPartNumber.Text = sProdQueryResults;
-                QueryItemMaster();
-            }
+            sVar.LogHandler.CreateLogAction("Part Number '" + sProdQueryResults + "' was found.", csLogging.LogState.NOTE);
+            txtPartNumber.Text = sProdQueryResults;
+            QueryItemMaster();
+            
         }
 
         /// <summary>
@@ -2079,23 +2073,30 @@ namespace RApID_Project_WPF
 
         private void dgPrevRepairInfo_MouseDoubleClick(object sender, MouseButtonEventArgs e)
         {
-            if (dgPrevRepairInfo.SelectedItem != null)
+            try
             {
-                var pri = new frmRepairPRI((PreviousRepairInformation)dgPrevRepairInfo.SelectedItem)
+                if (dgPrevRepairInfo.SelectedItem != null)
                 {
-                    Owner = this
-                };
-                pri.Closing += delegate
-                {
-                    dgPrevRepairInfo.Dispatcher.Invoke(() =>
-                    dgPrevRepairInfo.IsEnabled = true);
-                };
-                pri.Loaded += delegate
-                {
-                    dgPrevRepairInfo.IsEnabled = false;
-                };
-                pri.Show();
-                Activate();
+                    var pri = new frmRepairPRI((PreviousRepairInformation)dgPrevRepairInfo.SelectedItem)
+                    {
+                        Owner = this
+                    };
+                    pri.Closing += delegate
+                    {
+                        dgPrevRepairInfo.Dispatcher.Invoke(() =>
+                        dgPrevRepairInfo.IsEnabled = true);
+                    };
+                    pri.Loaded += delegate
+                    {
+                        dgPrevRepairInfo.IsEnabled = false;
+                    };
+                    pri.Show();
+                    Activate();
+                }
+            } catch(ArgumentOutOfRangeException aoore)
+            {
+                csExceptionLogger.csExceptionLogger.Write("RandomCrashing_RepairPRI", aoore);
+                dgPrevRepairInfo.IsEnabled = true;
             }
         }
 

@@ -1,10 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using EricStabileLibrary;
+using System;
+using System.Data.SqlClient;
 using System.Windows;
 using System.Windows.Input;
 using System.Windows.Media;
-using System.Data.SqlClient;
-using EricStabileLibrary;
 
 namespace RApID_Project_WPF
 {
@@ -29,12 +28,13 @@ namespace RApID_Project_WPF
             try
             {
                 if (PRI == null || !loadPRI()) { Close(); }
-            } catch (Exception ex)
+            }
+            catch (Exception ex)
             {
                 csExceptionLogger.csExceptionLogger.Write("frmRepairPRI-Window_Loaded", ex);
             }
         }
-        
+
         private bool loadPRI()
         {
             string sUnitID = string.Empty;
@@ -44,7 +44,7 @@ namespace RApID_Project_WPF
             string logQuery = "SELECT * FROM TechLogs WHERE ID = @logID";
             string actionQuery = "SELECT * FROM TechLogActions WHERE ActionID = @aid";
             string customerQuery = "SELECT * FROM RepairCustomerInformation WHERE CustomerNumber = @CustNum";
-           
+
             var cmd = new SqlCommand(query, conn);
             var customerCmd = new SqlCommand(customerQuery, conn);
             var logCmd = new SqlCommand(logQuery, conn); logCmd.Parameters.Add("@logID", System.Data.SqlDbType.Int);
@@ -53,10 +53,10 @@ namespace RApID_Project_WPF
             try
             {
                 conn.Open();
-                
-                using(SqlDataReader reader = cmd.ExecuteReader())
+
+                using (SqlDataReader reader = cmd.ExecuteReader())
                 {
-                    while(reader.Read())
+                    while (reader.Read())
                     {
                         sUnitID = reader["ID"].ToString().EmptyIfNull();
 
@@ -78,7 +78,7 @@ namespace RApID_Project_WPF
                         txtTechAct3.Text = reader["TechAct3"].ToString().EmptyIfNull();
 
                         txtCustNum.Text = reader["CustomerNumber"].ToString().EmptyIfNull();
-                        if(!string.IsNullOrEmpty(txtCustNum.Text))
+                        if (!string.IsNullOrEmpty(txtCustNum.Text))
                             customerCmd.Parameters.AddWithValue("@CustNum", int.Parse(txtCustNum.Text));
 
                         rtbQCDQEComments.AppendText(reader["QCDQEComments"].ToString().EmptyIfNull());
@@ -110,15 +110,17 @@ namespace RApID_Project_WPF
                 }
 
                 conn.Close();
-                                
-                if (!string.IsNullOrEmpty(sUnitID)) {
-                    List<UnitIssueModel> lRMI = csCrossClassInteraction.GetRepairUnitIssues(sUnitID);
 
-                    int ucIndex = 0;
+                if (!string.IsNullOrEmpty(sUnitID))
+                {
+                    var lRMI = csCrossClassInteraction.GetRepairUnitIssues(sUnitID);
+
                     foreach (var issue in lRMI)
                     {
-                        ucIssues[ucIndex].FillUnitIssue(
-                            //TODO: Find Multiple Parts to be added here
+                        if (string.IsNullOrEmpty(ucIssues[0].ReportedIssue))
+                        {
+                            #region First Issue
+                            ucIssues[0].FillUnitIssue(
                             issue.ReportedIssue,
                             issue.TestResult,
                             issue.TestResultAbort,
@@ -126,12 +128,55 @@ namespace RApID_Project_WPF
                             issue.Cause,
                             issue.Replacement,
                             issue.Item,
-                            issue.Problem,
-                            issue.SinglePartReplaced.RefDesignator,
-                            issue.SinglePartReplaced.PartReplaced,
-                            issue.SinglePartReplaced.PartsReplacedPartDescription
+                            issue.Problem
                         );
-                        if (lRMI.Count > ucIndex) ucIssues.AddTabItem();
+
+                            if (issue.SinglePartReplaced != null)
+                            {
+                                ucIssues[0].AddUnitIssuePart(
+                                        issue.SinglePartReplaced.RefDesignator,
+                                        issue.SinglePartReplaced.PartReplaced,
+                                        issue.SinglePartReplaced.PartsReplacedPartDescription);
+                            }
+                            else if (issue.MultiPartsReplaced != null)
+                            {
+                                foreach (var mpr in issue.MultiPartsReplaced)
+                                {
+                                    ucIssues[0].AddUnitIssuePart(mpr.RefDesignator, mpr.PartReplaced,
+                                        mpr.PartsReplacedPartDescription);
+                                }
+                            }
+                            #endregion
+                            continue;
+                        }
+
+                        var (Tab, ActualTabIndex) = ucIssues.AddTabItem();
+                        ucIssues[ActualTabIndex].FillUnitIssue(
+                            issue.ReportedIssue,
+                            issue.TestResult,
+                            issue.TestResultAbort,
+                            issue.Issue,
+                            issue.Cause,
+                            issue.Replacement,
+                            issue.Item,
+                            issue.Problem
+                        );
+
+                        if (issue.SinglePartReplaced != null)
+                        {
+                            ucIssues[ActualTabIndex].AddUnitIssuePart(
+                                    issue.SinglePartReplaced.RefDesignator,
+                                    issue.SinglePartReplaced.PartReplaced,
+                                    issue.SinglePartReplaced.PartsReplacedPartDescription);
+                        }
+                        else if (issue.MultiPartsReplaced != null)
+                        {
+                            foreach (var mpr in issue.MultiPartsReplaced)
+                            {
+                                ucIssues[ActualTabIndex].AddUnitIssuePart(mpr.RefDesignator, mpr.PartReplaced,
+                                    mpr.PartsReplacedPartDescription);
+                            }
+                        }
                     }
                 }
 
@@ -180,7 +225,7 @@ namespace RApID_Project_WPF
 
                 return true;
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 if (conn != null)
                     conn.Close();
@@ -195,7 +240,8 @@ namespace RApID_Project_WPF
         private void gbCustomerInfo_PreviewMouseDoubleClick(object sender, MouseButtonEventArgs e)
         {
             var fullInfo = new frmFullCustomerInformation(CurrentCustomer);
-            fullInfo.Closed += delegate {
+            fullInfo.Closed += delegate
+            {
                 gbCustomerInfo.IsEnabled = true;
             };
             fullInfo.Show();

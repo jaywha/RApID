@@ -1369,11 +1369,11 @@ namespace RApID_Project_WPF
         }
 
         /// <summary>
-        /// Fills the specified <see cref="ucUnitIssue"/> with the data from the given <see cref="string"/>array.
+        /// Fills the specified <see cref="ucUnitIssue"/> with the data from the given <see cref="string"/> array.
         /// </summary>
         /// <param name="issue">The target <see cref="ucUnitIssue"/> to fill with data.</param>
         /// <param name="values"><see cref="string"/> values ordered by visual appearance in the control.</param>
-        public static void FillUnitIssue(this ucUnitIssue issue, params string[] values)
+        public static ucUnitIssue FillUnitIssue(this ucUnitIssue issue, params string[] values)
         {
             var vi = 0;
 
@@ -1386,12 +1386,21 @@ namespace RApID_Project_WPF
             issue.Item = values[vi++];
             issue.Problem = values[vi++];
 
-            while (vi < values.Length && values[vi] != null)
-            {
-                issue.PartsReplaced = new List<MultiplePartsReplaced> {
-                    new MultiplePartsReplaced(values[vi++], values[vi++], values[vi++] ?? GetPartReplacedPartDescription(values[vi-2]))
-                };
-            }
+            return issue;
+        }
+
+        /// <summary>
+        /// Adds another <see cref="MultiplePartsReplaced"/> to the calling <see cref="ucUnitIssue"/>'s parts grid.
+        /// </summary>
+        /// <param name="issue">The calling unit issue</param>
+        /// <param name="values">The values to add the part table - refDesignator, partNumber, partDesc</param>
+        public static ucUnitIssue AddUnitIssuePart(this ucUnitIssue issue, params string[] values) {
+            if (issue.PartsReplaced == null) issue.PartsReplaced = new List<MultiplePartsReplaced>();
+            issue.PartsReplaced.Add(
+                new MultiplePartsReplaced(values[0], values[1], values.Length < 3 ? GetPartReplacedPartDescription(values[0]) : values[2])
+            );
+
+            return issue;
         }
 
         /// <summary>

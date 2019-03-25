@@ -122,7 +122,7 @@ namespace RApID_Project_WPF
 
             await Task.Factory.StartNew(new Action(() => {
                 var uName = UserPrincipal.Current.DisplayName.Trim().Split(',');
-                FullName = uName[1].Trim() + uName[0].Trim();
+                FullName = uName[1].Trim() + " " + uName[0].Trim();
                 Notify.ShowBalloonTip(msgTitle + $", {FullName}!", msgWelcome, BalloonIcon.Info);
             }));
         }

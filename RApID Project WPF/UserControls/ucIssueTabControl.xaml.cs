@@ -91,6 +91,9 @@ namespace RApID_Project_WPF.UserControls
             private set { _tabItems[index].Content = value; }
         }
 
+        /// <summary>
+        /// Default ctor - initializes the control
+        /// </summary>
         public ucIssueTabControl()
         {
             try
@@ -128,16 +131,13 @@ namespace RApID_Project_WPF.UserControls
                 VerticalAlignment = VerticalAlignment.Top
             };
 
-            if(unitIssue.ReadOnly)            
-                newTab.HeaderTemplate = (DataTemplate) tcTabs.FindResource("ROTabHeader");
-            else
-                newTab.HeaderTemplate = (DataTemplate)tcTabs.FindResource("TabHeader");            
+            newTab.HeaderTemplate = (DataTemplate)tcTabs.FindResource("TabHeader");            
 
             (newTab.Content as ucUnitIssue).btnResetIssueData.Content += $"#{count - 1}";
             _tabItems.Insert(count - 1, newTab);
         }
 
-        internal TabItem AddTabItem()
+        internal (TabItem Tab, int ActualTabIndex) AddTabItem()
         {
             int count = _tabItems.Count;
 
@@ -148,28 +148,35 @@ namespace RApID_Project_WPF.UserControls
                     Name = $"otherIssue{count}",
                     HorizontalAlignment = HorizontalAlignment.Center,
                     VerticalAlignment = VerticalAlignment.Top,
-                    Width = (double)GetValue(DesignWidthProperty) - 10,
-                    Height = (double)GetValue(DesignHeightProperty) - 10
+                    Width = DesignWidth - 10,
+                    Height = DesignHeight - 10
                 },
                 HorizontalAlignment = HorizontalAlignment.Left,
                 VerticalAlignment = VerticalAlignment.Top
             };
-
-            if (ReadOnly)
-                newTab.HeaderTemplate = (DataTemplate)tcTabs.FindResource("ROTabHeader");
-            else
-                newTab.HeaderTemplate = (DataTemplate)tcTabs.FindResource("TabHeader");
+            (newTab.Content as ucUnitIssue).SetBinding(ucUnitIssue.ReadOnlyProperty, new Binding(nameof(ReadOnly))
+            {
+                ElementName = Name,
+                Mode = BindingMode.TwoWay,
+                UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged
+            });
+            (newTab.Content as ucUnitIssue).SetBinding(ucUnitIssue.IsRepairFormProperty, new Binding(nameof(IsRepair))
+            {
+                ElementName = Name,
+                Mode = BindingMode.TwoWay,
+                UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged
+            });
 
             (newTab.Content as ucUnitIssue).btnResetIssueData.Content += $"#{count - 1}";
             _tabItems.Insert(count - 1, newTab);
-            return newTab;
+            return (newTab, count - 1);
         }
 
         private void tcTabs_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             if (tcTabs.SelectedItem is TabItem tab && tab.Header != null && tab.Equals(tiNewTab))
             {
-                tcTabs.SelectedItem = UpdateTabCollection(tcTabs, AddTabItem);
+                tcTabs.SelectedItem = UpdateTabCollection(tcTabs, AddTabItem).Tab;
             }
         }
 
