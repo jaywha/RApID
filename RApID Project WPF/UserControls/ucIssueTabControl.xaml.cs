@@ -3,12 +3,11 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Runtime.CompilerServices;
-using System.Runtime.InteropServices;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Input;
-using System.Windows.Interop;
+using System.Windows.Threading;
 
 namespace RApID_Project_WPF.UserControls
 {
@@ -24,6 +23,7 @@ namespace RApID_Project_WPF.UserControls
         #endregion
 
         #region Fields
+        /// <summary> The current index to place a new tab -- NewTab Button Index </summary>
         public int CurrentNewTabIndex = 1;
 
         private List<TabItem> _tabItems;
@@ -42,7 +42,8 @@ namespace RApID_Project_WPF.UserControls
         public double DesignWidth
         {
             get { return (double)GetValue(DesignWidthProperty); }
-            set {
+            set
+            {
                 SetValue(DesignWidthProperty, value);
                 OnPropertyChanged();
             }
@@ -51,7 +52,8 @@ namespace RApID_Project_WPF.UserControls
         public double DesignHeight
         {
             get { return (double)GetValue(DesignHeightProperty); }
-            set {
+            set
+            {
                 SetValue(DesignHeightProperty, value);
                 OnPropertyChanged();
             }
@@ -60,16 +62,18 @@ namespace RApID_Project_WPF.UserControls
         public bool ReadOnly
         {
             get { return (bool)GetValue(ReadOnlyProperty); }
-            set {
-                SetValue(ReadOnlyProperty, value);                
+            set
+            {
+                SetValue(ReadOnlyProperty, value);
                 OnPropertyChanged();
             }
         }
-        [Description("Determine what data to present."),Category("Common")]
+        [Description("Determine what data to present."), Category("Common")]
         public bool IsRepair
         {
             get { return (bool)GetValue(IsRepairProperty); }
-            set {
+            set
+            {
                 SetValue(IsRepairProperty, value);
                 OnPropertyChanged();
             }
@@ -82,13 +86,18 @@ namespace RApID_Project_WPF.UserControls
         }
         #endregion
 
+        /// <summary> Gets the ucUnitIssue at the provided index.</summary>
+        /// <remarks>Exposes the underlying collection to be indexed by its implementing class.</remarks>
+        /// <param name="index">The provided index.</param>
+        /// <returns>The ucUnitIssue in <see cref="_tabItems"/></returns>
         public ucUnitIssue this[int index]
         {
-            get {
-                if (_tabItems[index].Equals(_backupNewTab)) return null;
+            get
+            {
+                if (_tabItems.Count == 0 || _tabItems[index].Equals(_backupNewTab)) return null;
                 return _tabItems[index].Content as ucUnitIssue;
             }
-            private set { _tabItems[index].Content = value; }
+            private set { _tabItems[index].Content = value; } // Do not remove - causes ghost errors
         }
 
         /// <summary>
@@ -96,85 +105,162 @@ namespace RApID_Project_WPF.UserControls
         /// </summary>
         public ucIssueTabControl()
         {
+            InitializeComponent();
+
             try
             {
-                InitializeComponent();
+                _backupNewTab = new TabItem()
+                {
+                   Name="tiNewTab",
+                   Header="+"
+                };
+                _backupNewTab.SetBinding(VisibilityProperty, new Binding() {
+                    Source = this,
+                    Path = new PropertyPath(ReadOnlyProperty),
+                    Mode = BindingMode.TwoWay,
+                    UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged,
+                    Converter = new BoolToVisibilityConverter()
+                });
 
-                _tabItems = new List<TabItem> { tiNewTab };
-                                               
+                _tabItems = new List<TabItem> { _backupNewTab };
+
                 AddTabItem();
 
                 tcTabs.DataContext = _tabItems;
                 tcTabs.SelectedIndex = 0;
-            } catch(Exception e)
-            {
-                #if DEBUG
-                    Console.WriteLine($"UIC_InitError -> [{e.StackTrace}]");
-                #else
-                    csExceptionLogger.csExceptionLogger.Write("UnitIssueContainer_InitError", e);
-                #endif
             }
+            catch (Exception ex)
+            {
+                csExceptionLogger.csExceptionLogger.Write("UnitIssueContainer_InitError", ex);
+            }
+        }
 
-            _backupNewTab = tiNewTab;
+        private void UccIssueTabControl_Loaded(object sender, RoutedEventArgs e)
+        {
+            // Loaded events -- ???
         }
 
         internal void AddTabItem(ucUnitIssue unitIssue, string customHeader = null)
         {
-            int count = _tabItems.Count;
-
-            var newTab = new TabItem()
+            lock (_tabItems)
             {
-                Header = customHeader ?? $"Unit Issue #{count}",
-                Name = $"tiUnitIssue{count}",
-                Content = unitIssue,
-                HorizontalAlignment = HorizontalAlignment.Left,
-                VerticalAlignment = VerticalAlignment.Top
-            };
+                int count = _tabItems.Count;
 
-            newTab.HeaderTemplate = (DataTemplate)tcTabs.FindResource("TabHeader");            
+                var newTab = new TabItem()
+                {
+                    Header = customHeader ?? $"Unit Issue #{count}",
+                    Name = $"tiUnitIssue{count}",
+                    Content = unitIssue,
+                    HorizontalContentAlignment = HorizontalAlignment.Center,
+                    HorizontalAlignment = HorizontalAlignment.Center,
+                    VerticalAlignment = VerticalAlignment.Top
+                };
+                (newTab.Content as ucUnitIssue).HorizontalAlignment = HorizontalAlignment.Center;
 
-            (newTab.Content as ucUnitIssue).btnResetIssueData.Content += $"#{count - 1}";
-            _tabItems.Insert(count - 1, newTab);
+                #region Tab Bindings
+                (newTab.Content as ucUnitIssue).SetBinding(HeightProperty, new Binding()
+                {
+                    Source = this,
+                    Path = new PropertyPath(DesignHeightProperty),
+                    Mode = BindingMode.TwoWay,
+                    UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged
+                });
+                (newTab.Content as ucUnitIssue).SetBinding(WidthProperty, new Binding()
+                {
+                    Source = this,
+                    Path = new PropertyPath(DesignWidthProperty),
+                    Mode = BindingMode.TwoWay,
+                    UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged
+                });
+                (newTab.Content as ucUnitIssue).SetBinding(ucUnitIssue.ReadOnlyProperty, new Binding()
+                {
+                    Source = this,
+                    Path = new PropertyPath(ReadOnlyProperty),
+                    Mode = BindingMode.TwoWay,
+                    UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged
+                });
+                (newTab.Content as ucUnitIssue).SetBinding(ucUnitIssue.IsRepairFormProperty, new Binding()
+                {
+                    Source = this,
+                    Path = new PropertyPath(IsRepairProperty),
+                    Mode = BindingMode.TwoWay,
+                    UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged
+                });
+                #endregion
+
+                newTab.HeaderTemplate = (DataTemplate)tcTabs.FindResource("TabHeader");
+
+                (newTab.Content as ucUnitIssue).btnResetIssueData.Content += $"#{count - 1}";
+                (newTab.Content as ucUnitIssue).btnResetIssueData.Click += btnDelete_Click;
+                _tabItems.Insert(count - 1, newTab);
+            }
         }
 
         internal (TabItem Tab, int ActualTabIndex) AddTabItem()
         {
-            int count = _tabItems.Count;
+            lock (_tabItems)
+            {
+                int count = _tabItems.Count;
 
-            var newTab = new TabItem() {
-                Header = $"Unit Issue #{count}",
-                Name = $"tiUnitIssue{count}",
-                Content = new ucUnitIssue(count) {
-                    Name = $"otherIssue{count}",
+                var newTab = new TabItem()
+                {
+                    Header = $"Unit Issue #{count}",
+                    Name = $"tiUnitIssue{count}",
+                    Content = new ucUnitIssue(count)
+                    {
+                        Name = $"otherIssue{count}",
+                        HorizontalAlignment = HorizontalAlignment.Center,
+                        VerticalAlignment = VerticalAlignment.Top
+                    },
+                    HorizontalContentAlignment = HorizontalAlignment.Center,
                     HorizontalAlignment = HorizontalAlignment.Center,
-                    VerticalAlignment = VerticalAlignment.Top,
-                    Width = DesignWidth - 10,
-                    Height = DesignHeight - 10
-                },
-                HorizontalAlignment = HorizontalAlignment.Left,
-                VerticalAlignment = VerticalAlignment.Top
-            };
-            (newTab.Content as ucUnitIssue).SetBinding(ucUnitIssue.ReadOnlyProperty, new Binding(nameof(ReadOnly))
-            {
-                ElementName = Name,
-                Mode = BindingMode.TwoWay,
-                UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged
-            });
-            (newTab.Content as ucUnitIssue).SetBinding(ucUnitIssue.IsRepairFormProperty, new Binding(nameof(IsRepair))
-            {
-                ElementName = Name,
-                Mode = BindingMode.TwoWay,
-                UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged
-            });
+                    VerticalAlignment = VerticalAlignment.Top
+                };
 
-            (newTab.Content as ucUnitIssue).btnResetIssueData.Content += $"#{count - 1}";
-            _tabItems.Insert(count - 1, newTab);
-            return (newTab, count - 1);
+                #region Tab Bindings
+                (newTab.Content as ucUnitIssue).SetBinding(HeightProperty, new Binding()
+                {
+                    Source = this,
+                    Path = new PropertyPath(DesignHeightProperty),
+                    Mode = BindingMode.TwoWay,
+                    UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged
+                });
+                (newTab.Content as ucUnitIssue).SetBinding(WidthProperty, new Binding()
+                {
+                    Source = this,
+                    Path = new PropertyPath(DesignWidthProperty),
+                    Mode = BindingMode.TwoWay,
+                    UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged
+                });
+                (newTab.Content as ucUnitIssue).SetBinding(ucUnitIssue.ReadOnlyProperty, new Binding()
+                {
+                    Source = this,
+                    Path = new PropertyPath(ReadOnlyProperty),
+                    Mode = BindingMode.TwoWay,
+                    UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged
+                });
+                (newTab.Content as ucUnitIssue).SetBinding(ucUnitIssue.IsRepairFormProperty, new Binding()
+                {
+                    Source = this,
+                    Path = new PropertyPath(IsRepairProperty),
+                    Mode = BindingMode.TwoWay,
+                    UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged
+                });
+                #endregion
+
+                newTab.HeaderTemplate = (DataTemplate)tcTabs.FindResource("TabHeader");
+
+                (newTab.Content as ucUnitIssue).btnResetIssueData.Content += $"#{count - 1}";
+                (newTab.Content as ucUnitIssue).btnResetIssueData.Click += btnDelete_Click;
+                _tabItems.Insert(count - 1, newTab);
+
+                return (newTab, count - 1);
+            }
         }
 
         private void tcTabs_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            if (tcTabs.SelectedItem is TabItem tab && tab.Header != null && tab.Equals(tiNewTab))
+            if (tcTabs.SelectedItem is TabItem tab && tab.Header != null && tab.Header.Equals("+"))
             {
                 tcTabs.SelectedItem = UpdateTabCollection(tcTabs, AddTabItem).Tab;
             }
@@ -182,31 +268,44 @@ namespace RApID_Project_WPF.UserControls
 
         private void btnDelete_Click(object sender, RoutedEventArgs e)
         {
-            if (ReadOnly) {
+            if (ReadOnly)
+            {
                 MessageBox.Show("Can't remove tabs in read-only control.");
                 return;
             }
 
             var tabName = (sender as Button).CommandParameter.ToString();
 
-            if ((from i in tcTabs.Items.Cast<TabItem>()
+            if ((from i in _tabItems
                  where i.Name.Equals(tabName)
                  select i).FirstOrDefault() is TabItem tab)
             {
-                if (_tabItems.Count < 3)
+                lock (_tabItems)
                 {
-                    MessageBox.Show("Can't remove the last tab.");
-                }
-                else if (MessageBox.Show($"Are you sure you want to remove the {tab.Header.ToString()} tab?", "Remove Tab", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
-                {
-                    UpdateTabCollection<TabItem, bool>(tcTabs, _tabItems.Remove, tab);
-
-                    if (!(tcTabs.SelectedItem is TabItem selectedTab) || selectedTab.Equals(tab))
+                    if (_tabItems.Count < 3)
                     {
-                        selectedTab = _tabItems[0];
+                        MessageBox.Show("Can't remove the last tab.");
                     }
+                    else if (MessageBox.Show($"Are you sure you want to remove the {tab.Header.ToString()} tab?", "Remove Tab", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
+                    {
+                        UpdateTabCollection<TabItem, bool>(tcTabs, _tabItems.Remove, tab);
 
-                    tcTabs.SelectedItem = selectedTab;
+                        if (!(tcTabs.SelectedItem is TabItem selectedTab) || selectedTab.Equals(tab))
+                        {
+                            selectedTab = _tabItems[0];
+                        }
+
+                        int header_index = 1;
+                        foreach (var t in _tabItems)
+                        {
+                            t.Header
+                                = t.Header.ToString().Substring(0, t.Header.ToString().IndexOf("#") + 1)
+                                + (t.Header.ToString().StartsWith("Unit Issue") ? header_index++ + "" : "");
+                        }
+
+                        _tabItems.Last().Header = "+";
+                        tcTabs.SelectedItem = selectedTab;
+                    }
                 }
             }
         }
@@ -219,10 +318,11 @@ namespace RApID_Project_WPF.UserControls
         /// <param name="args">Any needed arguments for the function.</param>
         private TResult UpdateTabCollection<T, TResult>(TabControl tc, Func<T, TResult> operation, params object[] args)
         {
-            tc.DataContext = null;            
-            var result = (TResult) operation.DynamicInvoke(args);
-            if (tiNewTab == null) tiNewTab = _backupNewTab;
-            if (!_tabItems.Contains(tiNewTab)) _tabItems.Add(tiNewTab);
+            tc.DataContext = null;
+
+            var result = (TResult)operation.DynamicInvoke(args);
+            if (!_tabItems.Contains(_backupNewTab)) _tabItems.Add(_backupNewTab);
+
             tc.DataContext = _tabItems;
 
             return result;
@@ -237,8 +337,8 @@ namespace RApID_Project_WPF.UserControls
         {
             tc.DataContext = null;
             var result = operation.Invoke();
-            if (tiNewTab == null) tiNewTab = _backupNewTab;
-            if (!_tabItems.Contains(tiNewTab)) _tabItems.Add(tiNewTab);
+            if (!_tabItems.Contains(_backupNewTab)) _tabItems.Add(_backupNewTab);
+
             tc.DataContext = _tabItems;
 
             return result;

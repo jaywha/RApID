@@ -252,7 +252,10 @@ namespace RApID_Project_WPF.UserControls
         {
             InitializeComponent();
             holder.vGetServerName("");
-            //if (string.IsNullOrEmpty(MonkeyCache.FileStore.Barrel.ApplicationId)) MonkeyCache.FileStore.Barrel.ApplicationId = AppDomain.CurrentDomain.FriendlyName;
+            /*
+            * if (string.IsNullOrEmpty(MonkeyCache.FileStore.Barrel.ApplicationId)) 
+            * MonkeyCache.FileStore.Barrel.ApplicationId = AppDomain.CurrentDomain.FriendlyName;
+            */
 
             stkMain.Name += issueNum;
 
@@ -415,6 +418,72 @@ namespace RApID_Project_WPF.UserControls
             cmbxPartNumber.SelectedIndex = -1;
             cmbxRefDesignator.SelectedIndex = -1;
             dgMultipleParts.Items.Clear();
+        }
+        #endregion
+
+        #region Model Conversion
+        /// <summary>
+        /// Conversion from the data model to the UserControl.
+        /// </summary>
+        /// <param name="uim">Source data model. </param>
+        public static implicit operator ucUnitIssue(UnitIssueModel uim)
+        {
+            var result = new ucUnitIssue() {
+                ReportedIssue = uim.ReportedIssue,
+                TestResult = uim.TestResult,
+                AbortResult = uim.TestResultAbort,
+                Cause = uim.Cause,
+                Replacement = uim.Replacement,
+                Issue = uim.Issue,
+                Item = uim.Item,
+                Problem = uim.Problem
+            };
+
+            if(uim.MultiPartsReplaced != null && uim.MultiPartsReplaced.Count > 0)
+            {
+                foreach(var part in uim.MultiPartsReplaced)
+                {
+                    result.PartsReplaced.Add(part);
+                }
+            } else if(uim.SinglePartReplaced != null)
+            {
+                result.PartsReplaced.Add(uim.SinglePartReplaced);
+            }
+
+            return result;
+        }
+
+        /// <summary>
+        /// Conversion from the UserControl to the data model.
+        /// </summary>
+        /// <param name="issue">Source UserControl. </param>
+        public static implicit operator UnitIssueModel(ucUnitIssue issue)
+        {
+            var result = new UnitIssueModel()
+            {
+                ReportedIssue = issue.ReportedIssue,
+                TestResult = issue.TestResult,
+                TestResultAbort = issue.AbortResult,
+                Cause = issue.Cause,
+                Replacement = issue.Replacement,
+                Issue = issue.Issue,
+                Item = issue.Item,
+                Problem = issue.Problem
+            };
+
+            if (issue.PartsReplaced.Count == 1)
+            {
+                foreach (var part in issue.PartsReplaced)
+                {
+                    result.MultiPartsReplaced.Add(part);
+                }
+            }
+            else if (issue.PartsReplaced.Count > 1)
+            {
+                result.SinglePartReplaced = issue.PartsReplaced[0];
+            }
+
+            return result;
         }
         #endregion
 

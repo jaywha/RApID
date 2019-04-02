@@ -13,6 +13,10 @@ namespace RApID_Project_WPF
         PreviousRepairInformation PRI;
         csObjectHolder.csObjectHolder holder = csObjectHolder.csObjectHolder.ObjectHolderInstance();
 
+        /// <summary>
+        /// Default Constructor
+        /// </summary>
+        /// <param name="_pri">Previous Repair Information data to show in this form</param>
         public frmProductionPRI(PreviousRepairInformation _pri)
         {
             InitializeComponent();
@@ -64,23 +68,6 @@ namespace RApID_Project_WPF
                         if (reader["LogID"] != DBNull.Value)
                             logCmd.Parameters.AddWithValue("@logID",
                                 int.Parse(reader["LogID"].ToString().EmptyIfNull()));
-                                                
-                        var issue = ucIssues[0];
-                        if (issue != null)
-                        {
-                            issue.FillUnitIssue(null,
-                                reader["ReportedIssue"].ToString().EmptyIfNull(),
-                                reader["TestResult"].ToString().EmptyIfNull(),
-                                reader["TestResultAbort"].ToString().EmptyIfNull(),
-                                reader["Cause"].ToString().EmptyIfNull(),
-                                reader["Replacement"].ToString().EmptyIfNull(),
-                                reader["Issue"].ToString().EmptyIfNull(),
-                                reader["Item"].ToString().EmptyIfNull(),
-                                reader["Problem"].ToString().EmptyIfNull(),
-                                reader["PartsReplaced"].ToString(),
-                                reader["RefDesignator"].ToString()
-                            );
-                        }
 
                         rtbAddComm.AppendText((reader["AdditionalComments"]?.ToString() ?? "").EmptyIfNull());
                     }
@@ -132,6 +119,7 @@ namespace RApID_Project_WPF
                     || logCmd.Parameters[0].Value == null
                     || logCmd.Parameters[0].Value == DBNull.Value)
                 {
+
                     conn.Close();
                     return true;
                 }

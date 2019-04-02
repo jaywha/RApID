@@ -110,6 +110,37 @@ namespace RApID_Project_WPF
         public string Problem { get; set; }
         public List<MultiplePartsReplaced> MultiPartsReplaced { get; set; }
         public MultiplePartsReplaced SinglePartReplaced { get; set; }
+
+        public override string ToString()
+        {
+            var str = $"UnitIssueModel [{ID}] {{\n" +
+                $"\t{nameof(ReportedIssue)} : {ReportedIssue}\n" +
+                $"\t{nameof(TestResult)} : {TestResult}\n" +
+                $"\t{nameof(TestResultAbort)} : {TestResultAbort}\n" +
+                $"\t{nameof(Issue)} : {Issue}\n" +
+                $"\t{nameof(Cause)} : {Cause}\n" +
+                $"\t{nameof(Replacement)} : {Replacement}\n" +
+                $"\t{nameof(Item)} : {Item}\n" +
+                $"\t{nameof(Problem)} : {Problem}\n";
+
+            if(MultiPartsReplaced != null && MultiPartsReplaced.Count > 0)
+            {
+                str += $"\tMultiple Parts Replaced {{\n";
+                foreach(var part in MultiPartsReplaced)
+                {
+                    str += $"\t\t{part.ToString()}\n";
+                }
+                str += $"\t}}\n";
+            }
+            else if(SinglePartReplaced != null)
+            {
+                str += $"\tSingle Part Replaced {{\n" +
+                    $"\t\t{SinglePartReplaced.ToString()}\n" +
+                    $"\t}}\n";
+            }
+
+            return str;
+        }
     }
 
     /// <summary>

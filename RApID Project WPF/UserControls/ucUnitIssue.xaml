@@ -10,14 +10,14 @@
              x:Name="uccUnitIssue">
     <UserControl.Resources>
         <Style x:Key="DataGridBaseStyle" TargetType="{x:Type DataGrid}">
-            <Setter Property="HorizontalAlignment" Value="Left" />
+            <Setter Property="HorizontalAlignment" Value="Center" />
             <Setter Property="VerticalAlignment" Value="Top" />
             <Setter Property="Width" Value="225" />
             <Setter Property="Height" Value="75" />
             <Setter Property="IsReadOnly" Value="True" />
         </Style>
         <Style x:Key="TextboxUnitIssueStyle" TargetType="{x:Type TextBox}">
-            <Setter Property="HorizontalAlignment" Value="Left" />
+            <Setter Property="HorizontalAlignment" Value="Center" />
             <Setter Property="VerticalAlignment" Value="Top" />
             <Setter Property="VerticalContentAlignment" Value="Center" />
             <Setter Property="Width" Value="225" />

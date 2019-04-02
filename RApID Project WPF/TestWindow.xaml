@@ -8,12 +8,22 @@
         xmlns:UserControls="clr-namespace:RApID_Project_WPF.UserControls"
         x:Class="RApID_Project_WPF.TestWindow"
         mc:Ignorable="d"
-        Title="TestWindow" Height="527.674" Width="849.313" MaxHeight="535" MinWidth="690">
+        Title="TestWindow" Height="527.674" Width="849.313">
     <Window.Resources>
         <UserControls:BoolToStringConverter x:Key="StatusConv"/>
         <UserControls:VisibilityToBoolConverter x:Key="VisToBoolConv"/>
         <UserControls:CombiningConverter x:Key="VisStatusConv" Converter1="{StaticResource VisToBoolConv}" Converter2="{StaticResource StatusConv}"/>
     </Window.Resources>
+    <Window.Background>
+        <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+            <GradientStop Color="#FF4F3B3B" Offset="0.031"/>
+            <GradientStop Color="#FFAA8C8C" Offset="1"/>
+            <GradientStop Color="#FF444444" Offset="0.33"/>
+            <GradientStop Color="#FF797979" Offset="0.66"/>
+            <GradientStop Color="#FFA8A8A8" Offset="0.854"/>
+        </LinearGradientBrush>
+    </Window.Background>
+    <Viewbox>
     <Grid>
         <Grid.Background>
             <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
@@ -24,17 +34,17 @@
                 <GradientStop Color="#FFA8A8A8" Offset="0.854"/>
             </LinearGradientBrush>
         </Grid.Background>
-        <Border BorderThickness="2" BorderBrush="Bisque" Margin="369,80,306,364">
-            <DockPanel>
-                <Label Content="Serial Number" Foreground="Azure" DockPanel.Dock="Top" Margin="10,0"/>
-                <TextBox x:Name="txtSerialNumber" HorizontalAlignment="Left" Height="23" TextWrapping="Wrap" VerticalAlignment="Top" Width="146" DockPanel.Dock="Bottom" Margin="10,0,0,0" KeyDown="txtSerialNumber_KeyDown"/>
-            </DockPanel>
-        </Border>
-        <UserControls:ucIssueTabControl x:Name="tcUnitIssues" Margin="10,10,0,10" Width="349" HorizontalAlignment="Left" ReadOnly="True" IsRepair="True"/>
-        <UserControls:ucUnitIssue x:Name="unitIssue" HorizontalAlignment="Left" Height="Auto" Margin="10,10,0,10" Width="349" Foreground="White" LabelColor="White" 
+            <Border BorderThickness="2" BorderBrush="Bisque" Margin="369,80,306,364">
+                <DockPanel>
+                    <Label Content="Serial Number" Foreground="Azure" DockPanel.Dock="Top" Margin="10,0"/>
+                    <TextBox x:Name="txtSerialNumber" HorizontalAlignment="Left" Height="23" TextWrapping="Wrap" VerticalAlignment="Top" Width="146" DockPanel.Dock="Bottom" Margin="10,0,0,0" KeyDown="txtSerialNumber_KeyDown"/>
+                </DockPanel>
+            </Border>
+            <UserControls:ucUnitIssue x:Name="unitIssue" HorizontalAlignment="Left" Height="Auto" Margin="10,10,0,10" Width="349" Foreground="White" LabelColor="White" 
                                   DropDownEvent="unitIssue_DropDownEvent" AddPartReplaced="unitIssue_AddPartReplaced" IsRepairForm="True" Visibility="Collapsed"/>
+            <UserControls:ucIssueTabControl x:Name="tcUnitIssues" Margin="10,10,0,10" Width="349" HorizontalAlignment="Left" ReadOnly="True" IsRepair="True"/>
 
-        <Label Content="Read Only:" Foreground="Azure" Margin="0,10,196,0" HorizontalContentAlignment="Right" VerticalContentAlignment="Center" Width="105" HorizontalAlignment="Right" Height="31" VerticalAlignment="Top"/>
+            <Label Content="Read Only:" Foreground="Azure" Margin="0,10,196,0" HorizontalContentAlignment="Right" VerticalContentAlignment="Center" Width="105" HorizontalAlignment="Right" Height="31" VerticalAlignment="Top"/>
         <Label HorizontalAlignment="Right" Margin="0,10,91,0" VerticalAlignment="Top" Width="100" Height="30" BorderBrush="Orange" BorderThickness="2" Foreground="Azure">
             <Binding Path="ReadOnly" ElementName="unitIssue" Mode="TwoWay" UpdateSourceTrigger="PropertyChanged" Converter="{StaticResource StatusConv}">
                 <Binding.ConverterParameter>
@@ -145,4 +155,5 @@
             </StackPanel>
         </Button>
     </Grid>
+    </Viewbox>
 </Window>
