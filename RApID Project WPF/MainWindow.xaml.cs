@@ -79,10 +79,6 @@ namespace RApID_Project_WPF
                         $"(Stack Trace)\n{new string('-', 20)}\n\n{e.StackTrace}\n";
 
                     Console.WriteLine(out_msg);
-                    #if !DEBUG
-                        Mailman.SendEmail(subject: "", body: "", exception: e);
-                    #endif
-
                     if (e is TaskCanceledException tce)
                     {
                         var err_msg = $"[FirstChanceException] Task ID: {tce.Task.Id} | CanBeCanceled = {tce.CancellationToken.CanBeCanceled}\n\tSource -> {tce.Source}";

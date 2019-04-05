@@ -32,7 +32,7 @@ namespace RApID_Project_WPF
         {
             var conn = new SqlConnection(holder.RepairConnectionString);
 
-            string query = "SELECT * FROM TechnicianSubmission WHERE ID = '" + PRI.ID + "'";
+            string query = "SELECT * FROM TechnicianSubmission WHERE ID = '" + PRI.ID + "'"; 
             string logQuery = "SELECT * FROM TechLogs WHERE ID = @logID";
             string actionQuery = "SELECT * FROM TechLogActions WHERE ActionID = @aid";
             string unitIssueQuery = $"SELECT * FROM TechnicianUnitIssues WHERE ID = '{PRI.ID}'";
