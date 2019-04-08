@@ -120,26 +120,34 @@ namespace RApID_Project_WPF
             lbFilterList.Items.Clear();
         }
 
-        private void lbTechList_MouseDoubleClick(object sender, MouseButtonEventArgs e)
+        private async void lbTechList_MouseDoubleClick(object sender, MouseButtonEventArgs e)
         {
-            if (lbTechList.SelectedItem != null)
+            await Task.Factory.StartNew(() =>
             {
-                lLogList.Clear();
-                lbLogsToView.Items.Clear();
-                rtbLog.Document.Blocks.Clear();
-
-                string[] Files = Directory.GetFiles(Properties.Settings.Default.LogWriteLocation + @"\" + lbTechList.SelectedItem.ToString());
-                string[] splitters = { @"\" };
-                for (int i = 0; i < Files.Length; i++)
+                Dispatcher.Invoke(() =>
                 {
-                    string[] sFileSplit = Files[i].Split(splitters, StringSplitOptions.RemoveEmptyEntries);
-                    var li = new LogInfo(lbTechList.SelectedItem.ToString(), sFileSplit[sFileSplit.Length - 1]);
-                    lbLogsToView.Items.Add(li.LogDisplayName);
-                    lLogList.Add(li);
-                }
+                    if (lbTechList.SelectedItem != null)
+                    {
+                        lLogList.Clear();
+                        lbLogsToView.Items.Clear();
+                        rtbLog.Document.Blocks.Clear();
 
-                filterStatus(false);
-            }
+                        string[] Files = Directory.GetFiles(Properties.Settings.Default.LogWriteLocation + @"\" + lbTechList.SelectedItem.ToString());
+                        string[] splitters = { @"\" };
+                        string[] ignoreYears = new string[] { "2016", "2017" };
+                        for (int i = 0; i < Files.Length; i++)
+                        {
+                            string[] sFileSplit = Files[i].Split(splitters, StringSplitOptions.RemoveEmptyEntries);
+                            var li = new LogInfo(lbTechList.SelectedItem.ToString(), sFileSplit[sFileSplit.Length - 1]);
+                            if (li.LogDisplayName.Contains("2016") || li.LogDisplayName.Contains("2017")) continue;
+                            lbLogsToView.Items.Add(li.LogDisplayName);
+                            lLogList.Add(li);
+                        }
+
+                        filterStatus(false);
+                    }
+                });
+            });
         }
 
         private void lbLogsToView_MouseDoubleClick(object sender, MouseButtonEventArgs e)

@@ -3,22 +3,31 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         Title="RApID Log Viewer" Height="600" Width="771" Loaded="Window_Loaded" WindowStartupLocation="CenterScreen">
     <Grid>
-        <Menu Height="30" HorizontalAlignment="Stretch" VerticalAlignment="Top" Width="auto" Margin="0,0,0,0">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="249*"/>
+            <ColumnDefinition Width="290*"/>
+            <ColumnDefinition Width="224*"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="36*"/>
+            <RowDefinition Height="59*"/>
+        </Grid.RowDefinitions>
+        <Menu Height="30" HorizontalAlignment="Stretch" VerticalAlignment="Top" Width="auto" Margin="0,0,0,0" Grid.ColumnSpan="3">
         </Menu>
-        
+
         <Label Content="Technician List:" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="6,38,0,0" />
-        <ListBox Name="lbTechList" HorizontalAlignment="Left" Height="150" Margin="6,64,0,0" VerticalAlignment="Top" Width="240" MouseUp="lbTechList_MouseDoubleClick"/>
+        <ListBox Name="lbTechList" Margin="6,64,3,2" MouseUp="lbTechList_MouseDoubleClick"/>
 
-        <Label Content="Logs To View:" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="250,33,0,0" />
-        <ListBox Name="lbLogsToView" HorizontalAlignment="Left" VerticalAlignment="Top" Height="150" Width="287" Margin="251,64,0,0" MouseUp="lbLogsToView_MouseDoubleClick"/>
+        <Label Content="Logs To View:" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="1,33,0,0" Grid.Column="1" />
+        <ListBox Name="lbLogsToView" Margin="2,64,1,2" MouseUp="lbLogsToView_MouseDoubleClick" Grid.Column="1"/>
 
-        <Label Content="Log:" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="6,219,0,0" />
-        <RichTextBox Name="rtbLog" HorizontalAlignment="Left" VerticalAlignment="Top" Width="743" Height="314" VerticalScrollBarVisibility="Auto" Margin="6,245,0,0"/>
+        <Label Content="Log:" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="6,3,0,0" Grid.Row="1" />
+        <RichTextBox Name="rtbLog" VerticalScrollBarVisibility="Auto" Margin="6,29,14,11" Grid.ColumnSpan="3" Grid.Row="1"/>
 
-        <Label Content="Filters:" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="541,38,0,0" />
-        <ComboBox Name="cbFilters"  HorizontalAlignment="Left" Margin="543,64,0,0" VerticalAlignment="Top" Width="151"/>
-        <Button Name="btnAddFilter" Content="Add" HorizontalAlignment="Left" Margin="699,64,0,0" VerticalAlignment="Top" Width="50" Height="22" Click="btnAddFilter_Click"/>
-        <ListBox Name="lbFilterList" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="543,91,0,0" Width="206" Height="123" />
-        <Button Name="btnClearFilters" Content="Clear Filters" HorizontalAlignment="Left" Margin="674,219,0,0" VerticalAlignment="Top" Width="75" Height="22" Click="btnClearFilters_Click"/>
+        <Label Content="Filters:" VerticalAlignment="Top" Margin="2,38,0,0" Grid.Column="2" HorizontalAlignment="Left" Width="44" />
+        <ComboBox Name="cbFilters" Margin="4,64,0,0" VerticalAlignment="Top" Grid.Column="2" HorizontalAlignment="Left" Width="151"/>
+        <Button Name="btnAddFilter" Content="Add" Margin="160,64,0,0" VerticalAlignment="Top" Height="22" Click="btnAddFilter_Click" Grid.Column="2" HorizontalAlignment="Left" Width="50"/>
+        <ListBox Name="lbFilterList" Margin="4,91,0,2" Grid.Column="2" HorizontalAlignment="Left" Width="206" />
+        <Button Name="btnClearFilters" Content="Clear Filters" Margin="0,37,3,0" VerticalAlignment="Top" Height="22" Click="btnClearFilters_Click" Grid.Column="1" HorizontalAlignment="Right" Width="75"/>
     </Grid>
 </Window>

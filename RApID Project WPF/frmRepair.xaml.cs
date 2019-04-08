@@ -596,18 +596,32 @@ namespace RApID_Project_WPF
 
         private void QueryProduction()
         {
-            string query = "SELECT Xducer, Model FROM Production WHERE SerialNum = '" + txtBarcode.Text + "';";
-            var conn = new SqlConnection(holder.HummingBirdConnectionString); conn.Open();
-            var reader = new SqlCommand(query, conn).ExecuteReader(); reader.Read();
-            bool isXducer = reader.IsDBNull(0) ? false : reader.GetBoolean(0);
-            string sProdQueryResults = reader.IsDBNull(1) ? "" : reader.GetString(1); conn.Close();
+            try
+            {
+                string query = "SELECT Xducer, Model FROM Production WHERE SerialNum = '" + txtBarcode.Text + "';";
+                using (var conn = new SqlConnection(holder.HummingBirdConnectionString))
+                {
+                    conn.Open();
+                    using (var reader = new SqlCommand(query, conn).ExecuteReader())
+                    {
+                        reader.Read();
+                        if (reader.HasRows)
+                        {
+                            bool isXducer = reader.IsDBNull(0) ? false : reader.GetBoolean(0);
+                            string sProdQueryResults = reader.IsDBNull(1) ? "" : reader.GetString(1); conn.Close();
 
-            CheckForXDucer(ref sProdQueryResults, isXducer); if (bStop) return;
+                            CheckForXDucer(ref sProdQueryResults, isXducer); if (bStop) return;
 
-            sVar.LogHandler.CreateLogAction("Part Number '" + sProdQueryResults + "' was found.", csLogging.LogState.NOTE);
-            txtPartNumber.Text = sProdQueryResults;
-            QueryItemMaster();
-            
+                            sVar.LogHandler.CreateLogAction("Part Number '" + sProdQueryResults + "' was found.", csLogging.LogState.NOTE);
+                            txtPartNumber.Text = sProdQueryResults;
+                        }
+                        QueryItemMaster();
+                    }
+                }
+            } catch(Exception e)
+            {
+                csExceptionLogger.csExceptionLogger.Write("RPR_QueryProduction", e);
+            }
         }
 
         /// <summary>
