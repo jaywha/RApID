@@ -604,8 +604,7 @@ namespace RApID_Project_WPF
                     conn.Open();
                     using (var reader = new SqlCommand(query, conn).ExecuteReader())
                     {
-                        reader.Read();
-                        if (reader.HasRows)
+                        if (reader.Read() && reader.HasRows)
                         {
                             bool isXducer = reader.IsDBNull(0) ? false : reader.GetBoolean(0);
                             string sProdQueryResults = reader.IsDBNull(1) ? "" : reader.GetString(1); conn.Close();

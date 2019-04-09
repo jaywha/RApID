@@ -11,9 +11,13 @@ namespace RApID_Project_WPF
     public static class Mailman
     {
         private static csSQL.csSQLClass sqlClass = new csSQL.csSQLClass();
+        private static readonly List<Exception> ReportedExceptions = new List<Exception>();
 
         public static bool SendEmail(string subject = "", string body = "", Exception exception = null)
         {
+            if (ReportedExceptions.Contains(exception)) return true;
+            else ReportedExceptions.Add(exception);
+
             string sUserName = Environment.UserName;
             try
             {

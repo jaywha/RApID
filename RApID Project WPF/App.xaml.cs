@@ -1,5 +1,6 @@
 ﻿//using MonkeyCache.FileStore;
 using System;
+using System.IO;
 using System.Windows;
 
 namespace RApID_Project_WPF
@@ -12,6 +13,13 @@ namespace RApID_Project_WPF
         [STAThread]
         public static void Main(string[] args)
         {
+            if(string.IsNullOrWhiteSpace(csExceptionLogger.csExceptionLogger.DefaultLogLocation))
+            {
+                csExceptionLogger.csExceptionLogger.DefaultLogLocation 
+                    = $@"\\joi\EU\Public\EE Process Test\Logs\RApID\_Exceptions\{DateTime.Today:yyyy}\{DateTime.Today:MMMM}\";
+                Directory.CreateDirectory(csExceptionLogger.csExceptionLogger.DefaultLogLocation);
+            }
+
             try
             {
                 // Barrel.ApplicationId = AppDomain.CurrentDomain.FriendlyName;
