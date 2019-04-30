@@ -41,8 +41,8 @@ namespace RApID_Project_WPF
             dgvPartNumber.Items.Clear();
             string query = "";
             if (bIsProduction)
-                query = "SELECT PossibleAssemblies, ProductName FROM ProductTestParams ORDER BY ProductName ASC";
-            else query = "Select PartNumber, PartName From ItemMaster Where XRefCode = 'UC' OR XRefCode = 'XD' Order By PartName ASC";
+                query = "SELECT DISTINCT PossibleAssemblies, ProductName FROM ProductTestParams ORDER BY ProductName ASC";
+            else query = "Select DISTINCT PartNumber, PartName From ItemMaster Where XRefCode = 'UC' OR XRefCode = 'XD' Order By PartName ASC";
 
             var conn = new SqlConnection(holder.HummingBirdConnectionString);
             var cmd = new SqlCommand(query, conn);
