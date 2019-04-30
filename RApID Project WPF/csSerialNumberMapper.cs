@@ -88,6 +88,11 @@ namespace RApID_Project_WPF
         /// Boolean for the NMEA 2K Case
         /// </summary>
         public bool BIsNMEA;
+
+        /// <summary>
+        /// Boolean for the Ethernet Cases
+        /// </summary>
+        public bool BIsEthernet;
         #endregion
 
         /// <summary>
@@ -210,6 +215,13 @@ namespace RApID_Project_WPF
                 return true;
             }
 
+            if (PartNumber.Equals("408456-1")) // Ethernet Cases
+            {
+                BIsEthernet = true;
+                ComponentNumber = "408208-3";
+                return true;
+            }
+
             #region Find ComponentNumber (or PartNumber)
             var searchWoList = new SqlCommand("SELECT TOP(1) [ComponentNumber],[ItemNumber] FROM [HummingBird].[dbo].[WorkOrderPartsList] " +
                                                      "WHERE (RTRIM(LTRIM([ItemNumber])) = RTRIM(LTRIM(@PN)) " +
@@ -286,7 +298,6 @@ namespace RApID_Project_WPF
         /// <returns>A Task resulting in a Tuple consisting of the filename and <c>true</c> if it was found</returns>        
         public async Task<Tuple<string, bool>> FindFileAsync(string ext)
         {
-            // TODO: Build a list of possible excel files for ops to test each one for JUKI tab
             var filename = "";
             var found = false;
 
@@ -295,13 +306,23 @@ namespace RApID_Project_WPF
             if (BIsIce && ext.Equals(".pdf"))
             {
                 filename = @"\\joi\EU\application\EngDocumentation\Design\Electrical\407028-6 REV F (ICE FLASHER)\";
+                ShowSuccessMessage(filename);
                 return new Tuple<string, bool>(filename, true);
             }
             if (BIsIce && ext.Equals(".xls"))
             {
                 filename = @"\\joi\EU\application\EngDocumentation\Design\Electrical\407028-6 REV F (ICE FLASHER)\407026-1_(ICE 35)_407028-6_F.xls";
+                ShowSuccessMessage(filename);
                 return new Tuple<string, bool>(filename, true);
             }
+
+            if (BIsEthernet && ext.Equals(".xls"))
+            {
+                filename = @"\\joi\EU\application\EngDocumentation\Design\Electrical\408208-3 REV C (AS ETH 5PS)\408206-1_(AS ETH 5PS)_408208-3_C.xls";
+                ShowSuccessMessage(filename);
+                return new Tuple<string, bool>(filename, true);
+            }
+
             /*if (csCrossClassInteraction.Cache != null && csCrossClassInteraction.Cache.Exists(ComponentNumber))
             {
                 MainWindow.Notify.ShowBalloonTip("Loaded data from cache", $"Found data for {ComponentNumber} in the application cache.", Hardcodet.Wpf.TaskbarNotification.BalloonIcon.Info);
@@ -350,18 +371,7 @@ namespace RApID_Project_WPF
                         }
 
                         if (found) {
-                            RoutedEventHandler OpenDirectory = delegate {
-                                System.Diagnostics.Process.Start(filename.Substring(0, filename.LastIndexOf('\\')));
-                            };
-
-                            MainWindow.Notify.Dispatcher.Invoke(() => {
-                                MainWindow.Notify.TrayBalloonTipClicked += OpenDirectory;
-                                MainWindow.Notify.TrayBalloonTipClosed += delegate {
-                                    MainWindow.Notify.TrayBalloonTipClicked -= OpenDirectory;
-                                };
-                                MainWindow.Notify.ShowBalloonTip($"BOM Parts Pulled for [{PartNumber}]",
-                                $"The file is stored here: {filename}", Hardcodet.Wpf.TaskbarNotification.BalloonIcon.Info);
-                            });
+                            ShowSuccessMessage(filename);
                             break;
                         }
                     }
@@ -372,6 +382,21 @@ namespace RApID_Project_WPF
             }
 
             return new Tuple<string, bool>(filename, found);
+        }
+
+        private void ShowSuccessMessage(string filename)
+        {
+            void OpenDirectory(object sender, RoutedEventArgs e)
+                                => System.Diagnostics.Process.Start(filename.Substring(0, filename.LastIndexOf('\\')));
+
+            MainWindow.Notify.Dispatcher.Invoke(() => {
+                MainWindow.Notify.TrayBalloonTipClicked += OpenDirectory;
+                MainWindow.Notify.TrayBalloonTipClosed += delegate {
+                    MainWindow.Notify.TrayBalloonTipClicked -= OpenDirectory;
+                };
+                MainWindow.Notify.ShowBalloonTip($"BOM Parts Pulled for [{PartNumber}]",
+                $"The file is stored here: {filename}", Hardcodet.Wpf.TaskbarNotification.BalloonIcon.Info);
+            });
         }
 
         /// <inheritdoc />

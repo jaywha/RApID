@@ -186,6 +186,11 @@ namespace RApID_Project_WPF
             try
             {
                 //csSplashScreenHelper.StopTokenSource.Cancel();
+                if (this != null)
+                {
+                    Dispatcher.InvokeShutdown();
+                }
+
                 Notify = null;
                 notifyRapid.Dispose(); // Ensure GC collects notify icon
             }

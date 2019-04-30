@@ -205,7 +205,7 @@ namespace RApID_Project_WPF
                     if (string.IsNullOrEmpty(filePath))
                     {
                         MainWindow.Notify.ShowBalloonTip("Couldn't find BOM File",
-                            "The BOM file path was empty! There're no autocomplete or quick links available.\nPlease alert Dex or Jay.",
+                            "The BOM file path was empty! Parts won't be automatically suggested or listed.\nPlease alert Dex or Jay.",
                             Hardcodet.Wpf.TaskbarNotification.BalloonIcon.Warning);
                         return;
                     }

@@ -60,16 +60,11 @@ namespace RApID_Project_WPF
                         string[] splitters = { "," };
                         if(!bIsProduction) // REPAIR
                         {
-                            if(reader[0].ToString().Contains("0-") || reader.ToString().Contains("6-"))
+                            string[] sSplit = reader[0].ToString().Split(splitters, StringSplitOptions.RemoveEmptyEntries);
+                            for(int i = 0; i < sSplit.Length; i++)
                             {
-                                string[] sSplit = reader[0].ToString().Split(splitters, StringSplitOptions.RemoveEmptyEntries);
-                                for(int i = 0; i < sSplit.Length; i++)
-                                {
-                                    if (sSplit[i].Contains("0-") || sSplit[i].Contains("6-") || sSplit[i].Contains("8-"))
-                                    {
-                                        dt.Rows.Add(new object[] { sSplit[i].ToString().TrimEnd(), reader[1].ToString().TrimEnd() });
-                                    }
-                                }
+                                    dt.Rows.Add(new object[] { sSplit[i].ToString().TrimEnd(), reader[1].ToString().TrimEnd() });
+                                    
                             }
                         }
                         else // PRODUCTION
@@ -98,32 +93,6 @@ namespace RApID_Project_WPF
 
                 MessageBox.Show("There was an issue loading the initial part number/part name data.\nError Message: " + ex.Message, "Error Loading Data", MessageBoxButton.OK, MessageBoxImage.Error);
             }
-        }
-
-        /// <summary>
-        /// Searches over the DataTable for the Part Number entered
-        /// </summary>
-        private void searchDataTable()
-        {
-            var dtSearch = new DataTable();
-            dtSearch.Columns.Add("Part Number");
-            dtSearch.Columns.Add("Part Name");
-            string dtQuery = (!string.IsNullOrEmpty(txtSearchName.Text))
-                ? $"[Part Name] LIKE '%{txtSearchName.Text}%' " : "";
-
-            if(!string.IsNullOrEmpty(txtSearchName.Text))
-                dtQuery += (rbtnAND.IsChecked.Value ? " AND " :
-                            rbtnOR.IsChecked.Value ? " OR " : "");
-
-            dtQuery += (!string.IsNullOrEmpty(txtSearchNum.Text))
-                ? $"[Part Number] LIKE '%{txtSearchNum.Text}%'" : "";
-
-            DataRow[] drRes = dt.Select(dtQuery);
-            foreach(DataRow dr in drRes)
-            {
-                dtSearch.ImportRow(dr);
-            }
-            dgvPartNumber.DataContext = dtSearch.DefaultView;
         }
 
         /// <summary>
@@ -157,6 +126,38 @@ namespace RApID_Project_WPF
         private void txtSearch_TextChanged(object sender, TextChangedEventArgs e)
         {
             searchDataTable();
+        }
+
+        /// <summary>
+        /// Searches over the DataTable for the Part Number entered
+        /// </summary>
+        private void searchDataTable()
+        {
+            try
+            {
+                var dtSearch = new DataTable();
+                dtSearch.Columns.Add("Part Number");
+                dtSearch.Columns.Add("Part Name");
+                string dtQuery = (!string.IsNullOrEmpty(txtSearchName.Text))
+                    ? $" [Part Name] LIKE '%{txtSearchName.Text}%' " : "";
+
+                if (!string.IsNullOrEmpty(txtSearchName.Text))
+                    dtQuery += (rbtnAND.IsChecked.Value ? " AND " :
+                                rbtnOR.IsChecked.Value ? " OR " : "");
+
+                dtQuery += (!string.IsNullOrEmpty(txtSearchNum.Text))
+                    ? $" [Part Number] LIKE '%{txtSearchNum.Text}%'" : "";
+
+                DataRow[] drRes = dt.Select(dtQuery);
+                foreach (DataRow dr in drRes)
+                {
+                    dtSearch.ImportRow(dr);
+                }
+                dgvPartNumber.DataContext = dtSearch.DefaultView;
+            } catch(Exception e)
+            {
+                csExceptionLogger.csExceptionLogger.Write("PartNumberSearch", e);
+            }
         }
     }
 }
