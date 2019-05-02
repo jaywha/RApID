@@ -179,5 +179,16 @@ namespace RApID_Project_WPF.Properties {
                 this["DefaultReportManagerLink"] = value;
             }
         }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.SpecialSettingAttribute(global::System.Configuration.SpecialSetting.ConnectionString)]
+        [global::System.Configuration.DefaultSettingValueAttribute("Data Source=eudb01;Initial Catalog=Repair;Persist Security Info=True;User ID=inho" +
+            "use;Password=Password1")]
+        public string RepairConnectionString {
+            get {
+                return ((string)(this["RepairConnectionString"]));
+            }
+        }
     }
 }

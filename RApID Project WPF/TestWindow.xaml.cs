@@ -118,12 +118,8 @@ namespace RApID_Project_WPF
                             Console.WriteLine("(TestWindow.xaml.cs) ==> Mapper successfully started...");
                             if (!mapper.GetData(txtSerialNumber.Text))
                             {
-#if DEBUG
-                                throw new InvalidOperationException("Couldn't find data for this barcode!");
-#else
                                     MessageBox.Show("Couldn't find the barcode's entry in the database.\nPlease enter information manually.", 
                                         "Soft Error - BOM Lookup", MessageBoxButton.OK, MessageBoxImage.Warning);
-#endif
                             }
                             else
                             {
@@ -167,6 +163,12 @@ namespace RApID_Project_WPF
                 tcUnitIssues.Visibility = Visibility.Visible;
                 unitIssue.Visibility = Visibility.Collapsed;
             }
+        }
+
+        private void pcbaalias_click(object sender, RoutedEventArgs e)
+        {
+            var frm = new frmBoardAliases();
+            frm.ShowDialog();
         }
     }
 }

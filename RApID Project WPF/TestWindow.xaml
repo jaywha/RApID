@@ -24,20 +24,21 @@
         </LinearGradientBrush>
     </Window.Background>
     <Viewbox>
-    <Grid>
-        <Grid.Background>
-            <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
-                <GradientStop Color="#FF4F3B3B" Offset="0.031"/>
-                <GradientStop Color="#FFAA8C8C" Offset="1"/>
-                <GradientStop Color="#FF444444" Offset="0.33"/>
-                <GradientStop Color="#FF797979" Offset="0.66"/>
-                <GradientStop Color="#FFA8A8A8" Offset="0.854"/>
-            </LinearGradientBrush>
-        </Grid.Background>
+        <Grid>
+            <Grid.Background>
+                <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                    <GradientStop Color="#FF4F3B3B" Offset="0.031"/>
+                    <GradientStop Color="#FFAA8C8C" Offset="1"/>
+                    <GradientStop Color="#FF444444" Offset="0.33"/>
+                    <GradientStop Color="#FF797979" Offset="0.66"/>
+                    <GradientStop Color="#FFA8A8A8" Offset="0.854"/>
+                </LinearGradientBrush>
+            </Grid.Background>
             <Border BorderThickness="2" BorderBrush="Bisque" Margin="369,80,306,364">
                 <DockPanel>
                     <Label Content="Serial Number" Foreground="Azure" DockPanel.Dock="Top" Margin="10,0"/>
-                    <TextBox x:Name="txtSerialNumber" HorizontalAlignment="Left" Height="23" TextWrapping="Wrap" VerticalAlignment="Top" Width="146" DockPanel.Dock="Bottom" Margin="10,0,0,0" KeyDown="txtSerialNumber_KeyDown"/>
+                    <TextBox x:Name="txtSerialNumber" HorizontalAlignment="Left" Height="23" TextWrapping="Wrap" VerticalAlignment="Top" Width="146" DockPanel.Dock="Bottom" Margin="10,0,0,0" 
+                             KeyDown="txtSerialNumber_KeyDown"/>
                 </DockPanel>
             </Border>
             <UserControls:ucUnitIssue x:Name="unitIssue" HorizontalAlignment="Left" Height="Auto" Margin="10,10,0,10" Width="349" Foreground="White" LabelColor="White" 
@@ -45,115 +46,116 @@
             <UserControls:ucIssueTabControl x:Name="tcUnitIssues" Margin="10,10,0,10" Width="349" HorizontalAlignment="Left" ReadOnly="True" IsRepair="True"/>
 
             <Label Content="Read Only:" Foreground="Azure" Margin="0,10,196,0" HorizontalContentAlignment="Right" VerticalContentAlignment="Center" Width="105" HorizontalAlignment="Right" Height="31" VerticalAlignment="Top"/>
-        <Label HorizontalAlignment="Right" Margin="0,10,91,0" VerticalAlignment="Top" Width="100" Height="30" BorderBrush="Orange" BorderThickness="2" Foreground="Azure">
-            <Binding Path="ReadOnly" ElementName="unitIssue" Mode="TwoWay" UpdateSourceTrigger="PropertyChanged" Converter="{StaticResource StatusConv}">
-                <Binding.ConverterParameter>
-                    <x:Array Type="{x:Type sys:String}">
-                        <sys:String>Enabled</sys:String>
-                        <sys:String>Disabled</sys:String>
-                    </x:Array>
-                </Binding.ConverterParameter>
-            </Binding>
-        </Label>
-        <Button Content="Toggle" Background="CornflowerBlue" Margin="0,10,10,0" VerticalAlignment="Top" Click="btnToggle_Click" Height="30" HorizontalAlignment="Right" Width="75" Foreground="WhiteSmoke"/>
-        <Viewbox x:Name="vbProps" Margin="561,56,10,122" Stretch="Uniform">
-            <Grid x:Name="grdProperties" Width="{Binding ElementName=vbProps, Path=Width, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+            <Label HorizontalAlignment="Right" Margin="0,10,91,0" VerticalAlignment="Top" Width="100" Height="30" BorderBrush="Orange" BorderThickness="2" Foreground="Azure">
+                <Binding Path="ReadOnly" ElementName="unitIssue" Mode="TwoWay" UpdateSourceTrigger="PropertyChanged" Converter="{StaticResource StatusConv}">
+                    <Binding.ConverterParameter>
+                        <x:Array Type="{x:Type sys:String}">
+                            <sys:String>Enabled</sys:String>
+                            <sys:String>Disabled</sys:String>
+                        </x:Array>
+                    </Binding.ConverterParameter>
+                </Binding>
+            </Label>
+            <Button Content="Toggle" Background="CornflowerBlue" Margin="0,10,10,0" VerticalAlignment="Top" Click="btnToggle_Click" Height="30" HorizontalAlignment="Right" Width="75" Foreground="WhiteSmoke"/>
+            <Viewbox x:Name="vbProps" Margin="561,56,10,122" Stretch="Uniform">
+                <Grid x:Name="grdProperties" Width="{Binding ElementName=vbProps, Path=Width, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
 
-                <Label Content="Reported Issue: " Margin="0,0,186,0" HorizontalContentAlignment="Right" VerticalContentAlignment="Center" Height="31" VerticalAlignment="Top" HorizontalAlignment="Right" Width="105" Foreground="#FF71E5FF"/>
-                <Label HorizontalAlignment="Right" Margin="0,1,81,0" VerticalAlignment="Top" Width="100" Height="30" BorderBrush="Orange" BorderThickness="2" Foreground="Azure" ToolTip="{Binding ReportedIssue, ElementName=unitIssue, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Content="{Binding ReportedIssue, ElementName=unitIssue, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
-                <Button x:Name="btnReportedIssue" Content="Mutate" Foreground="Orange" Background="DarkOliveGreen" Margin="0,1,0,0" VerticalAlignment="Top" Click="btnMutate_Click" Height="30" HorizontalAlignment="Right" Width="75"
+                    <Label Content="Reported Issue: " Margin="0,0,186,0" HorizontalContentAlignment="Right" VerticalContentAlignment="Center" Height="31" VerticalAlignment="Top" HorizontalAlignment="Right" Width="105" Foreground="#FF71E5FF"/>
+                    <Label HorizontalAlignment="Right" Margin="0,1,81,0" VerticalAlignment="Top" Width="100" Height="30" BorderBrush="Orange" BorderThickness="2" Foreground="Azure" ToolTip="{Binding ReportedIssue, ElementName=unitIssue, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Content="{Binding ReportedIssue, ElementName=unitIssue, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                    <Button x:Name="btnReportedIssue" Content="Mutate" Foreground="Orange" Background="DarkOliveGreen" Margin="0,1,0,0" VerticalAlignment="Top" Click="btnMutate_Click" Height="30" HorizontalAlignment="Right" Width="75"
                 IsEnabled="{Binding ReadOnly, ElementName=unitIssue, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Tag="ReportedIssue"/>
-                <Label Content="Test Result:" Margin="0,35,186,0" HorizontalContentAlignment="Right" VerticalContentAlignment="Center" Height="31" VerticalAlignment="Top" HorizontalAlignment="Right" Width="105" Foreground="#FF71E5FF"/>
-                <Label HorizontalAlignment="Right" Margin="0,36,81,0" VerticalAlignment="Top" Width="100" Height="30" BorderBrush="Orange" BorderThickness="2" Foreground="Azure" ToolTip="{Binding TestResult, ElementName=unitIssue, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Content="{Binding TestResult, ElementName=unitIssue, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
-                <Button x:Name="btnTestResult" Content="Mutate" Foreground="Orange" Background="DarkOliveGreen" Margin="0,36,0,0" VerticalAlignment="Top" Click="btnMutate_Click" Height="30" HorizontalAlignment="Right" Width="75"
+                    <Label Content="Test Result:" Margin="0,35,186,0" HorizontalContentAlignment="Right" VerticalContentAlignment="Center" Height="31" VerticalAlignment="Top" HorizontalAlignment="Right" Width="105" Foreground="#FF71E5FF"/>
+                    <Label HorizontalAlignment="Right" Margin="0,36,81,0" VerticalAlignment="Top" Width="100" Height="30" BorderBrush="Orange" BorderThickness="2" Foreground="Azure" ToolTip="{Binding TestResult, ElementName=unitIssue, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Content="{Binding TestResult, ElementName=unitIssue, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                    <Button x:Name="btnTestResult" Content="Mutate" Foreground="Orange" Background="DarkOliveGreen" Margin="0,36,0,0" VerticalAlignment="Top" Click="btnMutate_Click" Height="30" HorizontalAlignment="Right" Width="75"
                 IsEnabled="{Binding ReadOnly, ElementName=unitIssue, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Tag="TestResult"/>
-                <Label Content="Test Result Abort:" Margin="0,70,186,0" HorizontalContentAlignment="Right" VerticalContentAlignment="Center" Height="31" VerticalAlignment="Top" HorizontalAlignment="Right" Width="105" Foreground="#FF71E5FF"/>
-                <Label HorizontalAlignment="Right" Margin="0,71,81,0" VerticalAlignment="Top" Width="100" Height="30" BorderBrush="Orange" BorderThickness="2" Foreground="Azure" ToolTip="{Binding AbortResult, ElementName=unitIssue, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Content="{Binding AbortResult, ElementName=unitIssue, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
-                <Button x:Name="btnAbortResult" Content="Mutate" Foreground="Orange" Background="DarkOliveGreen" Margin="0,71,0,0" VerticalAlignment="Top" Click="btnMutate_Click" Height="30" HorizontalAlignment="Right" Width="75"
+                    <Label Content="Test Result Abort:" Margin="0,70,186,0" HorizontalContentAlignment="Right" VerticalContentAlignment="Center" Height="31" VerticalAlignment="Top" HorizontalAlignment="Right" Width="105" Foreground="#FF71E5FF"/>
+                    <Label HorizontalAlignment="Right" Margin="0,71,81,0" VerticalAlignment="Top" Width="100" Height="30" BorderBrush="Orange" BorderThickness="2" Foreground="Azure" ToolTip="{Binding AbortResult, ElementName=unitIssue, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Content="{Binding AbortResult, ElementName=unitIssue, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                    <Button x:Name="btnAbortResult" Content="Mutate" Foreground="Orange" Background="DarkOliveGreen" Margin="0,71,0,0" VerticalAlignment="Top" Click="btnMutate_Click" Height="30" HorizontalAlignment="Right" Width="75"
                 IsEnabled="{Binding ReadOnly, ElementName=unitIssue, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Tag="TestResultAbort"/>
-                <Label Content="Cause:" Margin="0,105,186,0" HorizontalContentAlignment="Right" VerticalContentAlignment="Center" Height="31" VerticalAlignment="Top" HorizontalAlignment="Right" Width="105" Foreground="#FF71E5FF"/>
-                <Label HorizontalAlignment="Right" Margin="0,106,81,0" VerticalAlignment="Top" Width="100" Height="30" BorderBrush="Orange" BorderThickness="2" Foreground="Azure" ToolTip="{Binding Cause, ElementName=unitIssue, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Content="{Binding Cause, ElementName=unitIssue, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
-                <Button x:Name="btnCause" Content="Mutate" Foreground="Orange" Background="DarkOliveGreen" Margin="0,106,0,0" VerticalAlignment="Top" Click="btnMutate_Click" Height="30" HorizontalAlignment="Right" Width="75"
+                    <Label Content="Cause:" Margin="0,105,186,0" HorizontalContentAlignment="Right" VerticalContentAlignment="Center" Height="31" VerticalAlignment="Top" HorizontalAlignment="Right" Width="105" Foreground="#FF71E5FF"/>
+                    <Label HorizontalAlignment="Right" Margin="0,106,81,0" VerticalAlignment="Top" Width="100" Height="30" BorderBrush="Orange" BorderThickness="2" Foreground="Azure" ToolTip="{Binding Cause, ElementName=unitIssue, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Content="{Binding Cause, ElementName=unitIssue, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                    <Button x:Name="btnCause" Content="Mutate" Foreground="Orange" Background="DarkOliveGreen" Margin="0,106,0,0" VerticalAlignment="Top" Click="btnMutate_Click" Height="30" HorizontalAlignment="Right" Width="75"
                 IsEnabled="{Binding ReadOnly, ElementName=unitIssue, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Tag="Cause"/>
-                <Label Content="Replacement:" Margin="0,140,186,0" HorizontalContentAlignment="Right" VerticalContentAlignment="Center" Height="31" VerticalAlignment="Top" HorizontalAlignment="Right" Width="105" Foreground="#FF71E5FF"/>
-                <Label HorizontalAlignment="Right" Margin="0,141,81,0" VerticalAlignment="Top" Width="100" Height="30" BorderBrush="Orange" BorderThickness="2" Foreground="Azure" ToolTip="{Binding Replacement, ElementName=unitIssue, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Content="{Binding Replacement, ElementName=unitIssue, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
-                <Button x:Name="btnReplacement" Content="Mutate" Foreground="Orange" Background="DarkOliveGreen" Margin="0,141,0,0" VerticalAlignment="Top" Click="btnMutate_Click" Height="30" HorizontalAlignment="Right" Width="75"
+                    <Label Content="Replacement:" Margin="0,140,186,0" HorizontalContentAlignment="Right" VerticalContentAlignment="Center" Height="31" VerticalAlignment="Top" HorizontalAlignment="Right" Width="105" Foreground="#FF71E5FF"/>
+                    <Label HorizontalAlignment="Right" Margin="0,141,81,0" VerticalAlignment="Top" Width="100" Height="30" BorderBrush="Orange" BorderThickness="2" Foreground="Azure" ToolTip="{Binding Replacement, ElementName=unitIssue, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Content="{Binding Replacement, ElementName=unitIssue, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                    <Button x:Name="btnReplacement" Content="Mutate" Foreground="Orange" Background="DarkOliveGreen" Margin="0,141,0,0" VerticalAlignment="Top" Click="btnMutate_Click" Height="30" HorizontalAlignment="Right" Width="75"
                 IsEnabled="{Binding ReadOnly, ElementName=unitIssue, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Tag="Replacement"/>
-                <Label Content="Issue:" Margin="0,175,186,0" HorizontalContentAlignment="Right" VerticalContentAlignment="Center" Height="31" VerticalAlignment="Top" HorizontalAlignment="Right" Width="105" Foreground="#FF71E5FF"/>
-                <Label HorizontalAlignment="Right" Margin="0,176,81,0" VerticalAlignment="Top" Width="100" Height="30" BorderBrush="Orange" BorderThickness="2" Foreground="Azure" ToolTip="{Binding Issue, ElementName=unitIssue, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Content="{Binding Issue, ElementName=unitIssue, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
-                <Button x:Name="btnIssue" Content="Mutate" Foreground="Orange" Background="DarkOliveGreen" Margin="0,176,0,0" VerticalAlignment="Top" Click="btnMutate_Click" Height="30" HorizontalAlignment="Right" Width="75"
+                    <Label Content="Issue:" Margin="0,175,186,0" HorizontalContentAlignment="Right" VerticalContentAlignment="Center" Height="31" VerticalAlignment="Top" HorizontalAlignment="Right" Width="105" Foreground="#FF71E5FF"/>
+                    <Label HorizontalAlignment="Right" Margin="0,176,81,0" VerticalAlignment="Top" Width="100" Height="30" BorderBrush="Orange" BorderThickness="2" Foreground="Azure" ToolTip="{Binding Issue, ElementName=unitIssue, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Content="{Binding Issue, ElementName=unitIssue, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                    <Button x:Name="btnIssue" Content="Mutate" Foreground="Orange" Background="DarkOliveGreen" Margin="0,176,0,0" VerticalAlignment="Top" Click="btnMutate_Click" Height="30" HorizontalAlignment="Right" Width="75"
                 IsEnabled="{Binding ReadOnly, ElementName=unitIssue, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Tag="Issue"/>
-                <Label Content="Item:" Margin="0,210,186,0" HorizontalContentAlignment="Right" VerticalContentAlignment="Center" Height="31" VerticalAlignment="Top" HorizontalAlignment="Right" Width="105" Foreground="#FF71E5FF"/>
-                <Label HorizontalAlignment="Right" Margin="0,211,81,0" VerticalAlignment="Top" Width="100" Height="30" BorderBrush="Orange" BorderThickness="2" Foreground="Azure" ToolTip="{Binding Item, ElementName=unitIssue, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Content="{Binding Item, ElementName=unitIssue, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
-                <Button x:Name="btnItem" Content="Mutate" Foreground="Orange" Background="DarkOliveGreen" Margin="0,211,0,0" VerticalAlignment="Top" Click="btnMutate_Click" Height="30" HorizontalAlignment="Right" Width="75"
+                    <Label Content="Item:" Margin="0,210,186,0" HorizontalContentAlignment="Right" VerticalContentAlignment="Center" Height="31" VerticalAlignment="Top" HorizontalAlignment="Right" Width="105" Foreground="#FF71E5FF"/>
+                    <Label HorizontalAlignment="Right" Margin="0,211,81,0" VerticalAlignment="Top" Width="100" Height="30" BorderBrush="Orange" BorderThickness="2" Foreground="Azure" ToolTip="{Binding Item, ElementName=unitIssue, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Content="{Binding Item, ElementName=unitIssue, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                    <Button x:Name="btnItem" Content="Mutate" Foreground="Orange" Background="DarkOliveGreen" Margin="0,211,0,0" VerticalAlignment="Top" Click="btnMutate_Click" Height="30" HorizontalAlignment="Right" Width="75"
                 IsEnabled="{Binding ReadOnly, ElementName=unitIssue, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Tag="Item"/>
-                <Label Content="Problem:" Margin="0,245,186,0" HorizontalContentAlignment="Right" VerticalContentAlignment="Center" Height="31" VerticalAlignment="Top" HorizontalAlignment="Right" Width="105" Foreground="#FF71E5FF"/>
-                <Label HorizontalAlignment="Right" Margin="0,246,81,0" VerticalAlignment="Top" Width="100" Height="30" BorderBrush="Orange" BorderThickness="2" Foreground="Azure" ToolTip="{Binding Problem, ElementName=unitIssue, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Content="{Binding Problem, ElementName=unitIssue, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
-                <Button x:Name="btnProblem" Content="Mutate" Foreground="Orange" Background="DarkOliveGreen" Margin="0,246,0,0" VerticalAlignment="Top" Click="btnMutate_Click" Height="30" HorizontalAlignment="Right" Width="75"
+                    <Label Content="Problem:" Margin="0,245,186,0" HorizontalContentAlignment="Right" VerticalContentAlignment="Center" Height="31" VerticalAlignment="Top" HorizontalAlignment="Right" Width="105" Foreground="#FF71E5FF"/>
+                    <Label HorizontalAlignment="Right" Margin="0,246,81,0" VerticalAlignment="Top" Width="100" Height="30" BorderBrush="Orange" BorderThickness="2" Foreground="Azure" ToolTip="{Binding Problem, ElementName=unitIssue, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Content="{Binding Problem, ElementName=unitIssue, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                    <Button x:Name="btnProblem" Content="Mutate" Foreground="Orange" Background="DarkOliveGreen" Margin="0,246,0,0" VerticalAlignment="Top" Click="btnMutate_Click" Height="30" HorizontalAlignment="Right" Width="75"
                 IsEnabled="{Binding ReadOnly, ElementName=unitIssue, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Tag="Problem"/>
 
-            </Grid>
-        </Viewbox>
+                </Grid>
+            </Viewbox>
 
-        <Border BorderThickness="2" BorderBrush="ForestGreen" Margin="369,10,306,423" Padding="1px">
-            <StackPanel x:Name="stkOther" Orientation="Vertical">
-                <Label Content="Parent Window ComboBox" HorizontalAlignment="Left" VerticalAlignment="Top" Foreground="Azure"/>
-                <ComboBox x:Name="cmbxOther" HorizontalAlignment="Left" VerticalAlignment="Top" 
+            <Border BorderThickness="2" BorderBrush="ForestGreen" Margin="369,10,306,423" Padding="1px">
+                <StackPanel x:Name="stkOther" Orientation="Vertical">
+                    <Label Content="Parent Window ComboBox" HorizontalAlignment="Left" VerticalAlignment="Top" Foreground="Azure"/>
+                    <ComboBox x:Name="cmbxOther" HorizontalAlignment="Left" VerticalAlignment="Top" 
                           Width="151" BorderBrush="#FF002EFF" Foreground="Orange" DropDownClosed="unitIssue_DropDownEvent" SelectedIndex="0">
-                    <ComboBox.Background>
-                        <LinearGradientBrush EndPoint="0,1" StartPoint="0,0">
-                            <GradientStop Color="#FF94ADC5" Offset="0"/>
-                            <GradientStop Color="#FF5C84AA" Offset="0.385"/>
-                            <GradientStop Color="#FF2D6BA8" Offset="0.528"/>
-                            <GradientStop Color="#FF073D74" Offset="1"/>
-                        </LinearGradientBrush>
-                    </ComboBox.Background>
-                    <sys:String>Sample Selection</sys:String>
-                    <sys:String>Some Variety</sys:String>
-                    <sys:String>A company</sys:String>
-                </ComboBox>
-            </StackPanel>
-        </Border>
-        <Button x:Name="btnMutateForm" HorizontalAlignment="Left" Margin="650,438,0,0" VerticalAlignment="Top" Width="181" Height="50" Click="btnMutateForm_Click" Foreground="#FFE8E4E4">
-            <Button.Background>
-                <LinearGradientBrush EndPoint="0,1" StartPoint="0,0">
-                    <GradientStop Color="#FFE8B0B0" Offset="0"/>
-                    <GradientStop Color="#FFE89B9B" Offset="0.333"/>
-                    <GradientStop Color="#FFDC4B4B" Offset="0.632"/>
-                    <GradientStop Color="#FFCB1E1E" Offset="1"/>
-                </LinearGradientBrush>
-            </Button.Background>
-            <StackPanel Orientation="Horizontal">
-                <Label Foreground="{Binding Foreground, ElementName=btnMutateForm, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
-                    <Binding ElementName="unitIssue" Path="IsRepairForm" Mode="TwoWay" UpdateSourceTrigger="PropertyChanged" Converter="{StaticResource StatusConv}">
-                        <Binding.ConverterParameter>
-                            <x:Array Type="{x:Type sys:String}">
-                                <sys:String>Toggle to Production Mode</sys:String>
-                                <sys:String>Toggle to Repair Mode</sys:String>
-                            </x:Array>
-                        </Binding.ConverterParameter>
-                    </Binding>
-                </Label>
-            </StackPanel>
-        </Button>
-        <Label Content="Is Repair Form:" Foreground="Azure" Margin="0,402,65,0" HorizontalContentAlignment="Right" VerticalContentAlignment="Center" Height="31" VerticalAlignment="Top" HorizontalAlignment="Right" Width="126"/>
-        <Label HorizontalAlignment="Right" Margin="0,403,10,0" VerticalAlignment="Top" Width="50" Height="30" BorderBrush="Orange" BorderThickness="2" Foreground="Azure" ToolTip="{Binding IsRepairForm, ElementName=unitIssue, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Content="{Binding IsRepairForm, ElementName=unitIssue, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
-        <GridSplitter HorizontalAlignment="Left" Height="498" Margin="359,0,0,0" VerticalAlignment="Top" Width="5"/>
-        <ProgressBar x:Name="progMapper" HorizontalAlignment="Left" Height="19" Margin="369,139,0,0" VerticalAlignment="Top" Width="166"/>
-        <Button x:Name="btnContextSwitch" Background="AntiqueWhite" HorizontalAlignment="Left" Margin="369,438,0,0" VerticalAlignment="Top" Width="166" Height="60" Click="btnContextSwitch_Click">
-            <StackPanel Orientation="Horizontal">
-                <Label Foreground="{Binding Foreground, ElementName=btnContextSwitch, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
-                    <Binding ElementName="unitIssue" Path="Visibility" Mode="TwoWay" UpdateSourceTrigger="PropertyChanged" Converter="{StaticResource VisStatusConv}">
-                        <Binding.ConverterParameter>
-                            <x:Array Type="{x:Type sys:String}">
-                                <sys:String>Switch to Tab Control</sys:String>
-                                <sys:String>Swtich to Unit Issue</sys:String>
-                            </x:Array>
-                        </Binding.ConverterParameter>
-                    </Binding>
-                </Label>
-            </StackPanel>
-        </Button>
-    </Grid>
+                        <ComboBox.Background>
+                            <LinearGradientBrush EndPoint="0,1" StartPoint="0,0">
+                                <GradientStop Color="#FF94ADC5" Offset="0"/>
+                                <GradientStop Color="#FF5C84AA" Offset="0.385"/>
+                                <GradientStop Color="#FF2D6BA8" Offset="0.528"/>
+                                <GradientStop Color="#FF073D74" Offset="1"/>
+                            </LinearGradientBrush>
+                        </ComboBox.Background>
+                        <sys:String>Sample Selection</sys:String>
+                        <sys:String>Some Variety</sys:String>
+                        <sys:String>A company</sys:String>
+                    </ComboBox>
+                </StackPanel>
+            </Border>
+            <Button x:Name="btnMutateForm" HorizontalAlignment="Left" Margin="650,438,0,0" VerticalAlignment="Top" Width="181" Height="50" Click="btnMutateForm_Click" Foreground="#FFE8E4E4">
+                <Button.Background>
+                    <LinearGradientBrush EndPoint="0,1" StartPoint="0,0">
+                        <GradientStop Color="#FFE8B0B0" Offset="0"/>
+                        <GradientStop Color="#FFE89B9B" Offset="0.333"/>
+                        <GradientStop Color="#FFDC4B4B" Offset="0.632"/>
+                        <GradientStop Color="#FFCB1E1E" Offset="1"/>
+                    </LinearGradientBrush>
+                </Button.Background>
+                <StackPanel Orientation="Horizontal">
+                    <Label Foreground="{Binding Foreground, ElementName=btnMutateForm, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+                        <Binding ElementName="unitIssue" Path="IsRepairForm" Mode="TwoWay" UpdateSourceTrigger="PropertyChanged" Converter="{StaticResource StatusConv}">
+                            <Binding.ConverterParameter>
+                                <x:Array Type="{x:Type sys:String}">
+                                    <sys:String>Toggle to Production Mode</sys:String>
+                                    <sys:String>Toggle to Repair Mode</sys:String>
+                                </x:Array>
+                            </Binding.ConverterParameter>
+                        </Binding>
+                    </Label>
+                </StackPanel>
+            </Button>
+            <Label Content="Is Repair Form:" Foreground="Azure" Margin="0,402,65,0" HorizontalContentAlignment="Right" VerticalContentAlignment="Center" Height="31" VerticalAlignment="Top" HorizontalAlignment="Right" Width="126"/>
+            <Label HorizontalAlignment="Right" Margin="0,403,10,0" VerticalAlignment="Top" Width="50" Height="30" BorderBrush="Orange" BorderThickness="2" Foreground="Azure" ToolTip="{Binding IsRepairForm, ElementName=unitIssue, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Content="{Binding IsRepairForm, ElementName=unitIssue, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+            <GridSplitter HorizontalAlignment="Left" Height="498" Margin="359,0,0,0" VerticalAlignment="Top" Width="5"/>
+            <ProgressBar x:Name="progMapper" HorizontalAlignment="Left" Height="19" Margin="369,139,0,0" VerticalAlignment="Top" Width="166"/>
+            <Button x:Name="btnContextSwitch" Background="AntiqueWhite" HorizontalAlignment="Left" Margin="369,438,0,0" VerticalAlignment="Top" Width="166" Height="60" Click="btnContextSwitch_Click">
+                <StackPanel Orientation="Horizontal">
+                    <Label Foreground="{Binding Foreground, ElementName=btnContextSwitch, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+                        <Binding ElementName="unitIssue" Path="Visibility" Mode="TwoWay" UpdateSourceTrigger="PropertyChanged" Converter="{StaticResource VisStatusConv}">
+                            <Binding.ConverterParameter>
+                                <x:Array Type="{x:Type sys:String}">
+                                    <sys:String>Switch to Tab Control</sys:String>
+                                    <sys:String>Swtich to Unit Issue</sys:String>
+                                </x:Array>
+                            </Binding.ConverterParameter>
+                        </Binding>
+                    </Label>
+                </StackPanel>
+            </Button>
+            <Button Content="Test PCBA Aliases Maanager Form" HorizontalAlignment="Left" Margin="561,375,0,0" VerticalAlignment="Top" Width="291" Click="pcbaalias_click"/>
+        </Grid>
     </Viewbox>
 </Window>

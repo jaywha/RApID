@@ -109,12 +109,16 @@
     <Reference Include="ExcelDataReader, Version=3.4.2.0, Culture=neutral, PublicKeyToken=93517dbe6a4012fa, processorArchitecture=MSIL">
       <HintPath>..\packages\ExcelDataReader.3.4.2\lib\net45\ExcelDataReader.dll</HintPath>
     </Reference>
+    <Reference Include="frmMessageBox">
+      <HintPath>P:\Jay Whaley\_Folders\References\frmMessageBox.dll</HintPath>
+    </Reference>
     <Reference Include="GetNetLib">
       <HintPath>P:\Jay Whaley\_Folders\References\GetNetLib.dll</HintPath>
     </Reference>
     <Reference Include="Hardcodet.Wpf.TaskbarNotification, Version=1.0.5.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Hardcodet.NotifyIcon.Wpf.1.0.8\lib\net451\Hardcodet.Wpf.TaskbarNotification.dll</HintPath>
     </Reference>
+    <Reference Include="Microsoft.VisualBasic" />
     <Reference Include="netstandard, Version=2.0.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51" />
     <Reference Include="Newtonsoft.Json, Version=11.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\packages\Newtonsoft.Json.11.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
@@ -152,28 +156,28 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Compile Include="..\..\Linked Items\csObjectHolder\csObjectHolder\csObjectHolder.cs">
-      <Link>csObjectHolder.cs</Link>
-    </Compile>
     <Compile Include="..\..\Linked Items\csSQL\csSQL\csSQLClass.cs">
       <Link>csSQLClass.cs</Link>
     </Compile>
-    <Compile Include="..\..\Linked Items\frmMessageBox\frmMessageBox\frmMessageBox.cs">
-      <Link>frmMessageBox.cs</Link>
+    <Compile Include="BoardAliasDataSet.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>BoardAliasDataSet.xsd</DependentUpon>
+    </Compile>
+    <Compile Include="Classes\csExceptionLogger.cs" />
+    <Compile Include="Classes\csSerialNumberMapper.cs" />
+    <Compile Include="Classes\csClassHelper.cs" />
+    <Compile Include="Classes\csCrossClassInteraction.cs" />
+    <Compile Include="Classes\csPrintQCDQELabel.cs" />
+    <Compile Include="Classes\csSplashScreenHelper.cs" />
+    <Compile Include="Classes\csVersionControl.cs" />
+    <Compile Include="Classes\ESLIB.cs" />
+    <Compile Include="frmBoardAliases.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="..\..\Linked Items\frmMessageBox\frmMessageBox\frmMessageBox.designer.cs">
-      <Link>frmMessageBox.designer.cs</Link>
-      <DependentUpon>frmMessageBox.cs</DependentUpon>
+    <Compile Include="frmBoardAliases.Designer.cs">
+      <DependentUpon>frmBoardAliases.cs</DependentUpon>
     </Compile>
-    <Compile Include="csExceptionLogger.cs" />
-    <Compile Include="csSerialNumberMapper.cs" />
-    <Compile Include="csClassHelper.cs" />
-    <Compile Include="csCrossClassInteraction.cs" />
-    <Compile Include="csPrintQCDQELabel.cs" />
-    <Compile Include="csSplashScreenHelper.cs" />
-    <Compile Include="csVersionControl.cs" />
-    <Compile Include="ESLIB.cs" />
     <Compile Include="frmFullCustomerInformation.xaml.cs">
       <DependentUpon>frmFullCustomerInformation.xaml</DependentUpon>
     </Compile>
@@ -210,17 +214,22 @@
     <Compile Include="frmViewMultipleIssues.xaml.cs">
       <DependentUpon>frmViewMultipleIssues.xaml</DependentUpon>
     </Compile>
-    <Compile Include="csRecordList.cs" />
+    <Compile Include="Classes\csRecordList.cs" />
     <Compile Include="frmRepair.xaml.cs">
       <DependentUpon>frmRepair.xaml</DependentUpon>
     </Compile>
     <Compile Include="frmRepairPRI.xaml.cs">
       <DependentUpon>frmRepairPRI.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Mailman.cs" />
-    <Compile Include="ServiceManager.cs" />
-    <Compile Include="Settings.cs" />
-    <Compile Include="StaticVars.cs" />
+    <Compile Include="Classes\Mailman.cs" />
+    <Compile Include="Classes\ServiceManager.cs" />
+    <Compile Include="Classes\Settings.cs" />
+    <Compile Include="Classes\StaticVars.cs" />
+    <Compile Include="PCBAAliasesDataSet.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>PCBAAliasesDataSet.xsd</DependentUpon>
+    </Compile>
     <Compile Include="TestWindow.xaml.cs">
       <DependentUpon>TestWindow.xaml</DependentUpon>
     </Compile>
@@ -252,7 +261,7 @@
     <Compile Include="UserControls\ucUnitIssue.xaml.cs">
       <DependentUpon>ucUnitIssue.xaml</DependentUpon>
     </Compile>
-    <Compile Include="ViewModelBase.cs" />
+    <Compile Include="Classes\ViewModelBase.cs" />
     <Compile Include="VMB\ViewModelBase.cs" />
     <Page Include="frmFullCustomerInformation.xaml">
       <SubType>Designer</SubType>
@@ -369,15 +378,36 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
-    <EmbeddedResource Include="..\..\Linked Items\frmMessageBox\frmMessageBox\frmMessageBox.resx">
-      <Link>frmMessageBox.resx</Link>
-      <DependentUpon>frmMessageBox.cs</DependentUpon>
+    <EmbeddedResource Include="frmBoardAliases.resx">
+      <DependentUpon>frmBoardAliases.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
+    <None Include="BoardAliasDataSet.xsc">
+      <DependentUpon>BoardAliasDataSet.xsd</DependentUpon>
+    </None>
+    <None Include="BoardAliasDataSet.xsd">
+      <Generator>MSDataSetGenerator</Generator>
+      <LastGenOutput>BoardAliasDataSet.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="BoardAliasDataSet.xss">
+      <DependentUpon>BoardAliasDataSet.xsd</DependentUpon>
+    </None>
     <None Include="packages.config" />
+    <None Include="PCBAAliasesDataSet.xsc">
+      <DependentUpon>PCBAAliasesDataSet.xsd</DependentUpon>
+    </None>
+    <None Include="PCBAAliasesDataSet.xsd">
+      <Generator>MSDataSetGenerator</Generator>
+      <LastGenOutput>PCBAAliasesDataSet.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="PCBAAliasesDataSet.xss">
+      <DependentUpon>PCBAAliasesDataSet.xsd</DependentUpon>
+    </None>
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
