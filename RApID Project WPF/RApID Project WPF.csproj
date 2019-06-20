@@ -101,10 +101,13 @@
   <ItemGroup>
     <Reference Include="BarcodeLib, Version=1.0.0.2, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>Resources\BarcodeLib.dll</HintPath>
+      <HintPath>P:\EE Process Test\Software\BarcodeLib\BarcodeLib.dll</HintPath>
     </Reference>
     <Reference Include="Costura, Version=3.3.0.0, Culture=neutral, PublicKeyToken=9919ef960d84173d, processorArchitecture=MSIL">
       <HintPath>..\packages\Costura.Fody.3.3.0\lib\net40\Costura.dll</HintPath>
+    </Reference>
+    <Reference Include="csExceptionLogger">
+      <HintPath>P:\Jay Whaley\_Folders\References\csExceptionLogger.dll</HintPath>
     </Reference>
     <Reference Include="ExcelDataReader, Version=3.4.2.0, Culture=neutral, PublicKeyToken=93517dbe6a4012fa, processorArchitecture=MSIL">
       <HintPath>..\packages\ExcelDataReader.3.4.2\lib\net45\ExcelDataReader.dll</HintPath>

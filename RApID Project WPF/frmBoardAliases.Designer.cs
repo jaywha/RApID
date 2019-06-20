@@ -37,62 +37,63 @@
             this.cxmnuLinkMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.changeFilePathToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.tcDataViewer = new System.Windows.Forms.TabControl();
-            this.tbDatabaseView = new System.Windows.Forms.TabPage();
-            this.dgvDatabaseTable = new System.Windows.Forms.DataGridView();
             this.tbTechnicianView = new System.Windows.Forms.TabPage();
             this.spltpnlTechView = new System.Windows.Forms.SplitContainer();
-            this.spltpnlAliasToDetail = new System.Windows.Forms.SplitContainer();
-            this.pnlFilePaths = new System.Windows.Forms.Panel();
-            this.lnkBOMFile = new System.Windows.Forms.LinkLabel();
-            this.lblSchematicPathLabel = new System.Windows.Forms.Label();
-            this.lnkSchematicFile = new System.Windows.Forms.LinkLabel();
-            this.lblBOMPathLabel = new System.Windows.Forms.Label();
-            this.lstbxAliases = new System.Windows.Forms.ListBox();
             this.spltpnlPartNumToDetail = new System.Windows.Forms.SplitContainer();
-            this.grpbxPartNumberDetail = new System.Windows.Forms.GroupBox();
-            this.lblPartName = new System.Windows.Forms.Label();
-            this.lblCommodityClass = new System.Windows.Forms.Label();
             this.flopnlPartNumberInput = new System.Windows.Forms.FlowLayoutPanel();
-            this.txtPartNumber = new System.Windows.Forms.TextBox();
             this.lblPartNumberLabel = new System.Windows.Forms.Label();
-            this.lblWarning = new System.Windows.Forms.Label();
-            this.btnSubmit = new System.Windows.Forms.Button();
-            this.spltpnlMain = new System.Windows.Forms.SplitContainer();
-            this.pCBAAliasesDataSet = new RApID_Project_WPF.PCBAAliasesDataSet();
-            this.pCBAAliasesBindingSource = new System.Windows.Forms.BindingSource(this.components);
-            this.pCBAAliasesTableAdapter = new RApID_Project_WPF.PCBAAliasesDataSetTableAdapters.PCBAAliasesTableAdapter();
+            this.txtPartNumber = new System.Windows.Forms.TextBox();
+            this.grpbxPartNumberDetail = new System.Windows.Forms.GroupBox();
+            this.lblCommodityClass = new System.Windows.Forms.Label();
+            this.lblPartName = new System.Windows.Forms.Label();
+            this.spltpnlAliasToDetail = new System.Windows.Forms.SplitContainer();
+            this.lstbxAliases = new System.Windows.Forms.ListBox();
+            this.pnlFilePaths = new System.Windows.Forms.Panel();
+            this.lnkSchematicFileBottom = new System.Windows.Forms.LinkLabel();
+            this.label1lblSchematicPathLabelBottom = new System.Windows.Forms.Label();
+            this.lblBOMPathLabel = new System.Windows.Forms.Label();
+            this.lnkSchematicFileTop = new System.Windows.Forms.LinkLabel();
+            this.lblSchematicPathLabelTop = new System.Windows.Forms.Label();
+            this.lnkBOMFile = new System.Windows.Forms.LinkLabel();
+            this.tbDatabaseView = new System.Windows.Forms.TabPage();
+            this.dgvDatabaseTable = new System.Windows.Forms.DataGridView();
             this.iDDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.targetPartNumberDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.aliasDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.bOMPathDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewLinkColumn();
-            this.schematicPathDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewLinkColumn();
+            this.pCBAAliasesBindingSource = new System.Windows.Forms.BindingSource(this.components);
+            this.pCBAAliasesDataSet = new RApID_Project_WPF.PCBAAliasesDataSet();
+            this.lblWarning = new System.Windows.Forms.Label();
+            this.btnSubmit = new System.Windows.Forms.Button();
+            this.spltpnlMain = new System.Windows.Forms.SplitContainer();
+            this.pCBAAliasesTableAdapter = new RApID_Project_WPF.PCBAAliasesDataSetTableAdapters.PCBAAliasesTableAdapter();
             this.cxmnuAliasesMenu.SuspendLayout();
             this.cxmnuLinkMenu.SuspendLayout();
             this.tcDataViewer.SuspendLayout();
-            this.tbDatabaseView.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.dgvDatabaseTable)).BeginInit();
             this.tbTechnicianView.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.spltpnlTechView)).BeginInit();
             this.spltpnlTechView.Panel1.SuspendLayout();
             this.spltpnlTechView.Panel2.SuspendLayout();
             this.spltpnlTechView.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.spltpnlPartNumToDetail)).BeginInit();
+            this.spltpnlPartNumToDetail.Panel1.SuspendLayout();
+            this.spltpnlPartNumToDetail.Panel2.SuspendLayout();
+            this.spltpnlPartNumToDetail.SuspendLayout();
+            this.flopnlPartNumberInput.SuspendLayout();
+            this.grpbxPartNumberDetail.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.spltpnlAliasToDetail)).BeginInit();
             this.spltpnlAliasToDetail.Panel1.SuspendLayout();
             this.spltpnlAliasToDetail.Panel2.SuspendLayout();
             this.spltpnlAliasToDetail.SuspendLayout();
             this.pnlFilePaths.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.spltpnlPartNumToDetail)).BeginInit();
-            this.spltpnlPartNumToDetail.Panel1.SuspendLayout();
-            this.spltpnlPartNumToDetail.Panel2.SuspendLayout();
-            this.spltpnlPartNumToDetail.SuspendLayout();
-            this.grpbxPartNumberDetail.SuspendLayout();
-            this.flopnlPartNumberInput.SuspendLayout();
+            this.tbDatabaseView.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.dgvDatabaseTable)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pCBAAliasesBindingSource)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pCBAAliasesDataSet)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.spltpnlMain)).BeginInit();
             this.spltpnlMain.Panel1.SuspendLayout();
             this.spltpnlMain.Panel2.SuspendLayout();
             this.spltpnlMain.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pCBAAliasesDataSet)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pCBAAliasesBindingSource)).BeginInit();
             this.SuspendLayout();
             // 
             // cxmnuAliasesMenu
@@ -142,45 +143,6 @@
             this.tcDataViewer.Size = new System.Drawing.Size(800, 387);
             this.tcDataViewer.TabIndex = 1;
             // 
-            // tbDatabaseView
-            // 
-            this.tbDatabaseView.Controls.Add(this.dgvDatabaseTable);
-            this.tbDatabaseView.Location = new System.Drawing.Point(4, 22);
-            this.tbDatabaseView.Name = "tbDatabaseView";
-            this.tbDatabaseView.Padding = new System.Windows.Forms.Padding(3);
-            this.tbDatabaseView.Size = new System.Drawing.Size(792, 361);
-            this.tbDatabaseView.TabIndex = 1;
-            this.tbDatabaseView.Text = "Database View";
-            this.tbDatabaseView.ToolTipText = "Shows data using SQL Server Edit format.";
-            this.tbDatabaseView.UseVisualStyleBackColor = true;
-            // 
-            // dgvDatabaseTable
-            // 
-            this.dgvDatabaseTable.AutoGenerateColumns = false;
-            this.dgvDatabaseTable.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
-            this.dgvDatabaseTable.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dgvDatabaseTable.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
-            this.iDDataGridViewTextBoxColumn,
-            this.targetPartNumberDataGridViewTextBoxColumn,
-            this.aliasDataGridViewTextBoxColumn,
-            this.bOMPathDataGridViewTextBoxColumn,
-            this.schematicPathDataGridViewTextBoxColumn});
-            this.dgvDatabaseTable.DataSource = this.pCBAAliasesBindingSource;
-            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle1.BackColor = System.Drawing.Color.DimGray;
-            dataGridViewCellStyle1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle1.ForeColor = System.Drawing.SystemColors.ButtonHighlight;
-            dataGridViewCellStyle1.SelectionBackColor = System.Drawing.SystemColors.HotTrack;
-            dataGridViewCellStyle1.SelectionForeColor = System.Drawing.SystemColors.ControlLightLight;
-            dataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
-            this.dgvDatabaseTable.DefaultCellStyle = dataGridViewCellStyle1;
-            this.dgvDatabaseTable.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.dgvDatabaseTable.Location = new System.Drawing.Point(3, 3);
-            this.dgvDatabaseTable.Name = "dgvDatabaseTable";
-            this.dgvDatabaseTable.ReadOnly = true;
-            this.dgvDatabaseTable.Size = new System.Drawing.Size(786, 355);
-            this.dgvDatabaseTable.TabIndex = 0;
-            // 
             // tbTechnicianView
             // 
             this.tbTechnicianView.BackColor = System.Drawing.Color.DarkGoldenrod;
@@ -211,105 +173,6 @@
             this.spltpnlTechView.SplitterDistance = 149;
             this.spltpnlTechView.TabIndex = 6;
             // 
-            // spltpnlAliasToDetail
-            // 
-            this.spltpnlAliasToDetail.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.spltpnlAliasToDetail.Location = new System.Drawing.Point(0, 0);
-            this.spltpnlAliasToDetail.Name = "spltpnlAliasToDetail";
-            // 
-            // spltpnlAliasToDetail.Panel1
-            // 
-            this.spltpnlAliasToDetail.Panel1.Controls.Add(this.lstbxAliases);
-            // 
-            // spltpnlAliasToDetail.Panel2
-            // 
-            this.spltpnlAliasToDetail.Panel2.Controls.Add(this.pnlFilePaths);
-            this.spltpnlAliasToDetail.Size = new System.Drawing.Size(786, 202);
-            this.spltpnlAliasToDetail.SplitterDistance = 262;
-            this.spltpnlAliasToDetail.TabIndex = 0;
-            // 
-            // pnlFilePaths
-            // 
-            this.pnlFilePaths.BackColor = System.Drawing.Color.Black;
-            this.pnlFilePaths.Controls.Add(this.lblBOMPathLabel);
-            this.pnlFilePaths.Controls.Add(this.lnkSchematicFile);
-            this.pnlFilePaths.Controls.Add(this.lblSchematicPathLabel);
-            this.pnlFilePaths.Controls.Add(this.lnkBOMFile);
-            this.pnlFilePaths.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.pnlFilePaths.ForeColor = System.Drawing.Color.Gold;
-            this.pnlFilePaths.Location = new System.Drawing.Point(0, 0);
-            this.pnlFilePaths.Name = "pnlFilePaths";
-            this.pnlFilePaths.Size = new System.Drawing.Size(520, 202);
-            this.pnlFilePaths.TabIndex = 5;
-            // 
-            // lnkBOMFile
-            // 
-            this.lnkBOMFile.AutoSize = true;
-            this.lnkBOMFile.ContextMenuStrip = this.cxmnuLinkMenu;
-            this.lnkBOMFile.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lnkBOMFile.LinkColor = System.Drawing.Color.Aqua;
-            this.lnkBOMFile.Location = new System.Drawing.Point(3, 24);
-            this.lnkBOMFile.Name = "lnkBOMFile";
-            this.lnkBOMFile.Size = new System.Drawing.Size(74, 20);
-            this.lnkBOMFile.TabIndex = 3;
-            this.lnkBOMFile.TabStop = true;
-            this.lnkBOMFile.Text = "BOMLink";
-            this.lnkBOMFile.VisitedLinkColor = System.Drawing.Color.Fuchsia;
-            // 
-            // lblSchematicPathLabel
-            // 
-            this.lblSchematicPathLabel.AutoSize = true;
-            this.lblSchematicPathLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblSchematicPathLabel.ForeColor = System.Drawing.Color.Goldenrod;
-            this.lblSchematicPathLabel.Location = new System.Drawing.Point(3, 65);
-            this.lblSchematicPathLabel.Name = "lblSchematicPathLabel";
-            this.lblSchematicPathLabel.Size = new System.Drawing.Size(176, 24);
-            this.lblSchematicPathLabel.TabIndex = 2;
-            this.lblSchematicPathLabel.Text = "Schematic File Path";
-            // 
-            // lnkSchematicFile
-            // 
-            this.lnkSchematicFile.AutoSize = true;
-            this.lnkSchematicFile.ContextMenuStrip = this.cxmnuLinkMenu;
-            this.lnkSchematicFile.DisabledLinkColor = System.Drawing.Color.FromArgb(((int)(((byte)(133)))), ((int)(((byte)(133)))), ((int)(((byte)(133)))));
-            this.lnkSchematicFile.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lnkSchematicFile.LinkColor = System.Drawing.Color.Aqua;
-            this.lnkSchematicFile.Location = new System.Drawing.Point(3, 89);
-            this.lnkSchematicFile.Name = "lnkSchematicFile";
-            this.lnkSchematicFile.Size = new System.Drawing.Size(82, 20);
-            this.lnkSchematicFile.TabIndex = 4;
-            this.lnkSchematicFile.TabStop = true;
-            this.lnkSchematicFile.Text = "ASSYLink";
-            this.lnkSchematicFile.VisitedLinkColor = System.Drawing.Color.Fuchsia;
-            // 
-            // lblBOMPathLabel
-            // 
-            this.lblBOMPathLabel.AutoSize = true;
-            this.lblBOMPathLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblBOMPathLabel.ForeColor = System.Drawing.Color.Goldenrod;
-            this.lblBOMPathLabel.Location = new System.Drawing.Point(3, 0);
-            this.lblBOMPathLabel.Name = "lblBOMPathLabel";
-            this.lblBOMPathLabel.Size = new System.Drawing.Size(131, 24);
-            this.lblBOMPathLabel.TabIndex = 1;
-            this.lblBOMPathLabel.Text = "BOM File Path";
-            // 
-            // lstbxAliases
-            // 
-            this.lstbxAliases.BackColor = System.Drawing.Color.Black;
-            this.lstbxAliases.ContextMenuStrip = this.cxmnuAliasesMenu;
-            this.lstbxAliases.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.lstbxAliases.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lstbxAliases.ForeColor = System.Drawing.Color.Goldenrod;
-            this.lstbxAliases.FormattingEnabled = true;
-            this.lstbxAliases.ItemHeight = 20;
-            this.lstbxAliases.Items.AddRange(new object[] {
-            "Test"});
-            this.lstbxAliases.Location = new System.Drawing.Point(0, 0);
-            this.lstbxAliases.Name = "lstbxAliases";
-            this.lstbxAliases.Size = new System.Drawing.Size(262, 202);
-            this.lstbxAliases.TabIndex = 0;
-            this.lstbxAliases.SelectedIndexChanged += new System.EventHandler(this.lstbxAliases_SelectedIndexChanged);
-            // 
             // spltpnlPartNumToDetail
             // 
             this.spltpnlPartNumToDetail.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -327,6 +190,41 @@
             this.spltpnlPartNumToDetail.SplitterDistance = 262;
             this.spltpnlPartNumToDetail.TabIndex = 0;
             // 
+            // flopnlPartNumberInput
+            // 
+            this.flopnlPartNumberInput.BackColor = System.Drawing.Color.Black;
+            this.flopnlPartNumberInput.Controls.Add(this.lblPartNumberLabel);
+            this.flopnlPartNumberInput.Controls.Add(this.txtPartNumber);
+            this.flopnlPartNumberInput.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.flopnlPartNumberInput.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
+            this.flopnlPartNumberInput.ForeColor = System.Drawing.Color.Goldenrod;
+            this.flopnlPartNumberInput.Location = new System.Drawing.Point(0, 0);
+            this.flopnlPartNumberInput.Name = "flopnlPartNumberInput";
+            this.flopnlPartNumberInput.Size = new System.Drawing.Size(262, 149);
+            this.flopnlPartNumberInput.TabIndex = 0;
+            // 
+            // lblPartNumberLabel
+            // 
+            this.lblPartNumberLabel.AutoSize = true;
+            this.lblPartNumberLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblPartNumberLabel.ForeColor = System.Drawing.Color.Goldenrod;
+            this.lblPartNumberLabel.Location = new System.Drawing.Point(3, 0);
+            this.lblPartNumberLabel.Name = "lblPartNumberLabel";
+            this.lblPartNumberLabel.Size = new System.Drawing.Size(102, 20);
+            this.lblPartNumberLabel.TabIndex = 0;
+            this.lblPartNumberLabel.Text = "Part Number:";
+            // 
+            // txtPartNumber
+            // 
+            this.txtPartNumber.BackColor = System.Drawing.Color.Black;
+            this.txtPartNumber.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.txtPartNumber.ForeColor = System.Drawing.Color.Goldenrod;
+            this.txtPartNumber.Location = new System.Drawing.Point(3, 23);
+            this.txtPartNumber.Name = "txtPartNumber";
+            this.txtPartNumber.Size = new System.Drawing.Size(144, 26);
+            this.txtPartNumber.TabIndex = 1;
+            this.txtPartNumber.KeyDown += new System.Windows.Forms.KeyEventHandler(this.txtPartNumber_KeyDown);
+            // 
             // grpbxPartNumberDetail
             // 
             this.grpbxPartNumberDetail.BackColor = System.Drawing.Color.Black;
@@ -341,15 +239,6 @@
             this.grpbxPartNumberDetail.TabStop = false;
             this.grpbxPartNumberDetail.Text = "Part Number Details";
             // 
-            // lblPartName
-            // 
-            this.lblPartName.AutoSize = true;
-            this.lblPartName.Location = new System.Drawing.Point(7, 20);
-            this.lblPartName.Name = "lblPartName";
-            this.lblPartName.Size = new System.Drawing.Size(106, 13);
-            this.lblPartName.TabIndex = 0;
-            this.lblPartName.Text = "Part Name: <NAME>";
-            // 
             // lblCommodityClass
             // 
             this.lblCommodityClass.AutoSize = true;
@@ -359,40 +248,223 @@
             this.lblCommodityClass.TabIndex = 1;
             this.lblCommodityClass.Text = "Commodity Class: <CLASS>";
             // 
-            // flopnlPartNumberInput
+            // lblPartName
             // 
-            this.flopnlPartNumberInput.BackColor = System.Drawing.Color.Black;
-            this.flopnlPartNumberInput.Controls.Add(this.lblPartNumberLabel);
-            this.flopnlPartNumberInput.Controls.Add(this.txtPartNumber);
-            this.flopnlPartNumberInput.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.flopnlPartNumberInput.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
-            this.flopnlPartNumberInput.ForeColor = System.Drawing.Color.Goldenrod;
-            this.flopnlPartNumberInput.Location = new System.Drawing.Point(0, 0);
-            this.flopnlPartNumberInput.Name = "flopnlPartNumberInput";
-            this.flopnlPartNumberInput.Size = new System.Drawing.Size(262, 149);
-            this.flopnlPartNumberInput.TabIndex = 0;
+            this.lblPartName.AutoSize = true;
+            this.lblPartName.Location = new System.Drawing.Point(7, 20);
+            this.lblPartName.Name = "lblPartName";
+            this.lblPartName.Size = new System.Drawing.Size(106, 13);
+            this.lblPartName.TabIndex = 0;
+            this.lblPartName.Text = "Part Name: <NAME>";
             // 
-            // txtPartNumber
+            // spltpnlAliasToDetail
             // 
-            this.txtPartNumber.BackColor = System.Drawing.Color.Black;
-            this.txtPartNumber.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.txtPartNumber.ForeColor = System.Drawing.Color.Goldenrod;
-            this.txtPartNumber.Location = new System.Drawing.Point(3, 23);
-            this.txtPartNumber.Name = "txtPartNumber";
-            this.txtPartNumber.Size = new System.Drawing.Size(144, 26);
-            this.txtPartNumber.TabIndex = 1;
-            this.txtPartNumber.KeyDown += new System.Windows.Forms.KeyEventHandler(this.txtPartNumber_KeyDown);
+            this.spltpnlAliasToDetail.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.spltpnlAliasToDetail.Location = new System.Drawing.Point(0, 0);
+            this.spltpnlAliasToDetail.Name = "spltpnlAliasToDetail";
             // 
-            // lblPartNumberLabel
+            // spltpnlAliasToDetail.Panel1
             // 
-            this.lblPartNumberLabel.AutoSize = true;
-            this.lblPartNumberLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblPartNumberLabel.ForeColor = System.Drawing.Color.Goldenrod;
-            this.lblPartNumberLabel.Location = new System.Drawing.Point(3, 0);
-            this.lblPartNumberLabel.Name = "lblPartNumberLabel";
-            this.lblPartNumberLabel.Size = new System.Drawing.Size(102, 20);
-            this.lblPartNumberLabel.TabIndex = 0;
-            this.lblPartNumberLabel.Text = "Part Number:";
+            this.spltpnlAliasToDetail.Panel1.Controls.Add(this.lstbxAliases);
+            // 
+            // spltpnlAliasToDetail.Panel2
+            // 
+            this.spltpnlAliasToDetail.Panel2.Controls.Add(this.pnlFilePaths);
+            this.spltpnlAliasToDetail.Size = new System.Drawing.Size(786, 202);
+            this.spltpnlAliasToDetail.SplitterDistance = 262;
+            this.spltpnlAliasToDetail.TabIndex = 0;
+            // 
+            // lstbxAliases
+            // 
+            this.lstbxAliases.BackColor = System.Drawing.Color.Black;
+            this.lstbxAliases.ContextMenuStrip = this.cxmnuAliasesMenu;
+            this.lstbxAliases.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.lstbxAliases.Enabled = false;
+            this.lstbxAliases.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lstbxAliases.ForeColor = System.Drawing.Color.Goldenrod;
+            this.lstbxAliases.FormattingEnabled = true;
+            this.lstbxAliases.ItemHeight = 20;
+            this.lstbxAliases.Location = new System.Drawing.Point(0, 0);
+            this.lstbxAliases.Name = "lstbxAliases";
+            this.lstbxAliases.Size = new System.Drawing.Size(262, 202);
+            this.lstbxAliases.TabIndex = 0;
+            this.lstbxAliases.SelectedIndexChanged += new System.EventHandler(this.lstbxAliases_SelectedIndexChanged);
+            this.lstbxAliases.MouseDown += new System.Windows.Forms.MouseEventHandler(this.lstbxAliases_MouseDown);
+            // 
+            // pnlFilePaths
+            // 
+            this.pnlFilePaths.BackColor = System.Drawing.Color.Black;
+            this.pnlFilePaths.Controls.Add(this.lnkSchematicFileBottom);
+            this.pnlFilePaths.Controls.Add(this.label1lblSchematicPathLabelBottom);
+            this.pnlFilePaths.Controls.Add(this.lblBOMPathLabel);
+            this.pnlFilePaths.Controls.Add(this.lnkSchematicFileTop);
+            this.pnlFilePaths.Controls.Add(this.lblSchematicPathLabelTop);
+            this.pnlFilePaths.Controls.Add(this.lnkBOMFile);
+            this.pnlFilePaths.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.pnlFilePaths.ForeColor = System.Drawing.Color.Gold;
+            this.pnlFilePaths.Location = new System.Drawing.Point(0, 0);
+            this.pnlFilePaths.Name = "pnlFilePaths";
+            this.pnlFilePaths.Size = new System.Drawing.Size(520, 202);
+            this.pnlFilePaths.TabIndex = 5;
+            // 
+            // lnkSchematicFileBottom
+            // 
+            this.lnkSchematicFileBottom.AutoSize = true;
+            this.lnkSchematicFileBottom.ContextMenuStrip = this.cxmnuLinkMenu;
+            this.lnkSchematicFileBottom.DisabledLinkColor = System.Drawing.Color.FromArgb(((int)(((byte)(133)))), ((int)(((byte)(133)))), ((int)(((byte)(133)))));
+            this.lnkSchematicFileBottom.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lnkSchematicFileBottom.LinkColor = System.Drawing.Color.Aqua;
+            this.lnkSchematicFileBottom.Location = new System.Drawing.Point(6, 148);
+            this.lnkSchematicFileBottom.Name = "lnkSchematicFileBottom";
+            this.lnkSchematicFileBottom.Size = new System.Drawing.Size(82, 20);
+            this.lnkSchematicFileBottom.TabIndex = 6;
+            this.lnkSchematicFileBottom.TabStop = true;
+            this.lnkSchematicFileBottom.Text = "ASSYLink";
+            this.lnkSchematicFileBottom.VisitedLinkColor = System.Drawing.Color.Fuchsia;
+            this.lnkSchematicFileBottom.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.lnkFile_LinkClicked);
+            this.lnkSchematicFileBottom.MouseDown += new System.Windows.Forms.MouseEventHandler(this.lnkSchematicFileBottom_MouseDown);
+            // 
+            // label1lblSchematicPathLabelBottom
+            // 
+            this.label1lblSchematicPathLabelBottom.AutoSize = true;
+            this.label1lblSchematicPathLabelBottom.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label1lblSchematicPathLabelBottom.ForeColor = System.Drawing.Color.Goldenrod;
+            this.label1lblSchematicPathLabelBottom.Location = new System.Drawing.Point(6, 124);
+            this.label1lblSchematicPathLabelBottom.Name = "label1lblSchematicPathLabelBottom";
+            this.label1lblSchematicPathLabelBottom.Size = new System.Drawing.Size(275, 24);
+            this.label1lblSchematicPathLabelBottom.TabIndex = 5;
+            this.label1lblSchematicPathLabelBottom.Text = "Schematic File Path (BOTTOM)";
+            // 
+            // lblBOMPathLabel
+            // 
+            this.lblBOMPathLabel.AutoSize = true;
+            this.lblBOMPathLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblBOMPathLabel.ForeColor = System.Drawing.Color.Goldenrod;
+            this.lblBOMPathLabel.Location = new System.Drawing.Point(3, 0);
+            this.lblBOMPathLabel.Name = "lblBOMPathLabel";
+            this.lblBOMPathLabel.Size = new System.Drawing.Size(131, 24);
+            this.lblBOMPathLabel.TabIndex = 1;
+            this.lblBOMPathLabel.Text = "BOM File Path";
+            // 
+            // lnkSchematicFileTop
+            // 
+            this.lnkSchematicFileTop.AutoSize = true;
+            this.lnkSchematicFileTop.ContextMenuStrip = this.cxmnuLinkMenu;
+            this.lnkSchematicFileTop.DisabledLinkColor = System.Drawing.Color.FromArgb(((int)(((byte)(133)))), ((int)(((byte)(133)))), ((int)(((byte)(133)))));
+            this.lnkSchematicFileTop.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lnkSchematicFileTop.LinkColor = System.Drawing.Color.Aqua;
+            this.lnkSchematicFileTop.Location = new System.Drawing.Point(3, 89);
+            this.lnkSchematicFileTop.Name = "lnkSchematicFileTop";
+            this.lnkSchematicFileTop.Size = new System.Drawing.Size(82, 20);
+            this.lnkSchematicFileTop.TabIndex = 4;
+            this.lnkSchematicFileTop.TabStop = true;
+            this.lnkSchematicFileTop.Text = "ASSYLink";
+            this.lnkSchematicFileTop.VisitedLinkColor = System.Drawing.Color.Fuchsia;
+            this.lnkSchematicFileTop.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.lnkFile_LinkClicked);
+            this.lnkSchematicFileTop.MouseDown += new System.Windows.Forms.MouseEventHandler(this.lnkSchematicFileTop_MouseDown);
+            // 
+            // lblSchematicPathLabelTop
+            // 
+            this.lblSchematicPathLabelTop.AutoSize = true;
+            this.lblSchematicPathLabelTop.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblSchematicPathLabelTop.ForeColor = System.Drawing.Color.Goldenrod;
+            this.lblSchematicPathLabelTop.Location = new System.Drawing.Point(3, 65);
+            this.lblSchematicPathLabelTop.Name = "lblSchematicPathLabelTop";
+            this.lblSchematicPathLabelTop.Size = new System.Drawing.Size(232, 24);
+            this.lblSchematicPathLabelTop.TabIndex = 2;
+            this.lblSchematicPathLabelTop.Text = "Schematic File Path (TOP)";
+            // 
+            // lnkBOMFile
+            // 
+            this.lnkBOMFile.AutoSize = true;
+            this.lnkBOMFile.ContextMenuStrip = this.cxmnuLinkMenu;
+            this.lnkBOMFile.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lnkBOMFile.LinkColor = System.Drawing.Color.Aqua;
+            this.lnkBOMFile.Location = new System.Drawing.Point(3, 24);
+            this.lnkBOMFile.Name = "lnkBOMFile";
+            this.lnkBOMFile.Size = new System.Drawing.Size(74, 20);
+            this.lnkBOMFile.TabIndex = 3;
+            this.lnkBOMFile.TabStop = true;
+            this.lnkBOMFile.Text = "BOMLink";
+            this.lnkBOMFile.VisitedLinkColor = System.Drawing.Color.Fuchsia;
+            this.lnkBOMFile.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.lnkFile_LinkClicked);
+            this.lnkBOMFile.MouseDown += new System.Windows.Forms.MouseEventHandler(this.lnkBOMFile_Click);
+            // 
+            // tbDatabaseView
+            // 
+            this.tbDatabaseView.Controls.Add(this.dgvDatabaseTable);
+            this.tbDatabaseView.Location = new System.Drawing.Point(4, 22);
+            this.tbDatabaseView.Name = "tbDatabaseView";
+            this.tbDatabaseView.Padding = new System.Windows.Forms.Padding(3);
+            this.tbDatabaseView.Size = new System.Drawing.Size(792, 361);
+            this.tbDatabaseView.TabIndex = 1;
+            this.tbDatabaseView.Text = "Database View";
+            this.tbDatabaseView.ToolTipText = "Shows data using SQL Server Edit format.";
+            this.tbDatabaseView.UseVisualStyleBackColor = true;
+            // 
+            // dgvDatabaseTable
+            // 
+            this.dgvDatabaseTable.AutoGenerateColumns = false;
+            this.dgvDatabaseTable.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
+            this.dgvDatabaseTable.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dgvDatabaseTable.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
+            this.iDDataGridViewTextBoxColumn,
+            this.targetPartNumberDataGridViewTextBoxColumn,
+            this.aliasDataGridViewTextBoxColumn,
+            this.bOMPathDataGridViewTextBoxColumn});
+            this.dgvDatabaseTable.DataSource = this.pCBAAliasesBindingSource;
+            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle1.BackColor = System.Drawing.Color.DimGray;
+            dataGridViewCellStyle1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle1.ForeColor = System.Drawing.SystemColors.ButtonHighlight;
+            dataGridViewCellStyle1.SelectionBackColor = System.Drawing.SystemColors.HotTrack;
+            dataGridViewCellStyle1.SelectionForeColor = System.Drawing.SystemColors.ControlLightLight;
+            dataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+            this.dgvDatabaseTable.DefaultCellStyle = dataGridViewCellStyle1;
+            this.dgvDatabaseTable.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.dgvDatabaseTable.Location = new System.Drawing.Point(3, 3);
+            this.dgvDatabaseTable.Name = "dgvDatabaseTable";
+            this.dgvDatabaseTable.Size = new System.Drawing.Size(786, 355);
+            this.dgvDatabaseTable.TabIndex = 0;
+            // 
+            // iDDataGridViewTextBoxColumn
+            // 
+            this.iDDataGridViewTextBoxColumn.DataPropertyName = "ID";
+            this.iDDataGridViewTextBoxColumn.HeaderText = "ID";
+            this.iDDataGridViewTextBoxColumn.Name = "iDDataGridViewTextBoxColumn";
+            this.iDDataGridViewTextBoxColumn.ReadOnly = true;
+            this.iDDataGridViewTextBoxColumn.Visible = false;
+            // 
+            // targetPartNumberDataGridViewTextBoxColumn
+            // 
+            this.targetPartNumberDataGridViewTextBoxColumn.DataPropertyName = "TargetPartNumber";
+            this.targetPartNumberDataGridViewTextBoxColumn.HeaderText = "TargetPartNumber";
+            this.targetPartNumberDataGridViewTextBoxColumn.Name = "targetPartNumberDataGridViewTextBoxColumn";
+            // 
+            // aliasDataGridViewTextBoxColumn
+            // 
+            this.aliasDataGridViewTextBoxColumn.DataPropertyName = "Alias";
+            this.aliasDataGridViewTextBoxColumn.HeaderText = "Alias";
+            this.aliasDataGridViewTextBoxColumn.Name = "aliasDataGridViewTextBoxColumn";
+            // 
+            // bOMPathDataGridViewTextBoxColumn
+            // 
+            this.bOMPathDataGridViewTextBoxColumn.DataPropertyName = "BOMPath";
+            this.bOMPathDataGridViewTextBoxColumn.HeaderText = "BOMPath";
+            this.bOMPathDataGridViewTextBoxColumn.Name = "bOMPathDataGridViewTextBoxColumn";
+            this.bOMPathDataGridViewTextBoxColumn.Resizable = System.Windows.Forms.DataGridViewTriState.True;
+            this.bOMPathDataGridViewTextBoxColumn.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic;
+            this.bOMPathDataGridViewTextBoxColumn.VisitedLinkColor = System.Drawing.Color.Fuchsia;
+            // 
+            // pCBAAliasesBindingSource
+            // 
+            this.pCBAAliasesBindingSource.DataMember = "PCBAAliases";
+            this.pCBAAliasesBindingSource.DataSource = this.pCBAAliasesDataSet;
+            // 
+            // pCBAAliasesDataSet
+            // 
+            this.pCBAAliasesDataSet.DataSetName = "PCBAAliasesDataSet";
+            this.pCBAAliasesDataSet.SchemaSerializationMode = System.Data.SchemaSerializationMode.IncludeSchema;
             // 
             // lblWarning
             // 
@@ -442,61 +514,9 @@
             this.spltpnlMain.SplitterDistance = 59;
             this.spltpnlMain.TabIndex = 0;
             // 
-            // pCBAAliasesDataSet
-            // 
-            this.pCBAAliasesDataSet.DataSetName = "PCBAAliasesDataSet";
-            this.pCBAAliasesDataSet.SchemaSerializationMode = System.Data.SchemaSerializationMode.IncludeSchema;
-            // 
-            // pCBAAliasesBindingSource
-            // 
-            this.pCBAAliasesBindingSource.DataMember = "PCBAAliases";
-            this.pCBAAliasesBindingSource.DataSource = this.pCBAAliasesDataSet;
-            // 
             // pCBAAliasesTableAdapter
             // 
             this.pCBAAliasesTableAdapter.ClearBeforeFill = true;
-            // 
-            // iDDataGridViewTextBoxColumn
-            // 
-            this.iDDataGridViewTextBoxColumn.DataPropertyName = "ID";
-            this.iDDataGridViewTextBoxColumn.HeaderText = "ID";
-            this.iDDataGridViewTextBoxColumn.Name = "iDDataGridViewTextBoxColumn";
-            this.iDDataGridViewTextBoxColumn.ReadOnly = true;
-            this.iDDataGridViewTextBoxColumn.Visible = false;
-            // 
-            // targetPartNumberDataGridViewTextBoxColumn
-            // 
-            this.targetPartNumberDataGridViewTextBoxColumn.DataPropertyName = "TargetPartNumber";
-            this.targetPartNumberDataGridViewTextBoxColumn.HeaderText = "TargetPartNumber";
-            this.targetPartNumberDataGridViewTextBoxColumn.Name = "targetPartNumberDataGridViewTextBoxColumn";
-            this.targetPartNumberDataGridViewTextBoxColumn.ReadOnly = true;
-            // 
-            // aliasDataGridViewTextBoxColumn
-            // 
-            this.aliasDataGridViewTextBoxColumn.DataPropertyName = "Alias";
-            this.aliasDataGridViewTextBoxColumn.HeaderText = "Alias";
-            this.aliasDataGridViewTextBoxColumn.Name = "aliasDataGridViewTextBoxColumn";
-            this.aliasDataGridViewTextBoxColumn.ReadOnly = true;
-            // 
-            // bOMPathDataGridViewTextBoxColumn
-            // 
-            this.bOMPathDataGridViewTextBoxColumn.DataPropertyName = "BOMPath";
-            this.bOMPathDataGridViewTextBoxColumn.HeaderText = "BOMPath";
-            this.bOMPathDataGridViewTextBoxColumn.Name = "bOMPathDataGridViewTextBoxColumn";
-            this.bOMPathDataGridViewTextBoxColumn.ReadOnly = true;
-            this.bOMPathDataGridViewTextBoxColumn.Resizable = System.Windows.Forms.DataGridViewTriState.True;
-            this.bOMPathDataGridViewTextBoxColumn.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic;
-            this.bOMPathDataGridViewTextBoxColumn.VisitedLinkColor = System.Drawing.Color.Fuchsia;
-            // 
-            // schematicPathDataGridViewTextBoxColumn
-            // 
-            this.schematicPathDataGridViewTextBoxColumn.DataPropertyName = "SchematicPath";
-            this.schematicPathDataGridViewTextBoxColumn.HeaderText = "SchematicPath";
-            this.schematicPathDataGridViewTextBoxColumn.Name = "schematicPathDataGridViewTextBoxColumn";
-            this.schematicPathDataGridViewTextBoxColumn.ReadOnly = true;
-            this.schematicPathDataGridViewTextBoxColumn.Resizable = System.Windows.Forms.DataGridViewTriState.True;
-            this.schematicPathDataGridViewTextBoxColumn.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic;
-            this.schematicPathDataGridViewTextBoxColumn.VisitedLinkColor = System.Drawing.Color.Fuchsia;
             // 
             // frmBoardAliases
             // 
@@ -512,34 +532,34 @@
             this.cxmnuAliasesMenu.ResumeLayout(false);
             this.cxmnuLinkMenu.ResumeLayout(false);
             this.tcDataViewer.ResumeLayout(false);
-            this.tbDatabaseView.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.dgvDatabaseTable)).EndInit();
             this.tbTechnicianView.ResumeLayout(false);
             this.spltpnlTechView.Panel1.ResumeLayout(false);
             this.spltpnlTechView.Panel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.spltpnlTechView)).EndInit();
             this.spltpnlTechView.ResumeLayout(false);
+            this.spltpnlPartNumToDetail.Panel1.ResumeLayout(false);
+            this.spltpnlPartNumToDetail.Panel2.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.spltpnlPartNumToDetail)).EndInit();
+            this.spltpnlPartNumToDetail.ResumeLayout(false);
+            this.flopnlPartNumberInput.ResumeLayout(false);
+            this.flopnlPartNumberInput.PerformLayout();
+            this.grpbxPartNumberDetail.ResumeLayout(false);
+            this.grpbxPartNumberDetail.PerformLayout();
             this.spltpnlAliasToDetail.Panel1.ResumeLayout(false);
             this.spltpnlAliasToDetail.Panel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.spltpnlAliasToDetail)).EndInit();
             this.spltpnlAliasToDetail.ResumeLayout(false);
             this.pnlFilePaths.ResumeLayout(false);
             this.pnlFilePaths.PerformLayout();
-            this.spltpnlPartNumToDetail.Panel1.ResumeLayout(false);
-            this.spltpnlPartNumToDetail.Panel2.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.spltpnlPartNumToDetail)).EndInit();
-            this.spltpnlPartNumToDetail.ResumeLayout(false);
-            this.grpbxPartNumberDetail.ResumeLayout(false);
-            this.grpbxPartNumberDetail.PerformLayout();
-            this.flopnlPartNumberInput.ResumeLayout(false);
-            this.flopnlPartNumberInput.PerformLayout();
+            this.tbDatabaseView.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.dgvDatabaseTable)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pCBAAliasesBindingSource)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pCBAAliasesDataSet)).EndInit();
             this.spltpnlMain.Panel1.ResumeLayout(false);
             this.spltpnlMain.Panel1.PerformLayout();
             this.spltpnlMain.Panel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.spltpnlMain)).EndInit();
             this.spltpnlMain.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.pCBAAliasesDataSet)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pCBAAliasesBindingSource)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -564,8 +584,8 @@
         private System.Windows.Forms.ListBox lstbxAliases;
         private System.Windows.Forms.Panel pnlFilePaths;
         private System.Windows.Forms.Label lblBOMPathLabel;
-        private System.Windows.Forms.LinkLabel lnkSchematicFile;
-        private System.Windows.Forms.Label lblSchematicPathLabel;
+        private System.Windows.Forms.LinkLabel lnkSchematicFileTop;
+        private System.Windows.Forms.Label lblSchematicPathLabelTop;
         private System.Windows.Forms.LinkLabel lnkBOMFile;
         private System.Windows.Forms.TabPage tbDatabaseView;
         private System.Windows.Forms.DataGridView dgvDatabaseTable;
@@ -580,5 +600,7 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn aliasDataGridViewTextBoxColumn;
         private System.Windows.Forms.DataGridViewLinkColumn bOMPathDataGridViewTextBoxColumn;
         private System.Windows.Forms.DataGridViewLinkColumn schematicPathDataGridViewTextBoxColumn;
+        private System.Windows.Forms.LinkLabel lnkSchematicFileBottom;
+        private System.Windows.Forms.Label label1lblSchematicPathLabelBottom;
     }
 }
