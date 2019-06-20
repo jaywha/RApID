@@ -41,7 +41,6 @@ namespace RApID_Project_WPF
             // TODO: This line of code loads data into the 'pCBAAliasesDataSet.PCBAAliases' table. You can move, or remove it, as needed.
             this.pCBAAliasesTableAdapter.Fill(this.pCBAAliasesDataSet.PCBAAliases);
 
-
             SetterTip.SetToolTip(lnkBOMFile, "Go to -> " + lnkBOMFile.Text);
             SetterTip.SetToolTip(lnkSchematicFileTop, "Go to -> " + lnkSchematicFileTop.Text);
 
@@ -50,6 +49,7 @@ namespace RApID_Project_WPF
 
         private void frmBoardAliases_PreviewKeyDown(object sender, PreviewKeyDownEventArgs e)
         {
+            
             if (e.KeyCode == Keys.A && e.Modifiers == (Keys.LShiftKey | Keys.RControlKey))
             {
                 dgvDatabaseTable.AllowUserToAddRows = !currAdmin;
@@ -168,8 +168,8 @@ namespace RApID_Project_WPF
                 CurrentSchematicsBottom.Insert(lstbxAliases.SelectedIndex, ofd.FileName);
                 bBottom = false;
             }
-
-                using (var conn = new SqlConnection(csObjectHolder.csObjectHolder.ObjectHolderInstance().RepairConnectionString))
+            
+            using (var conn = new SqlConnection(csObjectHolder.csObjectHolder.ObjectHolderInstance().RepairConnectionString))
                 {
                     conn.Open();
                     using (var cmd = new SqlCommand("UPDATE [Repair].[dbo].[PCBAAliases] SET " +
@@ -282,11 +282,19 @@ namespace RApID_Project_WPF
 
         private void lnkFile_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            try
+            if (e.Button == MouseButtons.Left)
             {
-                Process.Start((sender as LinkLabel).Text);
+                try
+                {
+                    Process.Start((sender as LinkLabel).Text);
+                }
+                catch { }
             }
-            catch { }
+        }
+
+        private void tcDataViewer_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            this.pCBAAliasesTableAdapter.Fill(this.pCBAAliasesDataSet.PCBAAliases);
         }
     }
 }

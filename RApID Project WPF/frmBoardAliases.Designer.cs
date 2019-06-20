@@ -57,16 +57,17 @@
             this.lnkBOMFile = new System.Windows.Forms.LinkLabel();
             this.tbDatabaseView = new System.Windows.Forms.TabPage();
             this.dgvDatabaseTable = new System.Windows.Forms.DataGridView();
+            this.pCBAAliasesBindingSource = new System.Windows.Forms.BindingSource(this.components);
+            this.pCBAAliasesDataSet = new RApID_Project_WPF.PCBAAliasesDataSet();
+            this.lblWarning = new System.Windows.Forms.Label();
+            this.spltpnlMain = new System.Windows.Forms.SplitContainer();
+            this.pCBAAliasesTableAdapter = new RApID_Project_WPF.PCBAAliasesDataSetTableAdapters.PCBAAliasesTableAdapter();
             this.iDDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.targetPartNumberDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.aliasDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.bOMPathDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewLinkColumn();
-            this.pCBAAliasesBindingSource = new System.Windows.Forms.BindingSource(this.components);
-            this.pCBAAliasesDataSet = new RApID_Project_WPF.PCBAAliasesDataSet();
-            this.lblWarning = new System.Windows.Forms.Label();
-            this.btnSubmit = new System.Windows.Forms.Button();
-            this.spltpnlMain = new System.Windows.Forms.SplitContainer();
-            this.pCBAAliasesTableAdapter = new RApID_Project_WPF.PCBAAliasesDataSetTableAdapters.PCBAAliasesTableAdapter();
+            this.SchematicPathTop = new System.Windows.Forms.DataGridViewLinkColumn();
+            this.SchematicPathBottom = new System.Windows.Forms.DataGridViewLinkColumn();
             this.cxmnuAliasesMenu.SuspendLayout();
             this.cxmnuLinkMenu.SuspendLayout();
             this.tcDataViewer.SuspendLayout();
@@ -142,6 +143,7 @@
             this.tcDataViewer.SelectedIndex = 0;
             this.tcDataViewer.Size = new System.Drawing.Size(800, 387);
             this.tcDataViewer.TabIndex = 1;
+            this.tcDataViewer.SelectedIndexChanged += new System.EventHandler(this.tcDataViewer_SelectedIndexChanged);
             // 
             // tbTechnicianView
             // 
@@ -276,9 +278,11 @@
             // 
             // lstbxAliases
             // 
+            this.lstbxAliases.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.lstbxAliases.BackColor = System.Drawing.Color.Black;
             this.lstbxAliases.ContextMenuStrip = this.cxmnuAliasesMenu;
-            this.lstbxAliases.Dock = System.Windows.Forms.DockStyle.Fill;
             this.lstbxAliases.Enabled = false;
             this.lstbxAliases.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lstbxAliases.ForeColor = System.Drawing.Color.Goldenrod;
@@ -309,12 +313,13 @@
             // 
             // lnkSchematicFileBottom
             // 
+            this.lnkSchematicFileBottom.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.lnkSchematicFileBottom.AutoSize = true;
             this.lnkSchematicFileBottom.ContextMenuStrip = this.cxmnuLinkMenu;
             this.lnkSchematicFileBottom.DisabledLinkColor = System.Drawing.Color.FromArgb(((int)(((byte)(133)))), ((int)(((byte)(133)))), ((int)(((byte)(133)))));
             this.lnkSchematicFileBottom.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lnkSchematicFileBottom.LinkColor = System.Drawing.Color.Aqua;
-            this.lnkSchematicFileBottom.Location = new System.Drawing.Point(6, 148);
+            this.lnkSchematicFileBottom.Location = new System.Drawing.Point(5, 159);
             this.lnkSchematicFileBottom.Name = "lnkSchematicFileBottom";
             this.lnkSchematicFileBottom.Size = new System.Drawing.Size(82, 20);
             this.lnkSchematicFileBottom.TabIndex = 6;
@@ -326,10 +331,11 @@
             // 
             // label1lblSchematicPathLabelBottom
             // 
+            this.label1lblSchematicPathLabelBottom.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.label1lblSchematicPathLabelBottom.AutoSize = true;
             this.label1lblSchematicPathLabelBottom.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label1lblSchematicPathLabelBottom.ForeColor = System.Drawing.Color.Goldenrod;
-            this.label1lblSchematicPathLabelBottom.Location = new System.Drawing.Point(6, 124);
+            this.label1lblSchematicPathLabelBottom.Location = new System.Drawing.Point(5, 135);
             this.label1lblSchematicPathLabelBottom.Name = "label1lblSchematicPathLabelBottom";
             this.label1lblSchematicPathLabelBottom.Size = new System.Drawing.Size(275, 24);
             this.label1lblSchematicPathLabelBottom.TabIndex = 5;
@@ -404,6 +410,8 @@
             // 
             // dgvDatabaseTable
             // 
+            this.dgvDatabaseTable.AllowUserToAddRows = false;
+            this.dgvDatabaseTable.AllowUserToDeleteRows = false;
             this.dgvDatabaseTable.AutoGenerateColumns = false;
             this.dgvDatabaseTable.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
             this.dgvDatabaseTable.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
@@ -411,7 +419,9 @@
             this.iDDataGridViewTextBoxColumn,
             this.targetPartNumberDataGridViewTextBoxColumn,
             this.aliasDataGridViewTextBoxColumn,
-            this.bOMPathDataGridViewTextBoxColumn});
+            this.bOMPathDataGridViewTextBoxColumn,
+            this.SchematicPathTop,
+            this.SchematicPathBottom});
             this.dgvDatabaseTable.DataSource = this.pCBAAliasesBindingSource;
             dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
             dataGridViewCellStyle1.BackColor = System.Drawing.Color.DimGray;
@@ -424,37 +434,9 @@
             this.dgvDatabaseTable.Dock = System.Windows.Forms.DockStyle.Fill;
             this.dgvDatabaseTable.Location = new System.Drawing.Point(3, 3);
             this.dgvDatabaseTable.Name = "dgvDatabaseTable";
+            this.dgvDatabaseTable.ReadOnly = true;
             this.dgvDatabaseTable.Size = new System.Drawing.Size(786, 355);
             this.dgvDatabaseTable.TabIndex = 0;
-            // 
-            // iDDataGridViewTextBoxColumn
-            // 
-            this.iDDataGridViewTextBoxColumn.DataPropertyName = "ID";
-            this.iDDataGridViewTextBoxColumn.HeaderText = "ID";
-            this.iDDataGridViewTextBoxColumn.Name = "iDDataGridViewTextBoxColumn";
-            this.iDDataGridViewTextBoxColumn.ReadOnly = true;
-            this.iDDataGridViewTextBoxColumn.Visible = false;
-            // 
-            // targetPartNumberDataGridViewTextBoxColumn
-            // 
-            this.targetPartNumberDataGridViewTextBoxColumn.DataPropertyName = "TargetPartNumber";
-            this.targetPartNumberDataGridViewTextBoxColumn.HeaderText = "TargetPartNumber";
-            this.targetPartNumberDataGridViewTextBoxColumn.Name = "targetPartNumberDataGridViewTextBoxColumn";
-            // 
-            // aliasDataGridViewTextBoxColumn
-            // 
-            this.aliasDataGridViewTextBoxColumn.DataPropertyName = "Alias";
-            this.aliasDataGridViewTextBoxColumn.HeaderText = "Alias";
-            this.aliasDataGridViewTextBoxColumn.Name = "aliasDataGridViewTextBoxColumn";
-            // 
-            // bOMPathDataGridViewTextBoxColumn
-            // 
-            this.bOMPathDataGridViewTextBoxColumn.DataPropertyName = "BOMPath";
-            this.bOMPathDataGridViewTextBoxColumn.HeaderText = "BOMPath";
-            this.bOMPathDataGridViewTextBoxColumn.Name = "bOMPathDataGridViewTextBoxColumn";
-            this.bOMPathDataGridViewTextBoxColumn.Resizable = System.Windows.Forms.DataGridViewTriState.True;
-            this.bOMPathDataGridViewTextBoxColumn.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic;
-            this.bOMPathDataGridViewTextBoxColumn.VisitedLinkColor = System.Drawing.Color.Fuchsia;
             // 
             // pCBAAliasesBindingSource
             // 
@@ -479,20 +461,6 @@
             this.lblWarning.TabIndex = 0;
             this.lblWarning.Text = "Database Changes Are Immediately LIVE";
             // 
-            // btnSubmit
-            // 
-            this.btnSubmit.BackColor = System.Drawing.Color.Silver;
-            this.btnSubmit.Font = new System.Drawing.Font("Microsoft Sans Serif", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnSubmit.ForeColor = System.Drawing.Color.Black;
-            this.btnSubmit.Location = new System.Drawing.Point(570, 9);
-            this.btnSubmit.Name = "btnSubmit";
-            this.btnSubmit.Size = new System.Drawing.Size(223, 47);
-            this.btnSubmit.TabIndex = 1;
-            this.btnSubmit.Text = "Submit Changes";
-            this.btnSubmit.UseVisualStyleBackColor = false;
-            this.btnSubmit.Visible = false;
-            this.btnSubmit.Click += new System.EventHandler(this.btnSubmit_Click);
-            // 
             // spltpnlMain
             // 
             this.spltpnlMain.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -503,7 +471,6 @@
             // spltpnlMain.Panel1
             // 
             this.spltpnlMain.Panel1.BackColor = System.Drawing.Color.Black;
-            this.spltpnlMain.Panel1.Controls.Add(this.btnSubmit);
             this.spltpnlMain.Panel1.Controls.Add(this.lblWarning);
             this.spltpnlMain.Panel1.ForeColor = System.Drawing.Color.Goldenrod;
             // 
@@ -517,6 +484,52 @@
             // pCBAAliasesTableAdapter
             // 
             this.pCBAAliasesTableAdapter.ClearBeforeFill = true;
+            // 
+            // iDDataGridViewTextBoxColumn
+            // 
+            this.iDDataGridViewTextBoxColumn.DataPropertyName = "ID";
+            this.iDDataGridViewTextBoxColumn.HeaderText = "ID";
+            this.iDDataGridViewTextBoxColumn.Name = "iDDataGridViewTextBoxColumn";
+            this.iDDataGridViewTextBoxColumn.ReadOnly = true;
+            this.iDDataGridViewTextBoxColumn.Visible = false;
+            // 
+            // targetPartNumberDataGridViewTextBoxColumn
+            // 
+            this.targetPartNumberDataGridViewTextBoxColumn.DataPropertyName = "TargetPartNumber";
+            this.targetPartNumberDataGridViewTextBoxColumn.HeaderText = "TargetPartNumber";
+            this.targetPartNumberDataGridViewTextBoxColumn.Name = "targetPartNumberDataGridViewTextBoxColumn";
+            this.targetPartNumberDataGridViewTextBoxColumn.ReadOnly = true;
+            // 
+            // aliasDataGridViewTextBoxColumn
+            // 
+            this.aliasDataGridViewTextBoxColumn.DataPropertyName = "Alias";
+            this.aliasDataGridViewTextBoxColumn.HeaderText = "Alias";
+            this.aliasDataGridViewTextBoxColumn.Name = "aliasDataGridViewTextBoxColumn";
+            this.aliasDataGridViewTextBoxColumn.ReadOnly = true;
+            // 
+            // bOMPathDataGridViewTextBoxColumn
+            // 
+            this.bOMPathDataGridViewTextBoxColumn.DataPropertyName = "BOMPath";
+            this.bOMPathDataGridViewTextBoxColumn.HeaderText = "BOMPath";
+            this.bOMPathDataGridViewTextBoxColumn.Name = "bOMPathDataGridViewTextBoxColumn";
+            this.bOMPathDataGridViewTextBoxColumn.ReadOnly = true;
+            this.bOMPathDataGridViewTextBoxColumn.Resizable = System.Windows.Forms.DataGridViewTriState.True;
+            this.bOMPathDataGridViewTextBoxColumn.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic;
+            this.bOMPathDataGridViewTextBoxColumn.VisitedLinkColor = System.Drawing.Color.Fuchsia;
+            // 
+            // SchematicPathTop
+            // 
+            this.SchematicPathTop.DataPropertyName = "SchematicPathTop";
+            this.SchematicPathTop.HeaderText = "SchematicPathTop";
+            this.SchematicPathTop.Name = "SchematicPathTop";
+            this.SchematicPathTop.ReadOnly = true;
+            // 
+            // SchematicPathBottom
+            // 
+            this.SchematicPathBottom.DataPropertyName = "SchematicPathBottom";
+            this.SchematicPathBottom.HeaderText = "SchematicPathBottom";
+            this.SchematicPathBottom.Name = "SchematicPathBottom";
+            this.SchematicPathBottom.ReadOnly = true;
             // 
             // frmBoardAliases
             // 
@@ -590,17 +603,18 @@
         private System.Windows.Forms.TabPage tbDatabaseView;
         private System.Windows.Forms.DataGridView dgvDatabaseTable;
         private System.Windows.Forms.Label lblWarning;
-        private System.Windows.Forms.Button btnSubmit;
         private System.Windows.Forms.SplitContainer spltpnlMain;
         private PCBAAliasesDataSet pCBAAliasesDataSet;
         private System.Windows.Forms.BindingSource pCBAAliasesBindingSource;
         private PCBAAliasesDataSetTableAdapters.PCBAAliasesTableAdapter pCBAAliasesTableAdapter;
+        private System.Windows.Forms.DataGridViewLinkColumn schematicPathDataGridViewTextBoxColumn;
+        private System.Windows.Forms.LinkLabel lnkSchematicFileBottom;
+        private System.Windows.Forms.Label label1lblSchematicPathLabelBottom;
         private System.Windows.Forms.DataGridViewTextBoxColumn iDDataGridViewTextBoxColumn;
         private System.Windows.Forms.DataGridViewTextBoxColumn targetPartNumberDataGridViewTextBoxColumn;
         private System.Windows.Forms.DataGridViewTextBoxColumn aliasDataGridViewTextBoxColumn;
         private System.Windows.Forms.DataGridViewLinkColumn bOMPathDataGridViewTextBoxColumn;
-        private System.Windows.Forms.DataGridViewLinkColumn schematicPathDataGridViewTextBoxColumn;
-        private System.Windows.Forms.LinkLabel lnkSchematicFileBottom;
-        private System.Windows.Forms.Label label1lblSchematicPathLabelBottom;
+        private System.Windows.Forms.DataGridViewLinkColumn SchematicPathTop;
+        private System.Windows.Forms.DataGridViewLinkColumn SchematicPathBottom;
     }
 }
