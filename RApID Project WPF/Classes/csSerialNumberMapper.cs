@@ -1,4 +1,6 @@
 ﻿using ExcelDataReader;
+using PdfSharp.Pdf;
+using PdfSharp.Pdf.IO;
 //using MonkeyCache.FileStore;
 using System;
 using System.Data.SqlClient;
@@ -93,6 +95,11 @@ namespace RApID_Project_WPF
         /// Boolean for the Ethernet Cases
         /// </summary>
         public bool BIsEthernet;
+
+        /// <summary>
+        /// Output string for temporary schematic PDFs
+        /// </summary>
+        public string OUT_STR = $"Temp<TYPE>-<PN>-<CN>.pdf";
         #endregion
 
         /// <summary>
@@ -201,7 +208,7 @@ namespace RApID_Project_WPF
             // if both are null, then barcode not found!
             if (string.IsNullOrEmpty(PartNumber) && string.IsNullOrEmpty(WorkNumber)) { return false; }
 
-            if (PartNumber.Equals("407026-1") || PartNumber.Equals("407025-1")) //ICE Flasher cases
+            /*if (PartNumber.Equals("407026-1") || PartNumber.Equals("407025-1")) //ICE Flasher cases
             {
                 BIsIce = true;
                 ComponentNumber = "407028-6";
@@ -220,7 +227,7 @@ namespace RApID_Project_WPF
                 BIsEthernet = true;
                 ComponentNumber = "408208-3";
                 return true;
-            }
+            }*/
 
             #region Find ComponentNumber (or PartNumber)
             var searchWoList = new SqlCommand("SELECT TOP(1) [ComponentNumber],[ItemNumber] FROM [HummingBird].[dbo].[WorkOrderPartsList] " +
@@ -298,12 +305,61 @@ namespace RApID_Project_WPF
         /// <returns>A Task resulting in a Tuple consisting of the filename and <c>true</c> if it was found</returns>        
         public async Task<Tuple<string, bool>> FindFileAsync(string ext)
         {
+            #region New Code
+            /*var finalOutPath = OUT_STR.Replace("<PN>", PartNumber).Replace("<CN>", ComponentNumber);
+
+            switch (ext) {
+                default:
+                case ".xls":
+                case ".xlsm":
+                case ".xlsx":
+                    string bom = "";
+                    (bom,_,_) = frmBoardAliases.FindFilesFor(PartNumber);
+                    return new Tuple<string, bool>(bom, !string.IsNullOrWhiteSpace(bom));
+                case ".pdf":
+                    finalOutPath = finalOutPath.Replace("<TYPE>", "ASSY");
+                    string top = "";
+                    string bottom = "";
+                    (_,top,bottom) = frmBoardAliases.FindFilesFor(PartNumber);
+
+                    // https://stackoverflow.com/a/808699/7476183
+                    using (var outPdf = new PdfDocument())
+                    {
+                        if (string.IsNullOrWhiteSpace(top)) {
+                            return new Tuple<string, bool>("Nothing doing.", false);
+                        }
+
+                        var one = PdfReader.Open(top, PdfDocumentOpenMode.Import);
+                        CopyPages(one, outPdf);
+
+                        if (!string.IsNullOrWhiteSpace(bottom))
+                        {
+                            var two = PdfReader.Open(bottom, PdfDocumentOpenMode.Import);
+                            CopyPages(two, outPdf);
+                        }
+
+                        outPdf.Save(finalOutPath);
+                    }
+
+                    void CopyPages(PdfDocument from, PdfDocument to)
+                    {
+                        for (int i = 0; i < from.PageCount; i++)
+                        {
+                            to.AddPage(from.Pages[i]);
+                        }
+                    }
+
+                    return new Tuple<string, bool>(finalOutPath, true);
+            }*/
+            #endregion
+
+            #region Old Code
             var filename = "";
             var found = false;
 
             Console.WriteLine($"Running find... using data package {AsDataPackage()}");
 
-            if (BIsIce && ext.Equals(".pdf"))
+            /*if (BIsIce && ext.Equals(".pdf"))
             {
                 filename = @"\\joi\EU\application\EngDocumentation\Design\Electrical\407028-6 REV F (ICE FLASHER)\";
                 ShowSuccessMessage(filename);
@@ -321,7 +377,7 @@ namespace RApID_Project_WPF
                 filename = @"\\joi\EU\application\EngDocumentation\Design\Electrical\408208-3 REV C (AS ETH 5PS)\408206-1_(AS ETH 5PS)_408208-3_C.xls";
                 ShowSuccessMessage(filename);
                 return new Tuple<string, bool>(filename, true);
-            }
+            }*/
 
             /*if (csCrossClassInteraction.Cache != null && csCrossClassInteraction.Cache.Exists(ComponentNumber))
             {
@@ -382,6 +438,8 @@ namespace RApID_Project_WPF
             }
 
             return new Tuple<string, bool>(filename, found);
+            
+            #endregion
         }
 
         private void ShowSuccessMessage(string filename)

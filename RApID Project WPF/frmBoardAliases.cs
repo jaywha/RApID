@@ -30,6 +30,9 @@ namespace RApID_Project_WPF
         private int posX;
         private int posY;
 
+        /// <summary>
+        /// Technician Interface form to assign BOMs and Assembly files to a part number or alias thereof.
+        /// </summary>
         public frmBoardAliases()
         {
             InitializeComponent();
@@ -38,7 +41,6 @@ namespace RApID_Project_WPF
 
         private void frmBoardAliases_Load(object sender, EventArgs e)
         {
-            // TODO: This line of code loads data into the 'pCBAAliasesDataSet.PCBAAliases' table. You can move, or remove it, as needed.
             this.pCBAAliasesTableAdapter.Fill(this.pCBAAliasesDataSet.PCBAAliases);
 
             SetterTip.SetToolTip(lnkBOMFile, "Go to -> " + lnkBOMFile.Text);
@@ -76,80 +78,29 @@ namespace RApID_Project_WPF
             }
         }
 
-        private void GetPartNumberDetailsAndAliases()
+        private void tcDataViewer_SelectedIndexChanged(object sender, EventArgs e)
         {
-            using (var conn = new SqlConnection(csObjectHolder.csObjectHolder.ObjectHolderInstance().HummingBirdConnectionString))
-            {
-                conn.Open();
-                using (var cmd = new SqlCommand("SELECT PartName, CommodityClass FROM [HummingBird].[dbo].[ItemMaster] " +
-                    "WHERE [PartNumber] = @Pnum AND ([StockingType] <> 'O' AND [StockingType] <> 'U')", conn))
-                {
-                    cmd.Parameters.AddWithValue("@Pnum", txtPartNumber.Text);
-
-                    var reader = cmd.ExecuteReader();
-
-                    if (reader.HasRows && reader.Read())
-                    {
-                        lblPartName.Text = lblPartName.Text.Replace("<NAME>", reader[0].ToString());
-                        lblCommodityClass.Text = lblCommodityClass.Text.Replace("<CLASS>", reader[1].ToString());
-                        lstbxAliases.Enabled = true;
-                    }
-                }
-            }
-
-            using (var conn = new SqlConnection(csObjectHolder.csObjectHolder.ObjectHolderInstance().RepairConnectionString))
-            {
-                conn.Open();
-                using (var cmd = new SqlCommand("SELECT Alias, BOMPath, SchematicPathTop, SchematicPathBottom FROM [Repair].[dbo].[PCBAAliases] " +
-                    "WHERE [TargetPartNumber] = @Pnum", conn))
-                {
-                    cmd.Parameters.AddWithValue("@Pnum", txtPartNumber.Text);
-
-                    var reader = cmd.ExecuteReader();
-
-                    while (reader.Read()) { 
-                        CurrentAliases.Add(reader[0].ToString() ?? "empty alias ???");
-                        CurrentBOMs.Add(reader[1]?.ToString() ?? "not set");
-                        CurrentSchematicsTop.Add(reader[2]?.ToString() ?? "not set");
-                        CurrentSchematicsBottom.Add(reader[3]?.ToString() ?? "not set");
-                    }
-                }
-            }
-
-            lstbxAliases.DataSource = CurrentAliases;
-            if( lstbxAliases.Items.Count>0) lstbxAliases.SelectedIndex = 0;
-            else lstbxAliases.SelectedIndex = -1;
+            this.pCBAAliasesTableAdapter.Fill(this.pCBAAliasesDataSet.PCBAAliases);
         }
 
         #region Context Menu
 
         private void changeFilePathToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (String.IsNullOrWhiteSpace(txtPartNumber.Text)) return;
-            //var IsBOM = sender.ToString().Contains("BOM");
-
-            //var ofd = new OpenFileDialog()
-            //{
-            //    CheckFileExists = true,
-            //    CheckPathExists = true,
-            //    Title = $"Please choose the new {(IsBOM ? "BOM" : "Schematic")} file path...",
-            //    AutoUpgradeEnabled = true,
-            //    RestoreDirectory = true,
-            //    Multiselect = false
-            //};
+            if (string.IsNullOrWhiteSpace(txtPartNumber.Text)) return;
 
             var ofd = new OpenFileDialog()
             {
                 CheckFileExists = true,
                 CheckPathExists = true,
-                Title = $"Please choose the new file path...",
+                Title = $"Please choose the new {(bBOM ? "BOM" : "Schematic")} file path...",
                 AutoUpgradeEnabled = true,
                 RestoreDirectory = true,
                 Multiselect = false
             };
 
             ofd.ShowDialog();
-            if (String.IsNullOrWhiteSpace(ofd.FileName)) return;
+            if (string.IsNullOrWhiteSpace(ofd.FileName)) return;
             if (bBOM)
             {
                 lnkBOMFile.Text = ofd.FileName;
@@ -241,6 +192,7 @@ namespace RApID_Project_WPF
         }
         #endregion
 
+        #region ListBox
         private void lstbxAliases_SelectedIndexChanged(object sender, EventArgs e)
         {
             lnkBOMFile.Text = CurrentBOMs[lstbxAliases.SelectedIndex];
@@ -248,11 +200,14 @@ namespace RApID_Project_WPF
             lnkSchematicFileBottom.Text = CurrentSchematicsBottom[lstbxAliases.SelectedIndex];
         }
 
-        private void btnSubmit_Click(object sender, EventArgs e)
+        private void lstbxAliases_MouseDown(object sender, MouseEventArgs e)
         {
-            //TODO: Save ALL changes, like new & removed aliases <- File Paths are easier to change.
+            posX = e.X;
+            posY = e.Y;
         }
+        #endregion
 
+        #region Link Label
         private void lnkBOMFile_Click(object sender, MouseEventArgs e)
         {
             bBOM = true;
@@ -274,12 +229,6 @@ namespace RApID_Project_WPF
             bBottom = true;
         }
 
-        private void lstbxAliases_MouseDown(object sender, MouseEventArgs e)
-        {
-            posX = e.X;
-            posY = e.Y;
-        }
-
         private void lnkFile_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
             if (e.Button == MouseButtons.Left)
@@ -291,10 +240,84 @@ namespace RApID_Project_WPF
                 catch { }
             }
         }
+        #endregion
 
-        private void tcDataViewer_SelectedIndexChanged(object sender, EventArgs e)
+        private void GetPartNumberDetailsAndAliases()
         {
-            this.pCBAAliasesTableAdapter.Fill(this.pCBAAliasesDataSet.PCBAAliases);
+            using (var conn = new SqlConnection(csObjectHolder.csObjectHolder.ObjectHolderInstance().HummingBirdConnectionString))
+            {
+                conn.Open();
+                using (var cmd = new SqlCommand("SELECT PartName, CommodityClass FROM [HummingBird].[dbo].[ItemMaster] " +
+                    "WHERE [PartNumber] = @Pnum AND ([StockingType] <> 'O' AND [StockingType] <> 'U')", conn))
+                {
+                    cmd.Parameters.AddWithValue("@Pnum", txtPartNumber.Text);
+
+                    var reader = cmd.ExecuteReader();
+
+                    if (reader.HasRows && reader.Read())
+                    {
+                        lblPartName.Text = lblPartName.Text.Replace("<NAME>", reader[0].ToString());
+                        lblCommodityClass.Text = lblCommodityClass.Text.Replace("<CLASS>", reader[1].ToString());
+                        lstbxAliases.Enabled = true;
+                    }
+                }
+            }
+
+            using (var conn = new SqlConnection(csObjectHolder.csObjectHolder.ObjectHolderInstance().RepairConnectionString))
+            {
+                conn.Open();
+                using (var cmd = new SqlCommand("SELECT Alias, BOMPath, SchematicPathTop, SchematicPathBottom FROM [Repair].[dbo].[PCBAAliases] " +
+                    "WHERE [TargetPartNumber] = @Pnum", conn))
+                {
+                    cmd.Parameters.AddWithValue("@Pnum", txtPartNumber.Text);
+
+                    var reader = cmd.ExecuteReader();
+
+                    while (reader.Read())
+                    {
+                        CurrentAliases.Add(reader[0].ToString() ?? "empty alias ???");
+                        CurrentBOMs.Add(reader[1]?.ToString() ?? "not set");
+                        CurrentSchematicsTop.Add(reader[2]?.ToString() ?? "not set");
+                        CurrentSchematicsBottom.Add(reader[3]?.ToString() ?? "not set");
+                    }
+                }
+            }
+
+            lstbxAliases.DataSource = CurrentAliases;
+            if (lstbxAliases.Items.Count > 0) lstbxAliases.SelectedIndex = 0;
+            else lstbxAliases.SelectedIndex = -1;
+        }
+
+        /// <summary>
+        /// Will return 3 values for each file if the part number has files assigned.
+        /// </summary>
+        /// <param name="partNumber">The scanned part number (or derived from serial number)</param>
+        /// <returns>A ValueTuple with all files available.</returns>
+        public static (string BOM, string TOP, string BOTTOM) FindFilesFor(string partNumber)
+        {
+            using (var conn = new SqlConnection(csObjectHolder.csObjectHolder.ObjectHolderInstance().RepairConnectionString))
+            {
+                conn.Open();
+                using (var cmd = new SqlCommand("SELECT Alias, BOMPath, SchematicPathTop, SchematicPathBottom FROM [Repair].[dbo].[PCBAAliases] " +
+                    "WHERE [TargetPartNumber] = @Pnum", conn))
+                {
+                    cmd.Parameters.AddWithValue("@Pnum", partNumber);
+
+                    var reader = cmd.ExecuteReader();
+
+                    if (reader.Read())
+                    {
+                        var filePaths = reader[1].ToString().Split(',');
+                        return (
+                            BOM: filePaths[1] ?? "UNSET",
+                            TOP: filePaths[2] ?? "UNSET",
+                            BOTTOM: filePaths[3] ?? "UNSET"
+                            );
+                    }
+                }
+            }
+
+            return ("", "", "");
         }
     }
 }
