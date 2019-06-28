@@ -4,6 +4,8 @@
  */
 
 using ExcelDataReader;
+using MonkeyCache;
+using MonkeyCache.FileStore;
 using RApID_Project_WPF.UserControls;
 using System;
 using System.Collections.Generic;
@@ -17,8 +19,6 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
 using DesginatorPair = System.Tuple<System.Windows.Controls.Control, System.Windows.Controls.Control>;
-//using MonkeyCache.FileStore;
-//using MonkeyCache;
 
 namespace RApID_Project_WPF
 {
@@ -41,7 +41,7 @@ namespace RApID_Project_WPF
     public static class csCrossClassInteraction
     {
         /// <summary> Shortcut to <see cref="Banana"/> instance modelled in <see cref="Barrel.Current"/> </summary>
-        //public static IBarrel Cache = Barrel.Current;
+        public static IBarrel Cache = Barrel.Current;
         private static StaticVars sVar = StaticVars.StaticVarsInstance();
         private static csObjectHolder.csObjectHolder holder = csObjectHolder.csObjectHolder.ObjectHolderInstance();
 
@@ -195,7 +195,7 @@ namespace RApID_Project_WPF
         /// <param name="designators">A list of reference and part number designators to give autocompletion.</param>
         public static async void DoExcelOperations(string filePath, ProgressBar progData = null, DataGrid bomlist = null, params DesginatorPair[] designators)
         {
-            //Cache.EmptyExpired();
+            Cache.EmptyExpired();
 
             try
             {
@@ -210,22 +210,6 @@ namespace RApID_Project_WPF
                         return;
                     }
 
-                    foreach (var designator in designators)
-                    {
-                        var reference = designator.Item1;
-                        var partnumber = designator.Item2;
-
-                        if (reference is ComboBox refbox)
-                        {
-                            refbox.Dispatcher.Invoke(() => refbox.ItemsSource = ReferenceDesignators);
-                        }
-
-                        if (partnumber is ComboBox invbox)
-                        {
-                            invbox.Dispatcher.Invoke(() => invbox.ItemsSource = PartNumbers);
-                        }
-                    }
-
                     using (var stream = File.Open(filePath, FileMode.Open, FileAccess.Read))
                     {
                         using (var reader = ExcelReaderFactory.CreateReader(stream))
@@ -233,7 +217,8 @@ namespace RApID_Project_WPF
                             while (reader.NextResult() && reader.Name != null && !reader.Name.Equals("JUKI"))
                             { /*spin until JUKI sheet*/ }
 
-                            progData.Dispatcher.Invoke(() => {
+                            progData.Dispatcher.Invoke(() =>
+                            {
                                 progData.Maximum = reader.RowCount;
                             });
                             while (reader.Read() && !string.IsNullOrEmpty(reader.GetValue(0)?.ToString())
@@ -244,15 +229,45 @@ namespace RApID_Project_WPF
                                 ReferenceDesignators.Add(rd);
                                 PartNumbers.Add(pn);
 
-                                progData.Dispatcher.Invoke(()=> {
+                                progData.Dispatcher.Invoke(() =>
+                                {
                                     progData.Value++;
                                 });
-                                /*bomlist?.Dispatcher.Invoke(() =>
+                                /* TODO: Drag-n-drop listbox -- needed?
+                                 * bomlist?.Dispatcher.Invoke(() =>
                                 {
                                     bomlist.Items.Add(new MultiplePartsReplaced(rd, pn,
                                         pn.Contains("NP") ? "NO PART" : GetPartReplacedPartDescription(pn)));
                                 });*/
                             }
+                        }
+                    }
+
+                    foreach (var designator in designators)
+                    {
+                        var reference = designator.Item1;
+                        var partnumber = designator.Item2;
+
+                        if (reference is ComboBox refbox)
+                        {
+                            refbox.Dispatcher.Invoke(() =>
+                            {
+                                foreach (var refDes in ReferenceDesignators)
+                                {
+                                    refbox.Items.Add(refDes);
+                                }
+                            });
+                        }
+
+                        if (partnumber is ComboBox invbox)
+                        {
+                            invbox.Dispatcher.Invoke(() =>
+                            {
+                                foreach (var partNum in PartNumbers)
+                                {
+                                    invbox.Items.Add(partNum);
+                                }
+                            });
                         }
                     }
 
@@ -268,7 +283,7 @@ namespace RApID_Project_WPF
             }
         }
 
-        /*// <summary>
+        /// <summary>
         /// Checks the <see cref="ApplicationCache"/> for any data related to the <see cref="MultiplePartsReplaced"/> model for the given component number.
         /// </summary>
         /// <param name="filePath">The Excel File path </param>
@@ -279,7 +294,7 @@ namespace RApID_Project_WPF
                 return (false, string.Empty, string.Empty);
             else
                 return (true, Cache.Get<string>(componentNumber + "PN"), Cache.Get<string>(componentNumber + "RD"));
-        }*/
+        }
 
         /// <summary>
         /// Updates the <see cref="ApplicationCache"/> with any data related to the <see cref="MultiplePartsReplaced"/> model for the given component number.
@@ -289,8 +304,8 @@ namespace RApID_Project_WPF
         private static void UpdateCache(string cacheTarget, string filePath)
         {
             var componentNumber = filePath.Substring(filePath.LastIndexOf('\\') + 1, 8);
-            /*if (!Cache.Exists(componentNumber))
-                Cache.Add(componentNumber, filePath, TimeSpan.Parse("12:01:00"));*/
+            if (!Cache.Exists(componentNumber))
+                Cache.Add(componentNumber, filePath, TimeSpan.Parse("12:01:00"));
 
             string data = "";
             switch (cacheTarget)
@@ -306,7 +321,7 @@ namespace RApID_Project_WPF
                     return;
             }
 
-            //Cache.Add(componentNumber + cacheTarget, data, TimeSpan.FromHours(12.0));            
+            Cache.Add(componentNumber + cacheTarget, data, TimeSpan.FromHours(12.0));
         }
 
         /// <summary>
@@ -1394,7 +1409,8 @@ namespace RApID_Project_WPF
         /// </summary>
         /// <param name="issue">The calling unit issue</param>
         /// <param name="values">The values to add the part table - refDesignator, partNumber, partDesc</param>
-        public static ucUnitIssue AddUnitIssuePart(this ucUnitIssue issue, params string[] values) {
+        public static ucUnitIssue AddUnitIssuePart(this ucUnitIssue issue, params string[] values)
+        {
             if (issue.PartsReplaced == null) issue.PartsReplaced = new List<MultiplePartsReplaced>();
             issue.PartsReplaced.Add(
                 new MultiplePartsReplaced(values[0], values[1], values.Length < 3 ? GetPartReplacedPartDescription(values[0]) : values[2])

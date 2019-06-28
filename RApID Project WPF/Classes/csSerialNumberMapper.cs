@@ -1,7 +1,7 @@
 ﻿using ExcelDataReader;
 using PdfSharp.Pdf;
 using PdfSharp.Pdf.IO;
-//using MonkeyCache.FileStore;
+using MonkeyCache.FileStore;
 using System;
 using System.Data.SqlClient;
 using System.IO;
@@ -103,6 +103,12 @@ namespace RApID_Project_WPF
         #endregion
 
         /// <summary>
+        /// Prints a simple message with info about this mapper.
+        /// </summary>
+        /// <returns>A preformatted message -- used in debugging.</returns>
+        public string Success() => $"Board SN [{BarcodeNumber}] from date {DateTime.Now} with PN {PartNumber} & WO# {WorkNumber}";
+
+        /// <summary>
         /// Gets the component number for the scanned barcode.
         /// </summary>
         /// <param name="barcode">The barcode.</param>
@@ -111,180 +117,33 @@ namespace RApID_Project_WPF
         {
             if (string.IsNullOrEmpty(barcode) || barcode.Equals("\0")) return false; // disconnected scanners emit \0 on reconnect
             BarcodeNumber = barcode;
-            DateTime date = DateTime.Now;
-            try
-            {
-                date = DateTime.Parse($"{BarcodeNumber.Substring(2, 2)}-{BarcodeNumber.Substring(4, 2)}-{BarcodeNumber.Substring(0, 2)}");
-            } catch(FormatException fe)
-            {
-                csExceptionLogger.csExceptionLogger.Write("GetData_UnusualDate", fe);
 
-                try
+            using (var conn = new SqlConnection(csObjectHolder.csObjectHolder.ObjectHolderInstance().RepairConnectionString))
+            {
+                conn.Open();
+
+                using(var cmd = new SqlCommand("spFindWOPN", conn))
                 {
-                    date = DateTime.Parse($"{BarcodeNumber.Substring(5, 2)}-{BarcodeNumber.Substring(7, 2)}-{BarcodeNumber.Substring(9, 2)}");
-                }
-                catch (Exception e)
-                {
-                    csExceptionLogger.csExceptionLogger.Write("GetData_NoDateAtAll", e);
-                    return false;
-                }
-            }
-
-            var success = $"Board SN [{BarcodeNumber}] from date {date} with PN {PartNumber} & WO# {WorkNumber}";
-            const string errmsg = "There was an error during AOI/EOL SQL Execution.\nPlease inform EEPT.";
-
-            var hummingConn = new SqlConnection(csObjectHolder.csObjectHolder.ObjectHolderInstance().HummingBirdConnectionString);
-            var yesConn = new SqlConnection(csObjectHolder.csObjectHolder.ObjectHolderInstance().YesDBConnectionString);
-
-            hummingConn.Open();
-            yesConn.Open();
-
-            #region Get AOI and EOL Data
-            var findWo = new SqlCommand("SELECT TOP(1) [WO],[Assy] FROM [YesDB].[dbo].[SPC_Data] " +
-                                                   "WHERE [SN] = @SCANNED AND [WO] IS NOT NULL AND DATALENGTH([WO]) > 0 AND [WO] <> ' '", yesConn);
-            findWo.Parameters.Add(new SqlParameter()
-            {
-                ParameterName = "@SCANNED",
-                SqlDbType = System.Data.SqlDbType.NVarChar,
-                Direction = System.Data.ParameterDirection.Input,
-                Value = barcode
-            });
-
-
-            var findPn = new SqlCommand("SELECT TOP(1) [PartNumber] FROM [HummingBird].[dbo].[tblEOL] " +
-                                                   "WHERE [PCBSerial] = @SCANNED AND [PartNumber] IS NOT NULL AND DATALENGTH([PartNumber]) > 0 AND [PartNumber] <> ' '", hummingConn);
-            findPn.Parameters.Add(new SqlParameter()
-            {
-                ParameterName = "@SCANNED",
-                SqlDbType = System.Data.SqlDbType.NVarChar,
-                Direction = System.Data.ParameterDirection.Input,
-                Value = barcode
-            });
-
-            try
-            {
-                var woreader = findWo.ExecuteReader();
-                var pnreader = findPn.ExecuteReader();
-
-                if (woreader.Read() && woreader["WO"] != DBNull.Value)
-                    WorkNumber = woreader["WO"].ToString().Trim();
-                if (pnreader.Read() && pnreader["PartNumber"] != DBNull.Value)
-                    PartNumber = pnreader["PartNumber"].ToString().Trim();
-
-                var assemblyInAoi = "";
-
-                try
-                {
-                    if (woreader.Read() && woreader["Assy"] != DBNull.Value)
-                        assemblyInAoi = woreader["Assy"].ToString();
-                }
-                catch (InvalidOperationException ioe)
-                {
-                    csExceptionLogger.csExceptionLogger.Write("AssemblyAOI-OnEmpty", ioe);
-                }
-
-                // In case board never went to EOL, grab ComponentNumber to get PN later
-                if (string.IsNullOrEmpty(PartNumber) && !string.IsNullOrEmpty(assemblyInAoi)) ComponentNumber = assemblyInAoi.Substring(assemblyInAoi.LastIndexOf("REV", StringComparison.Ordinal) - 9, 8).Trim().Replace('_', '-');
-
-                woreader.Close();
-                pnreader.Close();
-            }
-            catch (Exception e)
-            {
-                csExceptionLogger.csExceptionLogger.Write("RetestVerifier-csBarcodeMapper_GetData-BadSQL_AOIEOL", e);
-                MessageBox.Show(errmsg, @"BadSQL Data on WO/PN", MessageBoxButton.OK, MessageBoxImage.Error);
-                return false;
-            }
-            finally
-            {
-                findWo.Dispose();
-                findPn.Dispose();
-            }
-            #endregion
-
-            success = $"Board SN [{BarcodeNumber}] on date {date} with PN {PartNumber} & WO# {WorkNumber}";
-            Console.WriteLine(success);
-
-            // if both are null, then barcode not found!
-            if (string.IsNullOrEmpty(PartNumber) && string.IsNullOrEmpty(WorkNumber)) { return false; }
-
-            /*if (PartNumber.Equals("407026-1") || PartNumber.Equals("407025-1")) //ICE Flasher cases
-            {
-                BIsIce = true;
-                ComponentNumber = "407028-6";
-                return true;
-            }
-
-            if (PartNumber.Equals("408396-1") || PartNumber.Equals("408390-1")) // NMEA-2k Cases
-            {
-                BIsNMEA = true;
-                ComponentNumber = "408398-1";
-                return true;
-            }
-
-            if (PartNumber.Equals("408456-1")) // Ethernet Cases
-            {
-                BIsEthernet = true;
-                ComponentNumber = "408208-3";
-                return true;
-            }*/
-
-            #region Find ComponentNumber (or PartNumber)
-            var searchWoList = new SqlCommand("SELECT TOP(1) [ComponentNumber],[ItemNumber] FROM [HummingBird].[dbo].[WorkOrderPartsList] " +
-                                                     "WHERE (RTRIM(LTRIM([ItemNumber])) = RTRIM(LTRIM(@PN)) " +
-                                                     "OR RTRIM(LTRIM([ComponentNumber])) = RTRIM(LTRIM(@CN)))" +
-                                                     "AND ComponentDescription LIKE 'P%C%B%' ", hummingConn); searchWoList.Parameters.AddWithValue("@PN", PartNumber);
-            searchWoList.Parameters.AddWithValue("@WO", WorkNumber);
-            searchWoList.Parameters.AddWithValue("@CN", ComponentNumber);
-            var searchWoListBackup = new SqlCommand("SELECT TOP(1) [ComponentNumber],[ItemNumber] FROM [HummingBird].[dbo].[WorkOrderPartsListBackup] " +
-                                                     "WHERE (RTRIM(LTRIM([ItemNumber])) = RTRIM(LTRIM(@PN)) " +
-                                                     "OR RTRIM(LTRIM([ComponentNumber])) = RTRIM(LTRIM(@CN)))" +
-                                                     "AND ComponentDescription LIKE 'P%C%B%' ", hummingConn); searchWoListBackup.Parameters.AddWithValue("@PN", PartNumber);
-            searchWoListBackup.Parameters.AddWithValue("@WO", WorkNumber);
-            searchWoListBackup.Parameters.AddWithValue("@CN", ComponentNumber);
-
-            try
-            {
-                using (var wolistReader = searchWoList.ExecuteReader())
-                {
-                    var targetNumber = string.IsNullOrEmpty(PartNumber) ? "ItemNumber" : "ComponentNumber";
-                    var resultNumber = "";
-
-                    if (wolistReader.Read() && wolistReader[targetNumber] != DBNull.Value)
-                        resultNumber = wolistReader[targetNumber].ToString().Trim();
-                    else
+                    cmd.CommandType = System.Data.CommandType.StoredProcedure;
+                    cmd.Parameters.AddWithValue("@SCANNED", barcode);
+                    using(var reader = cmd.ExecuteReader())
                     {
-                        wolistReader.Close();
-                        using (var backupReader = searchWoListBackup.ExecuteReader())
-                            if (backupReader.Read() && backupReader[targetNumber] != DBNull.Value)
-                                resultNumber = backupReader[targetNumber].ToString().Trim();
-                            else return false; //no Number Set!
+                        while(reader.NextResult())
+                        {
+                            if (reader.GetName(0).Equals("WorkOrder") && reader.Read()) {
+                                WorkNumber = reader["WorkOrder"].ToString().Trim();
+                                PartNumber = reader["PartNumber"].ToString().Trim();
+                                ComponentNumber =
+                                    string.IsNullOrWhiteSpace(reader["ComponentNumber"].ToString())
+                                    ? reader["ComponentNumberBackup"].ToString().Trim()
+                                    : reader["ComponentNumber"].ToString().Trim();
+                                return true;
+                            }
+                        }
+                        return false;
                     }
-
-                    if (string.IsNullOrEmpty(PartNumber))
-                    {
-                        PartNumber = resultNumber;
-                    }
-                    else ComponentNumber = resultNumber;
                 }
             }
-            catch (Exception e)
-            {
-                csExceptionLogger.csExceptionLogger.Write("RetestVerifier-csBarcodeMapper_GetData-BadSQL_WOLists", e);
-                MessageBox.Show(errmsg, @"BadSQL Data on WO Backup", MessageBoxButton.OK, MessageBoxImage.Error);
-                return false;
-            }
-            finally
-            {
-                searchWoList.Dispose();
-                searchWoListBackup.Dispose();
-            }
-            #endregion
-
-            hummingConn.Close();
-            yesConn.Close();
-
-            return true;
         }
 
         /// <summary>
@@ -305,85 +164,24 @@ namespace RApID_Project_WPF
         /// <returns>A Task resulting in a Tuple consisting of the filename and <c>true</c> if it was found</returns>        
         public async Task<Tuple<string, bool>> FindFileAsync(string ext)
         {
-            #region New Code
-            /*var finalOutPath = OUT_STR.Replace("<PN>", PartNumber).Replace("<CN>", ComponentNumber);
-
-            switch (ext) {
-                default:
-                case ".xls":
-                case ".xlsm":
-                case ".xlsx":
-                    string bom = "";
-                    (bom,_,_) = frmBoardAliases.FindFilesFor(PartNumber);
-                    return new Tuple<string, bool>(bom, !string.IsNullOrWhiteSpace(bom));
-                case ".pdf":
-                    finalOutPath = finalOutPath.Replace("<TYPE>", "ASSY");
-                    string top = "";
-                    string bottom = "";
-                    (_,top,bottom) = frmBoardAliases.FindFilesFor(PartNumber);
-
-                    // https://stackoverflow.com/a/808699/7476183
-                    using (var outPdf = new PdfDocument())
-                    {
-                        if (string.IsNullOrWhiteSpace(top)) {
-                            return new Tuple<string, bool>("Nothing doing.", false);
-                        }
-
-                        var one = PdfReader.Open(top, PdfDocumentOpenMode.Import);
-                        CopyPages(one, outPdf);
-
-                        if (!string.IsNullOrWhiteSpace(bottom))
-                        {
-                            var two = PdfReader.Open(bottom, PdfDocumentOpenMode.Import);
-                            CopyPages(two, outPdf);
-                        }
-
-                        outPdf.Save(finalOutPath);
-                    }
-
-                    void CopyPages(PdfDocument from, PdfDocument to)
-                    {
-                        for (int i = 0; i < from.PageCount; i++)
-                        {
-                            to.AddPage(from.Pages[i]);
-                        }
-                    }
-
-                    return new Tuple<string, bool>(finalOutPath, true);
-            }*/
-            #endregion
-
             #region Old Code
             var filename = "";
             var found = false;
 
             Console.WriteLine($"Running find... using data package {AsDataPackage()}");
 
-            /*if (BIsIce && ext.Equals(".pdf"))
-            {
-                filename = @"\\joi\EU\application\EngDocumentation\Design\Electrical\407028-6 REV F (ICE FLASHER)\";
-                ShowSuccessMessage(filename);
-                return new Tuple<string, bool>(filename, true);
-            }
-            if (BIsIce && ext.Equals(".xls"))
-            {
-                filename = @"\\joi\EU\application\EngDocumentation\Design\Electrical\407028-6 REV F (ICE FLASHER)\407026-1_(ICE 35)_407028-6_F.xls";
-                ShowSuccessMessage(filename);
-                return new Tuple<string, bool>(filename, true);
-            }
-
             if (BIsEthernet && ext.Equals(".xls"))
             {
                 filename = @"\\joi\EU\application\EngDocumentation\Design\Electrical\408208-3 REV C (AS ETH 5PS)\408206-1_(AS ETH 5PS)_408208-3_C.xls";
                 ShowSuccessMessage(filename);
                 return new Tuple<string, bool>(filename, true);
-            }*/
+            }
 
-            /*if (csCrossClassInteraction.Cache != null && csCrossClassInteraction.Cache.Exists(ComponentNumber))
+            if (csCrossClassInteraction.Cache != null && csCrossClassInteraction.Cache.Exists(ComponentNumber))
             {
                 MainWindow.Notify.ShowBalloonTip("Loaded data from cache", $"Found data for {ComponentNumber} in the application cache.", Hardcodet.Wpf.TaskbarNotification.BalloonIcon.Info);
                 return new Tuple<string, bool>(csCrossClassInteraction.Cache.Get<string>(ComponentNumber), true);
-            }*/
+            }
 
             try
             {
@@ -432,6 +230,58 @@ namespace RApID_Project_WPF
                         }
                     }
                 }));
+                if (!found)
+                {
+                    #region Tech Form Code
+                    /*
+                     var finalOutPath = OUT_STR.Replace("<PN>", PartNumber).Replace("<CN>", ComponentNumber);
+
+                    switch (ext) {
+                        default:
+                        case ".xls":
+                        case ".xlsm":
+                        case ".xlsx":
+                            string bom = "";
+                            (bom,_,_) = frmBoardAliases.FindFilesFor(PartNumber);
+                            return new Tuple<string, bool>(bom, !string.IsNullOrWhiteSpace(bom));
+                        case ".pdf":
+                            //TODO: Change to a listbox of Schematic files
+                            finalOutPath = finalOutPath.Replace("<TYPE>", "ASSY");
+                            string top = "";
+                            string bottom = "";
+                            (_,top,bottom) = frmBoardAliases.FindFilesFor(PartNumber);
+
+                            // https://stackoverflow.com/a/808699/7476183
+                            using (var outPdf = new PdfDocument())
+                            {
+                                if (string.IsNullOrWhiteSpace(top)) {
+                                    return new Tuple<string, bool>("Nothing doing.", false);
+                                }
+
+                                var one = PdfReader.Open(top, PdfDocumentOpenMode.Import);
+                                CopyPages(one, outPdf);
+
+                                if (!string.IsNullOrWhiteSpace(bottom))
+                                {
+                                    var two = PdfReader.Open(bottom, PdfDocumentOpenMode.Import);
+                                    CopyPages(two, outPdf);
+                                }
+
+                                outPdf.Save(finalOutPath);
+                            }
+
+                            void CopyPages(PdfDocument from, PdfDocument to)
+                            {
+                                for (int i = 0; i < from.PageCount; i++)
+                                {
+                                    to.AddPage(from.Pages[i]);
+                                }
+                            }
+
+                            return new Tuple<string, bool>(finalOutPath, true);
+                    }*/
+                    #endregion
+                }
             } catch(Exception e)
             {
                 csExceptionLogger.csExceptionLogger.Write("BarcodeMapper_FindFileError",e);

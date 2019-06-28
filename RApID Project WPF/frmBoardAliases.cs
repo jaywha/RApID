@@ -1,9 +1,9 @@
-﻿using System;
+﻿using Microsoft.VisualBasic;
+using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Diagnostics;
 using System.Windows.Forms;
-using Microsoft.VisualBasic;
 
 namespace RApID_Project_WPF
 {
@@ -11,8 +11,7 @@ namespace RApID_Project_WPF
     {
         private List<string> CurrentAliases = new List<string>();
         private List<string> CurrentBOMs = new List<string>();
-        private List<string> CurrentSchematicsTop = new List<string>();
-        private List<string> CurrentSchematicsBottom = new List<string>();
+        private List<string> CurrentSchematics = new List<string>();
 
         private ToolTip SetterTip = new ToolTip()
         {
@@ -23,10 +22,8 @@ namespace RApID_Project_WPF
             UseAnimation = true,
             ToolTipIcon = ToolTipIcon.Info
         };
-        private bool currAdmin;
         private bool bBOM;
-        private bool bBottom;
-        private bool bTop;
+        private bool bSchematic;
         private int posX;
         private int posY;
 
@@ -44,18 +41,17 @@ namespace RApID_Project_WPF
             this.pCBAAliasesTableAdapter.Fill(this.pCBAAliasesDataSet.PCBAAliases);
 
             SetterTip.SetToolTip(lnkBOMFile, "Go to -> " + lnkBOMFile.Text);
-            SetterTip.SetToolTip(lnkSchematicFileTop, "Go to -> " + lnkSchematicFileTop.Text);
+            // need to do each AssemblyLinkItem at their initializations
 
             txtPartNumber.Focus();
         }
 
         private void frmBoardAliases_PreviewKeyDown(object sender, PreviewKeyDownEventArgs e)
         {
-            
             if (e.KeyCode == Keys.A && e.Modifiers == (Keys.LShiftKey | Keys.RControlKey))
             {
-                dgvDatabaseTable.AllowUserToAddRows = !currAdmin;
-                dgvDatabaseTable.AllowUserToDeleteRows = !currAdmin;
+                dgvDatabaseTable.AllowUserToAddRows = !dgvDatabaseTable.AllowUserToAddRows;
+                dgvDatabaseTable.AllowUserToDeleteRows = !dgvDatabaseTable.AllowUserToDeleteRows;
             }
         }
 
@@ -65,14 +61,14 @@ namespace RApID_Project_WPF
             {
                 lstbxAliases.Enabled = false;
                 lnkBOMFile.Text = "BOMLink";
-                lnkSchematicFileBottom.Text = "ASSYLink";
-                lnkSchematicFileTop.Text = "ASSYLink";
                 lblPartName.Text = "Part Name: <NAME>";
                 lblCommodityClass.Text = "Commodity Class: <CLASS>";
+                lstvwSchematics.Items.Add(new AssemblyLinkItem("ASSYLink", "Assembly Link", 0));
+                lstvwSchematics.Items.Add(new AssemblyLinkItem("ASSYLink", "Assembly Link", "asc"));
+                lstvwSchematics.Items.Add(new AssemblyLinkItem("ASSYLink", "Assembly Link"));
                 CurrentAliases.Clear();
                 CurrentBOMs.Clear();
-                CurrentSchematicsTop.Clear();
-                CurrentSchematicsBottom.Clear();
+                CurrentSchematics.Clear();
                 lstbxAliases.DataSource = new List<string>();
                 GetPartNumberDetailsAndAliases();
             }
@@ -103,63 +99,57 @@ namespace RApID_Project_WPF
             if (string.IsNullOrWhiteSpace(ofd.FileName)) return;
             if (bBOM)
             {
-                lnkBOMFile.Text = ofd.FileName;
+                lnkBOMFile.Text = ofd.SafeFileName;
                 CurrentBOMs.Insert(lstbxAliases.SelectedIndex, ofd.FileName);
                 bBOM = false;
             }
-            else if (bTop)
+            else if (bSchematic)
             {
-                lnkSchematicFileTop.Text = ofd.FileName;
-                CurrentSchematicsTop.Insert(lstbxAliases.SelectedIndex, ofd.FileName);
-                bTop = false;
+                CurrentSchematics.Insert(lstbxAliases.SelectedIndex, ofd.FileName);
+                bBOM = false;
             }
-            else if (bBottom)
-            {
-                lnkSchematicFileBottom.Text = ofd.FileName;
-                CurrentSchematicsBottom.Insert(lstbxAliases.SelectedIndex, ofd.FileName);
-                bBottom = false;
-            }
-            
+
             using (var conn = new SqlConnection(csObjectHolder.csObjectHolder.ObjectHolderInstance().RepairConnectionString))
+            {
+                conn.Open();
+                using (var cmd = new SqlCommand("UPDATE [Repair].[dbo].[PCBAAliases] SET " +
+                    "BOMPath = @BomPath, SchematicPaths = @SchPath " +
+                    "WHERE [TargetPartNumber] = @Pnum AND Alias = @alias", conn))
                 {
-                    conn.Open();
-                    using (var cmd = new SqlCommand("UPDATE [Repair].[dbo].[PCBAAliases] SET " +
-                        "BOMPath = @BomPath, SchematicPathTop = @SchPath, SchematicPathBottom = @SchPathB " +
-                        "WHERE [TargetPartNumber] = @Pnum AND Alias = @alias", conn))
+                    cmd.Parameters.AddWithValue("@Pnum", txtPartNumber.Text);
+                    cmd.Parameters.AddWithValue("@BomPath", lnkBOMFile.Text);
+                    var schematicPaths = "";
+                    foreach (var @string in CurrentSchematics)
                     {
-                        cmd.Parameters.AddWithValue("@Pnum", txtPartNumber.Text);
-                        cmd.Parameters.AddWithValue("@BomPath", lnkBOMFile.Text);
-                        cmd.Parameters.AddWithValue("@SchPath", lnkSchematicFileTop.Text);
-                        cmd.Parameters.AddWithValue("@SchPathB", lnkSchematicFileBottom.Text);
-                        cmd.Parameters.AddWithValue("@alias", CurrentAliases[ lstbxAliases.SelectedIndex].ToString());
-                        var rowsAffected = cmd.ExecuteNonQuery();
+                        schematicPaths += @string + ",";
                     }
+                    cmd.Parameters.AddWithValue("@SchPath", schematicPaths.Substring(0, schematicPaths.Length-1));
+                    cmd.Parameters.AddWithValue("@alias", CurrentAliases[lstbxAliases.SelectedIndex].ToString());
+                    var rowsAffected = cmd.ExecuteNonQuery();
                 }
+            }
         }
 
         private void addNewAliasToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            string input = Interaction.InputBox("Please input the new alias:", $"New {txtPartNumber.Text} Alias", 
-                int.Parse(txtPartNumber.Text.Substring(0, txtPartNumber.Text.LastIndexOf('-'))).ToString(), 
+            string input = Interaction.InputBox("Please input the new alias:", $"New {txtPartNumber.Text} Alias",
+                int.Parse(txtPartNumber.Text.Substring(0, txtPartNumber.Text.LastIndexOf('-'))).ToString(),
                 posY, posX);
             if (String.IsNullOrWhiteSpace(input)) return;
             CurrentAliases.Add(input);
-            
+
             CurrentBOMs.Add("BOMPath");
-            CurrentSchematicsBottom.Add("ASSYLink");
-            CurrentSchematicsTop.Add("ASSYLink");
+            CurrentSchematics.Add("ASSYLink");
             lnkBOMFile.Text = "BOMLink";
-            lnkSchematicFileBottom.Text = "ASSYLink";
-            lnkSchematicFileTop.Text = "ASSYLink";
+            lstvwSchematics.Items.Add(new AssemblyLinkItem("<EMPTY>", "ASSYLink"));
             using (var conn = new SqlConnection(csObjectHolder.csObjectHolder.ObjectHolderInstance().RepairConnectionString))
             {
                 conn.Open();
-                using (var cmd = new SqlCommand("INSERT INTO PCBAAliases (TargetPartNumber, Alias, BOMPath, SchematicPathTop, SchematicPathBottom) VALUES (@Pnum, @alias, @BomPath, @SchPath, @SchPathB)", conn))
+                using (var cmd = new SqlCommand("INSERT INTO PCBAAliases (TargetPartNumber, Alias, BOMPath, SchematicPaths) VALUES (@Pnum, @alias, @BomPath, @SchPaths)", conn))
                 {
                     cmd.Parameters.AddWithValue("@Pnum", txtPartNumber.Text);
                     cmd.Parameters.AddWithValue("@BomPath", "BOMLink");
-                    cmd.Parameters.AddWithValue("@SchPath", "ASSYLink");
-                    cmd.Parameters.AddWithValue("@SchPathB", "ASSYLink");
+                    cmd.Parameters.AddWithValue("@SchPaths", "ASSYLink");
                     cmd.Parameters.AddWithValue("@alias", input);
                     var rowsAffected = cmd.ExecuteNonQuery();
                 }
@@ -184,20 +174,29 @@ namespace RApID_Project_WPF
             }
 
             CurrentBOMs.RemoveAt(lstbxAliases.SelectedIndex);
-            CurrentSchematicsTop.RemoveAt(lstbxAliases.SelectedIndex);
-            CurrentSchematicsBottom.RemoveAt(lstbxAliases.SelectedIndex);
+            CurrentSchematics.RemoveAt(lstbxAliases.SelectedIndex);
             CurrentAliases.RemoveAt(lstbxAliases.SelectedIndex);
             lstbxAliases.DataSource = new List<string>();
             lstbxAliases.DataSource = CurrentAliases;
+            lstvwSchematics.Items.Clear();
         }
         #endregion
 
         #region ListBox
         private void lstbxAliases_SelectedIndexChanged(object sender, EventArgs e)
         {
-            lnkBOMFile.Text = CurrentBOMs[lstbxAliases.SelectedIndex];
-            lnkSchematicFileTop.Text = CurrentSchematicsTop[lstbxAliases.SelectedIndex];
-            lnkSchematicFileBottom.Text = CurrentSchematicsBottom[lstbxAliases.SelectedIndex];
+            lnkBOMFile.Text = CurrentBOMs[lstbxAliases.SelectedIndex].Substring(CurrentBOMs[lstbxAliases.SelectedIndex].LastIndexOf('\\'));
+            foreach (var schematic in CurrentSchematics)
+            {
+                var assyItem = new AssemblyLinkItem(
+                    link: schematic,
+                    displayText: schematic.Substring(schematic.LastIndexOf('\\')),
+                    imageKey: schematic.Substring(schematic.LastIndexOf('.')))
+                {
+                    ToolTipText = "Open file:\n" + schematic
+                };
+                lstvwSchematics.Items.Add(schematic);
+            }
         }
 
         private void lstbxAliases_MouseDown(object sender, MouseEventArgs e)
@@ -211,22 +210,13 @@ namespace RApID_Project_WPF
         private void lnkBOMFile_Click(object sender, MouseEventArgs e)
         {
             bBOM = true;
-            bTop = false;
-            bBottom = false;
+            bSchematic = false;
         }
 
         private void lnkSchematicFileTop_MouseDown(object sender, MouseEventArgs e)
         {
-            bTop = true;
+            bSchematic = true;
             bBOM = false;
-            bBottom = false;
-        }
-
-        private void lnkSchematicFileBottom_MouseDown(object sender, MouseEventArgs e)
-        {
-            bBOM = false;
-            bTop = false;
-            bBottom = true;
         }
 
         private void lnkFile_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
@@ -266,7 +256,7 @@ namespace RApID_Project_WPF
             using (var conn = new SqlConnection(csObjectHolder.csObjectHolder.ObjectHolderInstance().RepairConnectionString))
             {
                 conn.Open();
-                using (var cmd = new SqlCommand("SELECT Alias, BOMPath, SchematicPathTop, SchematicPathBottom FROM [Repair].[dbo].[PCBAAliases] " +
+                using (var cmd = new SqlCommand("SELECT Alias, BOMPath, SchematicPaths FROM [Repair].[dbo].[PCBAAliases] " +
                     "WHERE [TargetPartNumber] = @Pnum", conn))
                 {
                     cmd.Parameters.AddWithValue("@Pnum", txtPartNumber.Text);
@@ -277,8 +267,10 @@ namespace RApID_Project_WPF
                     {
                         CurrentAliases.Add(reader[0].ToString() ?? "empty alias ???");
                         CurrentBOMs.Add(reader[1]?.ToString() ?? "not set");
-                        CurrentSchematicsTop.Add(reader[2]?.ToString() ?? "not set");
-                        CurrentSchematicsBottom.Add(reader[3]?.ToString() ?? "not set");
+                        foreach (var @string in reader[2].ToString().Split(','))
+                        {
+                            CurrentSchematics.Add(@string ?? "not set");
+                        }
                     }
                 }
             }
@@ -289,16 +281,16 @@ namespace RApID_Project_WPF
         }
 
         /// <summary>
-        /// Will return 3 values for each file if the part number has files assigned.
+        /// Will return the BOM file and any schematic files if the part number has them.
         /// </summary>
         /// <param name="partNumber">The scanned part number (or derived from serial number)</param>
         /// <returns>A ValueTuple with all files available.</returns>
-        public static (string BOM, string TOP, string BOTTOM) FindFilesFor(string partNumber)
+        public static (string BOM, List<string> ASSYS) FindFilesFor(string partNumber)
         {
             using (var conn = new SqlConnection(csObjectHolder.csObjectHolder.ObjectHolderInstance().RepairConnectionString))
             {
                 conn.Open();
-                using (var cmd = new SqlCommand("SELECT Alias, BOMPath, SchematicPathTop, SchematicPathBottom FROM [Repair].[dbo].[PCBAAliases] " +
+                using (var cmd = new SqlCommand("SELECT Alias, BOMPath, SchematicPaths FROM [Repair].[dbo].[PCBAAliases] " +
                     "WHERE [TargetPartNumber] = @Pnum", conn))
                 {
                     cmd.Parameters.AddWithValue("@Pnum", partNumber);
@@ -307,17 +299,110 @@ namespace RApID_Project_WPF
 
                     if (reader.Read())
                     {
-                        var filePaths = reader[1].ToString().Split(',');
+                        var dbBOM = reader[1].ToString();
+
+                        var filePaths = reader[2].ToString().Split(',');
                         return (
-                            BOM: filePaths[1] ?? "UNSET",
-                            TOP: filePaths[2] ?? "UNSET",
-                            BOTTOM: filePaths[3] ?? "UNSET"
-                            );
+                            BOM: dbBOM,
+                            ASSYS: new List<string>() { filePaths[0] ?? "UNSET", filePaths[1] ?? "UNSET" }
+                        );
                     }
                 }
             }
 
-            return ("", "", "");
+            return ("", new List<string>() { "EMPTY" });
+        }
+
+        private void lstvwSchematics_MouseDoubleClick(object sender, MouseEventArgs e)
+        {
+            if(lstvwSchematics.SelectedItems != null && lstvwSchematics.SelectedItems.Count > 0)
+            {
+                (lstvwSchematics.SelectedItems[0] as AssemblyLinkItem).Activate();
+            }
+        }
+    }
+
+    /// <summary>
+    /// Custom <see cref="ListViewItem"/> implementation for ease of use.
+    /// </summary>
+    public class AssemblyLinkItem : ListViewItem
+    {
+        /// <summary> URL or File Path </summary>
+        public string Link { get; set; }
+        /// <summary> Text to show -- can be unrelated to link </summary>
+        public string DisplayText { get; set; }
+
+        #region Constructors
+        /// <summary>
+        /// Default ctor -- will also execute base constructor.
+        /// </summary>
+        /// <param name="link">[Optional] Sets this <see cref="Link"/></param>
+        /// <param name="displayText">[Optional] Sets this <see cref="DisplayText"/></param>
+        /// <remarks>Deleagates to a default Image Index ctor</remarks>
+        public AssemblyLinkItem(string link = "", string displayText = "") 
+            : this(link, displayText, 2) {}
+
+        /// <summary>
+        /// Image Index ctor -- will also execute base constructor.
+        /// </summary>
+        /// <param name="link">[Optional] Sets this <see cref="Link"/></param>
+        /// <param name="displayText">[Optional] Sets this <see cref="DisplayText"/></param>
+        /// <param name="imageIndex">[Recommended] 0=PDF, 1=ASC, 2=Other/Default</param>
+        public AssemblyLinkItem(string link = "", string displayText = "",
+            int imageIndex = 2) : base(displayText, imageIndex)
+        {
+            if (!string.IsNullOrWhiteSpace(link))
+            {
+                Link = link;
+            }
+
+            if (!string.IsNullOrWhiteSpace(displayText))
+            {
+                DisplayText = displayText;
+            }
+        }
+
+        /// <summary>
+        /// Image Key ctor -- will also execute base constructor.
+        /// </summary>
+        /// <param name="link">[Optional] Sets this <see cref="Link"/></param>
+        /// <param name="displayText">[Optional] Sets this <see cref="DisplayText"/></param>
+        /// <param name="imageKey">[Recommended] 0=PDF, 1=ASC, 2=Other/Default</param>
+        public AssemblyLinkItem(string link = "", string displayText = "",
+            string imageKey = "other") : base(displayText, imageKey)
+        {
+            if (!string.IsNullOrWhiteSpace(link))
+            {
+                Link = link;
+            }
+
+            if (!string.IsNullOrWhiteSpace(displayText))
+            {
+                DisplayText = displayText;
+            }
+        }
+        #endregion
+
+        /// <summary> Will start the default associated process on the linked item. </summary>
+        public void Activate() {
+            try
+            {
+                Process.Start(Link);
+            } catch(System.ComponentModel.Win32Exception wex) {
+                csExceptionLogger.csExceptionLogger.Write($"Link_Activate->({Link})", wex);
+                MessageBox.Show("Couldn't start the process meant for this link.\nPlease ensure you have permission to access the path given.",
+                    "Link::Activate() - Win32Exception", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            } catch(ObjectDisposedException ode)
+            {
+                csExceptionLogger.csExceptionLogger.Write($"Link_Activate->({Link})", ode);
+                MessageBox.Show("The process object was disposed before the process stopped!", 
+                    "Link::Activate() - ObjectDisposedException", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            } catch(System.IO.FileNotFoundException fnfe)
+            {
+                csExceptionLogger.csExceptionLogger.Write($"Link_Activate->({Link})", fnfe);
+                MessageBox.Show("Couldn't find the file specificed in the link!",
+                    "Link::Activate() - FileNotFoundException", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
     }
 }

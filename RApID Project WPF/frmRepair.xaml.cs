@@ -435,7 +435,7 @@ namespace RApID_Project_WPF
                     var cb = (ComboBox)uie;
                     cb.SelectedIndex = -1;
                     cb.Text = "";
-                    if (uie is ComboBox cbx && cbx.Name.Contains("txt")) cbx.ItemsSource = new List<string>() { "" };
+                    // Only gets RefDes & PN --- if (uie is ComboBox cbx && cbx.Name.Contains("txt")) cbx.ItemsSource = new List<string>() { "" };
                 }
                 if (uie.GetType().Name.Equals("TextBox"))
                 {

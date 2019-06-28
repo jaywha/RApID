@@ -29,8 +29,14 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.ListViewGroup listViewGroup1 = new System.Windows.Forms.ListViewGroup("PDF File(s)", System.Windows.Forms.HorizontalAlignment.Left);
+            System.Windows.Forms.ListViewGroup listViewGroup2 = new System.Windows.Forms.ListViewGroup("ASC File(s)", System.Windows.Forms.HorizontalAlignment.Left);
+            System.Windows.Forms.ListViewGroup listViewGroup3 = new System.Windows.Forms.ListViewGroup("Other File(s)", System.Windows.Forms.HorizontalAlignment.Left);
+            System.Windows.Forms.ListViewItem listViewItem1 = new System.Windows.Forms.ListViewItem("ASSYLink", "pdf");
+            System.Windows.Forms.ListViewItem listViewItem2 = new System.Windows.Forms.ListViewItem("ASSYLink", "asc");
+            System.Windows.Forms.ListViewItem listViewItem3 = new System.Windows.Forms.ListViewItem("ASSYLink", "other");
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmBoardAliases));
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
             this.cxmnuAliasesMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.addNewAliasToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.deleteAliasToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -49,25 +55,23 @@
             this.spltpnlAliasToDetail = new System.Windows.Forms.SplitContainer();
             this.lstbxAliases = new System.Windows.Forms.ListBox();
             this.pnlFilePaths = new System.Windows.Forms.Panel();
-            this.lnkSchematicFileBottom = new System.Windows.Forms.LinkLabel();
-            this.label1lblSchematicPathLabelBottom = new System.Windows.Forms.Label();
+            this.label1 = new System.Windows.Forms.Label();
+            this.lstvwSchematics = new System.Windows.Forms.ListView();
+            this.imgSchematics = new System.Windows.Forms.ImageList(this.components);
             this.lblBOMPathLabel = new System.Windows.Forms.Label();
-            this.lnkSchematicFileTop = new System.Windows.Forms.LinkLabel();
-            this.lblSchematicPathLabelTop = new System.Windows.Forms.Label();
             this.lnkBOMFile = new System.Windows.Forms.LinkLabel();
             this.tbDatabaseView = new System.Windows.Forms.TabPage();
             this.dgvDatabaseTable = new System.Windows.Forms.DataGridView();
+            this.iDDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.targetPartNumberDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.aliasDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.bOMPathDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewLinkColumn();
+            this.SchematicPaths = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.pCBAAliasesBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.pCBAAliasesDataSet = new RApID_Project_WPF.PCBAAliasesDataSet();
             this.lblWarning = new System.Windows.Forms.Label();
             this.spltpnlMain = new System.Windows.Forms.SplitContainer();
             this.pCBAAliasesTableAdapter = new RApID_Project_WPF.PCBAAliasesDataSetTableAdapters.PCBAAliasesTableAdapter();
-            this.iDDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.targetPartNumberDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.aliasDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.bOMPathDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewLinkColumn();
-            this.SchematicPathTop = new System.Windows.Forms.DataGridViewLinkColumn();
-            this.SchematicPathBottom = new System.Windows.Forms.DataGridViewLinkColumn();
             this.cxmnuAliasesMenu.SuspendLayout();
             this.cxmnuLinkMenu.SuspendLayout();
             this.tcDataViewer.SuspendLayout();
@@ -141,7 +145,7 @@
             this.tcDataViewer.Location = new System.Drawing.Point(0, 0);
             this.tcDataViewer.Name = "tcDataViewer";
             this.tcDataViewer.SelectedIndex = 0;
-            this.tcDataViewer.Size = new System.Drawing.Size(800, 387);
+            this.tcDataViewer.Size = new System.Drawing.Size(800, 413);
             this.tcDataViewer.TabIndex = 1;
             this.tcDataViewer.SelectedIndexChanged += new System.EventHandler(this.tcDataViewer_SelectedIndexChanged);
             // 
@@ -152,7 +156,7 @@
             this.tbTechnicianView.Location = new System.Drawing.Point(4, 22);
             this.tbTechnicianView.Name = "tbTechnicianView";
             this.tbTechnicianView.Padding = new System.Windows.Forms.Padding(3);
-            this.tbTechnicianView.Size = new System.Drawing.Size(792, 361);
+            this.tbTechnicianView.Size = new System.Drawing.Size(792, 387);
             this.tbTechnicianView.TabIndex = 0;
             this.tbTechnicianView.Text = "Technician View";
             this.tbTechnicianView.ToolTipText = "Shows main format for managing part number aliases.";
@@ -171,8 +175,8 @@
             // spltpnlTechView.Panel2
             // 
             this.spltpnlTechView.Panel2.Controls.Add(this.spltpnlAliasToDetail);
-            this.spltpnlTechView.Size = new System.Drawing.Size(786, 355);
-            this.spltpnlTechView.SplitterDistance = 149;
+            this.spltpnlTechView.Size = new System.Drawing.Size(786, 381);
+            this.spltpnlTechView.SplitterDistance = 159;
             this.spltpnlTechView.TabIndex = 6;
             // 
             // spltpnlPartNumToDetail
@@ -188,7 +192,7 @@
             // spltpnlPartNumToDetail.Panel2
             // 
             this.spltpnlPartNumToDetail.Panel2.Controls.Add(this.grpbxPartNumberDetail);
-            this.spltpnlPartNumToDetail.Size = new System.Drawing.Size(786, 149);
+            this.spltpnlPartNumToDetail.Size = new System.Drawing.Size(786, 159);
             this.spltpnlPartNumToDetail.SplitterDistance = 262;
             this.spltpnlPartNumToDetail.TabIndex = 0;
             // 
@@ -202,7 +206,7 @@
             this.flopnlPartNumberInput.ForeColor = System.Drawing.Color.Goldenrod;
             this.flopnlPartNumberInput.Location = new System.Drawing.Point(0, 0);
             this.flopnlPartNumberInput.Name = "flopnlPartNumberInput";
-            this.flopnlPartNumberInput.Size = new System.Drawing.Size(262, 149);
+            this.flopnlPartNumberInput.Size = new System.Drawing.Size(262, 159);
             this.flopnlPartNumberInput.TabIndex = 0;
             // 
             // lblPartNumberLabel
@@ -236,7 +240,7 @@
             this.grpbxPartNumberDetail.ForeColor = System.Drawing.Color.Goldenrod;
             this.grpbxPartNumberDetail.Location = new System.Drawing.Point(0, 0);
             this.grpbxPartNumberDetail.Name = "grpbxPartNumberDetail";
-            this.grpbxPartNumberDetail.Size = new System.Drawing.Size(520, 149);
+            this.grpbxPartNumberDetail.Size = new System.Drawing.Size(520, 159);
             this.grpbxPartNumberDetail.TabIndex = 0;
             this.grpbxPartNumberDetail.TabStop = false;
             this.grpbxPartNumberDetail.Text = "Part Number Details";
@@ -272,17 +276,15 @@
             // spltpnlAliasToDetail.Panel2
             // 
             this.spltpnlAliasToDetail.Panel2.Controls.Add(this.pnlFilePaths);
-            this.spltpnlAliasToDetail.Size = new System.Drawing.Size(786, 202);
+            this.spltpnlAliasToDetail.Size = new System.Drawing.Size(786, 218);
             this.spltpnlAliasToDetail.SplitterDistance = 262;
             this.spltpnlAliasToDetail.TabIndex = 0;
             // 
             // lstbxAliases
             // 
-            this.lstbxAliases.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
             this.lstbxAliases.BackColor = System.Drawing.Color.Black;
             this.lstbxAliases.ContextMenuStrip = this.cxmnuAliasesMenu;
+            this.lstbxAliases.Dock = System.Windows.Forms.DockStyle.Fill;
             this.lstbxAliases.Enabled = false;
             this.lstbxAliases.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lstbxAliases.ForeColor = System.Drawing.Color.Goldenrod;
@@ -290,7 +292,7 @@
             this.lstbxAliases.ItemHeight = 20;
             this.lstbxAliases.Location = new System.Drawing.Point(0, 0);
             this.lstbxAliases.Name = "lstbxAliases";
-            this.lstbxAliases.Size = new System.Drawing.Size(262, 202);
+            this.lstbxAliases.Size = new System.Drawing.Size(262, 218);
             this.lstbxAliases.TabIndex = 0;
             this.lstbxAliases.SelectedIndexChanged += new System.EventHandler(this.lstbxAliases_SelectedIndexChanged);
             this.lstbxAliases.MouseDown += new System.Windows.Forms.MouseEventHandler(this.lstbxAliases_MouseDown);
@@ -298,48 +300,74 @@
             // pnlFilePaths
             // 
             this.pnlFilePaths.BackColor = System.Drawing.Color.Black;
-            this.pnlFilePaths.Controls.Add(this.lnkSchematicFileBottom);
-            this.pnlFilePaths.Controls.Add(this.label1lblSchematicPathLabelBottom);
+            this.pnlFilePaths.Controls.Add(this.label1);
+            this.pnlFilePaths.Controls.Add(this.lstvwSchematics);
             this.pnlFilePaths.Controls.Add(this.lblBOMPathLabel);
-            this.pnlFilePaths.Controls.Add(this.lnkSchematicFileTop);
-            this.pnlFilePaths.Controls.Add(this.lblSchematicPathLabelTop);
             this.pnlFilePaths.Controls.Add(this.lnkBOMFile);
             this.pnlFilePaths.Dock = System.Windows.Forms.DockStyle.Fill;
             this.pnlFilePaths.ForeColor = System.Drawing.Color.Gold;
             this.pnlFilePaths.Location = new System.Drawing.Point(0, 0);
             this.pnlFilePaths.Name = "pnlFilePaths";
-            this.pnlFilePaths.Size = new System.Drawing.Size(520, 202);
+            this.pnlFilePaths.Size = new System.Drawing.Size(520, 218);
             this.pnlFilePaths.TabIndex = 5;
             // 
-            // lnkSchematicFileBottom
+            // label1
             // 
-            this.lnkSchematicFileBottom.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.lnkSchematicFileBottom.AutoSize = true;
-            this.lnkSchematicFileBottom.ContextMenuStrip = this.cxmnuLinkMenu;
-            this.lnkSchematicFileBottom.DisabledLinkColor = System.Drawing.Color.FromArgb(((int)(((byte)(133)))), ((int)(((byte)(133)))), ((int)(((byte)(133)))));
-            this.lnkSchematicFileBottom.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lnkSchematicFileBottom.LinkColor = System.Drawing.Color.Aqua;
-            this.lnkSchematicFileBottom.Location = new System.Drawing.Point(5, 159);
-            this.lnkSchematicFileBottom.Name = "lnkSchematicFileBottom";
-            this.lnkSchematicFileBottom.Size = new System.Drawing.Size(82, 20);
-            this.lnkSchematicFileBottom.TabIndex = 6;
-            this.lnkSchematicFileBottom.TabStop = true;
-            this.lnkSchematicFileBottom.Text = "ASSYLink";
-            this.lnkSchematicFileBottom.VisitedLinkColor = System.Drawing.Color.Fuchsia;
-            this.lnkSchematicFileBottom.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.lnkFile_LinkClicked);
-            this.lnkSchematicFileBottom.MouseDown += new System.Windows.Forms.MouseEventHandler(this.lnkSchematicFileBottom_MouseDown);
+            this.label1.AutoSize = true;
+            this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label1.ForeColor = System.Drawing.Color.Goldenrod;
+            this.label1.Location = new System.Drawing.Point(372, 42);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(143, 24);
+            this.label1.TabIndex = 5;
+            this.label1.Text = "Schematic Files";
             // 
-            // label1lblSchematicPathLabelBottom
+            // lstvwSchematics
             // 
-            this.label1lblSchematicPathLabelBottom.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.label1lblSchematicPathLabelBottom.AutoSize = true;
-            this.label1lblSchematicPathLabelBottom.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label1lblSchematicPathLabelBottom.ForeColor = System.Drawing.Color.Goldenrod;
-            this.label1lblSchematicPathLabelBottom.Location = new System.Drawing.Point(5, 135);
-            this.label1lblSchematicPathLabelBottom.Name = "label1lblSchematicPathLabelBottom";
-            this.label1lblSchematicPathLabelBottom.Size = new System.Drawing.Size(275, 24);
-            this.label1lblSchematicPathLabelBottom.TabIndex = 5;
-            this.label1lblSchematicPathLabelBottom.Text = "Schematic File Path (BOTTOM)";
+            this.lstvwSchematics.Activation = System.Windows.Forms.ItemActivation.OneClick;
+            this.lstvwSchematics.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
+            this.lstvwSchematics.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.lstvwSchematics.ForeColor = System.Drawing.Color.Gold;
+            this.lstvwSchematics.GridLines = true;
+            listViewGroup1.Header = "PDF File(s)";
+            listViewGroup1.Name = "lstvwPDFs";
+            listViewGroup2.Header = "ASC File(s)";
+            listViewGroup2.Name = "lstvwASCs";
+            listViewGroup3.Header = "Other File(s)";
+            listViewGroup3.Name = "lstvwFiles";
+            this.lstvwSchematics.Groups.AddRange(new System.Windows.Forms.ListViewGroup[] {
+            listViewGroup1,
+            listViewGroup2,
+            listViewGroup3});
+            this.lstvwSchematics.HideSelection = false;
+            listViewItem1.Group = listViewGroup1;
+            listViewItem2.Group = listViewGroup2;
+            listViewItem3.Group = listViewGroup3;
+            this.lstvwSchematics.Items.AddRange(new System.Windows.Forms.ListViewItem[] {
+            listViewItem1,
+            listViewItem2,
+            listViewItem3});
+            this.lstvwSchematics.LargeImageList = this.imgSchematics;
+            this.lstvwSchematics.Location = new System.Drawing.Point(0, 69);
+            this.lstvwSchematics.MultiSelect = false;
+            this.lstvwSchematics.Name = "lstvwSchematics";
+            this.lstvwSchematics.OwnerDraw = true;
+            this.lstvwSchematics.ShowItemToolTips = true;
+            this.lstvwSchematics.Size = new System.Drawing.Size(520, 149);
+            this.lstvwSchematics.SmallImageList = this.imgSchematics;
+            this.lstvwSchematics.Sorting = System.Windows.Forms.SortOrder.Ascending;
+            this.lstvwSchematics.TabIndex = 4;
+            this.lstvwSchematics.UseCompatibleStateImageBehavior = false;
+            this.lstvwSchematics.View = System.Windows.Forms.View.List;
+            this.lstvwSchematics.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.lstvwSchematics_MouseDoubleClick);
+            // 
+            // imgSchematics
+            // 
+            this.imgSchematics.ImageStream = ((System.Windows.Forms.ImageListStreamer)(resources.GetObject("imgSchematics.ImageStream")));
+            this.imgSchematics.TransparentColor = System.Drawing.Color.Transparent;
+            this.imgSchematics.Images.SetKeyName(0, "pdf");
+            this.imgSchematics.Images.SetKeyName(1, "asc");
+            this.imgSchematics.Images.SetKeyName(2, "other");
             // 
             // lblBOMPathLabel
             // 
@@ -351,34 +379,6 @@
             this.lblBOMPathLabel.Size = new System.Drawing.Size(131, 24);
             this.lblBOMPathLabel.TabIndex = 1;
             this.lblBOMPathLabel.Text = "BOM File Path";
-            // 
-            // lnkSchematicFileTop
-            // 
-            this.lnkSchematicFileTop.AutoSize = true;
-            this.lnkSchematicFileTop.ContextMenuStrip = this.cxmnuLinkMenu;
-            this.lnkSchematicFileTop.DisabledLinkColor = System.Drawing.Color.FromArgb(((int)(((byte)(133)))), ((int)(((byte)(133)))), ((int)(((byte)(133)))));
-            this.lnkSchematicFileTop.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lnkSchematicFileTop.LinkColor = System.Drawing.Color.Aqua;
-            this.lnkSchematicFileTop.Location = new System.Drawing.Point(3, 89);
-            this.lnkSchematicFileTop.Name = "lnkSchematicFileTop";
-            this.lnkSchematicFileTop.Size = new System.Drawing.Size(82, 20);
-            this.lnkSchematicFileTop.TabIndex = 4;
-            this.lnkSchematicFileTop.TabStop = true;
-            this.lnkSchematicFileTop.Text = "ASSYLink";
-            this.lnkSchematicFileTop.VisitedLinkColor = System.Drawing.Color.Fuchsia;
-            this.lnkSchematicFileTop.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.lnkFile_LinkClicked);
-            this.lnkSchematicFileTop.MouseDown += new System.Windows.Forms.MouseEventHandler(this.lnkSchematicFileTop_MouseDown);
-            // 
-            // lblSchematicPathLabelTop
-            // 
-            this.lblSchematicPathLabelTop.AutoSize = true;
-            this.lblSchematicPathLabelTop.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblSchematicPathLabelTop.ForeColor = System.Drawing.Color.Goldenrod;
-            this.lblSchematicPathLabelTop.Location = new System.Drawing.Point(3, 65);
-            this.lblSchematicPathLabelTop.Name = "lblSchematicPathLabelTop";
-            this.lblSchematicPathLabelTop.Size = new System.Drawing.Size(232, 24);
-            this.lblSchematicPathLabelTop.TabIndex = 2;
-            this.lblSchematicPathLabelTop.Text = "Schematic File Path (TOP)";
             // 
             // lnkBOMFile
             // 
@@ -402,7 +402,7 @@
             this.tbDatabaseView.Location = new System.Drawing.Point(4, 22);
             this.tbDatabaseView.Name = "tbDatabaseView";
             this.tbDatabaseView.Padding = new System.Windows.Forms.Padding(3);
-            this.tbDatabaseView.Size = new System.Drawing.Size(792, 361);
+            this.tbDatabaseView.Size = new System.Drawing.Size(792, 387);
             this.tbDatabaseView.TabIndex = 1;
             this.tbDatabaseView.Text = "Database View";
             this.tbDatabaseView.ToolTipText = "Shows data using SQL Server Edit format.";
@@ -420,8 +420,7 @@
             this.targetPartNumberDataGridViewTextBoxColumn,
             this.aliasDataGridViewTextBoxColumn,
             this.bOMPathDataGridViewTextBoxColumn,
-            this.SchematicPathTop,
-            this.SchematicPathBottom});
+            this.SchematicPaths});
             this.dgvDatabaseTable.DataSource = this.pCBAAliasesBindingSource;
             dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
             dataGridViewCellStyle1.BackColor = System.Drawing.Color.DimGray;
@@ -435,8 +434,47 @@
             this.dgvDatabaseTable.Location = new System.Drawing.Point(3, 3);
             this.dgvDatabaseTable.Name = "dgvDatabaseTable";
             this.dgvDatabaseTable.ReadOnly = true;
-            this.dgvDatabaseTable.Size = new System.Drawing.Size(786, 355);
+            this.dgvDatabaseTable.Size = new System.Drawing.Size(786, 381);
             this.dgvDatabaseTable.TabIndex = 0;
+            // 
+            // iDDataGridViewTextBoxColumn
+            // 
+            this.iDDataGridViewTextBoxColumn.DataPropertyName = "ID";
+            this.iDDataGridViewTextBoxColumn.HeaderText = "ID";
+            this.iDDataGridViewTextBoxColumn.Name = "iDDataGridViewTextBoxColumn";
+            this.iDDataGridViewTextBoxColumn.ReadOnly = true;
+            this.iDDataGridViewTextBoxColumn.Visible = false;
+            // 
+            // targetPartNumberDataGridViewTextBoxColumn
+            // 
+            this.targetPartNumberDataGridViewTextBoxColumn.DataPropertyName = "TargetPartNumber";
+            this.targetPartNumberDataGridViewTextBoxColumn.HeaderText = "TargetPartNumber";
+            this.targetPartNumberDataGridViewTextBoxColumn.Name = "targetPartNumberDataGridViewTextBoxColumn";
+            this.targetPartNumberDataGridViewTextBoxColumn.ReadOnly = true;
+            // 
+            // aliasDataGridViewTextBoxColumn
+            // 
+            this.aliasDataGridViewTextBoxColumn.DataPropertyName = "Alias";
+            this.aliasDataGridViewTextBoxColumn.HeaderText = "Alias";
+            this.aliasDataGridViewTextBoxColumn.Name = "aliasDataGridViewTextBoxColumn";
+            this.aliasDataGridViewTextBoxColumn.ReadOnly = true;
+            // 
+            // bOMPathDataGridViewTextBoxColumn
+            // 
+            this.bOMPathDataGridViewTextBoxColumn.DataPropertyName = "BOMPath";
+            this.bOMPathDataGridViewTextBoxColumn.HeaderText = "BOMPath";
+            this.bOMPathDataGridViewTextBoxColumn.Name = "bOMPathDataGridViewTextBoxColumn";
+            this.bOMPathDataGridViewTextBoxColumn.ReadOnly = true;
+            this.bOMPathDataGridViewTextBoxColumn.Resizable = System.Windows.Forms.DataGridViewTriState.True;
+            this.bOMPathDataGridViewTextBoxColumn.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic;
+            this.bOMPathDataGridViewTextBoxColumn.VisitedLinkColor = System.Drawing.Color.Fuchsia;
+            // 
+            // SchematicPaths
+            // 
+            this.SchematicPaths.DataPropertyName = "SchematicPaths";
+            this.SchematicPaths.HeaderText = "SchematicPaths";
+            this.SchematicPaths.Name = "SchematicPaths";
+            this.SchematicPaths.ReadOnly = true;
             // 
             // pCBAAliasesBindingSource
             // 
@@ -477,65 +515,19 @@
             // spltpnlMain.Panel2
             // 
             this.spltpnlMain.Panel2.Controls.Add(this.tcDataViewer);
-            this.spltpnlMain.Size = new System.Drawing.Size(800, 450);
-            this.spltpnlMain.SplitterDistance = 59;
+            this.spltpnlMain.Size = new System.Drawing.Size(800, 479);
+            this.spltpnlMain.SplitterDistance = 62;
             this.spltpnlMain.TabIndex = 0;
             // 
             // pCBAAliasesTableAdapter
             // 
             this.pCBAAliasesTableAdapter.ClearBeforeFill = true;
             // 
-            // iDDataGridViewTextBoxColumn
-            // 
-            this.iDDataGridViewTextBoxColumn.DataPropertyName = "ID";
-            this.iDDataGridViewTextBoxColumn.HeaderText = "ID";
-            this.iDDataGridViewTextBoxColumn.Name = "iDDataGridViewTextBoxColumn";
-            this.iDDataGridViewTextBoxColumn.ReadOnly = true;
-            this.iDDataGridViewTextBoxColumn.Visible = false;
-            // 
-            // targetPartNumberDataGridViewTextBoxColumn
-            // 
-            this.targetPartNumberDataGridViewTextBoxColumn.DataPropertyName = "TargetPartNumber";
-            this.targetPartNumberDataGridViewTextBoxColumn.HeaderText = "TargetPartNumber";
-            this.targetPartNumberDataGridViewTextBoxColumn.Name = "targetPartNumberDataGridViewTextBoxColumn";
-            this.targetPartNumberDataGridViewTextBoxColumn.ReadOnly = true;
-            // 
-            // aliasDataGridViewTextBoxColumn
-            // 
-            this.aliasDataGridViewTextBoxColumn.DataPropertyName = "Alias";
-            this.aliasDataGridViewTextBoxColumn.HeaderText = "Alias";
-            this.aliasDataGridViewTextBoxColumn.Name = "aliasDataGridViewTextBoxColumn";
-            this.aliasDataGridViewTextBoxColumn.ReadOnly = true;
-            // 
-            // bOMPathDataGridViewTextBoxColumn
-            // 
-            this.bOMPathDataGridViewTextBoxColumn.DataPropertyName = "BOMPath";
-            this.bOMPathDataGridViewTextBoxColumn.HeaderText = "BOMPath";
-            this.bOMPathDataGridViewTextBoxColumn.Name = "bOMPathDataGridViewTextBoxColumn";
-            this.bOMPathDataGridViewTextBoxColumn.ReadOnly = true;
-            this.bOMPathDataGridViewTextBoxColumn.Resizable = System.Windows.Forms.DataGridViewTriState.True;
-            this.bOMPathDataGridViewTextBoxColumn.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic;
-            this.bOMPathDataGridViewTextBoxColumn.VisitedLinkColor = System.Drawing.Color.Fuchsia;
-            // 
-            // SchematicPathTop
-            // 
-            this.SchematicPathTop.DataPropertyName = "SchematicPathTop";
-            this.SchematicPathTop.HeaderText = "SchematicPathTop";
-            this.SchematicPathTop.Name = "SchematicPathTop";
-            this.SchematicPathTop.ReadOnly = true;
-            // 
-            // SchematicPathBottom
-            // 
-            this.SchematicPathBottom.DataPropertyName = "SchematicPathBottom";
-            this.SchematicPathBottom.HeaderText = "SchematicPathBottom";
-            this.SchematicPathBottom.Name = "SchematicPathBottom";
-            this.SchematicPathBottom.ReadOnly = true;
-            // 
             // frmBoardAliases
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(800, 450);
+            this.ClientSize = new System.Drawing.Size(800, 479);
             this.Controls.Add(this.spltpnlMain);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "frmBoardAliases";
@@ -597,8 +589,6 @@
         private System.Windows.Forms.ListBox lstbxAliases;
         private System.Windows.Forms.Panel pnlFilePaths;
         private System.Windows.Forms.Label lblBOMPathLabel;
-        private System.Windows.Forms.LinkLabel lnkSchematicFileTop;
-        private System.Windows.Forms.Label lblSchematicPathLabelTop;
         private System.Windows.Forms.LinkLabel lnkBOMFile;
         private System.Windows.Forms.TabPage tbDatabaseView;
         private System.Windows.Forms.DataGridView dgvDatabaseTable;
@@ -608,13 +598,13 @@
         private System.Windows.Forms.BindingSource pCBAAliasesBindingSource;
         private PCBAAliasesDataSetTableAdapters.PCBAAliasesTableAdapter pCBAAliasesTableAdapter;
         private System.Windows.Forms.DataGridViewLinkColumn schematicPathDataGridViewTextBoxColumn;
-        private System.Windows.Forms.LinkLabel lnkSchematicFileBottom;
-        private System.Windows.Forms.Label label1lblSchematicPathLabelBottom;
+        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.ListView lstvwSchematics;
+        private System.Windows.Forms.ImageList imgSchematics;
         private System.Windows.Forms.DataGridViewTextBoxColumn iDDataGridViewTextBoxColumn;
         private System.Windows.Forms.DataGridViewTextBoxColumn targetPartNumberDataGridViewTextBoxColumn;
         private System.Windows.Forms.DataGridViewTextBoxColumn aliasDataGridViewTextBoxColumn;
         private System.Windows.Forms.DataGridViewLinkColumn bOMPathDataGridViewTextBoxColumn;
-        private System.Windows.Forms.DataGridViewLinkColumn SchematicPathTop;
-        private System.Windows.Forms.DataGridViewLinkColumn SchematicPathBottom;
+        private System.Windows.Forms.DataGridViewTextBoxColumn SchematicPaths;
     }
 }
