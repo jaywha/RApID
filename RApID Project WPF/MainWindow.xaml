@@ -92,12 +92,6 @@
                 </StackPanel>
             </Button>
             <Separator Visibility="Hidden" Width="10" />
-            <Button x:Name="btnClearCache" Width="35" Height="35" VerticalAlignment="Center" Click="btnClicks" ToolTip="Clear Application Cache" Visibility="Collapsed">
-                <StackPanel>
-                    <Image Source="Resources/trashcan.png" />
-                </StackPanel>
-            </Button>
-            <Separator Visibility="Hidden" Width="10" />
             <Button x:Name="btnTicketLookup" Content="🔍" FontSize="20" Width="35" Height="35" 
                     VerticalAlignment="Center" Click="btnClicks" ToolTip="Global Search - Technician Submissions"/>
         </StackPanel>

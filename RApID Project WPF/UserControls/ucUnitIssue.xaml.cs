@@ -251,11 +251,7 @@ namespace RApID_Project_WPF.UserControls
         public ucUnitIssue(int issueNum)
         {
             InitializeComponent();
-            holder.vGetServerName("");
-            
-            if (string.IsNullOrEmpty(MonkeyCache.FileStore.Barrel.ApplicationId)) 
-            MonkeyCache.FileStore.Barrel.ApplicationId = AppDomain.CurrentDomain.FriendlyName;
-            
+            holder.vGetServerName("");            
 
             stkMain.Name += issueNum;
 

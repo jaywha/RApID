@@ -1,7 +1,6 @@
 ﻿using ExcelDataReader;
 using PdfSharp.Pdf;
 using PdfSharp.Pdf.IO;
-using MonkeyCache.FileStore;
 using System;
 using System.Data.SqlClient;
 using System.IO;
@@ -175,12 +174,6 @@ namespace RApID_Project_WPF
                 filename = @"\\joi\EU\application\EngDocumentation\Design\Electrical\408208-3 REV C (AS ETH 5PS)\408206-1_(AS ETH 5PS)_408208-3_C.xls";
                 ShowSuccessMessage(filename);
                 return new Tuple<string, bool>(filename, true);
-            }
-
-            if (csCrossClassInteraction.Cache != null && csCrossClassInteraction.Cache.Exists(ComponentNumber))
-            {
-                MainWindow.Notify.ShowBalloonTip("Loaded data from cache", $"Found data for {ComponentNumber} in the application cache.", Hardcodet.Wpf.TaskbarNotification.BalloonIcon.Info);
-                return new Tuple<string, bool>(csCrossClassInteraction.Cache.Get<string>(ComponentNumber), true);
             }
 
             try

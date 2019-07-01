@@ -1,5 +1,4 @@
-﻿using MonkeyCache.FileStore;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
@@ -34,8 +33,6 @@ namespace RApID_Project_WPF.UserControls
 
         public ucAOITab()
         {
-            if (string.IsNullOrWhiteSpace(Barrel.ApplicationId))
-                Barrel.ApplicationId = AppDomain.CurrentDomain.FriendlyName;
             InitializeComponent();
             dgAOI.dgBuildView(DataGridTypes.AOI);
             dgDefectCodes.dgBuildView(DataGridTypes.DEFECTCODES);

@@ -4,8 +4,6 @@
  */
 
 using ExcelDataReader;
-using MonkeyCache;
-using MonkeyCache.FileStore;
 using RApID_Project_WPF.UserControls;
 using System;
 using System.Collections.Generic;
@@ -40,8 +38,6 @@ namespace RApID_Project_WPF
 
     public static class csCrossClassInteraction
     {
-        /// <summary> Shortcut to <see cref="Banana"/> instance modelled in <see cref="Barrel.Current"/> </summary>
-        public static IBarrel Cache = Barrel.Current;
         private static StaticVars sVar = StaticVars.StaticVarsInstance();
         private static csObjectHolder.csObjectHolder holder = csObjectHolder.csObjectHolder.ObjectHolderInstance();
 
@@ -195,8 +191,6 @@ namespace RApID_Project_WPF
         /// <param name="designators">A list of reference and part number designators to give autocompletion.</param>
         public static async void DoExcelOperations(string filePath, ProgressBar progData = null, DataGrid bomlist = null, params DesginatorPair[] designators)
         {
-            Cache.EmptyExpired();
-
             try
             {
                 await Task.Factory.StartNew(new Action(() =>
@@ -284,19 +278,6 @@ namespace RApID_Project_WPF
         }
 
         /// <summary>
-        /// Checks the <see cref="ApplicationCache"/> for any data related to the <see cref="MultiplePartsReplaced"/> model for the given component number.
-        /// </summary>
-        /// <param name="filePath">The Excel File path </param>
-        private static (bool exists, string partNumbers, string referenceDesignators) CheckCache(string filePath)
-        {
-            var componentNumber = filePath.Substring(filePath.LastIndexOf('\\') + 1, 8);
-            if (!Cache.Exists(componentNumber))
-                return (false, string.Empty, string.Empty);
-            else
-                return (true, Cache.Get<string>(componentNumber + "PN"), Cache.Get<string>(componentNumber + "RD"));
-        }
-
-        /// <summary>
         /// Updates the <see cref="ApplicationCache"/> with any data related to the <see cref="MultiplePartsReplaced"/> model for the given component number.
         /// </summary>
         /// <param name="cacheTarget">Either Part Number or Reference Designators</param>
@@ -304,8 +285,6 @@ namespace RApID_Project_WPF
         private static void UpdateCache(string cacheTarget, string filePath)
         {
             var componentNumber = filePath.Substring(filePath.LastIndexOf('\\') + 1, 8);
-            if (!Cache.Exists(componentNumber))
-                Cache.Add(componentNumber, filePath, TimeSpan.Parse("12:01:00"));
 
             string data = "";
             switch (cacheTarget)
@@ -320,8 +299,6 @@ namespace RApID_Project_WPF
                     Console.WriteLine($"[WARN]: RApID_Project_WPF::csCrossClassInteraction.UpdateCache() with unknown cacheTarget = {cacheTarget}.");
                     return;
             }
-
-            Cache.Add(componentNumber + cacheTarget, data, TimeSpan.FromHours(12.0));
         }
 
         /// <summary>

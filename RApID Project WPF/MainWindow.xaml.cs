@@ -152,10 +152,6 @@ namespace RApID_Project_WPF
                         fSettings.Show();
                         Hide();
                         break;
-                    case "btnClearCache":
-                        if(MessageBox.Show("This will clear local BOM data.\nAre you sure?", "Clearing Application Cache?", MessageBoxButton.YesNo)==MessageBoxResult.Yes)
-                            csCrossClassInteraction.Cache.EmptyAll();
-                        break;
                     case "btnTicketLookup":
                         frmGlobalSearch.Instance.Owner = GlobalInstance;
                         frmGlobalSearch.Instance.WindowStartupLocation = WindowStartupLocation.CenterOwner;
