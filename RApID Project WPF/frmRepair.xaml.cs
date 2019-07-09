@@ -1,4 +1,5 @@
 ﻿using EricStabileLibrary;
+using SNMapperLib;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -1354,8 +1355,11 @@ namespace RApID_Project_WPF
                             new Tuple<Control, Control>(txtRefDes_2, txtPartReplaced_2),
                             new Tuple<Control, Control>(txtRefDes_3, txtPartReplaced_3));
 
-                            OrigRefSource = (List<string>)txtRefDes.ItemsSource;
-                            OrigPartSource = (List<string>)txtPartReplaced.ItemsSource;
+                            OrigRefSource = (List<string>)txtRefDes.Items.Cast<string>();
+                            OrigPartSource = (List<string>)txtPartReplaced.Items.Cast<string>();
+
+                            csCrossClassInteraction.MapperSuccessMessage(result.Item1, mapper.PartNumber);
+
                             BOMFileActive = true;
                         }
                     }), DispatcherPriority.Background);

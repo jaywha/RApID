@@ -132,6 +132,9 @@
     <Reference Include="PdfSharp.Charting, Version=1.50.5147.0, Culture=neutral, PublicKeyToken=f94615aa0424f9eb, processorArchitecture=MSIL">
       <HintPath>..\packages\PDFsharp.1.50.5147\lib\net20\PdfSharp.Charting.dll</HintPath>
     </Reference>
+    <Reference Include="SNMapperLib">
+      <HintPath>..\..\..\Users\jwhaley\OneDrive - Johnson Outdoors Inc\Visual Studio 2017\Projects\RetestVerifierApp\SNMapperLib\obj\Release\SNMapperLib.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.DirectoryServices.AccountManagement" />
@@ -175,7 +178,6 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>BoardAliasDataSet.xsd</DependentUpon>
     </Compile>
-    <Compile Include="Classes\csSerialNumberMapper.cs" />
     <Compile Include="Classes\csClassHelper.cs" />
     <Compile Include="Classes\csCrossClassInteraction.cs" />
     <Compile Include="Classes\csPrintQCDQELabel.cs" />

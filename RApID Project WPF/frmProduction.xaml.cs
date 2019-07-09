@@ -1,4 +1,5 @@
 ﻿using EricStabileLibrary;
+using SNMapperLib;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -636,6 +637,8 @@ namespace RApID_Project_WPF
                                 new Tuple<Control, Control>(txtMultiRefDes, txtMultiPartNum),
                                 new Tuple<Control, Control>(txtMultiRefDes_2, txtMultiPartNum_2),
                                 new Tuple<Control, Control>(txtMultiRefDes_3, txtMultiPartNum_3));
+
+                                csCrossClassInteraction.MapperSuccessMessage(result.Item1, mapper.PartNumber);
 
                                 BOMFileActive = true;
                             }

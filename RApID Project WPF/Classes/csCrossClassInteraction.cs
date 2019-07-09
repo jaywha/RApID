@@ -174,6 +174,21 @@ namespace RApID_Project_WPF
             w.Top = (((workAreaHeight - (w.Height * dpiScaling)) / 2) + (workArea.Top * dpiScaling));
         }
 
+        public static void MapperSuccessMessage(string filename, string PN = "")
+        {
+            void OpenDirectory(object sender, RoutedEventArgs e)
+                                => System.Diagnostics.Process.Start(filename.Substring(0, filename.LastIndexOf('\\')));
+
+            MainWindow.Notify.Dispatcher.Invoke(() => {
+                MainWindow.Notify.TrayBalloonTipClicked += OpenDirectory;
+                MainWindow.Notify.TrayBalloonTipClosed += delegate {
+                    MainWindow.Notify.TrayBalloonTipClicked -= OpenDirectory;
+                };
+                MainWindow.Notify.ShowBalloonTip($"BOM Parts Pulled{(string.IsNullOrWhiteSpace(PN) ? "" : $" for [{PN}]")}",
+                $"The file is stored here: {filename}", Hardcodet.Wpf.TaskbarNotification.BalloonIcon.Info);
+            });
+        }
+
         /// <summary>
         /// Does the excel operations for grabbing Reference and Part numbers.
         /// </summary>

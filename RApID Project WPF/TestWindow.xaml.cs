@@ -1,4 +1,5 @@
 ﻿using RApID_Project_WPF.UserControls;
+using SNMapperLib;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -127,6 +128,8 @@ namespace RApID_Project_WPF
                                 var result = await mapper.FindFileAsync(".xls");
                                 csCrossClassInteraction.DoExcelOperations(result.Item1, progMapper,
                                 new Tuple<Control, Control>(unitIssue.cmbxRefDesignator, unitIssue.cmbxPartNumber));
+
+                                csCrossClassInteraction.MapperSuccessMessage(result.Item1, mapper.PartNumber);
 
                                 BOMFileActive = true;
                             }

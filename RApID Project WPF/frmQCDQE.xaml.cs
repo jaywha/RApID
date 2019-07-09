@@ -16,6 +16,7 @@ using System.IO.Ports;
 using System.Data.Sql;
 using System.Data.SqlClient;
 using System.Windows.Threading;
+using SNMapperLib;
 
 namespace RApID_Project_WPF
 {
@@ -820,6 +821,8 @@ namespace RApID_Project_WPF
                             {
                                 var result = await mapper.FindFileAsync(".xls");
                                 //TODO: Make User Control for BOM Matcher (2 cmbx: Ref Des. -> Part Number)
+
+                                csCrossClassInteraction.MapperSuccessMessage(result.Item1, mapper.PartNumber);
                             }
                         });
                     }));

@@ -41,7 +41,6 @@ namespace RApID_Project_WPF
             #if DEBUG
                 lblDebug.Visibility = Visibility.Visible;
                 btnTest.Visibility = Visibility.Visible;
-                btnClearCache.Visibility = Visibility.Visible;
             #endif
 
             Notify = notifyRapid;
