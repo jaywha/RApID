@@ -56,6 +56,16 @@ namespace RApID_Project_WPF
         public frmProduction()
         {
             InitializeComponent();
+
+            CheckForManual();
+        }
+
+        private void CheckForManual() {
+            #if DEBUG
+                txtMultiPartNum.PrepForManualInput();
+                txtMultiPartNum_2.PrepForManualInput();
+                txtMultiPartNum_3.PrepForManualInput();
+            #endif
         }
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
@@ -641,6 +651,8 @@ namespace RApID_Project_WPF
                                 csCrossClassInteraction.MapperSuccessMessage(result.Item1, mapper.PartNumber);
 
                                 BOMFileActive = true;
+
+                                CheckForManual();
                             }
                         }), DispatcherPriority.ApplicationIdle);
                     }));

@@ -71,6 +71,23 @@ namespace EricStabileLibrary
         }
     }
 
+    /// <summary>
+    /// Extension methods
+    /// </summary>
+    public static class Extensions
+    {
+        /// <summary>
+        /// Quick extension method for forcing combo boxes to accept manual input.
+        /// </summary>
+        /// <param name="cmbx"></param>
+        public static void PrepForManualInput(this System.Windows.Controls.ComboBox cmbx)
+        {
+            cmbx.IsReadOnly = false;
+            cmbx.IsEnabled = true;
+            cmbx.IsEditable = true;
+        }
+    }
+
     public static class csAppSettings
     {
         /// <summary>
