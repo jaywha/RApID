@@ -9,6 +9,8 @@ namespace RApID_Project_WPF
 {
     public partial class frmBoardAliases : Form
     {
+        private static bool FirstTimeToday = true;
+
         private List<string> CurrentAliases = new List<string>();
         private List<string> CurrentBOMs = new List<string>();
         private List<string> CurrentSchematics = new List<string>();
@@ -38,6 +40,27 @@ namespace RApID_Project_WPF
 
         private void frmBoardAliases_Load(object sender, EventArgs e)
         {
+            /*if (FirstTimeToday)
+            {
+                var ans = MessageBox.Show("Please use this form to enter in the correct information to locate the files related to this repair item.",
+                    "Locate BOM & Schematic Files", MessageBoxButtons.YesNo, MessageBoxIcon.Information);
+                if (ans == DialogResult.No || ans == DialogResult.Cancel)
+                {
+                    try
+                    { // TRIGGERED EXCEPTION EMAIL
+                        throw new Exception($"Current User ({Environment.UserName}) said NO to helping me.");
+                    }
+                    catch (Exception ex)
+                    {
+                        Mailman.SendEmail($"{Environment.UserName} did not provide BOM assistance.",
+                            $"Timestamp: {DateTime.Now}\nSerial Number Mapper Data:\n{SNMapperLib.csSerialNumberMapper.Instance.AsDataPackage()}\n", ex);
+                        return;
+                    }
+                }
+
+                FirstTimeToday = false;
+            }*/
+
             this.pCBAAliasesTableAdapter.Fill(this.pCBAAliasesDataSet.PCBAAliases);
 
             SetterTip.SetToolTip(lnkBOMFile, "Go to -> " + lnkBOMFile.Text);

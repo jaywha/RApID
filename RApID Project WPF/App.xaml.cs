@@ -9,6 +9,10 @@ namespace RApID_Project_WPF
     /// </summary>
     public partial class App : Application
     {
+        /// <summary>
+        /// Custom Program Entry point
+        /// </summary>
+        /// <param name="args">Command Line Arguments</param>
         [STAThread]
         public static void Main(string[] args)
         {
@@ -18,6 +22,9 @@ namespace RApID_Project_WPF
                     = $@"\\joi\EU\Public\EE Process Test\Logs\RApID\_Exceptions\{DateTime.Today:yyyy}\{DateTime.Today:MMMM}\";
                 Directory.CreateDirectory(csExceptionLogger.csExceptionLogger.DefaultLogLocation);
             }
+            
+            // Set this form to be the form that should appear when a BOM is not found.
+            SNMapperLib.csSerialNumberMapper.Instance.RApIDForm = new frmBoardAliases();
 
             try
             {

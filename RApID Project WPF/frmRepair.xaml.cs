@@ -1370,15 +1370,15 @@ namespace RApID_Project_WPF
                         else
                         {
                             var result = await mapper.FindFileAsync(".xls");
-                            csCrossClassInteraction.DoExcelOperations(result.Item1, progMapper,
+                            csCrossClassInteraction.DoExcelOperations(result.filename, progMapper,
                             new Tuple<Control, Control>(txtRefDes, txtPartReplaced),
                             new Tuple<Control, Control>(txtRefDes_2, txtPartReplaced_2),
                             new Tuple<Control, Control>(txtRefDes_3, txtPartReplaced_3));
 
-                            OrigRefSource = (List<string>)txtRefDes.Items.Cast<string>();
-                            OrigPartSource = (List<string>)txtPartReplaced.Items.Cast<string>();
+                            OrigRefSource = txtRefDes.Items.Cast<string>().ToList();
+                            OrigPartSource = txtPartReplaced.Items.Cast<string>().ToList();
 
-                            csCrossClassInteraction.MapperSuccessMessage(result.Item1, mapper.PartNumber);
+                            csCrossClassInteraction.MapperSuccessMessage(result.filename, mapper.PartNumber);
 
                             BOMFileActive = true;
 

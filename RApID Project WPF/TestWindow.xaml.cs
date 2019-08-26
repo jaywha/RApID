@@ -126,10 +126,10 @@ namespace RApID_Project_WPF
                             {
                                 MessageBox.Show(mapper.Success(), "DEBUG", MessageBoxButton.OK, MessageBoxImage.Information);
                                 var result = await mapper.FindFileAsync(".xls");
-                                csCrossClassInteraction.DoExcelOperations(result.Item1, progMapper,
+                                csCrossClassInteraction.DoExcelOperations(result.filename, progMapper,
                                 new Tuple<Control, Control>(unitIssue.cmbxRefDesignator, unitIssue.cmbxPartNumber));
 
-                                csCrossClassInteraction.MapperSuccessMessage(result.Item1, mapper.PartNumber);
+                                csCrossClassInteraction.MapperSuccessMessage(result.filename, mapper.PartNumber);
 
                                 BOMFileActive = true;
                             }
