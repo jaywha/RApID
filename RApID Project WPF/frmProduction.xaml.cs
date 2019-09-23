@@ -637,21 +637,20 @@ namespace RApID_Project_WPF
                         {
                             if (!mapper.GetData(txtSerialNumber.Text))
                             {
-                                MessageBox.Show("Couldn't find the barcode's entry in the database.\nPlease enter information manually.", 
+                                MessageBox.Show("Couldn't find the barcode's entry in the database.\nPlease enter information manually.",
                                         "Soft Error - BOM Lookup", MessageBoxButton.OK, MessageBoxImage.Warning);
                             }
                             else
                             {
-                                var result = await mapper.FindFileAsync(".xls");
-                                csCrossClassInteraction.DoExcelOperations(result.filename, progMapper, dgBOMList,
+                                var (filename, found) = await mapper.FindFileAsync(".xls");
+                                csCrossClassInteraction.DoExcelOperations(filename, progMapper, dgBOMList,
                                 new Tuple<Control, Control>(txtMultiRefDes, txtMultiPartNum),
                                 new Tuple<Control, Control>(txtMultiRefDes_2, txtMultiPartNum_2),
                                 new Tuple<Control, Control>(txtMultiRefDes_3, txtMultiPartNum_3));
 
-                                csCrossClassInteraction.MapperSuccessMessage(result.filename, mapper.PartNumber);
+                                csCrossClassInteraction.MapperSuccessMessage(filename, mapper.PartNumber);
 
                                 BOMFileActive = true;
-
                                 CheckForManual();
                             }
                         }), DispatcherPriority.ApplicationIdle);

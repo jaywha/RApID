@@ -16,6 +16,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
+using System.Windows.Documents;
 using DesginatorPair = System.Tuple<System.Windows.Controls.Control, System.Windows.Controls.Control>;
 
 namespace RApID_Project_WPF
@@ -40,6 +41,8 @@ namespace RApID_Project_WPF
     {
         private static StaticVars sVar = StaticVars.StaticVarsInstance();
         private static csObjectHolder.csObjectHolder holder = csObjectHolder.csObjectHolder.ObjectHolderInstance();
+        private const string bomlogfiledir = @"P:\EE Process Test\Logs\RApID\_BOMReadings\";
+        private static readonly string bomlogfile = $"{DateTime.Now:y\\MMMM\\dd}-BOMLog.txt";
 
         public static List<string> ReferenceDesignators { get; private set; } = new List<string>();
         public static List<string> PartNumbers { get; private set; } = new List<string>();
@@ -148,7 +151,10 @@ namespace RApID_Project_WPF
 
         public static void ReplaceText(this RichTextBox rtbox, string oldString, string newString)
         {
-            //TODO: Need to remove oldString, set text to newString
+            var orig = new TextRange(rtbox.Document.ContentStart, rtbox.Document.ContentEnd).Text;
+            orig.Replace(oldString, newString);
+            rtbox.Document.Blocks.Clear();
+            rtbox.Document.Blocks.Add(new Paragraph(new Run(orig)));
         }
 
         /// <summary>
@@ -179,9 +185,11 @@ namespace RApID_Project_WPF
             void OpenDirectory(object sender, RoutedEventArgs e)
                                 => System.Diagnostics.Process.Start(filename.Substring(0, filename.LastIndexOf('\\')));
 
-            MainWindow.Notify.Dispatcher.Invoke(() => {
+            MainWindow.Notify.Dispatcher.Invoke(() =>
+            {
                 MainWindow.Notify.TrayBalloonTipClicked += OpenDirectory;
-                MainWindow.Notify.TrayBalloonTipClosed += delegate {
+                MainWindow.Notify.TrayBalloonTipClosed += delegate
+                {
                     MainWindow.Notify.TrayBalloonTipClicked -= OpenDirectory;
                 };
                 MainWindow.Notify.ShowBalloonTip($"BOM Parts Pulled{(string.IsNullOrWhiteSpace(PN) ? "" : $" for [{PN}]")}",
@@ -195,7 +203,8 @@ namespace RApID_Project_WPF
         /// <param name="filePath">Path to the Excel file - normally the BoM file.</param>
         /// <param name="progData">Any related progress bar to semi-report operation progress.</param>
         /// <param name="designators">A list of reference and part number designators to give autocompletion.</param>
-        public static void DoExcelOperations(string filePath, ProgressBar progData = null, params DesginatorPair[] designators) => DoExcelOperations(filePath, progData, null, designators);
+        public static void DoExcelOperations(string filePath, ProgressBar progData = null, params DesginatorPair[] designators)
+            => DoExcelOperations(filePath, progData, null, designators);
 
         /// <summary>
         /// Does the excel operations for grabbing Reference and Part numbers.
@@ -208,6 +217,9 @@ namespace RApID_Project_WPF
         {
             try
             {
+                Directory.CreateDirectory(bomlogfiledir);
+                File.Create(Path.Combine(bomlogfiledir, bomlogfile));
+
                 await Task.Factory.StartNew(new Action(() =>
                 {
                     if (progData != null) progData.Dispatcher.Invoke(() => progData.Visibility = Visibility.Visible);
@@ -242,16 +254,11 @@ namespace RApID_Project_WPF
                                 {
                                     progData.Value++;
                                 });
-                                /* TODO: Drag-n-drop listbox -- needed?
-                                 * bomlist?.Dispatcher.Invoke(() =>
-                                {
-                                    bomlist.Items.Add(new MultiplePartsReplaced(rd, pn,
-                                        pn.Contains("NP") ? "NO PART" : GetPartReplacedPartDescription(pn)));
-                                });*/
                             }
                         }
                     }
 
+                    var firstDesignator = designators[0].Item1 != null && designators[0].Item2 != null;
                     foreach (var designator in designators)
                     {
                         var reference = designator.Item1;
@@ -261,10 +268,13 @@ namespace RApID_Project_WPF
                         {
                             refbox.Dispatcher.Invoke(() =>
                             {
+                                if(firstDesignator) File.AppendAllText(bomlogfiledir + bomlogfile, "Reference Designators {\n");
                                 foreach (var refDes in ReferenceDesignators)
                                 {
+                                    if(firstDesignator) File.AppendAllText(bomlogfiledir + bomlogfile, $"\t{refDes}\n");
                                     refbox.Items.Add(refDes);
                                 }
+                                if(firstDesignator) File.AppendAllText(bomlogfiledir + bomlogfile, "}\n\n");
                             });
                         }
 
@@ -272,12 +282,17 @@ namespace RApID_Project_WPF
                         {
                             invbox.Dispatcher.Invoke(() =>
                             {
-                                foreach (var partNum in PartNumbers)
+                                if(firstDesignator) File.AppendAllText(bomlogfiledir + bomlogfile, "Part Numbers {\n");
+                                foreach (var partNumber in PartNumbers)
                                 {
-                                    invbox.Items.Add(partNum);
+                                    if(firstDesignator) File.AppendAllText(bomlogfiledir + bomlogfile, $"\t{partNumber}\n");
+                                    invbox.Items.Add(partNumber);
                                 }
+                                if(firstDesignator) File.AppendAllText(bomlogfiledir + bomlogfile, "}\n");
                             });
                         }
+
+                        firstDesignator = false;
                     }
 
                     GC.Collect();

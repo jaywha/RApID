@@ -40,7 +40,7 @@ namespace RApID_Project_WPF
 
         private void frmBoardAliases_Load(object sender, EventArgs e)
         {
-            /*if (FirstTimeToday)
+            if (FirstTimeToday)
             {
                 var ans = MessageBox.Show("Please use this form to enter in the correct information to locate the files related to this repair item.",
                     "Locate BOM & Schematic Files", MessageBoxButtons.YesNo, MessageBoxIcon.Information);
@@ -59,7 +59,7 @@ namespace RApID_Project_WPF
                 }
 
                 FirstTimeToday = false;
-            }*/
+            }
 
             this.pCBAAliasesTableAdapter.Fill(this.pCBAAliasesDataSet.PCBAAliases);
 
