@@ -3,12 +3,14 @@ using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Diagnostics;
+using System.IO;
 using System.Windows.Forms;
 
 namespace RApID_Project_WPF
 {
     public partial class frmBoardAliases : Form
     {
+        private const string EMPTY_FILE_PATH = "Empty BOM Path...";
         private static bool FirstTimeToday = true;
 
         private List<string> CurrentAliases = new List<string>();
@@ -54,7 +56,7 @@ namespace RApID_Project_WPF
                     {
                         Mailman.SendEmail($"{Environment.UserName} did not provide BOM assistance.",
                             $"Timestamp: {DateTime.Now}\nSerial Number Mapper Data:\n{SNMapperLib.csSerialNumberMapper.Instance.AsDataPackage()}\n", ex);
-                        return;
+                        Close();
                     }
                 }
 
@@ -80,6 +82,8 @@ namespace RApID_Project_WPF
 
         private void txtPartNumber_KeyDown(object sender, KeyEventArgs e)
         {
+            errorProvider.SetError(txtPartNumber, string.Empty);
+
             if (e.KeyCode == Keys.Enter)
             {
                 lstbxAliases.Enabled = false;
@@ -208,16 +212,21 @@ namespace RApID_Project_WPF
         #region ListBox
         private void lstbxAliases_SelectedIndexChanged(object sender, EventArgs e)
         {
-            lnkBOMFile.Text = CurrentBOMs[lstbxAliases.SelectedIndex].Substring(CurrentBOMs[lstbxAliases.SelectedIndex].LastIndexOf('\\'));
+            var lastSlashInPath = CurrentBOMs[lstbxAliases.SelectedIndex].LastIndexOf('\\');
+            if (lastSlashInPath > 0)
+                lnkBOMFile.Text = CurrentBOMs?[lstbxAliases.SelectedIndex].Substring(lastSlashInPath) ?? EMPTY_FILE_PATH;
+
             foreach (var schematic in CurrentSchematics)
             {
-                var assyItem = new AssemblyLinkItem(
+                if (!Directory.Exists(schematic)) continue;
+
+                var assyItem = 
+                    new AssemblyLinkItem(
                     link: schematic,
                     displayText: schematic.Substring(schematic.LastIndexOf('\\')),
-                    imageKey: schematic.Substring(schematic.LastIndexOf('.')))
-                {
-                    ToolTipText = "Open file:\n" + schematic
-                };
+                    imageKey: schematic.Substring(schematic.LastIndexOf('.'))) {
+                        ToolTipText = "Open file:\n" + schematic
+                    };
                 lstvwSchematics.Items.Add(schematic);
             }
         }
@@ -244,7 +253,7 @@ namespace RApID_Project_WPF
 
         private void lnkFile_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            if (e.Button == MouseButtons.Left)
+            if (e.Button == MouseButtons.Left && !(string.IsNullOrEmpty(e.Link.ToString()) || e.Link.ToString().Equals("")))
             {
                 try
                 {
@@ -257,6 +266,8 @@ namespace RApID_Project_WPF
 
         private void GetPartNumberDetailsAndAliases()
         {
+            var validPartNumber = false;
+
             using (var conn = new SqlConnection(csObjectHolder.csObjectHolder.ObjectHolderInstance().HummingBirdConnectionString))
             {
                 conn.Open();
@@ -266,14 +277,19 @@ namespace RApID_Project_WPF
                     cmd.Parameters.AddWithValue("@Pnum", txtPartNumber.Text);
 
                     var reader = cmd.ExecuteReader();
-
-                    if (reader.HasRows && reader.Read())
+                    validPartNumber = reader.HasRows;
+                    if (validPartNumber && reader.Read())
                     {
                         lblPartName.Text = lblPartName.Text.Replace("<NAME>", reader[0].ToString());
                         lblCommodityClass.Text = lblCommodityClass.Text.Replace("<CLASS>", reader[1].ToString());
                         lstbxAliases.Enabled = true;
                     }
                 }
+            }
+
+            if (!validPartNumber) {
+                errorProvider.SetError(txtPartNumber, "Part Number not found in ItemMaster table!");
+                return;
             }
 
             using (var conn = new SqlConnection(csObjectHolder.csObjectHolder.ObjectHolderInstance().RepairConnectionString))
@@ -377,12 +393,13 @@ namespace RApID_Project_WPF
             if (!string.IsNullOrWhiteSpace(link))
             {
                 Link = link;
+                ToolTipText = Link;
             }
 
             if (!string.IsNullOrWhiteSpace(displayText))
             {
                 DisplayText = displayText;
-            }
+            }            
         }
 
         /// <summary>
@@ -397,12 +414,13 @@ namespace RApID_Project_WPF
             if (!string.IsNullOrWhiteSpace(link))
             {
                 Link = link;
+                ToolTipText = Link;
             }
 
             if (!string.IsNullOrWhiteSpace(displayText))
             {
                 DisplayText = displayText;
-            }
+            }            
         }
         #endregion
 

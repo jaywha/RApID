@@ -149,6 +149,12 @@ namespace RApID_Project_WPF
                 rtbox.ReplaceText(rtbox.GetContent().ToString(), val as string);
         }
 
+        /// <summary>
+        /// Replaces the <paramref name="oldString"/> with the <paramref name="newString"/>.
+        /// </summary>
+        /// <param name="rtbox">Calling <see cref="RichTextBox"/></param>
+        /// <param name="oldString">The string to replace.</param>
+        /// <param name="newString">The string to put in place of.</param>
         public static void ReplaceText(this RichTextBox rtbox, string oldString, string newString)
         {
             var orig = new TextRange(rtbox.Document.ContentStart, rtbox.Document.ContentEnd).Text;

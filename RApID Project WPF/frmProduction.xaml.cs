@@ -290,6 +290,13 @@ namespace RApID_Project_WPF
             ucEOLTab.Reset();
             ucAOITab.Reset();
 
+            txtMultiRefDes.Items.Clear();
+            txtMultiRefDes_2.Items.Clear();
+            txtMultiRefDes_3.Items.Clear();
+            txtMultiPartNum.Items.Clear();
+            txtMultiPartNum_2.Items.Clear();
+            txtMultiPartNum_3.Items.Clear();
+
             txtSerialNumber.Focus();
         }
 
