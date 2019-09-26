@@ -127,7 +127,7 @@ namespace RApID_Project_WPF
             else if (c is TextBox tbox /*or a SuggestBox since custom conversion*/)
                 return tbox.Text;
             else if (c is RichTextBox rtbox)
-                return new System.Windows.Documents.TextRange(rtbox.Document.ContentStart, rtbox.Document.ContentEnd).Text;
+                return new TextRange(rtbox.Document.ContentStart, rtbox.Document.ContentEnd).Text;
             else
                 return null;
         }

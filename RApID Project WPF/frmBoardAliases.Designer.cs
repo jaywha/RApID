@@ -29,16 +29,10 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.Windows.Forms.ListViewGroup listViewGroup1 = new System.Windows.Forms.ListViewGroup("PDF File(s)", System.Windows.Forms.HorizontalAlignment.Left);
-            System.Windows.Forms.ListViewGroup listViewGroup2 = new System.Windows.Forms.ListViewGroup("ASC File(s)", System.Windows.Forms.HorizontalAlignment.Left);
-            System.Windows.Forms.ListViewGroup listViewGroup3 = new System.Windows.Forms.ListViewGroup("Other File(s)", System.Windows.Forms.HorizontalAlignment.Left);
-            System.Windows.Forms.ListViewItem listViewItem1 = new System.Windows.Forms.ListViewItem("ASSYLink", "pdf");
-            System.Windows.Forms.ListViewItem listViewItem2 = new System.Windows.Forms.ListViewItem("ASSYLink", "asc");
-            System.Windows.Forms.ListViewItem listViewItem3 = new System.Windows.Forms.ListViewItem("ASSYLink", "other");
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmBoardAliases));
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmBoardAliases));
             this.cxmnuAliasesMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.addNewAliasToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.deleteAliasToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -57,10 +51,9 @@
             this.spltpnlAliasToDetail = new System.Windows.Forms.SplitContainer();
             this.lstbxAliases = new System.Windows.Forms.ListBox();
             this.pnlFilePaths = new System.Windows.Forms.Panel();
-            this.label1 = new System.Windows.Forms.Label();
-            this.lstvwSchematics = new System.Windows.Forms.ListView();
-            this.imgSchematics = new System.Windows.Forms.ImageList(this.components);
-            this.lblBOMPathLabel = new System.Windows.Forms.Label();
+            this.grpbxSchematicFiles = new System.Windows.Forms.GroupBox();
+            this.flowSchematicLinks = new System.Windows.Forms.FlowLayoutPanel();
+            this.grpbxBOMLinkHolder = new System.Windows.Forms.GroupBox();
             this.lnkBOMFile = new System.Windows.Forms.LinkLabel();
             this.tbDatabaseView = new System.Windows.Forms.TabPage();
             this.dgvDatabaseTable = new System.Windows.Forms.DataGridView();
@@ -71,6 +64,7 @@
             this.SchematicPaths = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.pCBAAliasesBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.pCBAAliasesDataSet = new RApID_Project_WPF.PCBAAliasesDataSet();
+            this.imgSchematics = new System.Windows.Forms.ImageList(this.components);
             this.lblWarning = new System.Windows.Forms.Label();
             this.spltpnlMain = new System.Windows.Forms.SplitContainer();
             this.pCBAAliasesTableAdapter = new RApID_Project_WPF.PCBAAliasesDataSetTableAdapters.PCBAAliasesTableAdapter();
@@ -94,6 +88,8 @@
             this.spltpnlAliasToDetail.Panel2.SuspendLayout();
             this.spltpnlAliasToDetail.SuspendLayout();
             this.pnlFilePaths.SuspendLayout();
+            this.grpbxSchematicFiles.SuspendLayout();
+            this.grpbxBOMLinkHolder.SuspendLayout();
             this.tbDatabaseView.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgvDatabaseTable)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pCBAAliasesBindingSource)).BeginInit();
@@ -304,10 +300,8 @@
             // pnlFilePaths
             // 
             this.pnlFilePaths.BackColor = System.Drawing.Color.Black;
-            this.pnlFilePaths.Controls.Add(this.label1);
-            this.pnlFilePaths.Controls.Add(this.lstvwSchematics);
-            this.pnlFilePaths.Controls.Add(this.lblBOMPathLabel);
-            this.pnlFilePaths.Controls.Add(this.lnkBOMFile);
+            this.pnlFilePaths.Controls.Add(this.grpbxSchematicFiles);
+            this.pnlFilePaths.Controls.Add(this.grpbxBOMLinkHolder);
             this.pnlFilePaths.Dock = System.Windows.Forms.DockStyle.Fill;
             this.pnlFilePaths.ForeColor = System.Drawing.Color.Gold;
             this.pnlFilePaths.Location = new System.Drawing.Point(0, 0);
@@ -315,89 +309,52 @@
             this.pnlFilePaths.Size = new System.Drawing.Size(520, 218);
             this.pnlFilePaths.TabIndex = 5;
             // 
-            // label1
+            // grpbxSchematicFiles
             // 
-            this.label1.AutoSize = true;
-            this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label1.ForeColor = System.Drawing.Color.Goldenrod;
-            this.label1.Location = new System.Drawing.Point(372, 42);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(143, 24);
-            this.label1.TabIndex = 5;
-            this.label1.Text = "Schematic Files";
+            this.grpbxSchematicFiles.Controls.Add(this.flowSchematicLinks);
+            this.grpbxSchematicFiles.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.grpbxSchematicFiles.ForeColor = System.Drawing.Color.Gold;
+            this.grpbxSchematicFiles.Location = new System.Drawing.Point(3, 70);
+            this.grpbxSchematicFiles.Name = "grpbxSchematicFiles";
+            this.grpbxSchematicFiles.Size = new System.Drawing.Size(512, 143);
+            this.grpbxSchematicFiles.TabIndex = 7;
+            this.grpbxSchematicFiles.TabStop = false;
+            this.grpbxSchematicFiles.Text = "Schematic File Links";
             // 
-            // lstvwSchematics
+            // flowSchematicLinks
             // 
-            this.lstvwSchematics.Activation = System.Windows.Forms.ItemActivation.OneClick;
-            this.lstvwSchematics.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
-            this.lstvwSchematics.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.lstvwSchematics.ForeColor = System.Drawing.Color.Gold;
-            this.lstvwSchematics.GridLines = true;
-            listViewGroup1.Header = "PDF File(s)";
-            listViewGroup1.Name = "lstvwPDFs";
-            listViewGroup2.Header = "ASC File(s)";
-            listViewGroup2.Name = "lstvwASCs";
-            listViewGroup3.Header = "Other File(s)";
-            listViewGroup3.Name = "lstvwFiles";
-            this.lstvwSchematics.Groups.AddRange(new System.Windows.Forms.ListViewGroup[] {
-            listViewGroup1,
-            listViewGroup2,
-            listViewGroup3});
-            this.lstvwSchematics.HideSelection = false;
-            listViewItem1.Group = listViewGroup1;
-            listViewItem2.Group = listViewGroup2;
-            listViewItem3.Group = listViewGroup3;
-            this.lstvwSchematics.Items.AddRange(new System.Windows.Forms.ListViewItem[] {
-            listViewItem1,
-            listViewItem2,
-            listViewItem3});
-            this.lstvwSchematics.LargeImageList = this.imgSchematics;
-            this.lstvwSchematics.Location = new System.Drawing.Point(0, 69);
-            this.lstvwSchematics.MultiSelect = false;
-            this.lstvwSchematics.Name = "lstvwSchematics";
-            this.lstvwSchematics.OwnerDraw = true;
-            this.lstvwSchematics.ShowItemToolTips = true;
-            this.lstvwSchematics.Size = new System.Drawing.Size(520, 149);
-            this.lstvwSchematics.SmallImageList = this.imgSchematics;
-            this.lstvwSchematics.Sorting = System.Windows.Forms.SortOrder.Ascending;
-            this.lstvwSchematics.TabIndex = 4;
-            this.lstvwSchematics.UseCompatibleStateImageBehavior = false;
-            this.lstvwSchematics.View = System.Windows.Forms.View.List;
-            this.lstvwSchematics.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.lstvwSchematics_MouseDoubleClick);
+            this.flowSchematicLinks.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.flowSchematicLinks.ForeColor = System.Drawing.Color.Gold;
+            this.flowSchematicLinks.Location = new System.Drawing.Point(3, 22);
+            this.flowSchematicLinks.Name = "flowSchematicLinks";
+            this.flowSchematicLinks.Size = new System.Drawing.Size(506, 118);
+            this.flowSchematicLinks.TabIndex = 0;
             // 
-            // imgSchematics
+            // grpbxBOMLinkHolder
             // 
-            this.imgSchematics.ImageStream = ((System.Windows.Forms.ImageListStreamer)(resources.GetObject("imgSchematics.ImageStream")));
-            this.imgSchematics.TransparentColor = System.Drawing.Color.Transparent;
-            this.imgSchematics.Images.SetKeyName(0, "pdf");
-            this.imgSchematics.Images.SetKeyName(1, "asc");
-            this.imgSchematics.Images.SetKeyName(2, "other");
-            // 
-            // lblBOMPathLabel
-            // 
-            this.lblBOMPathLabel.AutoSize = true;
-            this.lblBOMPathLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblBOMPathLabel.ForeColor = System.Drawing.Color.Goldenrod;
-            this.lblBOMPathLabel.Location = new System.Drawing.Point(3, 0);
-            this.lblBOMPathLabel.Name = "lblBOMPathLabel";
-            this.lblBOMPathLabel.Size = new System.Drawing.Size(131, 24);
-            this.lblBOMPathLabel.TabIndex = 1;
-            this.lblBOMPathLabel.Text = "BOM File Path";
+            this.grpbxBOMLinkHolder.Controls.Add(this.lnkBOMFile);
+            this.grpbxBOMLinkHolder.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.grpbxBOMLinkHolder.ForeColor = System.Drawing.Color.Gold;
+            this.grpbxBOMLinkHolder.Location = new System.Drawing.Point(3, 3);
+            this.grpbxBOMLinkHolder.Name = "grpbxBOMLinkHolder";
+            this.grpbxBOMLinkHolder.Size = new System.Drawing.Size(512, 60);
+            this.grpbxBOMLinkHolder.TabIndex = 6;
+            this.grpbxBOMLinkHolder.TabStop = false;
+            this.grpbxBOMLinkHolder.Text = "BOM File Link";
             // 
             // lnkBOMFile
             // 
+            this.lnkBOMFile.ActiveLinkColor = System.Drawing.Color.FromArgb(((int)(((byte)(128)))), ((int)(((byte)(255)))), ((int)(((byte)(128)))));
             this.lnkBOMFile.AutoSize = true;
-            this.lnkBOMFile.ContextMenuStrip = this.cxmnuLinkMenu;
-            this.lnkBOMFile.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lnkBOMFile.LinkColor = System.Drawing.Color.Aqua;
-            this.lnkBOMFile.Location = new System.Drawing.Point(3, 24);
+            this.lnkBOMFile.LinkColor = System.Drawing.Color.Cyan;
+            this.lnkBOMFile.Location = new System.Drawing.Point(6, 22);
             this.lnkBOMFile.Name = "lnkBOMFile";
-            this.lnkBOMFile.Size = new System.Drawing.Size(74, 20);
-            this.lnkBOMFile.TabIndex = 3;
+            this.lnkBOMFile.Size = new System.Drawing.Size(78, 20);
+            this.lnkBOMFile.TabIndex = 0;
             this.lnkBOMFile.TabStop = true;
-            this.lnkBOMFile.Text = "BOMLink";
-            this.lnkBOMFile.VisitedLinkColor = System.Drawing.Color.Fuchsia;
-            this.lnkBOMFile.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.lnkFile_LinkClicked);
+            this.lnkBOMFile.Text = "BOMPath";
+            this.lnkBOMFile.VisitedLinkColor = System.Drawing.Color.FromArgb(((int)(((byte)(128)))), ((int)(((byte)(128)))), ((int)(((byte)(255)))));
+            this.lnkBOMFile.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.lnkBOMFile_LinkClicked);
             this.lnkBOMFile.MouseDown += new System.Windows.Forms.MouseEventHandler(this.lnkBOMFile_Click);
             // 
             // tbDatabaseView
@@ -506,6 +463,14 @@
             this.pCBAAliasesDataSet.DataSetName = "PCBAAliasesDataSet";
             this.pCBAAliasesDataSet.SchemaSerializationMode = System.Data.SchemaSerializationMode.IncludeSchema;
             // 
+            // imgSchematics
+            // 
+            this.imgSchematics.ImageStream = ((System.Windows.Forms.ImageListStreamer)(resources.GetObject("imgSchematics.ImageStream")));
+            this.imgSchematics.TransparentColor = System.Drawing.Color.Transparent;
+            this.imgSchematics.Images.SetKeyName(0, "pdf");
+            this.imgSchematics.Images.SetKeyName(1, "asc");
+            this.imgSchematics.Images.SetKeyName(2, "other");
+            // 
             // lblWarning
             // 
             this.lblWarning.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
@@ -581,7 +546,9 @@
             ((System.ComponentModel.ISupportInitialize)(this.spltpnlAliasToDetail)).EndInit();
             this.spltpnlAliasToDetail.ResumeLayout(false);
             this.pnlFilePaths.ResumeLayout(false);
-            this.pnlFilePaths.PerformLayout();
+            this.grpbxSchematicFiles.ResumeLayout(false);
+            this.grpbxBOMLinkHolder.ResumeLayout(false);
+            this.grpbxBOMLinkHolder.PerformLayout();
             this.tbDatabaseView.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.dgvDatabaseTable)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pCBAAliasesBindingSource)).EndInit();
@@ -615,8 +582,6 @@
         private System.Windows.Forms.SplitContainer spltpnlAliasToDetail;
         private System.Windows.Forms.ListBox lstbxAliases;
         private System.Windows.Forms.Panel pnlFilePaths;
-        private System.Windows.Forms.Label lblBOMPathLabel;
-        private System.Windows.Forms.LinkLabel lnkBOMFile;
         private System.Windows.Forms.TabPage tbDatabaseView;
         private System.Windows.Forms.DataGridView dgvDatabaseTable;
         private System.Windows.Forms.Label lblWarning;
@@ -625,8 +590,6 @@
         private System.Windows.Forms.BindingSource pCBAAliasesBindingSource;
         private PCBAAliasesDataSetTableAdapters.PCBAAliasesTableAdapter pCBAAliasesTableAdapter;
         private System.Windows.Forms.DataGridViewLinkColumn schematicPathDataGridViewTextBoxColumn;
-        private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.ListView lstvwSchematics;
         private System.Windows.Forms.ImageList imgSchematics;
         private System.Windows.Forms.DataGridViewTextBoxColumn iDDataGridViewTextBoxColumn;
         private System.Windows.Forms.DataGridViewTextBoxColumn targetPartNumberDataGridViewTextBoxColumn;
@@ -634,5 +597,9 @@
         private System.Windows.Forms.DataGridViewLinkColumn bOMPathDataGridViewTextBoxColumn;
         private System.Windows.Forms.DataGridViewTextBoxColumn SchematicPaths;
         private System.Windows.Forms.ErrorProvider errorProvider;
+        private System.Windows.Forms.GroupBox grpbxBOMLinkHolder;
+        private System.Windows.Forms.LinkLabel lnkBOMFile;
+        private System.Windows.Forms.GroupBox grpbxSchematicFiles;
+        private System.Windows.Forms.FlowLayoutPanel flowSchematicLinks;
     }
 }

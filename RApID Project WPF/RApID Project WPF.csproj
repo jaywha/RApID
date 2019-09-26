@@ -184,6 +184,7 @@
     <Compile Include="Classes\csSplashScreenHelper.cs" />
     <Compile Include="Classes\csVersionControl.cs" />
     <Compile Include="Classes\ESLIB.cs" />
+    <Compile Include="Classes\Temp.cs" />
     <Compile Include="frmBoardAliases.cs">
       <SubType>Form</SubType>
     </Compile>
