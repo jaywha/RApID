@@ -29,9 +29,9 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle5 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle6 = new System.Windows.Forms.DataGridViewCellStyle();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmBoardAliases));
             this.cxmnuAliasesMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.addNewAliasToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -45,6 +45,8 @@
             this.flopnlPartNumberInput = new System.Windows.Forms.FlowLayoutPanel();
             this.lblPartNumberLabel = new System.Windows.Forms.Label();
             this.txtPartNumber = new System.Windows.Forms.TextBox();
+            this.btnSearch = new System.Windows.Forms.Button();
+            this.btnNewPN = new System.Windows.Forms.Button();
             this.grpbxPartNumberDetail = new System.Windows.Forms.GroupBox();
             this.lblCommodityClass = new System.Windows.Forms.Label();
             this.lblPartName = new System.Windows.Forms.Label();
@@ -201,6 +203,8 @@
             this.flopnlPartNumberInput.BackColor = System.Drawing.Color.Black;
             this.flopnlPartNumberInput.Controls.Add(this.lblPartNumberLabel);
             this.flopnlPartNumberInput.Controls.Add(this.txtPartNumber);
+            this.flopnlPartNumberInput.Controls.Add(this.btnSearch);
+            this.flopnlPartNumberInput.Controls.Add(this.btnNewPN);
             this.flopnlPartNumberInput.Dock = System.Windows.Forms.DockStyle.Fill;
             this.flopnlPartNumberInput.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
             this.flopnlPartNumberInput.ForeColor = System.Drawing.Color.Goldenrod;
@@ -230,6 +234,28 @@
             this.txtPartNumber.Size = new System.Drawing.Size(144, 26);
             this.txtPartNumber.TabIndex = 1;
             this.txtPartNumber.KeyDown += new System.Windows.Forms.KeyEventHandler(this.txtPartNumber_KeyDown);
+            // 
+            // btnSearch
+            // 
+            this.btnSearch.BackColor = System.Drawing.Color.DarkGreen;
+            this.btnSearch.ForeColor = System.Drawing.Color.Gold;
+            this.btnSearch.Location = new System.Drawing.Point(3, 55);
+            this.btnSearch.Name = "btnSearch";
+            this.btnSearch.Size = new System.Drawing.Size(144, 23);
+            this.btnSearch.TabIndex = 3;
+            this.btnSearch.Text = "Search";
+            this.btnSearch.UseVisualStyleBackColor = false;
+            // 
+            // btnNewPN
+            // 
+            this.btnNewPN.BackColor = System.Drawing.Color.MidnightBlue;
+            this.btnNewPN.Location = new System.Drawing.Point(3, 84);
+            this.btnNewPN.Name = "btnNewPN";
+            this.btnNewPN.Size = new System.Drawing.Size(144, 23);
+            this.btnNewPN.TabIndex = 2;
+            this.btnNewPN.Text = "Add New Part Number";
+            this.btnNewPN.UseVisualStyleBackColor = false;
+            this.btnNewPN.Click += new System.EventHandler(this.btnNewPN_Click);
             // 
             // grpbxPartNumberDetail
             // 
@@ -295,7 +321,6 @@
             this.lstbxAliases.Size = new System.Drawing.Size(262, 218);
             this.lstbxAliases.TabIndex = 0;
             this.lstbxAliases.SelectedIndexChanged += new System.EventHandler(this.lstbxAliases_SelectedIndexChanged);
-            this.lstbxAliases.MouseDown += new System.Windows.Forms.MouseEventHandler(this.lstbxAliases_MouseDown);
             // 
             // pnlFilePaths
             // 
@@ -323,6 +348,7 @@
             // 
             // flowSchematicLinks
             // 
+            this.flowSchematicLinks.AutoScroll = true;
             this.flowSchematicLinks.Dock = System.Windows.Forms.DockStyle.Fill;
             this.flowSchematicLinks.ForeColor = System.Drawing.Color.Gold;
             this.flowSchematicLinks.Location = new System.Drawing.Point(3, 22);
@@ -375,14 +401,14 @@
             this.dgvDatabaseTable.AllowUserToDeleteRows = false;
             this.dgvDatabaseTable.AutoGenerateColumns = false;
             this.dgvDatabaseTable.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
-            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle1.BackColor = System.Drawing.SystemColors.Control;
-            dataGridViewCellStyle1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle1.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle1.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle1.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.dgvDatabaseTable.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle1;
+            dataGridViewCellStyle4.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle4.BackColor = System.Drawing.SystemColors.Control;
+            dataGridViewCellStyle4.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle4.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle4.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle4.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle4.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.dgvDatabaseTable.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle4;
             this.dgvDatabaseTable.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dgvDatabaseTable.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.iDDataGridViewTextBoxColumn,
@@ -391,26 +417,26 @@
             this.bOMPathDataGridViewTextBoxColumn,
             this.SchematicPaths});
             this.dgvDatabaseTable.DataSource = this.pCBAAliasesBindingSource;
-            dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle2.BackColor = System.Drawing.Color.DimGray;
-            dataGridViewCellStyle2.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle2.ForeColor = System.Drawing.SystemColors.ButtonHighlight;
-            dataGridViewCellStyle2.SelectionBackColor = System.Drawing.SystemColors.HotTrack;
-            dataGridViewCellStyle2.SelectionForeColor = System.Drawing.SystemColors.ControlLightLight;
-            dataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
-            this.dgvDatabaseTable.DefaultCellStyle = dataGridViewCellStyle2;
+            dataGridViewCellStyle5.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle5.BackColor = System.Drawing.Color.DimGray;
+            dataGridViewCellStyle5.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle5.ForeColor = System.Drawing.SystemColors.ButtonHighlight;
+            dataGridViewCellStyle5.SelectionBackColor = System.Drawing.SystemColors.HotTrack;
+            dataGridViewCellStyle5.SelectionForeColor = System.Drawing.SystemColors.ControlLightLight;
+            dataGridViewCellStyle5.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+            this.dgvDatabaseTable.DefaultCellStyle = dataGridViewCellStyle5;
             this.dgvDatabaseTable.Dock = System.Windows.Forms.DockStyle.Fill;
             this.dgvDatabaseTable.Location = new System.Drawing.Point(3, 3);
             this.dgvDatabaseTable.Name = "dgvDatabaseTable";
             this.dgvDatabaseTable.ReadOnly = true;
-            dataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle3.BackColor = System.Drawing.SystemColors.Control;
-            dataGridViewCellStyle3.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle3.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle3.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle3.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle3.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.dgvDatabaseTable.RowHeadersDefaultCellStyle = dataGridViewCellStyle3;
+            dataGridViewCellStyle6.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle6.BackColor = System.Drawing.SystemColors.Control;
+            dataGridViewCellStyle6.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle6.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle6.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle6.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle6.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.dgvDatabaseTable.RowHeadersDefaultCellStyle = dataGridViewCellStyle6;
             this.dgvDatabaseTable.Size = new System.Drawing.Size(786, 381);
             this.dgvDatabaseTable.TabIndex = 0;
             // 
@@ -601,5 +627,7 @@
         private System.Windows.Forms.LinkLabel lnkBOMFile;
         private System.Windows.Forms.GroupBox grpbxSchematicFiles;
         private System.Windows.Forms.FlowLayoutPanel flowSchematicLinks;
+        private System.Windows.Forms.Button btnNewPN;
+        private System.Windows.Forms.Button btnSearch;
     }
 }

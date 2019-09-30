@@ -185,6 +185,12 @@
     <Compile Include="Classes\csVersionControl.cs" />
     <Compile Include="Classes\ESLIB.cs" />
     <Compile Include="Classes\Temp.cs" />
+    <Compile Include="CustomControls\AssemblyLinkLabel.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="CustomControls\AssemblyLinkLabel.Designer.cs">
+      <DependentUpon>AssemblyLinkLabel.cs</DependentUpon>
+    </Compile>
     <Compile Include="frmBoardAliases.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -391,6 +397,9 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
+    <EmbeddedResource Include="CustomControls\AssemblyLinkLabel.resx">
+      <DependentUpon>AssemblyLinkLabel.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="frmBoardAliases.resx">
       <DependentUpon>frmBoardAliases.cs</DependentUpon>
     </EmbeddedResource>

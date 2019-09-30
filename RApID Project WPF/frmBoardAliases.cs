@@ -1,4 +1,5 @@
 ﻿using Microsoft.VisualBasic;
+using RApID_Project_WPF.CustomControls;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -13,6 +14,17 @@ using System.Windows.Forms;
 
 namespace RApID_Project_WPF
 {
+    /// <summary>
+    /// Specifies the database item type.
+    /// </summary>
+    public enum AliasDatabaseItem
+    {
+        /// <summary> A board alias which points to another part number's BOM. </summary>
+        Alias = 0,
+        /// <summary> A part number which points to a BOM via its own "alias." </summary>
+        TargetPartNumber = 1
+    }
+
     public partial class frmBoardAliases : Form
     {
         private const string EMPTY_FILE_PATH = "Empty BOM Path...";
@@ -20,7 +32,7 @@ namespace RApID_Project_WPF
 
         private List<string> CurrentAliases = new List<string>();
         private List<string> CurrentBOMs = new List<string>();
-        private List<AssemblyLinkItem> CurrentSchematics = new List<AssemblyLinkItem>();
+        private List<AssemblyLinkLabel> CurrentSchematics = new List<AssemblyLinkLabel>();
 
         private ToolTip SetterTip = new ToolTip()
         {
@@ -43,6 +55,9 @@ namespace RApID_Project_WPF
         {
             InitializeComponent();
             tbDatabaseView.Hide();
+
+            posX = (int) (Width / 2.0);
+            posY = (int) (Height / 2.0);
         }
 
         private void frmBoardAliases_Load(object sender, EventArgs e)
@@ -94,9 +109,6 @@ namespace RApID_Project_WPF
                 lnkBOMFile.Text = "BOMLink";
                 lblPartName.Text = "Part Name: <NAME>";
                 lblCommodityClass.Text = "Commodity Class: <CLASS>";
-                flowSchematicLinks.Controls.Add(new AssemblyLinkItem("ASSYLink", "PDF Link", imgSchematics.Images[".pdf"]));
-                flowSchematicLinks.Controls.Add(new AssemblyLinkItem("ASSYLink", "ASC Link", imgSchematics.Images[".asc"]));
-                flowSchematicLinks.Controls.Add(new AssemblyLinkItem("ASSYLink", "Other Link", imgSchematics.Images[2]));
                 CurrentAliases.Clear();
                 CurrentBOMs.Clear();
                 CurrentSchematics.Clear();
@@ -139,7 +151,7 @@ namespace RApID_Project_WPF
                 var ext = ofd.SafeFileName.Split('.').Last();
                 var img = new List<string>() { ".pdf", ".asc" }.Contains(ext) ? imgSchematics.Images[ext] : imgSchematics.Images[2];
                 CurrentSchematics.Insert(lstbxAliases.SelectedIndex,
-                    new AssemblyLinkItem(ofd.FileName, ofd.SafeFileName, img)
+                    new AssemblyLinkLabel(ofd.FileName, ofd.SafeFileName, img)
                 );
                 bBOM = false;
             }
@@ -165,24 +177,36 @@ namespace RApID_Project_WPF
             }
         }
 
-        private void addNewAliasToolStripMenuItem_Click(object sender, EventArgs e)
+        private void AddNewDatabaseRow(AliasDatabaseItem itemType)
         {
-            string input = Interaction.InputBox("Please input the new alias:", $"New {txtPartNumber.Text} Alias",
-                int.Parse(txtPartNumber.Text.Substring(0, txtPartNumber.Text.LastIndexOf('-'))).ToString(),
-                posY, posX);
-            if (String.IsNullOrWhiteSpace(input)) return;
+            string input = "";
+
+            switch (itemType)
+            {
+                default:
+                case AliasDatabaseItem.Alias:
+                    input = Interaction.InputBox("Please input the new alias:", $"New {txtPartNumber.Text} Alias",
+                        int.Parse(txtPartNumber.Text.Substring(0, txtPartNumber.Text.LastIndexOf('-'))).ToString(),
+                        posY, posX);
+                    break;
+                case AliasDatabaseItem.TargetPartNumber:
+                    input = Interaction.InputBox("Please input the new part number:", $"New Target Part Number", "", posY, posX);
+                    break;
+            }
+
+            if (string.IsNullOrWhiteSpace(input)) return;
             CurrentAliases.Add(input);
 
             CurrentBOMs.Add("BOMPath");
-            CurrentSchematics.Add(new AssemblyLinkItem("ASSYLink", "Assembly Display Text"));
+            CurrentSchematics.Add(new AssemblyLinkLabel("ASSYLink", "Assembly Display Text"));
             lnkBOMFile.Text = "BOMLink";
-            flowSchematicLinks.Controls.Add(new AssemblyLinkItem("<EMPTY>", "ASSYLink"));
+            flowSchematicLinks.Controls.Add(new AssemblyLinkLabel("<EMPTY>", "ASSYLink"));
             using (var conn = new SqlConnection(csObjectHolder.csObjectHolder.ObjectHolderInstance().RepairConnectionString))
             {
                 conn.Open();
                 using (var cmd = new SqlCommand("INSERT INTO PCBAAliases (TargetPartNumber, Alias, BOMPath, SchematicPaths) VALUES (@Pnum, @alias, @BomPath, @SchPaths)", conn))
                 {
-                    cmd.Parameters.AddWithValue("@Pnum", txtPartNumber.Text);
+                    cmd.Parameters.AddWithValue("@Pnum", itemType is AliasDatabaseItem.Alias ? txtPartNumber.Text : input);
                     cmd.Parameters.AddWithValue("@BomPath", "BOMLink");
                     cmd.Parameters.AddWithValue("@SchPaths", "ASSYLink");
                     cmd.Parameters.AddWithValue("@alias", input);
@@ -194,6 +218,12 @@ namespace RApID_Project_WPF
             lstbxAliases.DataSource = CurrentAliases;
             lstbxAliases.SelectedItem = input;
         }
+
+        private void btnNewPN_Click(object sender, EventArgs e) 
+            => AddNewDatabaseRow(AliasDatabaseItem.TargetPartNumber);
+
+        private void addNewAliasToolStripMenuItem_Click(object sender, EventArgs e) 
+            => AddNewDatabaseRow(AliasDatabaseItem.Alias);
 
         private void deleteAliasToolStripMenuItem_Click(object sender, EventArgs e)
         {
@@ -230,26 +260,13 @@ namespace RApID_Project_WPF
             foreach (var schematic in CurrentSchematics)
             {
                 var IsValidFile = File.Exists(schematic.Link);
-                Console.WriteLine($"The schematic ({schematic}) {(IsValidFile ? "does" : "doesn't")} exist.");
+                //Console.WriteLine($"The schematic ({schematic}) {(IsValidFile ? "does" : "doesn't")} exist.");
                 if (!IsValidFile) continue;
 
                 SetterTip.SetToolTip(schematic, "Open file:\n" + schematic.Link);
-                    /*
-                     new AssemblyLinkItem(
-                    link: schematic,
-                    displayText: schematic.Substring(schematic.LastIndexOf('\\')+1),
-                    imageKey: schematic.Substring(schematic.LastIndexOf('.'))) {
-                    };
-                    */
 
                 flowSchematicLinks.Controls.Add(schematic);
             }
-        }
-
-        private void lstbxAliases_MouseDown(object sender, MouseEventArgs e)
-        {
-            posX = e.X;
-            posY = e.Y;
         }
         #endregion
 
@@ -325,9 +342,16 @@ namespace RApID_Project_WPF
                         sb.Append("Reading New Schematic Files {");
                         foreach (var @string in reader[2].ToString().Split(','))
                         {
+                            var name = @string.Substring(@string.LastIndexOf('\\')+1) ?? "not set";
+                            var ext = @string.Substring(@string.LastIndexOf('.') + 1) ?? "other";
+                            var img = imgSchematics.Images[
+                                    (!string.IsNullOrWhiteSpace(ext) && new List<string>() { "pdf", "asc" }.Contains(ext)
+                                    ? ext : "other")
+                                ];
+
                             sb.Append("\n");
                             sb.Append($"\t[AssemblyLinkItem] ==> {@string}");
-                            CurrentSchematics.Add(new AssemblyLinkItem($@"C:\Users\{Environment.UserName}\Desktop", @string ?? "not set"));
+                            CurrentSchematics.Add(new AssemblyLinkLabel(@string, name, img));
                         }
                         sb.AppendLine("\n}");
                         Console.Write(sb.ToString());
@@ -339,72 +363,6 @@ namespace RApID_Project_WPF
             if (lstbxAliases.Items.Count > 0) lstbxAliases.SelectedIndex = 0;
             else lstbxAliases.SelectedIndex = -1;
         }
-    }
-
-    /// <summary>
-    /// Custom <see cref="ListViewItem"/> implementation for ease of use.
-    /// </summary>
-    public partial class AssemblyLinkItem : LinkLabel
-    {
-        /// <summary> URL or File Path </summary>
-        public new string Link { get; set; }
-
-        #region Constructors
-        /// <summary>
-        /// Default ctor
-        /// </summary>
-        /// <param name="link">[Optional] Sets this <see cref="Link"/></param>
-        /// <param name="displayText">[Optional] Sets this <see cref="LinkLabel.Text"/></param>
-        /// <param name="img">[Optional] The image icon for this file extension.</param>
-        public AssemblyLinkItem(string link = "", string displayText = "", Image img = null)
-        {
-            if (!string.IsNullOrWhiteSpace(link))
-            {
-                Link = link;
-            }
-
-            if (!string.IsNullOrWhiteSpace(displayText))
-            {
-                Text = displayText;
-            }
-
-            Image = img;
-        }
-        #endregion
-
-        /// <summary> Will start the default associated process on the linked item. </summary>
-        public void Activate()
-        {
-            try
-            {
-                Console.WriteLine(ToString() + "\n\t|--> Link Activated!\n");
-                Process.Start(Link);
-            }
-            catch (Win32Exception wex)
-            {
-                csExceptionLogger.csExceptionLogger.Write($"Link_Activate->({Link})", wex);
-                MessageBox.Show("Couldn't start the process meant for this link.\nPlease ensure you have permission to access the path given.",
-                    "Link::Activate() - Win32Exception", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
-            catch (ObjectDisposedException ode)
-            {
-                csExceptionLogger.csExceptionLogger.Write($"Link_Activate->({Link})", ode);
-                MessageBox.Show("The process object was disposed before the process stopped!",
-                    "Link::Activate() - ObjectDisposedException", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
-            catch (FileNotFoundException fnfe)
-            {
-                csExceptionLogger.csExceptionLogger.Write($"Link_Activate->({Link})", fnfe);
-                MessageBox.Show("Couldn't find the file specificed in the link!",
-                    "Link::Activate() - FileNotFoundException", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
-        }
-
-        /// <summary>
-        /// Custom ToString format for custom <see cref="ListViewItem"/>
-        /// </summary>
-        /// <returns></returns>
-        public override string ToString() => $"[AssemblyLinkItem({Name})]: {Text} => {Link}";
     }
 
     /// <summary>
