@@ -27,14 +27,14 @@ namespace RApID_Project_WPF
 
     public partial class frmBoardAliases : Form
     {
-        private const string EMPTY_FILE_PATH = "Empty BOM Path...";
-        private static bool FirstTimeToday = true;
+        const string EMPTY_FILE_PATH = "Empty BOM Path...";
+        static bool FirstTimeToday = true;
 
-        private List<string> CurrentAliases = new List<string>();
-        private List<string> CurrentBOMs = new List<string>();
-        private List<AssemblyLinkLabel> CurrentSchematics = new List<AssemblyLinkLabel>();
+        List<string> CurrentPartNumbers = new List<string>();
+        List<string> CurrentBOMs = new List<string>();
+        List<AssemblyLinkLabel> CurrentSchematics = new List<AssemblyLinkLabel>();
 
-        private ToolTip SetterTip = new ToolTip()
+        ToolTip SetterTip = new ToolTip()
         {
             AutoPopDelay = 5000,
             InitialDelay = 1000,
@@ -43,10 +43,12 @@ namespace RApID_Project_WPF
             UseAnimation = true,
             ToolTipIcon = ToolTipIcon.Info
         };
-        private bool bBOM;
-        private bool bSchematic;
-        private int posX;
-        private int posY;
+        bool bBOM;
+        bool bSchematic;
+        bool bNewSchematic;
+        int editingSchematicIndex;
+        int posX;
+        int posY;
 
         /// <summary>
         /// Technician Interface form to assign BOMs and Assembly files to a part number or alias thereof.
@@ -55,6 +57,8 @@ namespace RApID_Project_WPF
         {
             InitializeComponent();
             tbDatabaseView.Hide();
+
+            AssemblyLinkLabel.ChangeLink += lnkSchematicFile_MouseDown;
 
             posX = (int) (Width / 2.0);
             posY = (int) (Height / 2.0);
@@ -90,30 +94,32 @@ namespace RApID_Project_WPF
             txtPartNumber.Focus();
         }
 
+        private void HandleTextBoxEntry(KeyEventArgs e) {
+            errorProvider.SetError(txtPartNumber, string.Empty);
+
+            if (e.KeyCode == Keys.Enter)
+            {
+                lstbxPNHistory.Enabled = false;
+                lnkBOMFile.Text = "BOMLink";
+                lblPartName.Text = "Part Name: <NAME>";
+                lblCommodityClass.Text = "Commodity Class: <CLASS>";
+                CurrentPartNumbers.Clear();
+                CurrentBOMs.Clear();
+                CurrentSchematics.Clear();
+                lstbxPNHistory.DataSource = new List<string>();
+                GetPartNumberDetailsAndAliases();
+            }
+        }
+
+        private void btnSearch_Click(object sender, EventArgs e) => HandleTextBoxEntry(new KeyEventArgs(Keys.Enter));
+        private void txtPartNumber_KeyDown(object sender, KeyEventArgs e) => HandleTextBoxEntry(e);
+
         private void frmBoardAliases_PreviewKeyDown(object sender, PreviewKeyDownEventArgs e)
         {
             if (e.KeyCode == Keys.A && e.Modifiers == (Keys.LShiftKey | Keys.RControlKey))
             {
                 dgvDatabaseTable.AllowUserToAddRows = !dgvDatabaseTable.AllowUserToAddRows;
                 dgvDatabaseTable.AllowUserToDeleteRows = !dgvDatabaseTable.AllowUserToDeleteRows;
-            }
-        }
-
-        private void txtPartNumber_KeyDown(object sender, KeyEventArgs e)
-        {
-            errorProvider.SetError(txtPartNumber, string.Empty);
-
-            if (e.KeyCode == Keys.Enter)
-            {
-                lstbxAliases.Enabled = false;
-                lnkBOMFile.Text = "BOMLink";
-                lblPartName.Text = "Part Name: <NAME>";
-                lblCommodityClass.Text = "Commodity Class: <CLASS>";
-                CurrentAliases.Clear();
-                CurrentBOMs.Clear();
-                CurrentSchematics.Clear();
-                lstbxAliases.DataSource = new List<string>();
-                GetPartNumberDetailsAndAliases();
             }
         }
 
@@ -130,6 +136,7 @@ namespace RApID_Project_WPF
 
             var ofd = new OpenFileDialog()
             {
+                InitialDirectory = @"L:\EngDocumentation\Design\Electrical",
                 CheckFileExists = true,
                 CheckPathExists = true,
                 Title = $"Please choose the new {(bBOM ? "BOM" : "Schematic")} file path...",
@@ -143,16 +150,20 @@ namespace RApID_Project_WPF
             if (bBOM)
             {
                 lnkBOMFile.Text = ofd.SafeFileName;
-                CurrentBOMs.Insert(lstbxAliases.SelectedIndex, ofd.FileName);
+                CurrentBOMs.Insert(lstbxPNHistory.SelectedIndex, ofd.FileName);
                 bBOM = false;
             }
             else if (bSchematic)
             {
                 var ext = ofd.SafeFileName.Split('.').Last();
-                var img = new List<string>() { ".pdf", ".asc" }.Contains(ext) ? imgSchematics.Images[ext] : imgSchematics.Images[2];
-                CurrentSchematics.Insert(lstbxAliases.SelectedIndex,
-                    new AssemblyLinkLabel(ofd.FileName, ofd.SafeFileName, img)
-                );
+                var img = imgSchematics.Images[(new List<string>() { ".pdf", ".asc" }.Contains(ext) ? ext : "other")];
+                if (bNewSchematic)
+                {
+                    CurrentSchematics.Add(new AssemblyLinkLabel(ofd.FileName, ofd.SafeFileName, img));
+                    bNewSchematic = false;
+                }
+                else
+                    CurrentSchematics.Insert(editingSchematicIndex, new AssemblyLinkLabel(ofd.FileName, ofd.SafeFileName, img));
                 bBOM = false;
             }
 
@@ -161,42 +172,53 @@ namespace RApID_Project_WPF
                 conn.Open();
                 using (var cmd = new SqlCommand("UPDATE [Repair].[dbo].[PCBAAliases] SET " +
                     "BOMPath = @BomPath, SchematicPaths = @SchPath " +
-                    "WHERE [TargetPartNumber] = @Pnum AND Alias = @alias", conn))
+                    "WHERE [TargetPartNumber] = @Pnum", conn))
                 {
-                    cmd.Parameters.AddWithValue("@Pnum", txtPartNumber.Text);
+                    cmd.Parameters.AddWithValue("@Pnum", CurrentPartNumbers[lstbxPNHistory.SelectedIndex].ToString());
                     cmd.Parameters.AddWithValue("@BomPath", lnkBOMFile.Text);
                     var schematicPaths = "";
-                    foreach (var @string in CurrentSchematics)
+                    foreach (var schematic in CurrentSchematics)
                     {
-                        schematicPaths += @string + ",";
+                        schematicPaths += schematic.Link + ",";
                     }
                     cmd.Parameters.AddWithValue("@SchPath", schematicPaths.Substring(0, schematicPaths.Length-1));
-                    cmd.Parameters.AddWithValue("@alias", CurrentAliases[lstbxAliases.SelectedIndex].ToString());
                     var rowsAffected = cmd.ExecuteNonQuery();
                 }
             }
         }
 
-        private void AddNewDatabaseRow(AliasDatabaseItem itemType)
+        private ToolStripMenuItem AddNewSchematicLink = new ToolStripMenuItem("Add New Schematic Link...");
+        private void flowSchematicLinks_MouseDown(object sender, MouseEventArgs e)
         {
-            string input = "";
+            //TODO: Offer to add new schematic link
+            var tempMenuItem = cxmnuLinkMenu.Items.Add(AddNewSchematicLink);
+            AddNewSchematicLink.Click += AddNewSchematicLink_Click;
 
-            switch (itemType)
-            {
-                default:
-                case AliasDatabaseItem.Alias:
-                    input = Interaction.InputBox("Please input the new alias:", $"New {txtPartNumber.Text} Alias",
-                        int.Parse(txtPartNumber.Text.Substring(0, txtPartNumber.Text.LastIndexOf('-'))).ToString(),
-                        posY, posX);
-                    break;
-                case AliasDatabaseItem.TargetPartNumber:
-                    input = Interaction.InputBox("Please input the new part number:", $"New Target Part Number", "", posY, posX);
-                    break;
-            }
+            cxmnuLinkMenu.Show(MousePosition.X, MousePosition.Y);
+            cxmnuLinkMenu.Closed += cxmnuLinkMenu_Closed;
+        }
+
+        private void AddNewSchematicLink_Click(object sender, EventArgs e)
+        {
+            bNewSchematic = true;
+            bSchematic = true;
+            bBOM = false;
+            changeFilePathToolStripMenuItem_Click(sender, e);
+        }
+
+        private void cxmnuLinkMenu_Closed(object sender, EventArgs e)
+        {
+            cxmnuLinkMenu.Items.Remove(AddNewSchematicLink);
+            cxmnuLinkMenu.Closed -= cxmnuLinkMenu_Closed;
+        }
+
+        private void AddNewDatabaseRow()
+        {
+            var input = Interaction.InputBox("Please input the new part number:", $"New Target Part Number", txtPartNumber.Text, posY, posX);
 
             if (string.IsNullOrWhiteSpace(input)) return;
-            CurrentAliases.Add(input);
 
+            CurrentPartNumbers.Add(input);
             CurrentBOMs.Add("BOMPath");
             CurrentSchematics.Add(new AssemblyLinkLabel("ASSYLink", "Assembly Display Text"));
             lnkBOMFile.Text = "BOMLink";
@@ -206,7 +228,7 @@ namespace RApID_Project_WPF
                 conn.Open();
                 using (var cmd = new SqlCommand("INSERT INTO PCBAAliases (TargetPartNumber, Alias, BOMPath, SchematicPaths) VALUES (@Pnum, @alias, @BomPath, @SchPaths)", conn))
                 {
-                    cmd.Parameters.AddWithValue("@Pnum", itemType is AliasDatabaseItem.Alias ? txtPartNumber.Text : input);
+                    cmd.Parameters.AddWithValue("@Pnum", input);
                     cmd.Parameters.AddWithValue("@BomPath", "BOMLink");
                     cmd.Parameters.AddWithValue("@SchPaths", "ASSYLink");
                     cmd.Parameters.AddWithValue("@alias", input);
@@ -214,45 +236,40 @@ namespace RApID_Project_WPF
                 }
             }
 
-            lstbxAliases.DataSource = new List<string>();
-            lstbxAliases.DataSource = CurrentAliases;
-            lstbxAliases.SelectedItem = input;
+            lstbxPNHistory.DataSource = new List<string>();
+            lstbxPNHistory.DataSource = CurrentPartNumbers;
+            lstbxPNHistory.SelectedItem = input;
         }
 
-        private void btnNewPN_Click(object sender, EventArgs e) 
-            => AddNewDatabaseRow(AliasDatabaseItem.TargetPartNumber);
+        private void btnNewPN_Click(object sender, EventArgs e) => AddNewDatabaseRow();
 
-        private void addNewAliasToolStripMenuItem_Click(object sender, EventArgs e) 
-            => AddNewDatabaseRow(AliasDatabaseItem.Alias);
-
-        private void deleteAliasToolStripMenuItem_Click(object sender, EventArgs e)
+        private void deletePartNumberToolStripMenuItem_Click(object sender, EventArgs e)
         {
             using (var conn = new SqlConnection(csObjectHolder.csObjectHolder.ObjectHolderInstance().RepairConnectionString))
             {
                 conn.Open();
-                using (var cmd = new SqlCommand("DELETE FROM PCBAAliases WHERE TargetPartNumber = @Pnum AND Alias = @alias", conn))
+                using (var cmd = new SqlCommand("DELETE FROM PCBAAliases WHERE TargetPartNumber = @Pnum", conn))
                 {
                     cmd.Parameters.AddWithValue("@Pnum", txtPartNumber.Text);
-                    cmd.Parameters.AddWithValue("@alias", CurrentAliases[lstbxAliases.SelectedIndex]);
                     var rowsAffected = cmd.ExecuteNonQuery();
                 }
             }
 
-            CurrentBOMs.RemoveAt(lstbxAliases.SelectedIndex);
-            CurrentSchematics.RemoveAt(lstbxAliases.SelectedIndex);
-            CurrentAliases.RemoveAt(lstbxAliases.SelectedIndex);
-            lstbxAliases.DataSource = new List<string>();
-            lstbxAliases.DataSource = CurrentAliases;
+            CurrentBOMs.RemoveAt(lstbxPNHistory.SelectedIndex);
+            CurrentSchematics.RemoveAt(lstbxPNHistory.SelectedIndex);
+            CurrentPartNumbers.RemoveAt(lstbxPNHistory.SelectedIndex);
+            lstbxPNHistory.DataSource = new List<string>();
+            lstbxPNHistory.DataSource = CurrentPartNumbers;
             flowSchematicLinks.Controls.Clear();
         }
         #endregion
 
         #region ListBox
-        private void lstbxAliases_SelectedIndexChanged(object sender, EventArgs e)
+        private void lstbxPNHistory_SelectedIndexChanged(object sender, EventArgs e)
         {
-            var lastSlashInPath = CurrentBOMs[lstbxAliases.SelectedIndex].LastIndexOf('\\')+1;
+            var lastSlashInPath = CurrentBOMs[lstbxPNHistory.SelectedIndex].LastIndexOf('\\')+1;
             if (lastSlashInPath > 0)
-                lnkBOMFile.Text = CurrentBOMs?[lstbxAliases.SelectedIndex].Substring(lastSlashInPath) ?? EMPTY_FILE_PATH;
+                lnkBOMFile.Text = CurrentBOMs?[lstbxPNHistory.SelectedIndex].Substring(lastSlashInPath) ?? EMPTY_FILE_PATH;
 
             SetterTip.SetToolTip(lnkBOMFile, "Go to -> " + lnkBOMFile.Text);
 
@@ -275,12 +292,30 @@ namespace RApID_Project_WPF
         {
             bBOM = true;
             bSchematic = false;
+
+            if(e.Button == MouseButtons.Right)
+            {
+                cxmnuLinkMenu.Show(MousePosition.X, MousePosition.Y);
+            }
         }
 
-        private void lnkSchematicFileTop_MouseDown(object sender, MouseEventArgs e)
+        private void lnkSchematicFile_MouseDown(object sender, MouseEventArgs e)
         {
             bSchematic = true;
             bBOM = false;
+
+            if (e.Button == MouseButtons.Right)
+            {
+                editingSchematicIndex = 0;
+                foreach(Control c in flowSchematicLinks.Controls)
+                {
+                    var screenPoint = PointToScreen(c.Location);
+                    if (screenPoint.X == MousePosition.X && screenPoint.Y == MousePosition.Y)
+                        break;
+                    else editingSchematicIndex++;
+                }
+                cxmnuLinkMenu.Show(MousePosition.X, MousePosition.Y);
+            }
         }
 
         private void lnkBOMFile_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
@@ -289,9 +324,12 @@ namespace RApID_Project_WPF
             {
                 try
                 {
-                    Process.Start(CurrentBOMs?[lstbxAliases.SelectedIndex]);
+                    Process.Start(CurrentBOMs?[lstbxPNHistory.SelectedIndex]);
                 }
-                catch { }
+                catch (Exception ex)
+                {
+                    csExceptionLogger.csExceptionLogger.Write("frmBoardAliases::lnkBOMFile_LinkClicked", ex);
+                }
             }
         }
         #endregion
@@ -314,7 +352,7 @@ namespace RApID_Project_WPF
                     {
                         lblPartName.Text = lblPartName.Text.Replace("<NAME>", reader[0].ToString());
                         lblCommodityClass.Text = lblCommodityClass.Text.Replace("<CLASS>", reader[1].ToString());
-                        lstbxAliases.Enabled = true;
+                        lstbxPNHistory.Enabled = true;
                     }
                 }
             }
@@ -327,7 +365,7 @@ namespace RApID_Project_WPF
             using (var conn = new SqlConnection(csObjectHolder.csObjectHolder.ObjectHolderInstance().RepairConnectionString))
             {
                 conn.Open();
-                using (var cmd = new SqlCommand("SELECT Alias, BOMPath, SchematicPaths FROM [Repair].[dbo].[PCBAAliases] " +
+                using (var cmd = new SqlCommand("SELECT TargetPartNumber, BOMPath, SchematicPaths FROM [Repair].[dbo].[PCBAAliases] " +
                     "WHERE [TargetPartNumber] = @Pnum", conn))
                 {
                     cmd.Parameters.AddWithValue("@Pnum", txtPartNumber.Text);
@@ -336,7 +374,7 @@ namespace RApID_Project_WPF
 
                     while (reader.Read())
                     {
-                        CurrentAliases.Add(reader[0].ToString() ?? "empty alias ???");
+                        CurrentPartNumbers.Add(reader[0].ToString() ?? "empty alias ???");
                         CurrentBOMs.Add(reader[1]?.ToString() ?? "not set");
                         var sb = new StringBuilder();
                         sb.Append("Reading New Schematic Files {");
@@ -359,9 +397,9 @@ namespace RApID_Project_WPF
                 }
             }
 
-            lstbxAliases.DataSource = CurrentAliases;
-            if (lstbxAliases.Items.Count > 0) lstbxAliases.SelectedIndex = 0;
-            else lstbxAliases.SelectedIndex = -1;
+            lstbxPNHistory.DataSource = CurrentPartNumbers;
+            if (lstbxPNHistory.Items.Count > 0) lstbxPNHistory.SelectedIndex = 0;
+            else lstbxPNHistory.SelectedIndex = -1;
         }
     }
 

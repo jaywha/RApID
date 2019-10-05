@@ -28,10 +28,11 @@ namespace RApID_Project_WPF
 
             try
             {
+                RApID_Project_WPF.Classes.RDM.InitReg();
                 //GetNetLib.VersionTest.InstallIfLowerThan45();
             } catch (Exception e) {
-                MessageBox.Show("The cache library is causing an issue.", "DEBUGGING MESSAGE", MessageBoxButton.OK, MessageBoxImage.Stop);
-                csExceptionLogger.csExceptionLogger.Write("MonkeyCacheIssues", e);
+                MessageBox.Show("The cache library or registry class is causing an issue.", "DEBUGGING MESSAGE", MessageBoxButton.OK, MessageBoxImage.Stop);
+                csExceptionLogger.csExceptionLogger.Write("MonkeyCacheORRegsitryIssues", e);
             } finally
             {
                 var application = new App();

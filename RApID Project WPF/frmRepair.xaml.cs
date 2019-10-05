@@ -1,4 +1,5 @@
 ﻿using EricStabileLibrary;
+using RApID_Project_WPF.Classes;
 using SNMapperLib;
 using System;
 using System.Collections;
@@ -330,11 +331,17 @@ namespace RApID_Project_WPF
         /// </summary>
         private void handleInitSerialPort()
         {
-            if (SerialPort.GetPortNames().Any(x => x == Properties.Settings.Default.SPPortName))
+            if (SerialPort.GetPortNames().Any(x => x == RDM.ReadFromReg<string>(RDM.DefaultKey, RDM.COMPort)))
             {
                 try
                 {
-                    sp = new SerialPort(Properties.Settings.Default.SPPortName, Properties.Settings.Default.SPBaudRate, Properties.Settings.Default.SPParity, Properties.Settings.Default.SPDataBit, Properties.Settings.Default.SPStopBit);
+                    sp = new SerialPort() {
+                        PortName = RDM.ReadFromReg<string>(RDM.DefaultKey, RDM.COMPort),
+                        BaudRate = RDM.ReadFromReg<int>(RDM.DefaultKey, RDM. BaudRate),
+                        Parity = (Parity) Enum.Parse(typeof(Parity), RDM.ReadFromReg<string>(RDM.DefaultKey, RDM.Parity)),
+                        DataBits = RDM.ReadFromReg<int>(RDM.DefaultKey,RDM.DataBits),
+                        StopBits = (StopBits) Enum.Parse(typeof(StopBits), RDM.ReadFromReg<string>(RDM.DefaultKey,RDM.StopBits))
+                    };
                     sp.DataReceived += new SerialDataReceivedEventHandler(spDataReceived);
                     if (sp != null)
                         sp.Open();
@@ -1369,8 +1376,8 @@ namespace RApID_Project_WPF
                         }
                         else
                         {
-                            var result = await mapper.FindFileAsync(".xls");
-                            csCrossClassInteraction.DoExcelOperations(result.filename, progMapper,
+                            var (filename, found) = await mapper.FindFileAsync(".xls");
+                            csCrossClassInteraction.DoExcelOperations(filename, progMapper,
                             new Tuple<Control, Control>(txtRefDes, txtPartReplaced),
                             new Tuple<Control, Control>(txtRefDes_2, txtPartReplaced_2),
                             new Tuple<Control, Control>(txtRefDes_3, txtPartReplaced_3));
@@ -1378,7 +1385,7 @@ namespace RApID_Project_WPF
                             OrigRefSource = txtRefDes.Items.Cast<string>().ToList();
                             OrigPartSource = txtPartReplaced.Items.Cast<string>().ToList();
 
-                            csCrossClassInteraction.MapperSuccessMessage(result.filename, mapper.PartNumber);
+                            csCrossClassInteraction.MapperSuccessMessage(filename, mapper.PartNumber);
 
                             BOMFileActive = true;
 

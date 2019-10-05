@@ -15,6 +15,7 @@ using EricStabileLibrary;
 using System.IO.Ports;
 using Microsoft.Win32;
 using WinForm = System.Windows.Forms;
+using RApID_Project_WPF.Classes;
 
 namespace RApID_Project_WPF
 {
@@ -23,12 +24,12 @@ namespace RApID_Project_WPF
     /// </summary>
     public partial class frmSettings : Window
     {
-        SerialPort sp;
+        private SerialPort BarcodeScanner { get; set; }
         csPrintQCDQELabel printLabel;
         StaticVars sVars = StaticVars.StaticVarsInstance();
         csObjectHolder.csObjectHolder holder = csObjectHolder.csObjectHolder.ObjectHolderInstance();
 
-
+        /// <summary> Default ctor </summary>
         public frmSettings()
         {
             InitializeComponent();
@@ -40,7 +41,7 @@ namespace RApID_Project_WPF
             buildSerialPortSettings();
             buildLogSettings();
             buildPrinterSettings();
-            this.Activate();
+            Activate();
         }
 
         #region Database Settings
@@ -240,31 +241,31 @@ namespace RApID_Project_WPF
             #region Ports
             foreach (string s in csSerialPort.GetPortNames())
                 cbPort.Items.Add(s);
-            cbPort.Text = Properties.Settings.Default.SPPortName;
+            cbPort.Text = RDM.ReadFromReg<string>(RDM.DefaultKey, RDM.COMPort);
             #endregion
 
             #region Baud Rate
             foreach (string s in csSerialPort.GetBaudRates())
                 cbBaudRate.Items.Add(s);
-            cbBaudRate.Text = Properties.Settings.Default.SPBaudRate.ToString();
+            cbBaudRate.Text = RDM.ReadFromReg<string>(RDM.DefaultKey, RDM.BaudRate);
             #endregion
 
             #region Parity
             for (int i = 0; i < csSerialPort.GetParityList().Count; i++)
                 cbParity.Items.Add(csSerialPort.GetParityList()[i]);
-            cbParity.Text = Properties.Settings.Default.SPParity.ToString();
+            cbParity.Text = RDM.ReadFromReg<string>(RDM.DefaultKey, RDM.Parity);
             #endregion
 
             #region Data Bits
             foreach (int i in csSerialPort.GetDataBits())
                 cbDataBits.Items.Add(i.ToString());
-            cbDataBits.Text = Properties.Settings.Default.SPDataBit.ToString();
+            cbDataBits.Text = RDM.ReadFromReg<string>(RDM.DefaultKey, RDM.DataBits);
             #endregion
 
             #region Stop Bits
             for (int i = 0; i < csSerialPort.GetStopBits().Count; i++)
                 cbStopBits.Items.Add(csSerialPort.GetStopBits()[i]);
-            cbStopBits.Text = Properties.Settings.Default.SPStopBit.ToString();
+            cbStopBits.Text = RDM.ReadFromReg<string>(RDM.DefaultKey, RDM.StopBits);
             #endregion
 
             serialPortButtonControl();
@@ -286,17 +287,19 @@ namespace RApID_Project_WPF
         {
             try
             {
-                if(sp != null)
+                if(BarcodeScanner != null)
                 {
-                    if (sp.IsOpen)
-                        sp.Close();
-                    sp = null;
+                    if (BarcodeScanner.IsOpen)
+                        BarcodeScanner.Close();
+                    BarcodeScanner = null;
                 }
 
-                sp = new SerialPort(cbPort.SelectedItem.ToString(), Convert.ToInt32(cbBaudRate.SelectedItem.ToString()), (Parity)cbParity.SelectedItem, Convert.ToInt16(cbDataBits.SelectedItem), (StopBits)cbStopBits.SelectedItem);
-                sp.DataReceived += new SerialDataReceivedEventHandler(spDataReceived);
+                RDM.CurrentCOMIdentifier = nameof(BarcodeScanner);
 
-                if (sp != null)
+                BarcodeScanner = new SerialPort(cbPort.SelectedItem.ToString(), Convert.ToInt32(cbBaudRate.SelectedItem.ToString()), (Parity)cbParity.SelectedItem, Convert.ToInt16(cbDataBits.SelectedItem), (StopBits)cbStopBits.SelectedItem);
+                BarcodeScanner.DataReceived += new SerialDataReceivedEventHandler(spDataReceived);
+
+                if (BarcodeScanner != null)
                     lblPortStatus.Content = "Port Status: Created";
                 else lblPortStatus.Content = "Port Status: Not Created";
             }
@@ -305,25 +308,25 @@ namespace RApID_Project_WPF
 
         private void btnOpenPort_Click(object sender, RoutedEventArgs e)
         {
-            if (sp == null)
+            if (BarcodeScanner == null)
             {
                 lblPortStatus.Content = "Port Status: Not Created";
                 return;
             }
 
-            if (sp.IsOpen)
+            if (BarcodeScanner.IsOpen)
             {
-                sp.Close();
-                if (!sp.IsOpen)
+                BarcodeScanner.Close();
+                if (!BarcodeScanner.IsOpen)
                 {
                     lblPortStatus.Content = "Port Status: Closed";
                     btnOpenPort.Content = "Open Port";
                 }
             }
-            else if (!sp.IsOpen)
+            else if (!BarcodeScanner.IsOpen)
             {
-                sp.Open();
-                if (sp.IsOpen)
+                BarcodeScanner.Open();
+                if (BarcodeScanner.IsOpen)
                 {
                     lblPortStatus.Content = "Port Status: Opened";
                     btnOpenPort.Content = "Close Port";
@@ -335,12 +338,11 @@ namespace RApID_Project_WPF
         {
             try
             {
-                Properties.Settings.Default.SPPortName = cbPort.Text.ToString();
-                Properties.Settings.Default.SPBaudRate = Convert.ToInt32(cbBaudRate.Text);
-                Properties.Settings.Default.SPParity = (Parity)cbParity.SelectedItem;
-                Properties.Settings.Default.SPDataBit = Convert.ToInt16(cbDataBits.Text);
-                Properties.Settings.Default.SPStopBit = (StopBits)cbStopBits.SelectedItem;
-                Properties.Settings.Default.Save();
+                RDM.WriteToReg<string>(RDM.DefaultKey, cbPort.Text, RDM.COMPort);
+                RDM.WriteToReg<string>(RDM.DefaultKey, cbBaudRate.Text, RDM.COMPort);
+                RDM.WriteToReg<string>(RDM.DefaultKey, cbParity.SelectedItem.ToString(), RDM.COMPort);
+                RDM.WriteToReg<string>(RDM.DefaultKey, cbDataBits.Text, RDM.COMPort);
+                RDM.WriteToReg<string>(RDM.DefaultKey, cbStopBits.SelectedItem.ToString(), RDM.COMPort);
                 MessageBox.Show("Settings saved successfully.");
             }
             catch (Exception ex)
@@ -349,29 +351,29 @@ namespace RApID_Project_WPF
             }
         }
 
-        public void spDataReceived(object sender, SerialDataReceivedEventArgs e)
+        private void spDataReceived(object sender, SerialDataReceivedEventArgs e)
         {
             try
             {
                 string data = string.Empty;
                 while (true)
                 {
-                    if (!sp.IsOpen)
+                    if (!BarcodeScanner.IsOpen)
                     {
-                        if (sp != null)
+                        if (BarcodeScanner != null)
                         {
-                            sp.DiscardInBuffer();
-                            sp.DiscardOutBuffer();
+                            BarcodeScanner.DiscardInBuffer();
+                            BarcodeScanner.DiscardOutBuffer();
                             lblPortStatus.Content = "Port Status: Closed";
                         }
-                        else if (sp == null)
+                        else if (BarcodeScanner == null)
                         {
                             lblPortStatus.Content = "Port Status: Not Created";
                         }
                     }
 
-                    if (sp != null)
-                        data += sp.ReadExisting();
+                    if (BarcodeScanner != null)
+                        data += BarcodeScanner.ReadExisting();
 
                     if (data.EndsWith("\r") || data.EndsWith("\n"))
                         break;
@@ -575,10 +577,10 @@ namespace RApID_Project_WPF
 
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
-            if (sp != null && sp.IsOpen)
+            if (BarcodeScanner != null && BarcodeScanner.IsOpen)
             {
-                sp.Close();
-                sp = null;
+                BarcodeScanner.Close();
+                BarcodeScanner = null;
             }
 
             MainWindow.GlobalInstance.MakeFocus();

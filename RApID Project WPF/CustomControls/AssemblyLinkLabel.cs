@@ -17,6 +17,11 @@ namespace RApID_Project_WPF.CustomControls
     /// </summary>
     public partial class AssemblyLinkLabel : LinkLabel
     {
+        /// <summary>
+        /// Exposes the change link event to other classes
+        /// </summary>
+        public static event MouseEventHandler ChangeLink;
+
         /// <summary> URL or File Path </summary>
         [Description("URL or File Path")]
         public new string Link { get; set; }
@@ -64,7 +69,15 @@ namespace RApID_Project_WPF.CustomControls
         }
         #endregion
 
-        private void AssemblyLinkLabel_MouseDown(object sender, MouseEventArgs e) => Activate();
+        private void AssemblyLinkLabel_MouseDown(object sender, MouseEventArgs e) {
+            if (e.Button == MouseButtons.Left)
+            {
+                Activate();
+            } else
+            {
+                ChangeLink?.Invoke(sender, e);
+            }
+        }
 
         /// <summary> Will start the default associated process on the linked item. </summary>
         public void Activate()

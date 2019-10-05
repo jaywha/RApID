@@ -29,13 +29,10 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle5 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle6 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmBoardAliases));
-            this.cxmnuAliasesMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
-            this.addNewAliasToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.deleteAliasToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.cxmnuLinkMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.changeFilePathToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.tcDataViewer = new System.Windows.Forms.TabControl();
@@ -51,7 +48,9 @@
             this.lblCommodityClass = new System.Windows.Forms.Label();
             this.lblPartName = new System.Windows.Forms.Label();
             this.spltpnlAliasToDetail = new System.Windows.Forms.SplitContainer();
-            this.lstbxAliases = new System.Windows.Forms.ListBox();
+            this.lstbxPNHistory = new System.Windows.Forms.ListBox();
+            this.cxmnuAliasesMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.deleteAliasToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.pnlFilePaths = new System.Windows.Forms.Panel();
             this.grpbxSchematicFiles = new System.Windows.Forms.GroupBox();
             this.flowSchematicLinks = new System.Windows.Forms.FlowLayoutPanel();
@@ -61,7 +60,6 @@
             this.dgvDatabaseTable = new System.Windows.Forms.DataGridView();
             this.iDDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.targetPartNumberDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.aliasDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.bOMPathDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewLinkColumn();
             this.SchematicPaths = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.pCBAAliasesBindingSource = new System.Windows.Forms.BindingSource(this.components);
@@ -71,7 +69,6 @@
             this.spltpnlMain = new System.Windows.Forms.SplitContainer();
             this.pCBAAliasesTableAdapter = new RApID_Project_WPF.PCBAAliasesDataSetTableAdapters.PCBAAliasesTableAdapter();
             this.errorProvider = new System.Windows.Forms.ErrorProvider(this.components);
-            this.cxmnuAliasesMenu.SuspendLayout();
             this.cxmnuLinkMenu.SuspendLayout();
             this.tcDataViewer.SuspendLayout();
             this.tbTechnicianView.SuspendLayout();
@@ -89,6 +86,7 @@
             this.spltpnlAliasToDetail.Panel1.SuspendLayout();
             this.spltpnlAliasToDetail.Panel2.SuspendLayout();
             this.spltpnlAliasToDetail.SuspendLayout();
+            this.cxmnuAliasesMenu.SuspendLayout();
             this.pnlFilePaths.SuspendLayout();
             this.grpbxSchematicFiles.SuspendLayout();
             this.grpbxBOMLinkHolder.SuspendLayout();
@@ -102,28 +100,6 @@
             this.spltpnlMain.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.errorProvider)).BeginInit();
             this.SuspendLayout();
-            // 
-            // cxmnuAliasesMenu
-            // 
-            this.cxmnuAliasesMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.addNewAliasToolStripMenuItem,
-            this.deleteAliasToolStripMenuItem});
-            this.cxmnuAliasesMenu.Name = "cxmnuAliasesMenu";
-            this.cxmnuAliasesMenu.Size = new System.Drawing.Size(183, 48);
-            // 
-            // addNewAliasToolStripMenuItem
-            // 
-            this.addNewAliasToolStripMenuItem.Name = "addNewAliasToolStripMenuItem";
-            this.addNewAliasToolStripMenuItem.Size = new System.Drawing.Size(182, 22);
-            this.addNewAliasToolStripMenuItem.Text = "Add New Alias";
-            this.addNewAliasToolStripMenuItem.Click += new System.EventHandler(this.addNewAliasToolStripMenuItem_Click);
-            // 
-            // deleteAliasToolStripMenuItem
-            // 
-            this.deleteAliasToolStripMenuItem.Name = "deleteAliasToolStripMenuItem";
-            this.deleteAliasToolStripMenuItem.Size = new System.Drawing.Size(182, 22);
-            this.deleteAliasToolStripMenuItem.Text = "Delete Selected Alias";
-            this.deleteAliasToolStripMenuItem.Click += new System.EventHandler(this.deleteAliasToolStripMenuItem_Click);
             // 
             // cxmnuLinkMenu
             // 
@@ -245,6 +221,7 @@
             this.btnSearch.TabIndex = 3;
             this.btnSearch.Text = "Search";
             this.btnSearch.UseVisualStyleBackColor = false;
+            this.btnSearch.Click += new System.EventHandler(this.btnSearch_Click);
             // 
             // btnNewPN
             // 
@@ -297,7 +274,7 @@
             // 
             // spltpnlAliasToDetail.Panel1
             // 
-            this.spltpnlAliasToDetail.Panel1.Controls.Add(this.lstbxAliases);
+            this.spltpnlAliasToDetail.Panel1.Controls.Add(this.lstbxPNHistory);
             // 
             // spltpnlAliasToDetail.Panel2
             // 
@@ -306,21 +283,35 @@
             this.spltpnlAliasToDetail.SplitterDistance = 262;
             this.spltpnlAliasToDetail.TabIndex = 0;
             // 
-            // lstbxAliases
+            // lstbxPNHistory
             // 
-            this.lstbxAliases.BackColor = System.Drawing.Color.Black;
-            this.lstbxAliases.ContextMenuStrip = this.cxmnuAliasesMenu;
-            this.lstbxAliases.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.lstbxAliases.Enabled = false;
-            this.lstbxAliases.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lstbxAliases.ForeColor = System.Drawing.Color.Goldenrod;
-            this.lstbxAliases.FormattingEnabled = true;
-            this.lstbxAliases.ItemHeight = 20;
-            this.lstbxAliases.Location = new System.Drawing.Point(0, 0);
-            this.lstbxAliases.Name = "lstbxAliases";
-            this.lstbxAliases.Size = new System.Drawing.Size(262, 218);
-            this.lstbxAliases.TabIndex = 0;
-            this.lstbxAliases.SelectedIndexChanged += new System.EventHandler(this.lstbxAliases_SelectedIndexChanged);
+            this.lstbxPNHistory.BackColor = System.Drawing.Color.Black;
+            this.lstbxPNHistory.ContextMenuStrip = this.cxmnuAliasesMenu;
+            this.lstbxPNHistory.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.lstbxPNHistory.Enabled = false;
+            this.lstbxPNHistory.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lstbxPNHistory.ForeColor = System.Drawing.Color.Goldenrod;
+            this.lstbxPNHistory.FormattingEnabled = true;
+            this.lstbxPNHistory.ItemHeight = 20;
+            this.lstbxPNHistory.Location = new System.Drawing.Point(0, 0);
+            this.lstbxPNHistory.Name = "lstbxPNHistory";
+            this.lstbxPNHistory.Size = new System.Drawing.Size(262, 218);
+            this.lstbxPNHistory.TabIndex = 0;
+            this.lstbxPNHistory.SelectedIndexChanged += new System.EventHandler(this.lstbxPNHistory_SelectedIndexChanged);
+            // 
+            // cxmnuAliasesMenu
+            // 
+            this.cxmnuAliasesMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.deleteAliasToolStripMenuItem});
+            this.cxmnuAliasesMenu.Name = "cxmnuAliasesMenu";
+            this.cxmnuAliasesMenu.Size = new System.Drawing.Size(226, 26);
+            // 
+            // deleteAliasToolStripMenuItem
+            // 
+            this.deleteAliasToolStripMenuItem.Name = "deleteAliasToolStripMenuItem";
+            this.deleteAliasToolStripMenuItem.Size = new System.Drawing.Size(225, 22);
+            this.deleteAliasToolStripMenuItem.Text = "Delete Selected Part Number";
+            this.deleteAliasToolStripMenuItem.Click += new System.EventHandler(this.deletePartNumberToolStripMenuItem_Click);
             // 
             // pnlFilePaths
             // 
@@ -355,6 +346,7 @@
             this.flowSchematicLinks.Name = "flowSchematicLinks";
             this.flowSchematicLinks.Size = new System.Drawing.Size(506, 118);
             this.flowSchematicLinks.TabIndex = 0;
+            this.flowSchematicLinks.MouseDown += new System.Windows.Forms.MouseEventHandler(this.flowSchematicLinks_MouseDown);
             // 
             // grpbxBOMLinkHolder
             // 
@@ -401,42 +393,41 @@
             this.dgvDatabaseTable.AllowUserToDeleteRows = false;
             this.dgvDatabaseTable.AutoGenerateColumns = false;
             this.dgvDatabaseTable.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
-            dataGridViewCellStyle4.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle4.BackColor = System.Drawing.SystemColors.Control;
-            dataGridViewCellStyle4.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle4.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle4.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle4.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle4.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.dgvDatabaseTable.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle4;
+            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle1.BackColor = System.Drawing.SystemColors.Control;
+            dataGridViewCellStyle1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle1.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle1.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle1.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.dgvDatabaseTable.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle1;
             this.dgvDatabaseTable.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dgvDatabaseTable.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.iDDataGridViewTextBoxColumn,
             this.targetPartNumberDataGridViewTextBoxColumn,
-            this.aliasDataGridViewTextBoxColumn,
             this.bOMPathDataGridViewTextBoxColumn,
             this.SchematicPaths});
             this.dgvDatabaseTable.DataSource = this.pCBAAliasesBindingSource;
-            dataGridViewCellStyle5.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle5.BackColor = System.Drawing.Color.DimGray;
-            dataGridViewCellStyle5.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle5.ForeColor = System.Drawing.SystemColors.ButtonHighlight;
-            dataGridViewCellStyle5.SelectionBackColor = System.Drawing.SystemColors.HotTrack;
-            dataGridViewCellStyle5.SelectionForeColor = System.Drawing.SystemColors.ControlLightLight;
-            dataGridViewCellStyle5.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
-            this.dgvDatabaseTable.DefaultCellStyle = dataGridViewCellStyle5;
+            dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle2.BackColor = System.Drawing.Color.DimGray;
+            dataGridViewCellStyle2.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle2.ForeColor = System.Drawing.SystemColors.ButtonHighlight;
+            dataGridViewCellStyle2.SelectionBackColor = System.Drawing.SystemColors.HotTrack;
+            dataGridViewCellStyle2.SelectionForeColor = System.Drawing.SystemColors.ControlLightLight;
+            dataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+            this.dgvDatabaseTable.DefaultCellStyle = dataGridViewCellStyle2;
             this.dgvDatabaseTable.Dock = System.Windows.Forms.DockStyle.Fill;
             this.dgvDatabaseTable.Location = new System.Drawing.Point(3, 3);
             this.dgvDatabaseTable.Name = "dgvDatabaseTable";
             this.dgvDatabaseTable.ReadOnly = true;
-            dataGridViewCellStyle6.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle6.BackColor = System.Drawing.SystemColors.Control;
-            dataGridViewCellStyle6.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle6.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle6.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle6.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle6.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.dgvDatabaseTable.RowHeadersDefaultCellStyle = dataGridViewCellStyle6;
+            dataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle3.BackColor = System.Drawing.SystemColors.Control;
+            dataGridViewCellStyle3.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle3.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle3.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle3.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle3.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.dgvDatabaseTable.RowHeadersDefaultCellStyle = dataGridViewCellStyle3;
             this.dgvDatabaseTable.Size = new System.Drawing.Size(786, 381);
             this.dgvDatabaseTable.TabIndex = 0;
             // 
@@ -454,13 +445,6 @@
             this.targetPartNumberDataGridViewTextBoxColumn.HeaderText = "TargetPartNumber";
             this.targetPartNumberDataGridViewTextBoxColumn.Name = "targetPartNumberDataGridViewTextBoxColumn";
             this.targetPartNumberDataGridViewTextBoxColumn.ReadOnly = true;
-            // 
-            // aliasDataGridViewTextBoxColumn
-            // 
-            this.aliasDataGridViewTextBoxColumn.DataPropertyName = "Alias";
-            this.aliasDataGridViewTextBoxColumn.HeaderText = "Alias";
-            this.aliasDataGridViewTextBoxColumn.Name = "aliasDataGridViewTextBoxColumn";
-            this.aliasDataGridViewTextBoxColumn.ReadOnly = true;
             // 
             // bOMPathDataGridViewTextBoxColumn
             // 
@@ -551,7 +535,6 @@
             this.Text = "PCBA Alias Manager";
             this.Load += new System.EventHandler(this.frmBoardAliases_Load);
             this.PreviewKeyDown += new System.Windows.Forms.PreviewKeyDownEventHandler(this.frmBoardAliases_PreviewKeyDown);
-            this.cxmnuAliasesMenu.ResumeLayout(false);
             this.cxmnuLinkMenu.ResumeLayout(false);
             this.tcDataViewer.ResumeLayout(false);
             this.tbTechnicianView.ResumeLayout(false);
@@ -571,6 +554,7 @@
             this.spltpnlAliasToDetail.Panel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.spltpnlAliasToDetail)).EndInit();
             this.spltpnlAliasToDetail.ResumeLayout(false);
+            this.cxmnuAliasesMenu.ResumeLayout(false);
             this.pnlFilePaths.ResumeLayout(false);
             this.grpbxSchematicFiles.ResumeLayout(false);
             this.grpbxBOMLinkHolder.ResumeLayout(false);
@@ -591,10 +575,7 @@
 
         #endregion
         private System.Windows.Forms.ContextMenuStrip cxmnuLinkMenu;
-        private System.Windows.Forms.ContextMenuStrip cxmnuAliasesMenu;
         private System.Windows.Forms.ToolStripMenuItem changeFilePathToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem addNewAliasToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem deleteAliasToolStripMenuItem;
         private System.Windows.Forms.TabControl tcDataViewer;
         private System.Windows.Forms.TabPage tbTechnicianView;
         private System.Windows.Forms.SplitContainer spltpnlTechView;
@@ -606,7 +587,7 @@
         private System.Windows.Forms.Label lblCommodityClass;
         private System.Windows.Forms.Label lblPartName;
         private System.Windows.Forms.SplitContainer spltpnlAliasToDetail;
-        private System.Windows.Forms.ListBox lstbxAliases;
+        private System.Windows.Forms.ListBox lstbxPNHistory;
         private System.Windows.Forms.Panel pnlFilePaths;
         private System.Windows.Forms.TabPage tbDatabaseView;
         private System.Windows.Forms.DataGridView dgvDatabaseTable;
@@ -629,5 +610,7 @@
         private System.Windows.Forms.FlowLayoutPanel flowSchematicLinks;
         private System.Windows.Forms.Button btnNewPN;
         private System.Windows.Forms.Button btnSearch;
+        private System.Windows.Forms.ContextMenuStrip cxmnuAliasesMenu;
+        private System.Windows.Forms.ToolStripMenuItem deleteAliasToolStripMenuItem;
     }
 }

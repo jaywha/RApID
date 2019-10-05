@@ -86,6 +86,100 @@ namespace EricStabileLibrary
             cmbx.IsEnabled = true;
             cmbx.IsEditable = true;
         }
+
+        /// <summary>
+        /// Error symbol to ensure we can see when an error happens.
+        /// </summary>
+        public const string ERROR_GLYPH = "╓╥╫╥┘";
+
+        /// <summary>
+        /// Convenience extension method for doing <see cref="IConvertible"/> conversions, piped to a <see cref="Nullable&lt;T&gt;"/>.
+        /// </summary>
+        /// <typeparam name="T">Conversion Target Type</typeparam>
+        /// <param name="o">Source object to convert - normally a string.</param>
+        /// <returns>The value as an instance of type <typeparamref name="T"/>, or type <typeparamref name="T"/>'s default value.</returns>
+        public static T TryChangeTypeTo<T>(this object o)
+        {
+            if (o.ToString().Equals(ERROR_GLYPH)) return default;
+
+            try
+            {
+                Type t = typeof(T);
+                Type u = Nullable.GetUnderlyingType(t);
+
+                if (u != null)
+                {
+                    return (o == null) ? default : (T)Convert.ChangeType(o, u);
+                }
+                else
+                {
+                    return (T)Convert.ChangeType(o, t);
+                }
+            }
+            catch (Exception ex)
+              when (ex is ArgumentNullException
+                  || ex is FormatException
+                  || ex is OverflowException
+                  || ex is InvalidCastException)
+            {
+                Console.WriteLine($"[ChangeTypeTo_TypicalException] ==> {ex}");
+                Console.WriteLine($"[Exception:{ex.GetType()}] -> {ex.Message}");
+                return default;
+            }
+        }
+
+        /// <summary>
+        /// Convenience extension method for doing <see cref="IConvertible"/> conversions, piped to a <see cref="Nullable&lt;T&gt;"/>.
+        /// </summary>
+        /// <typeparam name="T">Conversion Target Type</typeparam>
+        /// <param name="o">Source object to convert - normally a string.</param>
+        /// <param name="result">The value as an instance of type <typeparamref name="T"/>, or type <typeparamref name="T"/>'s default value.</param>
+        /// <returns>True if operation successful.</returns>
+        public static bool TryChangeTypeTo<T>(this object o, out T result)
+        {
+            if (o == null || o.ToString().Equals(ERROR_GLYPH))
+            {
+                result = default;
+                return false;
+            }
+
+            try
+            {
+                Type t = typeof(T);
+                Type u = Nullable.GetUnderlyingType(t);
+
+                if (u != null)
+                {
+                    if (o.ToString().Contains("Bad Value"))
+                    {
+                        result = default;
+                        return false;
+                    }
+                    result = (o == null) ? default : (T)Convert.ChangeType(o, u);
+                }
+                else
+                {
+                    if (o.ToString().Contains("Bad Value"))
+                    {
+                        result = default;
+                        return false;
+                    }
+                    result = (T)Convert.ChangeType(o, t);
+                }
+            }
+            catch (Exception ex)
+              when (ex is ArgumentNullException
+                  || ex is FormatException
+                  || ex is OverflowException
+                  || ex is InvalidCastException)
+            {
+                Console.WriteLine($"[ChangeTypeTo_TypicalException] ==> {ex}");
+                Console.WriteLine($"[Exception:{ex.GetType()}] -> {ex.Message}");
+                result = default;
+                return false;
+            }
+            return true;
+        }
     }
 
     public static class csAppSettings

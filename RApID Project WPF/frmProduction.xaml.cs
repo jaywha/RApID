@@ -1,4 +1,5 @@
 ﻿using EricStabileLibrary;
+using RApID_Project_WPF.Classes;
 using SNMapperLib;
 using System;
 using System.Collections;
@@ -237,11 +238,18 @@ namespace RApID_Project_WPF
 
         private void initSerialPort()
         {
-            if (SerialPort.GetPortNames().Any(x => x == Properties.Settings.Default.SPPortName))
+            if (SerialPort.GetPortNames().Any(x => x == RDM.ReadFromReg<string>(RDM.DefaultKey, RDM.COMPort)))
             {
                 try
                 {
-                    sp = new SerialPort(Properties.Settings.Default.SPPortName, Properties.Settings.Default.SPBaudRate, Properties.Settings.Default.SPParity, Properties.Settings.Default.SPDataBit, Properties.Settings.Default.SPStopBit);
+                    sp = new SerialPort()
+                    {
+                        PortName = RDM.ReadFromReg<string>(RDM.DefaultKey, RDM.COMPort),
+                        BaudRate = RDM.ReadFromReg<int>(RDM.DefaultKey, RDM.BaudRate),
+                        Parity = (Parity)Enum.Parse(typeof(Parity), RDM.ReadFromReg<string>(RDM.DefaultKey, RDM.Parity)),
+                        DataBits = RDM.ReadFromReg<int>(RDM.DefaultKey, RDM.DataBits),
+                        StopBits = (StopBits)Enum.Parse(typeof(StopBits), RDM.ReadFromReg<string>(RDM.DefaultKey, RDM.StopBits))
+                    };
                     sp.DataReceived += new SerialDataReceivedEventHandler(spDataReceived);
                     if (sp != null)
                         sp.Open();
