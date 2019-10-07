@@ -653,11 +653,29 @@ namespace RApID_Project_WPF
                             if (!mapper.GetData(txtSerialNumber.Text))
                             {
                                 MessageBox.Show("Couldn't find the barcode's entry in the database.\nPlease enter information manually.",
-                                        "Soft Error - BOM Lookup", MessageBoxButton.OK, MessageBoxImage.Warning);
+                                        "Soft Error - Database Lookup", MessageBoxButton.OK, MessageBoxImage.Warning);
+                                new frmBoardAliases().ShowDialog();
                             }
                             else
                             {
                                 var (filename, found) = await mapper.FindFileAsync(".xls");
+
+                                if(!found)
+                                {
+                                    MessageBox.Show("We got some database info, but we still need help finindg the BOM.",
+                                        "Soft Error - BOM Not Found", MessageBoxButton.OK, MessageBoxImage.Information);
+                                    frmBoardAliases techForm = new frmBoardAliases(mapper.PartNumber);
+                                    techForm.ShowDialog();
+
+                                    if (!techForm.WasEntryFound) {
+                                        MessageBox.Show("No BOM Loaded!", "Warning: BOM Missing!", 
+                                            MessageBoxButton.OK, MessageBoxImage.Warning);
+                                        return;
+                                    } else {
+                                        filename = techForm.BOMFileName;
+                                    }
+                                }
+
                                 csCrossClassInteraction.DoExcelOperations(filename, progMapper, dgBOMList,
                                 new Tuple<Control, Control>(txtMultiRefDes, txtMultiPartNum),
                                 new Tuple<Control, Control>(txtMultiRefDes_2, txtMultiPartNum_2),

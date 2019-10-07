@@ -25,8 +25,14 @@ namespace RApID_Project_WPF
         TargetPartNumber = 1
     }
 
+    /// <summary>
+    /// Technician Interface form to assign BOMs and Assembly files to a part number or alias thereof.
+    /// </summary>
     public partial class frmBoardAliases : Form
     {
+        public bool WasEntryFound = false;
+        public string BOMFileName = "";
+
         const string EMPTY_FILE_PATH = "Empty BOM Path...";
         static bool FirstTimeToday = true;
 
@@ -51,9 +57,9 @@ namespace RApID_Project_WPF
         int posY;
 
         /// <summary>
-        /// Technician Interface form to assign BOMs and Assembly files to a part number or alias thereof.
+        /// Default Ctor
         /// </summary>
-        public frmBoardAliases()
+        public frmBoardAliases(string partNumber = "")
         {
             InitializeComponent();
             tbDatabaseView.Hide();
@@ -62,6 +68,8 @@ namespace RApID_Project_WPF
 
             posX = (int) (Width / 2.0);
             posY = (int) (Height / 2.0);
+
+            if (!string.IsNullOrWhiteSpace(partNumber)) txtPartNumber.Text = partNumber;
         }
 
         private void frmBoardAliases_Load(object sender, EventArgs e)
@@ -226,12 +234,11 @@ namespace RApID_Project_WPF
             using (var conn = new SqlConnection(csObjectHolder.csObjectHolder.ObjectHolderInstance().RepairConnectionString))
             {
                 conn.Open();
-                using (var cmd = new SqlCommand("INSERT INTO PCBAAliases (TargetPartNumber, Alias, BOMPath, SchematicPaths) VALUES (@Pnum, @alias, @BomPath, @SchPaths)", conn))
+                using (var cmd = new SqlCommand("INSERT INTO PCBAAliases (TargetPartNumber, BOMPath, SchematicPaths) VALUES (@Pnum, @BomPath, @SchPaths)", conn))
                 {
                     cmd.Parameters.AddWithValue("@Pnum", input);
                     cmd.Parameters.AddWithValue("@BomPath", "BOMLink");
                     cmd.Parameters.AddWithValue("@SchPaths", "ASSYLink");
-                    cmd.Parameters.AddWithValue("@alias", input);
                     var rowsAffected = cmd.ExecuteNonQuery();
                 }
             }

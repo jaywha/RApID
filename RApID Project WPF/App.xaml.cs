@@ -22,14 +22,10 @@ namespace RApID_Project_WPF
                     = $@"\\joi\EU\Public\EE Process Test\Logs\RApID\_Exceptions\{DateTime.Today:yyyy}\{DateTime.Today:MMMM}\";
                 Directory.CreateDirectory(csExceptionLogger.csExceptionLogger.DefaultLogLocation);
             }
-            
-            // Set this form to be the form that should appear when a BOM is not found.
-            SNMapperLib.csSerialNumberMapper.Instance.RApIDForm = new frmBoardAliases();
 
             try
             {
-                RApID_Project_WPF.Classes.RDM.InitReg();
-                //GetNetLib.VersionTest.InstallIfLowerThan45();
+                Classes.RDM.InitReg();
             } catch (Exception e) {
                 MessageBox.Show("The cache library or registry class is causing an issue.", "DEBUGGING MESSAGE", MessageBoxButton.OK, MessageBoxImage.Stop);
                 csExceptionLogger.csExceptionLogger.Write("MonkeyCacheORRegsitryIssues", e);
