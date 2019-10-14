@@ -86,6 +86,12 @@
         <Button x:Name="btnQCDQE" Content="QC/DQE" HorizontalAlignment="Left" Margin="10,195,0,0" VerticalAlignment="Top" Width="200" Height="100" Style="{StaticResource MainMenuButton}" Click="btnClicks" FontFamily="Arial" ToolTip="Design Qualfication Eng. - ERAP &amp; Pilot Repair"/>
         <Button x:Name="btnReportViewer" Content="Report Viewer" HorizontalAlignment="Right" Margin="0,195,10,0" VerticalAlignment="Top" Width="200" Height="100" Style="{StaticResource MainMenuButton}" Click="btnClicks" FontFamily="Arial" ToolTip="MSSQL Reports"/>
         <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="10,300,10,0">
+            <Button x:Name="btnTechFilesForm" Width="35" Height="35" VerticalAlignment="Center" Click="btnClicks" ToolTip="PCB Alias Form">
+                <StackPanel>
+                    <Image Source="Resources/tech.png" />
+                </StackPanel>
+            </Button>
+            <Separator Visibility="Hidden" Width="10" />
             <Button x:Name="btnSettings" Width="35" Height="35" VerticalAlignment="Center" Click="btnClicks" ToolTip="Application Settings">
                 <StackPanel>
                     <Image Source="Resources/settingsIcon.png" />

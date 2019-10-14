@@ -132,7 +132,7 @@ namespace RApID_Project_WPF.Classes
         /// <param name="valueName">The name of the value to read from the target key.</param>
         /// <returns> The Value held in the target RegistryKey </returns>
         public static object ReadFromReg(RegistryKey key, string valueName)
-            => key.GetValue(valueName) ?? default;
+            => key.GetValue(valueName) ?? default(object);
 
         /// <summary>
         /// Will try to cast the value of the specified RegistryKey to type <typeparamref name="T"/>.
@@ -146,7 +146,7 @@ namespace RApID_Project_WPF.Classes
         /// <param name="valueName">The name of the value to read from the target key.</param>
         /// <returns> The Value held in the target RegistryKey </returns>
         public static T ReadFromReg<T>(RegistryKey key, string valueName)
-            => ((IConvertible)key.GetValue(valueName)).TryChangeTypeTo(out T result) ? result : default;
+            => ((IConvertible)key.GetValue(valueName)).TryChangeTypeTo(out T result) ? result : default(T);
 
         /// <summary>
         /// Will push the specified value to the RegistryKey.
@@ -181,6 +181,6 @@ namespace RApID_Project_WPF.Classes
         /// <param name="val">The Value to write to the name part of key.</param>
         /// <param name="name">The Value to write to the key.</param>
         public static void WriteToReg<T>(RegistryKey key, IConvertible val, string name)
-            => key.SetValue(name, (val.TryChangeTypeTo(out T result) ? result : default).ToString());
+            => key.SetValue(name, (val.TryChangeTypeTo(out T result) ? result : default(T)).ToString());
     }
 }

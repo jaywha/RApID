@@ -100,7 +100,7 @@ namespace EricStabileLibrary
         /// <returns>The value as an instance of type <typeparamref name="T"/>, or type <typeparamref name="T"/>'s default value.</returns>
         public static T TryChangeTypeTo<T>(this object o)
         {
-            if (o.ToString().Equals(ERROR_GLYPH)) return default;
+            if (o.ToString().Equals(ERROR_GLYPH)) return default(T);
 
             try
             {
@@ -109,7 +109,7 @@ namespace EricStabileLibrary
 
                 if (u != null)
                 {
-                    return (o == null) ? default : (T)Convert.ChangeType(o, u);
+                    return (o == null) ? default(T) : (T)Convert.ChangeType(o, u);
                 }
                 else
                 {
@@ -124,7 +124,7 @@ namespace EricStabileLibrary
             {
                 Console.WriteLine($"[ChangeTypeTo_TypicalException] ==> {ex}");
                 Console.WriteLine($"[Exception:{ex.GetType()}] -> {ex.Message}");
-                return default;
+                return default(T);
             }
         }
 
@@ -139,7 +139,7 @@ namespace EricStabileLibrary
         {
             if (o == null || o.ToString().Equals(ERROR_GLYPH))
             {
-                result = default;
+                result = default(T);
                 return false;
             }
 
@@ -152,16 +152,16 @@ namespace EricStabileLibrary
                 {
                     if (o.ToString().Contains("Bad Value"))
                     {
-                        result = default;
+                        result = default(T);
                         return false;
                     }
-                    result = (o == null) ? default : (T)Convert.ChangeType(o, u);
+                    result = (o == null) ? default(T) : (T)Convert.ChangeType(o, u);
                 }
                 else
                 {
                     if (o.ToString().Contains("Bad Value"))
                     {
-                        result = default;
+                        result = default(T);
                         return false;
                     }
                     result = (T)Convert.ChangeType(o, t);
@@ -175,7 +175,7 @@ namespace EricStabileLibrary
             {
                 Console.WriteLine($"[ChangeTypeTo_TypicalException] ==> {ex}");
                 Console.WriteLine($"[Exception:{ex.GetType()}] -> {ex.Message}");
-                result = default;
+                result = default(T);
                 return false;
             }
             return true;

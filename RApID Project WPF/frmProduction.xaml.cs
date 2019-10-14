@@ -2027,5 +2027,15 @@ namespace RApID_Project_WPF
                 PrevGrid = tcUnitIssues.SelectedContent as Grid ?? null;
             }
         }
+
+        private void ExpBOMInfo_Expanded(object sender, RoutedEventArgs e)
+        {
+            expBOMInfo.Margin = new Thickness(15, 200, 650, 300);
+        }
+
+        private void ExpBOMInfo_Collapsed(object sender, RoutedEventArgs e)
+        {
+            expBOMInfo.Margin = new Thickness(15, 200, 1050, 300);
+        }
     }
 }

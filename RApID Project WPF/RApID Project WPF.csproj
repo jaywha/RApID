@@ -444,11 +444,13 @@
     <WCFMetadata Include="Service References\" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Resources\refresh.png" />
     <Resource Include="Resources\trashcan.png" />
     <Resource Include="Resources\close.png" />
     <Resource Include="RApID.ico" />
     <None Include="FodyWeavers.xml" />
     <Resource Include="Resources\14-149858_big-image-green-plus-icon-png.jpg" />
+    <Resource Include="Resources\tech.png" />
     <Content Include="Resources\BarcodeLib.dll" />
     <Resource Include="Resources\settingsIcon.png" />
   </ItemGroup>

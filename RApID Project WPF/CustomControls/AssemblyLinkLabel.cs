@@ -65,6 +65,7 @@ namespace RApID_Project_WPF.CustomControls
             Margin = new Padding(5);
             Padding = new Padding(32,4,4,4);
             BorderStyle = BorderStyle.Fixed3D;
+            Cursor = Cursors.Hand;
             MouseDown += AssemblyLinkLabel_MouseDown;
         }
         #endregion

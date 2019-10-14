@@ -128,35 +128,39 @@ namespace RApID_Project_WPF
             {
                 switch (((Control)sender).Name.ToString())
                 {
-                    case "btnRework":
+                    case nameof(btnRework):
                         var fpr = new frmProduction { Owner = this, WindowStartupLocation = WindowStartupLocation.CenterOwner };                        
                         fpr.Show();
                         Hide();
                         break;
-                    case "btnRepair":
+                    case nameof(btnRepair):
                         var rpr = new frmRepair(false) { Owner = this, WindowStartupLocation = WindowStartupLocation.CenterOwner };
                         rpr.Show();
                         Hide();
                         break;
-                    case "btnReportViewer":
+                    case nameof(btnReportViewer):
                         Process.Start(Properties.Settings.Default.DefaultReportManagerLink);
                         break;
-                    case "btnQCDQE":
+                    case nameof(btnQCDQE):
                         var fQC = new frmQCDQE { Owner = this, WindowStartupLocation = WindowStartupLocation.CenterOwner };
                         fQC.Show();
                         Hide();
                         break;
-                    case "btnSettings":
+                    case nameof(btnSettings):
                         var fSettings = new frmSettings { Owner = this, WindowStartupLocation = WindowStartupLocation.CenterOwner  };
                         fSettings.Show();
                         Hide();
                         break;
-                    case "btnTicketLookup":
+                    case nameof(btnTicketLookup):
                         frmGlobalSearch.Instance.Owner = GlobalInstance;
                         frmGlobalSearch.Instance.WindowStartupLocation = WindowStartupLocation.CenterOwner;
                         frmGlobalSearch.Instance.CenterWindow();
                         frmGlobalSearch.Instance.Show();
                         Hide();
+                        break;
+                    case nameof(btnTechFilesForm):
+                        frmBoardAliases alias = new frmBoardAliases();
+                        alias.ShowDialog();
                         break;
                 }
             }
