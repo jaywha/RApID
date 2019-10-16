@@ -239,37 +239,31 @@ namespace RApID_Project_WPF
         #region Serial Port Settings
         private void buildSerialPortSettings()
         {
-            void InitRegAndOptions(ref ComboBox cmbx , string[] options, string regKey) {
+            void InitRegAndOptions<T>(ref ComboBox cmbx , List<T> options, string regKey) {
                 string targetValue = RDM.ReadFromReg<string>(RDM.DefaultKey, regKey);
 
-                foreach (string s in options) cmbx.Items.Add(s);
+                foreach (T item in options) cmbx.Items.Add(item);
                 cmbx.Text = targetValue;
             }
 
             #region Ports
-            InitRegAndOptions(ref cbPort, csSerialPort.GetPortNames(), RDM.COMPort);
+            InitRegAndOptions(ref cbPort, csSerialPort.GetPortNames().ToList(), RDM.COMPort);
             #endregion
 
             #region Baud Rate
-            InitRegAndOptions(ref cbBaudRate, csSerialPort.GetBaudRates(), RDM.BaudRate);
+            InitRegAndOptions(ref cbBaudRate, csSerialPort.GetBaudRates().ToList(), RDM.BaudRate);
             #endregion
 
             #region Parity
-            for (int i = 0; i < csSerialPort.GetParityList().Count; i++)
-                cbParity.Items.Add(csSerialPort.GetParityList()[i]);
-            cbParity.SelectedItem = Enum.Parse(typeof(Parity), RDM.ReadFromReg<string>(RDM.DefaultKey, RDM.Parity));
+            InitRegAndOptions(ref cbParity, csSerialPort.GetParityList(), RDM.Parity);
             #endregion
 
             #region Data Bits
-            foreach (int i in csSerialPort.GetDataBits())
-                cbDataBits.Items.Add(i.ToString());
-            cbDataBits.SelectedItem = RDM.ReadFromReg<string>(RDM.DefaultKey, RDM.DataBits);
+            InitRegAndOptions(ref cbDataBits, csSerialPort.GetDataBits().ToList(), RDM.DataBits);
             #endregion
 
             #region Stop Bits
-            for (int i = 0; i < csSerialPort.GetStopBits().Count; i++)
-                cbStopBits.Items.Add(csSerialPort.GetStopBits()[i]);
-            cbStopBits.SelectedItem = Enum.Parse(typeof(StopBits), RDM.ReadFromReg<string>(RDM.DefaultKey, RDM.StopBits));
+            InitRegAndOptions(ref cbStopBits, csSerialPort.GetStopBits(), RDM.StopBits);
             #endregion
 
             serialPortButtonControl();
