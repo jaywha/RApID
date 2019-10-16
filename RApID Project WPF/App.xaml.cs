@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Windows;
+using RDM = RApID_Project_WPF.Classes.RDM;
 
 namespace RApID_Project_WPF
 {
@@ -23,18 +24,9 @@ namespace RApID_Project_WPF
                 Directory.CreateDirectory(csExceptionLogger.csExceptionLogger.DefaultLogLocation);
             }
 
-            try
-            {
-                Classes.RDM.InitReg();
-            } catch (Exception e) {
-                MessageBox.Show("The cache library or registry class is causing an issue.", "DEBUGGING MESSAGE", MessageBoxButton.OK, MessageBoxImage.Stop);
-                csExceptionLogger.csExceptionLogger.Write("MonkeyCacheORRegsitryIssues", e);
-            } finally
-            {
-                var application = new App();
-                application.InitializeComponent();
-                application.Run();
-            }
+            var application = new App();
+            application.InitializeComponent();
+            application.Run();
         }
     }
 }

@@ -33,6 +33,7 @@ namespace RApID_Project_WPF
         public frmSettings()
         {
             InitializeComponent();
+            if (!RDM.ReadFromReg<bool>(RDM.DefaultKey, RDM.IsInited)) RDM.InitReg();
         }
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
@@ -238,34 +239,37 @@ namespace RApID_Project_WPF
         #region Serial Port Settings
         private void buildSerialPortSettings()
         {
+            void InitRegAndOptions(ref ComboBox cmbx , string[] options, string regKey) {
+                string targetValue = RDM.ReadFromReg<string>(RDM.DefaultKey, regKey);
+
+                foreach (string s in options) cmbx.Items.Add(s);
+                cmbx.Text = targetValue;
+            }
+
             #region Ports
-            foreach (string s in csSerialPort.GetPortNames())
-                cbPort.Items.Add(s);
-            cbPort.Text = RDM.ReadFromReg<string>(RDM.DefaultKey, RDM.COMPort);
+            InitRegAndOptions(ref cbPort, csSerialPort.GetPortNames(), RDM.COMPort);
             #endregion
 
             #region Baud Rate
-            foreach (string s in csSerialPort.GetBaudRates())
-                cbBaudRate.Items.Add(s);
-            cbBaudRate.Text = RDM.ReadFromReg<string>(RDM.DefaultKey, RDM.BaudRate);
+            InitRegAndOptions(ref cbBaudRate, csSerialPort.GetBaudRates(), RDM.BaudRate);
             #endregion
 
             #region Parity
             for (int i = 0; i < csSerialPort.GetParityList().Count; i++)
                 cbParity.Items.Add(csSerialPort.GetParityList()[i]);
-            cbParity.Text = RDM.ReadFromReg<string>(RDM.DefaultKey, RDM.Parity);
+            cbParity.SelectedItem = Enum.Parse(typeof(Parity), RDM.ReadFromReg<string>(RDM.DefaultKey, RDM.Parity));
             #endregion
 
             #region Data Bits
             foreach (int i in csSerialPort.GetDataBits())
                 cbDataBits.Items.Add(i.ToString());
-            cbDataBits.Text = RDM.ReadFromReg<string>(RDM.DefaultKey, RDM.DataBits);
+            cbDataBits.SelectedItem = RDM.ReadFromReg<string>(RDM.DefaultKey, RDM.DataBits);
             #endregion
 
             #region Stop Bits
             for (int i = 0; i < csSerialPort.GetStopBits().Count; i++)
                 cbStopBits.Items.Add(csSerialPort.GetStopBits()[i]);
-            cbStopBits.Text = RDM.ReadFromReg<string>(RDM.DefaultKey, RDM.StopBits);
+            cbStopBits.SelectedItem = Enum.Parse(typeof(StopBits), RDM.ReadFromReg<string>(RDM.DefaultKey, RDM.StopBits));
             #endregion
 
             serialPortButtonControl();
@@ -294,7 +298,7 @@ namespace RApID_Project_WPF
                     BarcodeScanner = null;
                 }
 
-                RDM.CurrentCOMIdentifier = nameof(BarcodeScanner);
+                RDM.CurrentCOMIdentifier = "Default";
 
                 BarcodeScanner = new SerialPort(cbPort.SelectedItem.ToString(), Convert.ToInt32(cbBaudRate.SelectedItem.ToString()), (Parity)cbParity.SelectedItem, Convert.ToInt16(cbDataBits.SelectedItem), (StopBits)cbStopBits.SelectedItem);
                 BarcodeScanner.DataReceived += new SerialDataReceivedEventHandler(spDataReceived);
@@ -339,10 +343,10 @@ namespace RApID_Project_WPF
             try
             {
                 RDM.WriteToReg<string>(RDM.DefaultKey, cbPort.Text, RDM.COMPort);
-                RDM.WriteToReg<string>(RDM.DefaultKey, cbBaudRate.Text, RDM.COMPort);
-                RDM.WriteToReg<string>(RDM.DefaultKey, cbParity.SelectedItem.ToString(), RDM.COMPort);
-                RDM.WriteToReg<string>(RDM.DefaultKey, cbDataBits.Text, RDM.COMPort);
-                RDM.WriteToReg<string>(RDM.DefaultKey, cbStopBits.SelectedItem.ToString(), RDM.COMPort);
+                RDM.WriteToReg<string>(RDM.DefaultKey, cbBaudRate.Text, RDM.BaudRate);
+                RDM.WriteToReg<string>(RDM.DefaultKey, cbParity.SelectedItem.ToString(), RDM.Parity);
+                RDM.WriteToReg<string>(RDM.DefaultKey, cbDataBits.Text, RDM.DataBits);
+                RDM.WriteToReg<string>(RDM.DefaultKey, cbStopBits.SelectedItem.ToString(), RDM.StopBits);
                 MessageBox.Show("Settings saved successfully.");
             }
             catch (Exception ex)
@@ -431,45 +435,6 @@ namespace RApID_Project_WPF
             txtLogWriteLoc.Text = Properties.Settings.Default.LogWriteLocation;
         }
 
-        //private void attemptToReadLog(string sLogLoc)
-        //{
-        //    rtbLogInfo.Document.Blocks.Clear();
-        //    LogToReview = csSerialization.deserializeFile(sLogLoc);
-
-        //    if (LogToReview == null)
-        //    {
-        //        rtbLogInfo.AppendText("There was an error reading in the selected log.");
-        //        btnViewLogNewWindow.Visibility = Visibility.Hidden;
-        //    }
-        //    else if (LogToReview != null)
-        //    {
-        //        btnViewLogNewWindow.Visibility = Visibility.Visible;
-
-        //        string sLogData = String.Format("{0} began this entry at {1}.\n", LogToReview.Tech, LogToReview.LogCreationTime.ToString("MM/dd/yyyy hh:mm:ss tt"));
-
-        //        if (LogToReview.IsCR)
-        //            sLogData += "This was regarding a Credit Return.\n";
-        //        else sLogData += "This was not a Credit Return.\n";
-
-        //        sLogData += "Actions Associated With This Log File:\n";
-
-        //        //Note: Count the number of times each action appears.
-        //        for (int i = 0; i < System.Enum.GetNames(typeof(csLogging.LogState)).Length; i++)
-        //        {
-        //            int iCount = 0;
-        //            csLogging.LogState _stateChecker = (csLogging.LogState)i;
-        //            for (int j = 0; j < LogToReview.lActions.Count; j++)
-        //            {
-        //                if (LogToReview.lActions[j].EventType.Equals(_stateChecker))
-        //                    iCount++;
-        //            }
-        //            sLogData += String.Format("Type of Event: {0} | Number of Occurrences: {1}\n", _stateChecker.ToString(), iCount.ToString());
-        //        }
-
-        //        rtbLogInfo.AppendText(sLogData);
-        //    }
-        //}
-
         private void btnUpdateLogLocation_Click(object sender, RoutedEventArgs e)
         {
             var fbd = new WinForm.FolderBrowserDialog();
@@ -478,10 +443,6 @@ namespace RApID_Project_WPF
                 if (!string.IsNullOrEmpty(fbd.SelectedPath))
                 {
                     txtLogWriteLoc.Text = fbd.SelectedPath.ToString() + @"\";
-
-                    //if (!txtLogWriteLoc.Text.EndsWith(@"\"))
-                      //  txtLogWriteLoc.Text = fbd.SelectedPath.ToString() + @"\";
-
                 }
             }
         }
@@ -492,22 +453,6 @@ namespace RApID_Project_WPF
             Properties.Settings.Default.Save();
             MessageBox.Show("Log Settings Updated!");
         }
-
-        //private void btnReadLog_Click(object sender, RoutedEventArgs e)
-        //{
-        //    string sLogFileLoc = String.Empty;
-        //    OpenFileDialog ofd = new OpenFileDialog();
-        //    ofd.Filter = "XML Files (*.xml)|*xml";
-        //    if (ofd.ShowDialog() == true)
-        //    {
-        //        sLogFileLoc = ofd.FileName;
-        //        Console.WriteLine(sLogFileLoc);
-        //        if (!String.IsNullOrEmpty(sLogFileLoc))
-        //        {
-        //            attemptToReadLog(sLogFileLoc);
-        //        }
-        //    }
-        //}
 
         private void btnViewLogNewWindow_Click(object sender, RoutedEventArgs e)
         {
@@ -523,8 +468,6 @@ namespace RApID_Project_WPF
             {
                 cbPrinterList.Items.Add(System.Drawing.Printing.PrinterSettings.InstalledPrinters[i].ToString());
             }
-
-            //cbPrinterList.Items.Add(@"\\eufs04\EU_B3_Repair label printer");
 
             if (!string.IsNullOrEmpty(Properties.Settings.Default.PrinterToUse))
                 cbPrinterList.Text = Properties.Settings.Default.PrinterToUse;

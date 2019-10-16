@@ -52,7 +52,7 @@ namespace RApID_Project_WPF.Classes
         public static readonly string CurrentRunningApplication = AppDomain.CurrentDomain.FriendlyName.Replace(".exe", "");
 
         /// <summary> Have we inited the registry? </summary>
-        public static string Inited {
+        public static string IsInited {
             get => $"{CurrentCOMIdentifier}_IsInited";
         }
         /// <summary> Current COM Port's Baude Rate </summary>
@@ -103,7 +103,7 @@ namespace RApID_Project_WPF.Classes
                 => DefaultKey.SetValue(@default, value, RegistryValueKind.String);
             try
             {
-                Set(Inited, "true");
+                Set(IsInited, "true");
                 Set(BaudRate, "9600");
                 Set(COMPort, "COM3");
                 Set(DataBits, "8");
