@@ -112,7 +112,7 @@ namespace RApID_Project_WPF.UserControls
         private void SuggestionBox_OnKeyUp(object sender, System.Windows.Input.KeyEventArgs e)
         {
             bool found = false;
-            var border = (stkSuggestions.Parent as ScrollViewer).Parent as Border;
+            Border border = (stkSuggestions.Parent as ScrollViewer).Parent as Border;
 
             string query = (sender as TextBox).Text;
 
@@ -153,7 +153,7 @@ namespace RApID_Project_WPF.UserControls
         /// <param name="text"></param>
         private void addItem(string text)
         {
-            var block = new TextBlock
+            TextBlock block = new TextBlock
             {
                 // Add the text   
                 Text = text,
@@ -172,13 +172,13 @@ namespace RApID_Project_WPF.UserControls
 
             block.MouseEnter += (sender, e) =>
             {
-                var b = sender as TextBlock;
+                TextBlock b = sender as TextBlock;
                 b.Background = Brushes.PeachPuff;
             };
 
             block.MouseLeave += (sender, e) =>
             {
-                var b = sender as TextBlock;
+                TextBlock b = sender as TextBlock;
                 b.Background = Brushes.Transparent;
             };
 

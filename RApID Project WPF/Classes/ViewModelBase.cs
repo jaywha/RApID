@@ -85,7 +85,7 @@ namespace GPFC.ProfitPOS.MVVM
       PropertyChangedEventHandler handler = this.PropertyChanged;
       if (handler != null)
       {
-        var e = new PropertyChangedEventArgs(propertyName);
+                PropertyChangedEventArgs e = new PropertyChangedEventArgs(propertyName);
         handler(this, e);
       }
     }
@@ -108,13 +108,13 @@ namespace GPFC.ProfitPOS.MVVM
     #region UpdatedNotifyPropertyChanged
     public static PropertyInfo PropertyOf<T>(Expression<Func<T>> expression)
     {
-      var memberExpr = expression.Body as MemberExpression;
+            MemberExpression memberExpr = expression.Body as MemberExpression;
       // If the method gets a lambda expression that is not a member access,
       // for example, () => x + y, an exception is thrown
       if (memberExpr == null)
         throw new ArgumentException("Expression \"" + expression +
                       "\" is not a valid member expression.");
-      var property = memberExpr.Member as PropertyInfo;
+            PropertyInfo property = memberExpr.Member as PropertyInfo;
       if (property == null)
         throw new ArgumentException("Expression \"" + expression +
                       "\" does not reference a property.");
@@ -123,7 +123,7 @@ namespace GPFC.ProfitPOS.MVVM
 
     protected void NotifyPropertyChanged<T>(Expression<Func<T>> expression)
     {
-      var handler = PropertyChanged;
+            PropertyChangedEventHandler handler = PropertyChanged;
       if (handler == null)
         return;
       var propertyName = PropertyOf(expression).Name;

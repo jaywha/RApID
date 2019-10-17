@@ -49,7 +49,7 @@ namespace EricStabileLibrary
         /// <returns>Returns a list of Parity</returns>
         public static List<Parity> GetParityList()
         {
-            var lParity = new List<Parity>();
+            List<Parity> lParity = new List<Parity>();
             foreach(Parity p in Enum.GetValues(typeof(Parity)))
             {
                 lParity.Add(p);
@@ -62,7 +62,7 @@ namespace EricStabileLibrary
         /// <returns>Returns a list of all available Stop Bits.</returns>
         public static List<StopBits> GetStopBits()
         {
-            var lStopBits = new List<StopBits>();
+            List<StopBits> lStopBits = new List<StopBits>();
             foreach(StopBits sb in Enum.GetValues(typeof(StopBits)))
             {
                 lStopBits.Add(sb);
@@ -85,6 +85,17 @@ namespace EricStabileLibrary
             cmbx.IsReadOnly = false;
             cmbx.IsEnabled = true;
             cmbx.IsEditable = true;
+        }
+
+        /// <summary>
+        /// Ensures the given element is in the list.
+        /// </summary>
+        /// <typeparam name="T">&lt;Generic Type Parameter&gt;</typeparam>
+        /// <param name="list">Calling list to insert given element into.</param>
+        /// <param name="element">Given element to check for.</param>
+        public static void EnsureElement<T>(this IList<T> list, T element)
+        {
+            if(!list.Contains(element)) list.Add(element);
         }
 
         /// <summary>
@@ -252,13 +263,13 @@ namespace EricStabileLibrary
         /// </summary>
         public static bool serializeFile(string tech, DateTime dtLC, List<csLogAction> lLA, string sFileLoc, string sFileName)
         {
-            var csL = new csLog();
+            csLog csL = new csLog();
             csL.buildCSLog(tech, dtLC, lLA);
 
             StreamWriter sw = null;
             try
             {
-                var _ser = new XmlSerializer(typeof(csLog));
+                XmlSerializer _ser = new XmlSerializer(typeof(csLog));
                 sw = new StreamWriter(sFileLoc + sFileName, false);
                 _ser.Serialize(sw, csL);
                 sw.Close();
@@ -267,15 +278,15 @@ namespace EricStabileLibrary
 
                 #region Submit Log to DB
 
-                using (var conn = new SqlConnection(csObjectHolder.csObjectHolder.ObjectHolderInstance().RepairConnectionString))
+                using (SqlConnection conn = new SqlConnection(csObjectHolder.csObjectHolder.ObjectHolderInstance().RepairConnectionString))
                 {
                     conn.Open();
 
                     /* [1.] Get ActionID index to increment by 1. */
                     var actionID = 0;
-                    using (var cmd = new SqlCommand("SELECT ActionID FROM TechLogActions ORDER BY ActionID DESC", conn))
+                    using (SqlCommand cmd = new SqlCommand("SELECT ActionID FROM TechLogActions ORDER BY ActionID DESC", conn))
                     {
-                        using (var reader = cmd.ExecuteReader())
+                        using (SqlDataReader reader = cmd.ExecuteReader())
                         {
                             if (reader.Read())
                             {
@@ -286,7 +297,7 @@ namespace EricStabileLibrary
                     }
 
                     /* [2.] Insert initial log details into TechLogs table. */
-                    using (var cmd = new SqlCommand("INSERT INTO TechLogs (ActionID, Tech, LogCreationTime, LogSubmitTime) " +
+                    using (SqlCommand cmd = new SqlCommand("INSERT INTO TechLogs (ActionID, Tech, LogCreationTime, LogSubmitTime) " +
                         "VALUES (@aid, @tech, @createtime, @submittime)", conn))
                     {
 
@@ -299,9 +310,9 @@ namespace EricStabileLibrary
                     }
 
                     /* [3.] Get newest LogID after instering log entry (Auto Increment ID)*/
-                    using(var cmd  = new SqlCommand("SELECT ID FROM TechLogs ORDER BY ID DESC", conn))
+                    using(SqlCommand cmd  = new SqlCommand("SELECT ID FROM TechLogs ORDER BY ID DESC", conn))
                     {
-                        using (var reader = cmd.ExecuteReader())
+                        using (SqlDataReader reader = cmd.ExecuteReader())
                             if (reader.Read())
                             {
                                 CurrLogIDToUse = reader.GetInt32(0) + 1;
@@ -310,9 +321,9 @@ namespace EricStabileLibrary
                     }
 
                     /* [4.] Insert all relevant actions into TechLogActions table with ActionID as the pairing column. */
-                    foreach (var action in csL.lActions)
+                    foreach (csLogAction action in csL.lActions)
                     {
-                        using (var cmd = new SqlCommand("INSERT INTO TechLogActions (ActionID, ControlType, ControlName, " +
+                        using (SqlCommand cmd = new SqlCommand("INSERT INTO TechLogActions (ActionID, ControlType, ControlName, " +
                             "ControlContent, LogState, EventTiming, LogNote, LogError)" +
                             "VALUES (@aid, @cType, @cName, @cContent, @state, @time, @note, @error)", conn))
                         {
@@ -355,7 +366,7 @@ namespace EricStabileLibrary
         {
             csLog logReadIn = null;
 
-            var serRead = new XmlSerializer(typeof(csLog));
+            XmlSerializer serRead = new XmlSerializer(typeof(csLog));
             StreamReader sr = null;
             try
             {

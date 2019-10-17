@@ -23,7 +23,7 @@ namespace RApID_Project_WPF.VMB
             PropertyChangedEventHandler handler = this.PropertyChanged;
             if(handler != null)
             {
-                var e = new PropertyChangedEventArgs(propertyName);
+                PropertyChangedEventArgs e = new PropertyChangedEventArgs(propertyName);
                 handler(this, e);
             }
         }
@@ -43,10 +43,10 @@ namespace RApID_Project_WPF.VMB
 
         public static PropertyInfo PropertyOf<T>(Expression<Func<T>> expression)
         {
-            var memberExpr = expression.Body as MemberExpression;
+            MemberExpression memberExpr = expression.Body as MemberExpression;
             if (memberExpr == null)
                 throw new ArgumentException("Expression \"" + expression + "\" is not a valid member expression.");
-            var property = memberExpr.Member as PropertyInfo;
+            PropertyInfo property = memberExpr.Member as PropertyInfo;
             if (property == null)
                 throw new ArgumentException("Expression \"" + expression + "\" does not reference a property.");
             return property;
@@ -54,7 +54,7 @@ namespace RApID_Project_WPF.VMB
 
         protected void NotifyPropertyChanged<T>(Expression<Func<T>> expression)
         {
-            var handler = PropertyChanged;
+            PropertyChangedEventHandler handler = PropertyChanged;
             if (handler == null)
                 return;
             var propertyName = PropertyOf(expression).Name;

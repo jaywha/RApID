@@ -118,7 +118,7 @@ namespace RApID_Project_WPF
             {
                 if (uie.GetType().Name.Equals("TextBox"))
                 {
-                    var txtBox = (TextBox)uie;
+                    TextBox txtBox = (TextBox)uie;
                     txtBox.Text = string.Empty;
                 }
             }
@@ -127,7 +127,7 @@ namespace RApID_Project_WPF
             {
                 if (uie.GetType().Name.Equals("TextBox"))
                 {
-                    var txtBox = (TextBox)uie;
+                    TextBox txtBox = (TextBox)uie;
                     txtBox.Text = string.Empty;
                 }
             }
@@ -136,7 +136,7 @@ namespace RApID_Project_WPF
             {
                 if (uie.GetType().Name.Equals("TextBox"))
                 {
-                    var txtBox = (TextBox)uie;
+                    TextBox txtBox = (TextBox)uie;
                     txtBox.Text = string.Empty;
                 }
             }
@@ -145,7 +145,7 @@ namespace RApID_Project_WPF
             {
                 if (uie.GetType().Name.Equals("TextBox"))
                 {
-                    var txtBox = (TextBox)uie;
+                    TextBox txtBox = (TextBox)uie;
                     txtBox.Text = string.Empty;
                 }
             }
@@ -161,7 +161,7 @@ namespace RApID_Project_WPF
             {
                 if(uie.GetType().Name.Equals("TextBox"))
                 {
-                    var txtBox = (TextBox)uie;
+                    TextBox txtBox = (TextBox)uie;
                     txtBox.Text = string.Empty;
                 }
             }
@@ -170,7 +170,7 @@ namespace RApID_Project_WPF
             {
                 if(uie.GetType().Name.Equals("TextBox"))
                 {
-                    var txtBox = (TextBox)uie;
+                    TextBox txtBox = (TextBox)uie;
                     txtBox.Text = string.Empty;
                 }
             }
@@ -307,8 +307,8 @@ namespace RApID_Project_WPF
                 query = "SELECT * FROM TechnicianSubmission WHERE SerialNumber = '" + txtRepairBarcode.Text + "' ORDER BY ID DESC;";
             }
 
-            var conn = new SqlConnection(holder.RepairConnectionString);
-            var cmd = new SqlCommand(query, conn);
+            SqlConnection conn = new SqlConnection(holder.RepairConnectionString);
+            SqlCommand cmd = new SqlCommand(query, conn);
             try
             {
                 sVar.LogHandler.CreateLogAction("Attempting to get the Scanned Unit Information...", csLogging.LogState.NOTE);
@@ -379,10 +379,10 @@ namespace RApID_Project_WPF
 
         private void getUnitIssueInfo()
         {
-            var lRMI = new List<UnitIssueModel>();
+            List<UnitIssueModel> lRMI = new List<UnitIssueModel>();
             string query = "SELECT * FROM TechnicianUnitIssues WHERE ID = '" + ScannedUnitInformation.ID + "' ORDER BY ID DESC";
-            var conn = new SqlConnection(holder.RepairConnectionString);
-            var cmd = new SqlCommand(query, conn);
+            SqlConnection conn = new SqlConnection(holder.RepairConnectionString);
+            SqlCommand cmd = new SqlCommand(query, conn);
 
             try
             {
@@ -535,7 +535,7 @@ namespace RApID_Project_WPF
 
         private QCDQESubmitData prepDataForSubmission(string _submitStatus)
         {
-            var _submitInfo = new QCDQESubmitData();
+            QCDQESubmitData _submitInfo = new QCDQESubmitData();
 
             if((bool)cbxScanSwitch.IsChecked)
             {
@@ -558,8 +558,8 @@ namespace RApID_Project_WPF
 
         private void submitData(QCDQESubmitData _submitData)
         {
-            var conn = new SqlConnection(holder.RepairConnectionString);
-            var cmd = new SqlCommand(_submitData.SubmitQuery, conn);
+            SqlConnection conn = new SqlConnection(holder.RepairConnectionString);
+            SqlCommand cmd = new SqlCommand(_submitData.SubmitQuery, conn);
             try
             {
                 var sLogString = "Attemping to submit the data with the following parameters to the TechnicianSubmission Table:\n";
@@ -690,7 +690,7 @@ namespace RApID_Project_WPF
             {
                 if (!string.IsNullOrEmpty(ScannedUnitInformation.CustomerInformation.CustomerNumber))
                 {
-                    var fullInfo = new frmFullCustomerInformation(ScannedUnitInformation.CustomerInformation);
+                    frmFullCustomerInformation fullInfo = new frmFullCustomerInformation(ScannedUnitInformation.CustomerInformation);
                     fullInfo.Closed += delegate { btnViewFullCustInfo.IsEnabled = true; };
                     fullInfo.Show();
                     btnViewFullCustInfo.IsEnabled = false;
@@ -730,7 +730,7 @@ namespace RApID_Project_WPF
         {
             if (dgPrevRepairInfo.SelectedItem != null)
             {
-                var pri = new frmRepairPRI((PreviousRepairInformation)dgPrevRepairInfo.SelectedItem);
+                frmRepairPRI pri = new frmRepairPRI((PreviousRepairInformation)dgPrevRepairInfo.SelectedItem);
                 pri.Show();
             }
         }
@@ -817,7 +817,7 @@ namespace RApID_Project_WPF
                     }
                 }
 
-                using (var mapper = csSerialNumberMapper.Instance)
+                using (csSerialNumberMapper mapper = csSerialNumberMapper.Instance)
                 {
                     Task.Factory.StartNew(new Action(() =>
                     {
@@ -827,7 +827,7 @@ namespace RApID_Project_WPF
                                 throw new InvalidOperationException("Couldn't find data for this barcode!");
                             else
                             {
-                                var result = await mapper.FindFileAsync(".xls");
+                                (string filename, bool found) result = await mapper.FindFileAsync(".xls");
                                 //TODO: Make User Control for BOM Matcher (2 cmbx: Ref Des. -> Part Number)
 
                                 csCrossClassInteraction.MapperSuccessMessage(result.filename, mapper.PartNumber);

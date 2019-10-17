@@ -281,17 +281,17 @@ namespace RApID_Project_WPF.UserControls
 
         public bool MutateToComboBoxes()
         {
-            return Dispatcher.Invoke(() => { 
-                var controls = new UIElement[stkMain.Children.Count];
+            return Dispatcher.Invoke(() => {
+                UIElement[] controls = new UIElement[stkMain.Children.Count];
                 stkMain.Children.Cast<UIElement>().ToList().CopyTo(controls, 0);
 
                 try
                 {
-                    foreach (var control in controls)
+                    foreach (UIElement control in controls)
                     {
                         if (control is TextBox txtbx)
                         {
-                            var cmbx = new ComboBox()
+                            ComboBox cmbx = new ComboBox()
                             {
                                 Name = txtbx.Name,
                                 Width = txtbx.Width,
@@ -323,16 +323,16 @@ namespace RApID_Project_WPF.UserControls
         public bool MutateToTextBoxes()
         {
             return Dispatcher.Invoke(() => {
-                var controls = new UIElement[stkMain.Children.Count];
+                UIElement[] controls = new UIElement[stkMain.Children.Count];
                 stkMain.Children.Cast<UIElement>().ToList().CopyTo(controls, 0);
 
                 try
                 {
-                    foreach (var control in controls)
+                    foreach (UIElement control in controls)
                     {
                         if (control is ComboBox cmbx && cmbx.Name.StartsWith("txt"))
                         {
-                            var txtbx = new TextBox()
+                            TextBox txtbx = new TextBox()
                             {
                                 Name = cmbx.Name,
                                 Width = cmbx.Width,
@@ -424,7 +424,7 @@ namespace RApID_Project_WPF.UserControls
         /// <param name="uim">Source data model. </param>
         public static implicit operator ucUnitIssue(UnitIssueModel uim)
         {
-            var result = new ucUnitIssue() {
+            ucUnitIssue result = new ucUnitIssue() {
                 ReportedIssue = uim.ReportedIssue,
                 TestResult = uim.TestResult,
                 AbortResult = uim.TestResultAbort,
@@ -437,7 +437,7 @@ namespace RApID_Project_WPF.UserControls
 
             if(uim.MultiPartsReplaced != null && uim.MultiPartsReplaced.Count > 0)
             {
-                foreach(var part in uim.MultiPartsReplaced)
+                foreach(MultiplePartsReplaced part in uim.MultiPartsReplaced)
                 {
                     result.PartsReplaced.Add(part);
                 }
@@ -455,7 +455,7 @@ namespace RApID_Project_WPF.UserControls
         /// <param name="issue">Source UserControl. </param>
         public static implicit operator UnitIssueModel(ucUnitIssue issue)
         {
-            var result = new UnitIssueModel()
+            UnitIssueModel result = new UnitIssueModel()
             {
                 ReportedIssue = issue.ReportedIssue,
                 TestResult = issue.TestResult,
@@ -469,7 +469,7 @@ namespace RApID_Project_WPF.UserControls
 
             if (issue.PartsReplaced.Count == 1)
             {
-                foreach (var part in issue.PartsReplaced)
+                foreach (MultiplePartsReplaced part in issue.PartsReplaced)
                 {
                     result.MultiPartsReplaced.Add(part);
                 }

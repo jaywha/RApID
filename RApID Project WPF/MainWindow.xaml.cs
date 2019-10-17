@@ -49,7 +49,7 @@ namespace RApID_Project_WPF
             // attempted to fix visual studio exception on stopping debugging
             AppDomain.CurrentDomain.UnhandledException += new UnhandledExceptionEventHandler(
                 delegate (object sender, UnhandledExceptionEventArgs args) {
-                    var e = ((Exception)args.ExceptionObject);
+                    Exception e = ((Exception)args.ExceptionObject);
                     var out_msg = $"[UEHandler]: {e.Message}\n" +
                         $"(Stack Trace)\n{new string('-', 20)}\n\n{e.StackTrace}\n\n{new string('-', 20)}\n" +
                         $"Will runtime terminate now? -> \'{(args.IsTerminating ? "Yes" : "No")}\'";
@@ -73,7 +73,7 @@ namespace RApID_Project_WPF
             AppDomain.CurrentDomain.FirstChanceException += new EventHandler<System.Runtime.ExceptionServices.FirstChanceExceptionEventArgs>(
                 delegate (object sender, System.Runtime.ExceptionServices.FirstChanceExceptionEventArgs args)
                 {
-                    var e = args.Exception;
+                    Exception e = args.Exception;
                     var out_msg = $"[UEHandler]: {e.Message}\n" +
                         $"(Stack Trace)\n{new string('-', 20)}\n\n{e.StackTrace}\n";
 
@@ -129,12 +129,12 @@ namespace RApID_Project_WPF
                 switch (((Control)sender).Name.ToString())
                 {
                     case nameof(btnRework):
-                        var fpr = new frmProduction { Owner = this, WindowStartupLocation = WindowStartupLocation.CenterOwner };                        
+                        frmProduction fpr = new frmProduction { Owner = this, WindowStartupLocation = WindowStartupLocation.CenterOwner };                        
                         fpr.Show();
                         Hide();
                         break;
                     case nameof(btnRepair):
-                        var rpr = new frmRepair(false) { Owner = this, WindowStartupLocation = WindowStartupLocation.CenterOwner };
+                        frmRepair rpr = new frmRepair(false) { Owner = this, WindowStartupLocation = WindowStartupLocation.CenterOwner };
                         rpr.Show();
                         Hide();
                         break;
@@ -142,12 +142,12 @@ namespace RApID_Project_WPF
                         Process.Start(Properties.Settings.Default.DefaultReportManagerLink);
                         break;
                     case nameof(btnQCDQE):
-                        var fQC = new frmQCDQE { Owner = this, WindowStartupLocation = WindowStartupLocation.CenterOwner };
+                        frmQCDQE fQC = new frmQCDQE { Owner = this, WindowStartupLocation = WindowStartupLocation.CenterOwner };
                         fQC.Show();
                         Hide();
                         break;
                     case nameof(btnSettings):
-                        var fSettings = new frmSettings { Owner = this, WindowStartupLocation = WindowStartupLocation.CenterOwner  };
+                        frmSettings fSettings = new frmSettings { Owner = this, WindowStartupLocation = WindowStartupLocation.CenterOwner  };
                         fSettings.Show();
                         Hide();
                         break;
@@ -159,8 +159,8 @@ namespace RApID_Project_WPF
                         Hide();
                         break;
                     case nameof(btnTechFilesForm):
-                        frmBoardAliases alias = new frmBoardAliases();
-                        alias.ShowDialog();
+                        frmBoardFileManager alias = new frmBoardFileManager(directDialog: true) { StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen };
+                        alias.Show();
                         break;
                 }
             }
@@ -232,7 +232,7 @@ namespace RApID_Project_WPF
 
         private void BtnShake_Click(object sender, RoutedEventArgs e)
         {
-            var anime 
+            DoubleAnimation anime 
                 = new DoubleAnimation(wndMain.Left, wndMain.Left / 0.9708737864, new Duration(new TimeSpan(0, 0, 0, 0, 50)))
                 {
                     AutoReverse = true,

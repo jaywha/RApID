@@ -38,17 +38,17 @@ namespace RApID_Project_WPF
         private bool loadPRI()
         {
             string sUnitID = string.Empty;
-            var conn = new SqlConnection(holder.RepairConnectionString);
+            SqlConnection conn = new SqlConnection(holder.RepairConnectionString);
 
             string query = "SELECT * FROM TechnicianSubmission WHERE ID = '" + PRI.ID + "'";
             string logQuery = "SELECT * FROM TechLogs WHERE ID = @logID";
             string actionQuery = "SELECT * FROM TechLogActions WHERE ActionID = @aid";
             string customerQuery = "SELECT * FROM RepairCustomerInformation WHERE CustomerNumber = @CustNum";
 
-            var cmd = new SqlCommand(query, conn);
-            var customerCmd = new SqlCommand(customerQuery, conn);
-            var logCmd = new SqlCommand(logQuery, conn); logCmd.Parameters.Add("@logID", System.Data.SqlDbType.Int);
-            var actionCmd = new SqlCommand(actionQuery, conn); actionCmd.Parameters.Add("@aid", System.Data.SqlDbType.Int);
+            SqlCommand cmd = new SqlCommand(query, conn);
+            SqlCommand customerCmd = new SqlCommand(customerQuery, conn);
+            SqlCommand logCmd = new SqlCommand(logQuery, conn); logCmd.Parameters.Add("@logID", System.Data.SqlDbType.Int);
+            SqlCommand actionCmd = new SqlCommand(actionQuery, conn); actionCmd.Parameters.Add("@aid", System.Data.SqlDbType.Int);
 
             try
             {
@@ -87,7 +87,7 @@ namespace RApID_Project_WPF
 
                 if (!string.IsNullOrEmpty(txtCustNum.Text)) // if number available, load customer info
                 {
-                    using (var customerReader = customerCmd.ExecuteReader())
+                    using (SqlDataReader customerReader = customerCmd.ExecuteReader())
                     {
                         while (customerReader.Read())
                         {
@@ -113,9 +113,9 @@ namespace RApID_Project_WPF
 
                 if (!string.IsNullOrEmpty(sUnitID))
                 {
-                    var lRMI = csCrossClassInteraction.GetRepairUnitIssues(sUnitID);
+                    System.Collections.Generic.List<UnitIssueModel> lRMI = csCrossClassInteraction.GetRepairUnitIssues(sUnitID);
 
-                    foreach (var issue in lRMI)
+                    foreach (UnitIssueModel issue in lRMI)
                     {
                         if (string.IsNullOrEmpty(ucIssues[0].ReportedIssue))
                         {
@@ -140,7 +140,7 @@ namespace RApID_Project_WPF
                             }
                             else if (issue.MultiPartsReplaced != null)
                             {
-                                foreach (var mpr in issue.MultiPartsReplaced)
+                                foreach (MultiplePartsReplaced mpr in issue.MultiPartsReplaced)
                                 {
                                     ucIssues[0].AddUnitIssuePart(mpr.RefDesignator, mpr.PartReplaced,
                                         mpr.PartsReplacedPartDescription);
@@ -150,7 +150,7 @@ namespace RApID_Project_WPF
                             continue;
                         }
 
-                        var (Tab, ActualTabIndex) = ucIssues.AddTabItem();
+                        (System.Windows.Controls.TabItem Tab, int ActualTabIndex) = ucIssues.AddTabItem();
                         ucIssues[ActualTabIndex].FillUnitIssue(
                             issue.ReportedIssue,
                             issue.TestResult,
@@ -171,7 +171,7 @@ namespace RApID_Project_WPF
                         }
                         else if (issue.MultiPartsReplaced != null)
                         {
-                            foreach (var mpr in issue.MultiPartsReplaced)
+                            foreach (MultiplePartsReplaced mpr in issue.MultiPartsReplaced)
                             {
                                 ucIssues[ActualTabIndex].AddUnitIssuePart(mpr.RefDesignator, mpr.PartReplaced,
                                     mpr.PartsReplacedPartDescription);
@@ -188,7 +188,7 @@ namespace RApID_Project_WPF
 
                 btnViewLog.Visibility = Visibility.Visible;
 
-                using (var reader = logCmd.ExecuteReader())
+                using (SqlDataReader reader = logCmd.ExecuteReader())
                 {
                     reader.Read(); // only one record
 
@@ -202,11 +202,11 @@ namespace RApID_Project_WPF
                     };
                 }
 
-                using (var reader = actionCmd.ExecuteReader())
+                using (SqlDataReader reader = actionCmd.ExecuteReader())
                 {
                     while (reader.Read())
                     {
-                        var @action = new csLogAction()
+                        csLogAction @action = new csLogAction()
                         {
                             ControlType = reader["ControlType"].ToString().EmptyIfNull(),
                             ControlName = reader["ControlName"].ToString().EmptyIfNull(),
@@ -239,7 +239,7 @@ namespace RApID_Project_WPF
 
         private void gbCustomerInfo_PreviewMouseDoubleClick(object sender, MouseButtonEventArgs e)
         {
-            var fullInfo = new frmFullCustomerInformation(CurrentCustomer);
+            frmFullCustomerInformation fullInfo = new frmFullCustomerInformation(CurrentCustomer);
             fullInfo.Closed += delegate
             {
                 gbCustomerInfo.IsEnabled = true;
@@ -262,7 +262,7 @@ namespace RApID_Project_WPF
 
         private void BtnViewLog_Click(object sender, RoutedEventArgs e)
         {
-            var frm = new Window() { Content = PRILogView };
+            Window frm = new Window() { Content = PRILogView };
             (frm.Content as UserControls.ucLogActionView).InitView();
         }
     }

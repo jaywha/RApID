@@ -170,10 +170,10 @@ namespace RApID_Project_WPF
         public static void CenterWindow(this Window w)
         {
             //get the current monitor
-            var currentMonitor = System.Windows.Forms.Screen.FromHandle(new System.Windows.Interop.WindowInteropHelper(w).Handle);
+            System.Windows.Forms.Screen currentMonitor = System.Windows.Forms.Screen.FromHandle(new System.Windows.Interop.WindowInteropHelper(w).Handle);
 
             //find out if our app is being scaled by the monitor
-            var source = PresentationSource.FromVisual(w);
+            PresentationSource source = PresentationSource.FromVisual(w);
             double dpiScaling = (source != null && source.CompositionTarget != null ? source.CompositionTarget.TransformFromDevice.M11 : 1);
 
             //get the available area of the monitor
@@ -237,9 +237,9 @@ namespace RApID_Project_WPF
                         return;
                     }
 
-                    using (var stream = File.Open(filePath, FileMode.Open, FileAccess.Read))
+                    using (FileStream stream = File.Open(filePath, FileMode.Open, FileAccess.Read))
                     {
-                        using (var reader = ExcelReaderFactory.CreateReader(stream))
+                        using (IExcelDataReader reader = ExcelReaderFactory.CreateReader(stream))
                         {
                             while (reader.NextResult() && reader.Name != null && !reader.Name.Equals("JUKI"))
                             { /*spin until JUKI sheet*/ }
@@ -265,10 +265,10 @@ namespace RApID_Project_WPF
                     }
 
                     var firstDesignator = designators[0].Item1 != null && designators[0].Item2 != null;
-                    foreach (var designator in designators)
+                    foreach (DesginatorPair designator in designators)
                     {
-                        var reference = designator.Item1;
-                        var partnumber = designator.Item2;
+                        Control reference = designator.Item1;
+                        Control partnumber = designator.Item2;
 
                         if (reference is ComboBox refbox)
                         {
@@ -365,8 +365,8 @@ namespace RApID_Project_WPF
             sVar.LogHandler.CreateLogAction(string.Format("Attempting to fill {0} from a SQL Query.", cbToFill.Name.ToString()), EricStabileLibrary.csLogging.LogState.NOTE);
             sVar.LogHandler.CreateLogAction("SQL QUERY: " + _query, EricStabileLibrary.csLogging.LogState.SQLQUERY);
 
-            var conn = new SqlConnection(string.IsNullOrEmpty(connString) ? holder.HummingBirdConnectionString : connString);
-            var cmd = new SqlCommand(_query, conn);
+            SqlConnection conn = new SqlConnection(string.IsNullOrEmpty(connString) ? holder.HummingBirdConnectionString : connString);
+            SqlCommand cmd = new SqlCommand(_query, conn);
             try
             {
                 conn.Open();
@@ -404,8 +404,8 @@ namespace RApID_Project_WPF
             sVar.LogHandler.CreateLogAction(string.Format("Attempting to fill {0} from a SQL Query.", txtToFill.Name.ToString()), EricStabileLibrary.csLogging.LogState.NOTE);
             sVar.LogHandler.CreateLogAction("SQL QUERY: " + _query, EricStabileLibrary.csLogging.LogState.SQLQUERY);
 
-            var conn = new SqlConnection(holder.HummingBirdConnectionString);
-            var cmd = new SqlCommand(_query, conn);
+            SqlConnection conn = new SqlConnection(holder.HummingBirdConnectionString);
+            SqlCommand cmd = new SqlCommand(_query, conn);
             try
             {
                 conn.Open();
@@ -442,14 +442,14 @@ namespace RApID_Project_WPF
         /// <param name="lsvToFill">List To Fill</param>
         public static void lsvFillFromQuery(string _conn, string _query, ListView lsvToFill)
         {
-            var conn = new SqlConnection();
+            SqlConnection conn = new SqlConnection();
             conn.ConnectionString = _conn;
-            var cmd = new SqlCommand(_query, conn);
+            SqlCommand cmd = new SqlCommand(_query, conn);
             try
             {
                 string[] testVal = new string[2];
                 lsvToFill.Items.Clear();
-                var gv = new GridView();
+                GridView gv = new GridView();
                 lsvToFill.View = gv;
                 gv.Columns.Add(new GridViewColumn { Header = "Test", DisplayMemberBinding = new Binding("Test") });
                 gv.Columns.Add(new GridViewColumn { Header = "Value", DisplayMemberBinding = new Binding("Value") });
@@ -498,8 +498,8 @@ namespace RApID_Project_WPF
         /// <param name="_serialNum">Serial Number we are searching</param>
         public static void dgTechReport(string _query, bool oldDb, DataGrid dgToFill, string _serialNum)
         {
-            var conn = new SqlConnection(holder.RepairConnectionString);
-            var cmd = new SqlCommand(_query, conn);
+            SqlConnection conn = new SqlConnection(holder.RepairConnectionString);
+            SqlCommand cmd = new SqlCommand(_query, conn);
             try
             {
                 conn.Open();
@@ -549,8 +549,8 @@ namespace RApID_Project_WPF
 
             bool bQueryPassed = false;
 
-            var conn = new SqlConnection(holder.HummingBirdConnectionString);
-            var cmd = new SqlCommand(query, conn);
+            SqlConnection conn = new SqlConnection(holder.HummingBirdConnectionString);
+            SqlCommand cmd = new SqlCommand(query, conn);
             try
             {
                 conn.Open();
@@ -596,8 +596,8 @@ namespace RApID_Project_WPF
             sVar.LogHandler.CreateLogAction("Attempting to query the ItemMaster Table.", EricStabileLibrary.csLogging.LogState.NOTE);
             sVar.LogHandler.CreateLogAction("SQL QUERY: " + query, EricStabileLibrary.csLogging.LogState.SQLQUERY);
 
-            var conn = new SqlConnection(holder.HummingBirdConnectionString);
-            var cmd = new SqlCommand(query, conn);
+            SqlConnection conn = new SqlConnection(holder.HummingBirdConnectionString);
+            SqlCommand cmd = new SqlCommand(query, conn);
             try
             {
                 conn.Open();
@@ -647,8 +647,8 @@ namespace RApID_Project_WPF
             sVar.LogHandler.CreateLogAction("SQL QUERY: " + _query, EricStabileLibrary.csLogging.LogState.SQLQUERY);
             string sReturn = "";
 
-            var conn = new SqlConnection(holder.HummingBirdConnectionString);
-            var cmd = new SqlCommand(_query, conn);
+            SqlConnection conn = new SqlConnection(holder.HummingBirdConnectionString);
+            SqlCommand cmd = new SqlCommand(_query, conn);
             try
             {
                 conn.Open();
@@ -685,8 +685,8 @@ namespace RApID_Project_WPF
             sVar.LogHandler.CreateLogAction("SQL QUERY: " + _query, EricStabileLibrary.csLogging.LogState.SQLQUERY);
             string sReturn = "";
 
-            var conn = new SqlConnection(holder.HummingBirdConnectionString);
-            var cmd = new SqlCommand(_query, conn);
+            SqlConnection conn = new SqlConnection(holder.HummingBirdConnectionString);
+            SqlCommand cmd = new SqlCommand(_query, conn);
             try
             {
                 conn.Open();
@@ -725,15 +725,15 @@ namespace RApID_Project_WPF
         /// </summary>
         public static void AOIQuery(DataGrid _dgAOI, DataGrid _dgDefect, string _sSN)
         {
-            var lDefectCode = new List<string>();
+            List<string> lDefectCode = new List<string>();
 
             string query = "SELECT * FROM SPC_Data WHERE SN = '" + _sSN + "';";
 
             sVar.LogHandler.CreateLogAction("Attemping to query the AOI Table.", EricStabileLibrary.csLogging.LogState.NOTE);
             sVar.LogHandler.CreateLogAction("SQL QUERY: " + query, EricStabileLibrary.csLogging.LogState.SQLQUERY);
 
-            var conn = new SqlConnection(holder.YesDBConnectionString);
-            var cmd = new SqlCommand(query, conn);
+            SqlConnection conn = new SqlConnection(holder.YesDBConnectionString);
+            SqlCommand cmd = new SqlCommand(query, conn);
             try
             {
                 conn.Open();
@@ -806,8 +806,8 @@ namespace RApID_Project_WPF
         {
             int rID = -1;
 
-            var conn = new SqlConnection(holder.RepairConnectionString);
-            var cmd = new SqlCommand(_query, conn);
+            SqlConnection conn = new SqlConnection(holder.RepairConnectionString);
+            SqlCommand cmd = new SqlCommand(_query, conn);
             try
             {
                 conn.Open();
@@ -849,8 +849,8 @@ namespace RApID_Project_WPF
             sVar.LogHandler.CreateLogAction("Attempting to query the DefectCode table.", EricStabileLibrary.csLogging.LogState.NOTE);
             sVar.LogHandler.CreateLogAction("SQL QUERY: " + query, EricStabileLibrary.csLogging.LogState.SQLQUERY);
 
-            var conn = new SqlConnection(holder.YesDBConnectionString);
-            var cmd = new SqlCommand(query, conn);
+            SqlConnection conn = new SqlConnection(holder.YesDBConnectionString);
+            SqlCommand cmd = new SqlCommand(query, conn);
             try
             {
                 conn.Open();
@@ -894,8 +894,8 @@ namespace RApID_Project_WPF
             sVar.LogHandler.CreateLogAction("Attempting to query the Beams table to see if the Serial Number exists.", EricStabileLibrary.csLogging.LogState.NOTE);
             sVar.LogHandler.CreateLogAction("SQL QUERY: " + _query, EricStabileLibrary.csLogging.LogState.SQLQUERY);
 
-            var conn = new SqlConnection(holder.HummingBirdConnectionString);
-            var cmd = new SqlCommand(_query, conn);
+            SqlConnection conn = new SqlConnection(holder.HummingBirdConnectionString);
+            SqlCommand cmd = new SqlCommand(_query, conn);
             try
             {
                 conn.Open();
@@ -923,8 +923,8 @@ namespace RApID_Project_WPF
 
             if (bFoundSN)
             {
-                var hBeams = new HashSet<string>();
-                var lBeams = new List<string>();
+                HashSet<string> hBeams = new HashSet<string>();
+                List<string> lBeams = new List<string>();
                 if (isXDR) _query = $"SELECT BeamNumber FROM tblXducerTestResults WHERE SerialNumber = '{_sn}' ORDER BY BeamNumber ASC;";
                 else _query = "SELECT BeamNumber FROM Beams WHERE PCBSerial = '" + _sn + "' ORDER BY BeamNumber ASC;";
                 cmd = new SqlCommand(_query, conn);
@@ -963,13 +963,13 @@ namespace RApID_Project_WPF
 
         public static void BeamsQuery(string _query, ListView lsvToFill, string serialName = "PCBSerial")
         {
-            var conn = new SqlConnection(holder.HummingBirdConnectionString);
-            var cmd = new SqlCommand(_query, conn);
+            SqlConnection conn = new SqlConnection(holder.HummingBirdConnectionString);
+            SqlCommand cmd = new SqlCommand(_query, conn);
             try
             {
                 string[] testVal = new string[2];
                 lsvToFill.Items.Clear();
-                var gv = new GridView();
+                GridView gv = new GridView();
                 lsvToFill.View = gv;
                 gv.Columns.Add(new GridViewColumn { Header = "Test", DisplayMemberBinding = new Binding("Test") });
                 gv.Columns.Add(new GridViewColumn { Header = "Value", DisplayMemberBinding = new Binding("Value") });
@@ -1028,7 +1028,7 @@ namespace RApID_Project_WPF
 
         public static void LoadPartNumberForm(bool bProduction, List<TextBox> lTB)
         {
-            var fpn = new frmPartNumber(bProduction);
+            frmPartNumber fpn = new frmPartNumber(bProduction);
             fpn.ShowDialog();
             if (sVar.SelectedPartNumberPartName.PartNumberSelected)
             {
@@ -1115,7 +1115,7 @@ namespace RApID_Project_WPF
             MultiplePartsReplaced mpReturn = mpr;
             for (int i = 0; i < _dg.Items.Count; i++)
             {
-                var dgmpr = (MultiplePartsReplaced)_dg.Items[i];
+                MultiplePartsReplaced dgmpr = (MultiplePartsReplaced)_dg.Items[i];
                 mpReturn.PartReplaced += unitIssuesValSubmit(dgmpr.PartReplaced);
                 mpReturn.RefDesignator += unitIssuesValSubmit(dgmpr.RefDesignator);
                 mpReturn.PartsReplacedPartDescription += unitIssuesValSubmit(dgmpr.PartsReplacedPartDescription);
@@ -1138,11 +1138,11 @@ namespace RApID_Project_WPF
         /// </summary>
         public static List<MultiplePartsReplaced> getMPRList(DataGrid _dg)
         {
-            var lmpReturn = new List<MultiplePartsReplaced>();
+            List<MultiplePartsReplaced> lmpReturn = new List<MultiplePartsReplaced>();
 
             for (int i = 0; i < _dg.Items.Count; i++)
             {
-                var dgmpr = (MultiplePartsReplaced)_dg.Items[i];
+                MultiplePartsReplaced dgmpr = (MultiplePartsReplaced)_dg.Items[i];
                 dgmpr.PartReplaced = unitIssuesValSubmit(dgmpr.PartReplaced).TrimEnd(new char[] { ',', ' ' });
                 dgmpr.RefDesignator = unitIssuesValSubmit(dgmpr.RefDesignator).TrimEnd(new char[] { ',', ' ' });
                 dgmpr.PartsReplacedPartDescription = unitIssuesValSubmit(dgmpr.PartsReplacedPartDescription).TrimEnd(new char[] { ',', ' ' });
@@ -1159,12 +1159,12 @@ namespace RApID_Project_WPF
         /// <returns></returns>
         public static CustomerInformation CustomerInformationQuery(string CustomerNumber)
         {
-            var _ciReturn = new CustomerInformation();
+            CustomerInformation _ciReturn = new CustomerInformation();
             _ciReturn.CustomerNumber = CustomerNumber;
 
             string query = "SELECT * FROM RepairCustomerInformation WHERE CustomerNumber = '" + CustomerNumber + "'";
-            var conn = new SqlConnection(holder.RepairConnectionString);
-            var cmd = new SqlCommand(query, conn);
+            SqlConnection conn = new SqlConnection(holder.RepairConnectionString);
+            SqlCommand cmd = new SqlCommand(query, conn);
 
             try
             {
@@ -1200,9 +1200,9 @@ namespace RApID_Project_WPF
 
         private static List<UnitIssueModel> breakdownRepairIssues(List<UnitIssueModel> _lrmi)
         {
-            var lCombinedRMI = new List<UnitIssueModel>();
-            var dMultiParts = new Dictionary<int, List<UnitIssueModel>>();
-            var lIndividualIssues = new List<UnitIssueModel>();
+            List<UnitIssueModel> lCombinedRMI = new List<UnitIssueModel>();
+            Dictionary<int, List<UnitIssueModel>> dMultiParts = new Dictionary<int, List<UnitIssueModel>>();
+            List<UnitIssueModel> lIndividualIssues = new List<UnitIssueModel>();
 
             #region Split the overall list into two separate list: 1 with individual unit issues, 2 with same unit issue but different parts replaced/ref des
             int key = 0;
@@ -1265,7 +1265,7 @@ namespace RApID_Project_WPF
                 {
                     if (kvp.Value.Count > 0)
                     {
-                        var _rmiCombine = new UnitIssueModel();
+                        UnitIssueModel _rmiCombine = new UnitIssueModel();
 
                         for (int i = 0; i < kvp.Value.Count; i++)
                         {
@@ -1300,11 +1300,11 @@ namespace RApID_Project_WPF
         /// </summary>
         public static List<UnitIssueModel> GetRepairUnitIssues(string ID)
         {
-            var lRMI = new List<UnitIssueModel>();
+            List<UnitIssueModel> lRMI = new List<UnitIssueModel>();
 
             string query = "SELECT * FROM TechnicianUnitIssues WHERE ID = '" + ID + "'";
-            var conn = new SqlConnection(holder.RepairConnectionString);
-            var cmd = new SqlCommand(query, conn);
+            SqlConnection conn = new SqlConnection(holder.RepairConnectionString);
+            SqlCommand cmd = new SqlCommand(query, conn);
 
             try
             {
@@ -1386,7 +1386,7 @@ namespace RApID_Project_WPF
         {
             var chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
             var stringChars = new char[length];
-            var random = new Random();
+            Random random = new Random();
 
             for (int i = 0; i < stringChars.Length; i++)
             {
@@ -1464,7 +1464,7 @@ namespace RApID_Project_WPF
         /// <returns>New <see cref="ucUnitIssue"/> instance.</returns>
         public static ucUnitIssue Copy(this ucUnitIssue orig)
         {
-            var u = new ucUnitIssue()
+            ucUnitIssue u = new ucUnitIssue()
             {
                 ReportedIssue = orig.ReportedIssue,
                 TestResult = orig.TestResult,

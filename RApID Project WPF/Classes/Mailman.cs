@@ -21,7 +21,7 @@ namespace RApID_Project_WPF
             string sUserName = Environment.UserName;
             try
             {
-                var _emailMessage = new MailMessage();
+                MailMessage _emailMessage = new MailMessage();
 
                 #region assign email recipients
                     _emailMessage.To.Add("jwhaley@johnsonoutdoors.com");
@@ -56,7 +56,7 @@ namespace RApID_Project_WPF
                 string query = "SELECT Name FROM EmailServers";
                 string smtpClient = sqlClass.SQLGet_String(query, eeptConnString);
 
-                var smtp = new SmtpClient(smtpClient); ;
+                SmtpClient smtp = new SmtpClient(smtpClient); ;
                 //System.Net.ServicePointManager.MaxServicePointIdleTime = 1;
 
                 string sExMessage = "";

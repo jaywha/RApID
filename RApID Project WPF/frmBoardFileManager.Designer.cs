@@ -1,6 +1,6 @@
 ﻿namespace RApID_Project_WPF
 {
-    partial class frmBoardAliases
+    partial class frmBoardFileManager
     {
         /// <summary>
         /// Required designer variable.
@@ -32,9 +32,11 @@
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmBoardAliases));
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmBoardFileManager));
             this.cxmnuLinkMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.changeFilePathToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
+            this.deleteSchematicLinkToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.tcDataViewer = new System.Windows.Forms.TabControl();
             this.tbTechnicianView = new System.Windows.Forms.TabPage();
             this.spltpnlTechView = new System.Windows.Forms.SplitContainer();
@@ -43,7 +45,8 @@
             this.lblPartNumberLabel = new System.Windows.Forms.Label();
             this.txtPartNumber = new System.Windows.Forms.TextBox();
             this.btnSearch = new System.Windows.Forms.Button();
-            this.btnNewPN = new System.Windows.Forms.Button();
+            this.btnAddNewPN = new System.Windows.Forms.Button();
+            this.btnReset = new System.Windows.Forms.Button();
             this.grpbxPartNumberDetail = new System.Windows.Forms.GroupBox();
             this.lblCommodityClass = new System.Windows.Forms.Label();
             this.lblPartName = new System.Windows.Forms.Label();
@@ -59,21 +62,19 @@
             this.lnkBOMFile = new System.Windows.Forms.LinkLabel();
             this.tbDatabaseView = new System.Windows.Forms.TabPage();
             this.dgvDatabaseTable = new System.Windows.Forms.DataGridView();
-            this.iDDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.targetPartNumberDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.bOMPathDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewLinkColumn();
-            this.SchematicPaths = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.cxmnuDatabaseMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.refreshToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.pCBAAliasesBindingSource = new System.Windows.Forms.BindingSource(this.components);
-            this.pCBAAliasesDataSet = new RApID_Project_WPF.PCBAAliasesDataSet();
             this.imgSchematics = new System.Windows.Forms.ImageList(this.components);
             this.lblWarning = new System.Windows.Forms.Label();
             this.spltpnlMain = new System.Windows.Forms.SplitContainer();
-            this.pCBAAliasesTableAdapter = new RApID_Project_WPF.PCBAAliasesDataSetTableAdapters.PCBAAliasesTableAdapter();
             this.errorProvider = new System.Windows.Forms.ErrorProvider(this.components);
-            this.deleteSchematicLinkToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
+            this.pCBAliasDataSet = new RApID_Project_WPF.PCBAliasDataSet();
+            this.pCBAAliasesBindingSource = new System.Windows.Forms.BindingSource(this.components);
+            this.pCBAAliasesTableAdapter = new RApID_Project_WPF.PCBAliasDataSetTableAdapters.PCBAAliasesTableAdapter();
+            this.partNumberDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.bOMPathDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.bOMFileNameDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.schematicPathsDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.cxmnuLinkMenu.SuspendLayout();
             this.tcDataViewer.SuspendLayout();
             this.tbTechnicianView.SuspendLayout();
@@ -98,13 +99,13 @@
             this.tbDatabaseView.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgvDatabaseTable)).BeginInit();
             this.cxmnuDatabaseMenu.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pCBAAliasesBindingSource)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pCBAAliasesDataSet)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.spltpnlMain)).BeginInit();
             this.spltpnlMain.Panel1.SuspendLayout();
             this.spltpnlMain.Panel2.SuspendLayout();
             this.spltpnlMain.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.errorProvider)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pCBAliasDataSet)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pCBAAliasesBindingSource)).BeginInit();
             this.SuspendLayout();
             // 
             // cxmnuLinkMenu
@@ -114,7 +115,7 @@
             this.toolStripSeparator1,
             this.deleteSchematicLinkToolStripMenuItem});
             this.cxmnuLinkMenu.Name = "cxmnuLinkMenu";
-            this.cxmnuLinkMenu.Size = new System.Drawing.Size(200, 76);
+            this.cxmnuLinkMenu.Size = new System.Drawing.Size(200, 54);
             // 
             // changeFilePathToolStripMenuItem
             // 
@@ -122,6 +123,18 @@
             this.changeFilePathToolStripMenuItem.Size = new System.Drawing.Size(199, 22);
             this.changeFilePathToolStripMenuItem.Text = "Change File Path...";
             this.changeFilePathToolStripMenuItem.Click += new System.EventHandler(this.changeFilePathToolStripMenuItem_Click);
+            // 
+            // toolStripSeparator1
+            // 
+            this.toolStripSeparator1.Name = "toolStripSeparator1";
+            this.toolStripSeparator1.Size = new System.Drawing.Size(196, 6);
+            // 
+            // deleteSchematicLinkToolStripMenuItem
+            // 
+            this.deleteSchematicLinkToolStripMenuItem.Name = "deleteSchematicLinkToolStripMenuItem";
+            this.deleteSchematicLinkToolStripMenuItem.Size = new System.Drawing.Size(199, 22);
+            this.deleteSchematicLinkToolStripMenuItem.Text = "Delete Schematic Link...";
+            this.deleteSchematicLinkToolStripMenuItem.Click += new System.EventHandler(this.deleteSchematicLinkToolStripMenuItem_Click);
             // 
             // tcDataViewer
             // 
@@ -131,7 +144,7 @@
             this.tcDataViewer.Location = new System.Drawing.Point(0, 0);
             this.tcDataViewer.Name = "tcDataViewer";
             this.tcDataViewer.SelectedIndex = 0;
-            this.tcDataViewer.Size = new System.Drawing.Size(800, 413);
+            this.tcDataViewer.Size = new System.Drawing.Size(800, 429);
             this.tcDataViewer.TabIndex = 1;
             this.tcDataViewer.SelectedIndexChanged += new System.EventHandler(this.tcDataViewer_SelectedIndexChanged);
             // 
@@ -142,7 +155,7 @@
             this.tbTechnicianView.Location = new System.Drawing.Point(4, 22);
             this.tbTechnicianView.Name = "tbTechnicianView";
             this.tbTechnicianView.Padding = new System.Windows.Forms.Padding(3);
-            this.tbTechnicianView.Size = new System.Drawing.Size(792, 387);
+            this.tbTechnicianView.Size = new System.Drawing.Size(792, 403);
             this.tbTechnicianView.TabIndex = 0;
             this.tbTechnicianView.Text = "Technician View";
             this.tbTechnicianView.ToolTipText = "Shows main format for managing part number aliases.";
@@ -150,6 +163,7 @@
             // spltpnlTechView
             // 
             this.spltpnlTechView.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.spltpnlTechView.IsSplitterFixed = true;
             this.spltpnlTechView.Location = new System.Drawing.Point(3, 3);
             this.spltpnlTechView.Name = "spltpnlTechView";
             this.spltpnlTechView.Orientation = System.Windows.Forms.Orientation.Horizontal;
@@ -161,8 +175,8 @@
             // spltpnlTechView.Panel2
             // 
             this.spltpnlTechView.Panel2.Controls.Add(this.spltpnlAliasToDetail);
-            this.spltpnlTechView.Size = new System.Drawing.Size(786, 381);
-            this.spltpnlTechView.SplitterDistance = 159;
+            this.spltpnlTechView.Size = new System.Drawing.Size(786, 397);
+            this.spltpnlTechView.SplitterDistance = 180;
             this.spltpnlTechView.TabIndex = 6;
             // 
             // spltpnlPartNumToDetail
@@ -178,7 +192,7 @@
             // spltpnlPartNumToDetail.Panel2
             // 
             this.spltpnlPartNumToDetail.Panel2.Controls.Add(this.grpbxPartNumberDetail);
-            this.spltpnlPartNumToDetail.Size = new System.Drawing.Size(786, 159);
+            this.spltpnlPartNumToDetail.Size = new System.Drawing.Size(786, 180);
             this.spltpnlPartNumToDetail.SplitterDistance = 262;
             this.spltpnlPartNumToDetail.TabIndex = 0;
             // 
@@ -188,13 +202,14 @@
             this.flopnlPartNumberInput.Controls.Add(this.lblPartNumberLabel);
             this.flopnlPartNumberInput.Controls.Add(this.txtPartNumber);
             this.flopnlPartNumberInput.Controls.Add(this.btnSearch);
-            this.flopnlPartNumberInput.Controls.Add(this.btnNewPN);
+            this.flopnlPartNumberInput.Controls.Add(this.btnAddNewPN);
+            this.flopnlPartNumberInput.Controls.Add(this.btnReset);
             this.flopnlPartNumberInput.Dock = System.Windows.Forms.DockStyle.Fill;
             this.flopnlPartNumberInput.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
             this.flopnlPartNumberInput.ForeColor = System.Drawing.Color.Goldenrod;
             this.flopnlPartNumberInput.Location = new System.Drawing.Point(0, 0);
             this.flopnlPartNumberInput.Name = "flopnlPartNumberInput";
-            this.flopnlPartNumberInput.Size = new System.Drawing.Size(262, 159);
+            this.flopnlPartNumberInput.Size = new System.Drawing.Size(262, 180);
             this.flopnlPartNumberInput.TabIndex = 0;
             // 
             // lblPartNumberLabel
@@ -231,16 +246,27 @@
             this.btnSearch.UseVisualStyleBackColor = false;
             this.btnSearch.Click += new System.EventHandler(this.btnSearch_Click);
             // 
-            // btnNewPN
+            // btnAddNewPN
             // 
-            this.btnNewPN.BackColor = System.Drawing.Color.MidnightBlue;
-            this.btnNewPN.Location = new System.Drawing.Point(3, 84);
-            this.btnNewPN.Name = "btnNewPN";
-            this.btnNewPN.Size = new System.Drawing.Size(144, 23);
-            this.btnNewPN.TabIndex = 2;
-            this.btnNewPN.Text = "Add New Part Number";
-            this.btnNewPN.UseVisualStyleBackColor = false;
-            this.btnNewPN.Click += new System.EventHandler(this.btnNewPN_Click);
+            this.btnAddNewPN.BackColor = System.Drawing.Color.MidnightBlue;
+            this.btnAddNewPN.Location = new System.Drawing.Point(3, 84);
+            this.btnAddNewPN.Name = "btnAddNewPN";
+            this.btnAddNewPN.Size = new System.Drawing.Size(144, 23);
+            this.btnAddNewPN.TabIndex = 2;
+            this.btnAddNewPN.Text = "Add New Part Number";
+            this.btnAddNewPN.UseVisualStyleBackColor = false;
+            this.btnAddNewPN.Click += new System.EventHandler(this.btnAddNewPN_Click);
+            // 
+            // btnReset
+            // 
+            this.btnReset.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
+            this.btnReset.Location = new System.Drawing.Point(3, 113);
+            this.btnReset.Name = "btnReset";
+            this.btnReset.Size = new System.Drawing.Size(144, 23);
+            this.btnReset.TabIndex = 4;
+            this.btnReset.Text = "Reset";
+            this.btnReset.UseVisualStyleBackColor = false;
+            this.btnReset.Click += new System.EventHandler(this.btnReset_Click);
             // 
             // grpbxPartNumberDetail
             // 
@@ -251,7 +277,7 @@
             this.grpbxPartNumberDetail.ForeColor = System.Drawing.Color.Goldenrod;
             this.grpbxPartNumberDetail.Location = new System.Drawing.Point(0, 0);
             this.grpbxPartNumberDetail.Name = "grpbxPartNumberDetail";
-            this.grpbxPartNumberDetail.Size = new System.Drawing.Size(520, 159);
+            this.grpbxPartNumberDetail.Size = new System.Drawing.Size(520, 180);
             this.grpbxPartNumberDetail.TabIndex = 0;
             this.grpbxPartNumberDetail.TabStop = false;
             this.grpbxPartNumberDetail.Text = "Part Number Details";
@@ -287,7 +313,7 @@
             // spltpnlAliasToDetail.Panel2
             // 
             this.spltpnlAliasToDetail.Panel2.Controls.Add(this.pnlFilePaths);
-            this.spltpnlAliasToDetail.Size = new System.Drawing.Size(786, 218);
+            this.spltpnlAliasToDetail.Size = new System.Drawing.Size(786, 213);
             this.spltpnlAliasToDetail.SplitterDistance = 262;
             this.spltpnlAliasToDetail.TabIndex = 0;
             // 
@@ -296,14 +322,13 @@
             this.lstbxPNHistory.BackColor = System.Drawing.Color.Black;
             this.lstbxPNHistory.ContextMenuStrip = this.cxmnuAliasesMenu;
             this.lstbxPNHistory.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.lstbxPNHistory.Enabled = false;
             this.lstbxPNHistory.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lstbxPNHistory.ForeColor = System.Drawing.Color.Goldenrod;
             this.lstbxPNHistory.FormattingEnabled = true;
             this.lstbxPNHistory.ItemHeight = 20;
             this.lstbxPNHistory.Location = new System.Drawing.Point(0, 0);
             this.lstbxPNHistory.Name = "lstbxPNHistory";
-            this.lstbxPNHistory.Size = new System.Drawing.Size(262, 218);
+            this.lstbxPNHistory.Size = new System.Drawing.Size(262, 213);
             this.lstbxPNHistory.TabIndex = 0;
             this.lstbxPNHistory.SelectedIndexChanged += new System.EventHandler(this.lstbxPNHistory_SelectedIndexChanged);
             // 
@@ -330,17 +355,19 @@
             this.pnlFilePaths.ForeColor = System.Drawing.Color.Gold;
             this.pnlFilePaths.Location = new System.Drawing.Point(0, 0);
             this.pnlFilePaths.Name = "pnlFilePaths";
-            this.pnlFilePaths.Size = new System.Drawing.Size(520, 218);
+            this.pnlFilePaths.Size = new System.Drawing.Size(520, 213);
             this.pnlFilePaths.TabIndex = 5;
             // 
             // grpbxSchematicFiles
             // 
+            this.grpbxSchematicFiles.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.grpbxSchematicFiles.Controls.Add(this.flowSchematicLinks);
             this.grpbxSchematicFiles.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.grpbxSchematicFiles.ForeColor = System.Drawing.Color.Gold;
-            this.grpbxSchematicFiles.Location = new System.Drawing.Point(3, 70);
+            this.grpbxSchematicFiles.Location = new System.Drawing.Point(3, 69);
             this.grpbxSchematicFiles.Name = "grpbxSchematicFiles";
-            this.grpbxSchematicFiles.Size = new System.Drawing.Size(512, 143);
+            this.grpbxSchematicFiles.Size = new System.Drawing.Size(512, 139);
             this.grpbxSchematicFiles.TabIndex = 7;
             this.grpbxSchematicFiles.TabStop = false;
             this.grpbxSchematicFiles.Text = "Schematic File Links";
@@ -352,12 +379,14 @@
             this.flowSchematicLinks.ForeColor = System.Drawing.Color.Gold;
             this.flowSchematicLinks.Location = new System.Drawing.Point(3, 22);
             this.flowSchematicLinks.Name = "flowSchematicLinks";
-            this.flowSchematicLinks.Size = new System.Drawing.Size(506, 118);
+            this.flowSchematicLinks.Size = new System.Drawing.Size(506, 114);
             this.flowSchematicLinks.TabIndex = 0;
             this.flowSchematicLinks.MouseDown += new System.Windows.Forms.MouseEventHandler(this.flowSchematicLinks_MouseDown);
             // 
             // grpbxBOMLinkHolder
             // 
+            this.grpbxBOMLinkHolder.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.grpbxBOMLinkHolder.Controls.Add(this.btnChangeBOMPath);
             this.grpbxBOMLinkHolder.Controls.Add(this.lnkBOMFile);
             this.grpbxBOMLinkHolder.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
@@ -404,7 +433,7 @@
             this.tbDatabaseView.Location = new System.Drawing.Point(4, 22);
             this.tbDatabaseView.Name = "tbDatabaseView";
             this.tbDatabaseView.Padding = new System.Windows.Forms.Padding(3);
-            this.tbDatabaseView.Size = new System.Drawing.Size(792, 387);
+            this.tbDatabaseView.Size = new System.Drawing.Size(792, 403);
             this.tbDatabaseView.TabIndex = 1;
             this.tbDatabaseView.Text = "Database View";
             this.tbDatabaseView.ToolTipText = "Shows data using SQL Server Edit format.";
@@ -426,10 +455,10 @@
             this.dgvDatabaseTable.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle1;
             this.dgvDatabaseTable.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dgvDatabaseTable.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
-            this.iDDataGridViewTextBoxColumn,
-            this.targetPartNumberDataGridViewTextBoxColumn,
+            this.partNumberDataGridViewTextBoxColumn,
             this.bOMPathDataGridViewTextBoxColumn,
-            this.SchematicPaths});
+            this.bOMFileNameDataGridViewTextBoxColumn,
+            this.schematicPathsDataGridViewTextBoxColumn});
             this.dgvDatabaseTable.ContextMenuStrip = this.cxmnuDatabaseMenu;
             this.dgvDatabaseTable.DataSource = this.pCBAAliasesBindingSource;
             dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
@@ -452,40 +481,8 @@
             dataGridViewCellStyle3.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
             dataGridViewCellStyle3.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
             this.dgvDatabaseTable.RowHeadersDefaultCellStyle = dataGridViewCellStyle3;
-            this.dgvDatabaseTable.Size = new System.Drawing.Size(786, 381);
+            this.dgvDatabaseTable.Size = new System.Drawing.Size(786, 397);
             this.dgvDatabaseTable.TabIndex = 0;
-            // 
-            // iDDataGridViewTextBoxColumn
-            // 
-            this.iDDataGridViewTextBoxColumn.DataPropertyName = "ID";
-            this.iDDataGridViewTextBoxColumn.HeaderText = "ID";
-            this.iDDataGridViewTextBoxColumn.Name = "iDDataGridViewTextBoxColumn";
-            this.iDDataGridViewTextBoxColumn.ReadOnly = true;
-            this.iDDataGridViewTextBoxColumn.Visible = false;
-            // 
-            // targetPartNumberDataGridViewTextBoxColumn
-            // 
-            this.targetPartNumberDataGridViewTextBoxColumn.DataPropertyName = "TargetPartNumber";
-            this.targetPartNumberDataGridViewTextBoxColumn.HeaderText = "TargetPartNumber";
-            this.targetPartNumberDataGridViewTextBoxColumn.Name = "targetPartNumberDataGridViewTextBoxColumn";
-            this.targetPartNumberDataGridViewTextBoxColumn.ReadOnly = true;
-            // 
-            // bOMPathDataGridViewTextBoxColumn
-            // 
-            this.bOMPathDataGridViewTextBoxColumn.DataPropertyName = "BOMPath";
-            this.bOMPathDataGridViewTextBoxColumn.HeaderText = "BOMPath";
-            this.bOMPathDataGridViewTextBoxColumn.Name = "bOMPathDataGridViewTextBoxColumn";
-            this.bOMPathDataGridViewTextBoxColumn.ReadOnly = true;
-            this.bOMPathDataGridViewTextBoxColumn.Resizable = System.Windows.Forms.DataGridViewTriState.True;
-            this.bOMPathDataGridViewTextBoxColumn.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic;
-            this.bOMPathDataGridViewTextBoxColumn.VisitedLinkColor = System.Drawing.Color.Fuchsia;
-            // 
-            // SchematicPaths
-            // 
-            this.SchematicPaths.DataPropertyName = "SchematicPaths";
-            this.SchematicPaths.HeaderText = "SchematicPaths";
-            this.SchematicPaths.Name = "SchematicPaths";
-            this.SchematicPaths.ReadOnly = true;
             // 
             // cxmnuDatabaseMenu
             // 
@@ -501,16 +498,6 @@
             this.refreshToolStripMenuItem.Size = new System.Drawing.Size(113, 22);
             this.refreshToolStripMenuItem.Text = "Refresh";
             this.refreshToolStripMenuItem.Click += new System.EventHandler(this.refreshToolStripMenuItem_Click);
-            // 
-            // pCBAAliasesBindingSource
-            // 
-            this.pCBAAliasesBindingSource.DataMember = "PCBAAliases";
-            this.pCBAAliasesBindingSource.DataSource = this.pCBAAliasesDataSet;
-            // 
-            // pCBAAliasesDataSet
-            // 
-            this.pCBAAliasesDataSet.DataSetName = "PCBAAliasesDataSet";
-            this.pCBAAliasesDataSet.SchemaSerializationMode = System.Data.SchemaSerializationMode.IncludeSchema;
             // 
             // imgSchematics
             // 
@@ -536,6 +523,7 @@
             // spltpnlMain
             // 
             this.spltpnlMain.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.spltpnlMain.IsSplitterFixed = true;
             this.spltpnlMain.Location = new System.Drawing.Point(0, 0);
             this.spltpnlMain.Name = "spltpnlMain";
             this.spltpnlMain.Orientation = System.Windows.Forms.Orientation.Horizontal;
@@ -550,40 +538,67 @@
             // 
             this.spltpnlMain.Panel2.Controls.Add(this.tcDataViewer);
             this.spltpnlMain.Size = new System.Drawing.Size(800, 479);
-            this.spltpnlMain.SplitterDistance = 62;
+            this.spltpnlMain.SplitterDistance = 46;
             this.spltpnlMain.TabIndex = 0;
-            // 
-            // pCBAAliasesTableAdapter
-            // 
-            this.pCBAAliasesTableAdapter.ClearBeforeFill = true;
             // 
             // errorProvider
             // 
             this.errorProvider.BlinkRate = 333;
             this.errorProvider.ContainerControl = this;
             // 
-            // deleteSchematicLinkToolStripMenuItem
+            // pCBAliasDataSet
             // 
-            this.deleteSchematicLinkToolStripMenuItem.Name = "deleteSchematicLinkToolStripMenuItem";
-            this.deleteSchematicLinkToolStripMenuItem.Size = new System.Drawing.Size(199, 22);
-            this.deleteSchematicLinkToolStripMenuItem.Text = "Delete Schematic Link...";
-            this.deleteSchematicLinkToolStripMenuItem.Click += new System.EventHandler(this.deleteSchematicLinkToolStripMenuItem_Click);
+            this.pCBAliasDataSet.DataSetName = "PCBAliasDataSet";
+            this.pCBAliasDataSet.SchemaSerializationMode = System.Data.SchemaSerializationMode.IncludeSchema;
             // 
-            // toolStripSeparator1
+            // pCBAAliasesBindingSource
             // 
-            this.toolStripSeparator1.Name = "toolStripSeparator1";
-            this.toolStripSeparator1.Size = new System.Drawing.Size(196, 6);
+            this.pCBAAliasesBindingSource.DataMember = "PCBAAliases";
+            this.pCBAAliasesBindingSource.DataSource = this.pCBAliasDataSet;
             // 
-            // frmBoardAliases
+            // pCBAAliasesTableAdapter
+            // 
+            this.pCBAAliasesTableAdapter.ClearBeforeFill = true;
+            // 
+            // partNumberDataGridViewTextBoxColumn
+            // 
+            this.partNumberDataGridViewTextBoxColumn.DataPropertyName = "PartNumber";
+            this.partNumberDataGridViewTextBoxColumn.HeaderText = "PartNumber";
+            this.partNumberDataGridViewTextBoxColumn.Name = "partNumberDataGridViewTextBoxColumn";
+            this.partNumberDataGridViewTextBoxColumn.ReadOnly = true;
+            // 
+            // bOMPathDataGridViewTextBoxColumn
+            // 
+            this.bOMPathDataGridViewTextBoxColumn.DataPropertyName = "BOMPath";
+            this.bOMPathDataGridViewTextBoxColumn.HeaderText = "BOMPath";
+            this.bOMPathDataGridViewTextBoxColumn.Name = "bOMPathDataGridViewTextBoxColumn";
+            this.bOMPathDataGridViewTextBoxColumn.ReadOnly = true;
+            // 
+            // bOMFileNameDataGridViewTextBoxColumn
+            // 
+            this.bOMFileNameDataGridViewTextBoxColumn.DataPropertyName = "BOMFileName";
+            this.bOMFileNameDataGridViewTextBoxColumn.HeaderText = "BOMFileName";
+            this.bOMFileNameDataGridViewTextBoxColumn.Name = "bOMFileNameDataGridViewTextBoxColumn";
+            this.bOMFileNameDataGridViewTextBoxColumn.ReadOnly = true;
+            // 
+            // schematicPathsDataGridViewTextBoxColumn
+            // 
+            this.schematicPathsDataGridViewTextBoxColumn.DataPropertyName = "SchematicPaths";
+            this.schematicPathsDataGridViewTextBoxColumn.HeaderText = "SchematicPaths";
+            this.schematicPathsDataGridViewTextBoxColumn.Name = "schematicPathsDataGridViewTextBoxColumn";
+            this.schematicPathsDataGridViewTextBoxColumn.ReadOnly = true;
+            // 
+            // frmBoardFileManager
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(800, 479);
             this.Controls.Add(this.spltpnlMain);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
-            this.Name = "frmBoardAliases";
+            this.MinimumSize = new System.Drawing.Size(750, 400);
+            this.Name = "frmBoardFileManager";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
-            this.Text = "PCBA Alias Manager";
+            this.Text = "PCB File Manager";
             this.Load += new System.EventHandler(this.frmBoardAliases_Load);
             this.PreviewKeyDown += new System.Windows.Forms.PreviewKeyDownEventHandler(this.frmBoardAliases_PreviewKeyDown);
             this.cxmnuLinkMenu.ResumeLayout(false);
@@ -613,14 +628,14 @@
             this.tbDatabaseView.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.dgvDatabaseTable)).EndInit();
             this.cxmnuDatabaseMenu.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.pCBAAliasesBindingSource)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pCBAAliasesDataSet)).EndInit();
             this.spltpnlMain.Panel1.ResumeLayout(false);
             this.spltpnlMain.Panel1.PerformLayout();
             this.spltpnlMain.Panel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.spltpnlMain)).EndInit();
             this.spltpnlMain.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.errorProvider)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pCBAliasDataSet)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pCBAAliasesBindingSource)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -645,22 +660,15 @@
         private System.Windows.Forms.DataGridView dgvDatabaseTable;
         private System.Windows.Forms.Label lblWarning;
         private System.Windows.Forms.SplitContainer spltpnlMain;
-        private PCBAAliasesDataSet pCBAAliasesDataSet;
-        private System.Windows.Forms.BindingSource pCBAAliasesBindingSource;
-        private PCBAAliasesDataSetTableAdapters.PCBAAliasesTableAdapter pCBAAliasesTableAdapter;
         private System.Windows.Forms.DataGridViewLinkColumn schematicPathDataGridViewTextBoxColumn;
         private System.Windows.Forms.ImageList imgSchematics;
-        private System.Windows.Forms.DataGridViewTextBoxColumn iDDataGridViewTextBoxColumn;
-        private System.Windows.Forms.DataGridViewTextBoxColumn targetPartNumberDataGridViewTextBoxColumn;
         private System.Windows.Forms.DataGridViewTextBoxColumn aliasDataGridViewTextBoxColumn;
-        private System.Windows.Forms.DataGridViewLinkColumn bOMPathDataGridViewTextBoxColumn;
-        private System.Windows.Forms.DataGridViewTextBoxColumn SchematicPaths;
         private System.Windows.Forms.ErrorProvider errorProvider;
         private System.Windows.Forms.GroupBox grpbxBOMLinkHolder;
         private System.Windows.Forms.LinkLabel lnkBOMFile;
         private System.Windows.Forms.GroupBox grpbxSchematicFiles;
         private System.Windows.Forms.FlowLayoutPanel flowSchematicLinks;
-        private System.Windows.Forms.Button btnNewPN;
+        private System.Windows.Forms.Button btnAddNewPN;
         private System.Windows.Forms.Button btnSearch;
         private System.Windows.Forms.ContextMenuStrip cxmnuAliasesMenu;
         private System.Windows.Forms.ToolStripMenuItem deleteAliasToolStripMenuItem;
@@ -669,5 +677,13 @@
         private System.Windows.Forms.ToolStripMenuItem refreshToolStripMenuItem;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
         private System.Windows.Forms.ToolStripMenuItem deleteSchematicLinkToolStripMenuItem;
+        private System.Windows.Forms.Button btnReset;
+        private PCBAliasDataSet pCBAliasDataSet;
+        private System.Windows.Forms.BindingSource pCBAAliasesBindingSource;
+        private PCBAliasDataSetTableAdapters.PCBAAliasesTableAdapter pCBAAliasesTableAdapter;
+        private System.Windows.Forms.DataGridViewTextBoxColumn partNumberDataGridViewTextBoxColumn;
+        private System.Windows.Forms.DataGridViewTextBoxColumn bOMPathDataGridViewTextBoxColumn;
+        private System.Windows.Forms.DataGridViewTextBoxColumn bOMFileNameDataGridViewTextBoxColumn;
+        private System.Windows.Forms.DataGridViewTextBoxColumn schematicPathsDataGridViewTextBoxColumn;
     }
 }

@@ -123,17 +123,14 @@
   <metadata name="cxmnuAliasesMenu.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>291, 17</value>
   </metadata>
-  <metadata name="SchematicPaths.UserAddedColumn" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
-    <value>True</value>
-  </metadata>
   <metadata name="cxmnuDatabaseMenu.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>276, 52</value>
+    <value>444, 18</value>
   </metadata>
   <metadata name="pCBAAliasesBindingSource.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>608, 17</value>
+    <value>292, 48</value>
   </metadata>
-  <metadata name="pCBAAliasesDataSet.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>447, 17</value>
+  <metadata name="pCBAliasDataSet.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+    <value>150, 48</value>
   </metadata>
   <metadata name="imgSchematics.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>17, 17</value>
@@ -143,7 +140,7 @@
         AAEAAAD/////AQAAAAAAAAAMAgAAAFdTeXN0ZW0uV2luZG93cy5Gb3JtcywgVmVyc2lvbj00LjAuMC4w
         LCBDdWx0dXJlPW5ldXRyYWwsIFB1YmxpY0tleVRva2VuPWI3N2E1YzU2MTkzNGUwODkFAQAAACZTeXN0
         ZW0uV2luZG93cy5Gb3Jtcy5JbWFnZUxpc3RTdHJlYW1lcgEAAAAERGF0YQcCAgAAAAkDAAAADwMAAAD0
-        EwAAAk1TRnQBSQFMAgEBAwEAAagBAAGoAQABIAEAASABAAT/AREBAAj/AUIBTQE2BwABNgMAASgDAAGA
+        EwAAAk1TRnQBSQFMAgEBAwEAAdABAAHQAQABIAEAASABAAT/AREBAAj/AUIBTQE2BwABNgMAASgDAAGA
         AwABIAMAAQEBAAEQBgABICAAAf8BfwE5AWcBUgFKAVIBSgFSAUoBUgFKAVIBSgFSAUoBUgFKAVIBSgFS
         AUoBUgFKAVIBSgFSAUoBUgFKAVIBSgFSAUoBUgFKAVIBSgFSAUoBUgFKAVIBSgH3AV4B/wF/TgAB/wF/
         Ad4BewG9AXcBvQF3Ab0BdwG9AXcBvQF3Ab0BdwG9AXcBvQF3Ab0BdwG9AXcBvQF3Ab0BdwG9AXcBvQF3
@@ -231,11 +228,8 @@
         AX8B/wGAAQcF/wQACw==
 </value>
   </data>
-  <metadata name="pCBAAliasesTableAdapter.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>806, 17</value>
-  </metadata>
   <metadata name="errorProvider.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>998, 17</value>
+    <value>27, 48</value>
   </metadata>
   <assembly alias="System.Drawing" name="System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
   <data name="$this.Icon" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
@@ -1662,4 +1656,7 @@
         AAAAAAAAD//g////B//wAAAAAAAAHwf/8H////////gAAAAAH///////
 </value>
   </data>
+  <metadata name="pCBAAliasesTableAdapter.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+    <value>490, 48</value>
+  </metadata>
 </root>

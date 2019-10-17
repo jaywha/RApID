@@ -83,7 +83,7 @@ namespace RApID_Project_WPF
         {
             _records.Clear();
 
-            var newSqlQuery = new System.Data.SqlClient.SqlCommand
+            System.Data.SqlClient.SqlCommand newSqlQuery = new System.Data.SqlClient.SqlCommand
             {
                 CommandText =
                 "SELECT * FROM [Repair].[dbo].[TechnicianSubmission] WHERE " +
@@ -107,7 +107,7 @@ namespace RApID_Project_WPF
 
         private void ApplyFilters(object sender, RoutedEventArgs e)
         {
-            var dataView = CollectionViewSource.GetDefaultView(dgSubmissions.ItemsSource);
+            System.ComponentModel.ICollectionView dataView = CollectionViewSource.GetDefaultView(dgSubmissions.ItemsSource);
 
             lblLoadingIndicator.Visibility = Visibility.Visible;
             lblLoadingIndicator.Content = "Applying filters...";
@@ -116,7 +116,7 @@ namespace RApID_Project_WPF
             dataView.Filter
                 = (obj) =>
                 {
-                    var row = obj as Record;
+                    Record row = obj as Record;
                     var allowRow = true;
                     if (!string.IsNullOrEmpty(txtPartNumber.Text.Trim()))
                     {
@@ -181,20 +181,20 @@ namespace RApID_Project_WPF
         private void OpenProduction(object sender, RoutedEventArgs e)
         {
             //Get the clicked MenuItem
-            var menuItem = (MenuItem)sender;
+            MenuItem menuItem = (MenuItem)sender;
 
             //Get the ContextMenu to which the menuItem belongs
-            var contextMenu = (ContextMenu)menuItem.Parent;
+            ContextMenu contextMenu = (ContextMenu)menuItem.Parent;
 
             //Find the placementTarget
-            var item = (DataGrid)contextMenu.PlacementTarget;
+            DataGrid item = (DataGrid)contextMenu.PlacementTarget;
 
             //Get the underlying item, that you cast to your object that is bound
             //to the DataGrid (and has subject and state as property)
-            var recordToOpen = (Record)item.SelectedCells[0].Item;
+            Record recordToOpen = (Record)item.SelectedCells[0].Item;
 
             //Open form with Record as PRI
-            var frm = new frmProductionPRI(recordToOpen);
+            frmProductionPRI frm = new frmProductionPRI(recordToOpen);
             frm.Show();
         }
 

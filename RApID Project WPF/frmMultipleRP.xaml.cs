@@ -59,8 +59,8 @@ namespace RApID_Project_WPF
         private void loadDGView()
         {
             string query = "SELECT * FROM CustomerRepairOrderFromJDE WHERE OrderNumber = '" + sOrderNumber + "'";
-            var conn = new SqlConnection(holder.RepairConnectionString);
-            var cmd = new SqlCommand(query, conn);
+            SqlConnection conn = new SqlConnection(holder.RepairConnectionString);
+            SqlCommand cmd = new SqlCommand(query, conn);
             try
             {
                 conn.Open();
@@ -68,7 +68,7 @@ namespace RApID_Project_WPF
                 {
                     while (reader.Read())
                     {
-                        var dmpr = new DGVMULTIPLERP
+                        DGVMULTIPLERP dmpr = new DGVMULTIPLERP
                         {
                             RPNumber = reader["ItemNumber"].ToString().TrimEnd(),
                             LineNumber = Convert.ToDouble(reader["LineNumber"]),

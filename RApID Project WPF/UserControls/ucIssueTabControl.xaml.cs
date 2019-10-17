@@ -146,7 +146,7 @@ namespace RApID_Project_WPF.UserControls
             {
                 int count = _tabItems.Count;
 
-                var newTab = new TabItem()
+                TabItem newTab = new TabItem()
                 {
                     Header = customHeader ?? $"Unit Issue #{count}",
                     Name = $"tiUnitIssue{count}",
@@ -202,7 +202,7 @@ namespace RApID_Project_WPF.UserControls
             {
                 int count = _tabItems.Count;
 
-                var newTab = new TabItem()
+                TabItem newTab = new TabItem()
                 {
                     Header = $"Unit Issue #{count}",
                     Name = $"tiUnitIssue{count}",
@@ -296,7 +296,7 @@ namespace RApID_Project_WPF.UserControls
                         }
 
                         int header_index = 1;
-                        foreach (var t in _tabItems)
+                        foreach (TabItem t in _tabItems)
                         {
                             t.Header
                                 = t.Header.ToString().Substring(0, t.Header.ToString().IndexOf("#") + 1)
@@ -320,7 +320,7 @@ namespace RApID_Project_WPF.UserControls
         {
             tc.DataContext = null;
 
-            var result = (TResult)operation.DynamicInvoke(args);
+            TResult result = (TResult)operation.DynamicInvoke(args);
             if (!_tabItems.Contains(_backupNewTab)) _tabItems.Add(_backupNewTab);
 
             tc.DataContext = _tabItems;
@@ -336,7 +336,7 @@ namespace RApID_Project_WPF.UserControls
         private TResult UpdateTabCollection<TResult>(TabControl tc, Func<TResult> operation)
         {
             tc.DataContext = null;
-            var result = operation.Invoke();
+            TResult result = operation.Invoke();
             if (!_tabItems.Contains(_backupNewTab)) _tabItems.Add(_backupNewTab);
 
             tc.DataContext = _tabItems;

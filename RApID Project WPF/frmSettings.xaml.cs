@@ -431,7 +431,7 @@ namespace RApID_Project_WPF
 
         private void btnUpdateLogLocation_Click(object sender, RoutedEventArgs e)
         {
-            var fbd = new WinForm.FolderBrowserDialog();
+            WinForm.FolderBrowserDialog fbd = new WinForm.FolderBrowserDialog();
             if (fbd.ShowDialog() == WinForm.DialogResult.OK)
             {
                 if (!string.IsNullOrEmpty(fbd.SelectedPath))
@@ -450,7 +450,7 @@ namespace RApID_Project_WPF
 
         private void btnViewLogNewWindow_Click(object sender, RoutedEventArgs e)
         {
-            var fvfl = new frmViewFullLog();
+            frmViewFullLog fvfl = new frmViewFullLog();
             fvfl.ShowDialog();
         }
         #endregion
@@ -507,7 +507,7 @@ namespace RApID_Project_WPF
 
         private void btnPrintQCDQELabel_Click(object sender, RoutedEventArgs e)
         {
-            var fpqcedqel = new frmPrintQCDQELabel();
+            frmPrintQCDQELabel fpqcedqel = new frmPrintQCDQELabel();
             fpqcedqel.ShowDialog();
         }
         #endregion

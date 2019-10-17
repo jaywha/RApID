@@ -74,15 +74,15 @@ namespace RApID_Project_WPF
         {
             try
             {
-                var LabelFont = new Font("Arial", 9, FontStyle.Bold);
+                Font LabelFont = new Font("Arial", 9, FontStyle.Bold);
 
-                var blackBrush = new SolidBrush(Color.Black);
-                var whiteBrush = new SolidBrush(Color.White);
+                SolidBrush blackBrush = new SolidBrush(Color.Black);
+                SolidBrush whiteBrush = new SolidBrush(Color.White);
 
-                var blackPen = new Pen(Color.Black);
-                var whitePen = new Pen(Color.White);
+                Pen blackPen = new Pen(Color.Black);
+                Pen whitePen = new Pen(Color.White);
 
-                var centerString = new StringFormat();
+                StringFormat centerString = new StringFormat();
                 centerString.Alignment = StringAlignment.Center;
                 centerString.LineAlignment = StringAlignment.Center;
 
@@ -92,28 +92,28 @@ namespace RApID_Project_WPF
                 int pHeight = docToPrint.DefaultPageSettings.PaperSize.Height;
 
                 //-Label Outline-//
-                var labelRect = new Rectangle(xOffset, yOffset, pWidth, pHeight);
-               // e.Graphics.DrawRectangle(blackPen, labelRect);
+                Rectangle labelRect = new Rectangle(xOffset, yOffset, pWidth, pHeight);
+                // e.Graphics.DrawRectangle(blackPen, labelRect);
 
                 //-Sent To...-//
-                var sentToRect = new Rectangle(xOffset, yOffset, pWidth, 15);
+                Rectangle sentToRect = new Rectangle(xOffset, yOffset, pWidth, 15);
                 e.Graphics.DrawString("Sent To: " + sSentTo, LabelFont, blackBrush, sentToRect, centerString);
 
                 //-Sent By...-//
-                var sendByRect = new Rectangle(xOffset, yOffset, pWidth, 55);
+                Rectangle sendByRect = new Rectangle(xOffset, yOffset, pWidth, 55);
                 e.Graphics.DrawString("Sent By: " + sSentBy, LabelFont, blackBrush, sendByRect, centerString);
 
                 //-Date and Time-//
-                var dateTimeRect = new Rectangle(xOffset, yOffset, pWidth, 95);
+                Rectangle dateTimeRect = new Rectangle(xOffset, yOffset, pWidth, 95);
                 e.Graphics.DrawString(sTimeSent, LabelFont, blackBrush, dateTimeRect, centerString);
 
                 //-Barcode-//
-                var barcodeRect = new Rectangle(xOffset + 20, yOffset + 90, pWidth - 50, 40);
+                Rectangle barcodeRect = new Rectangle(xOffset + 20, yOffset + 90, pWidth - 50, 40);
                 bcLib.RawData = sBarcode;
                 e.Graphics.DrawImage(bcLib.Encode(bcType128, Color.Black, Color.White), barcodeRect);
 
                 //-Barcode Text-//
-                var bcodeText = new Rectangle(xOffset, yOffset, pWidth, pHeight);
+                Rectangle bcodeText = new Rectangle(xOffset, yOffset, pWidth, pHeight);
                 e.Graphics.DrawString(sBarcode, LabelFont, blackBrush, bcodeText, centerString);
             }
             catch(Exception ex)

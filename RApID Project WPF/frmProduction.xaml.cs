@@ -116,18 +116,18 @@ namespace RApID_Project_WPF
         private void initSQLQuery()
         {
             #region Temp List for Sorting
-            var lReportedIssue = new List<string>();
-            var lTestResult = new List<string>();
-            var lTestResultAbort = new List<string>();
-            var lFromArea = new List<string>();
-            var lTechAction1 = new List<string>();
-            var lTechAction2 = new List<string>();
-            var lTechAction3 = new List<string>();
+            List<string> lReportedIssue = new List<string>();
+            List<string> lTestResult = new List<string>();
+            List<string> lTestResultAbort = new List<string>();
+            List<string> lFromArea = new List<string>();
+            List<string> lTechAction1 = new List<string>();
+            List<string> lTechAction2 = new List<string>();
+            List<string> lTechAction3 = new List<string>();
             #endregion
 
             string query = "SELECT * FROM RApID_DropDowns;";
-            var conn = new SqlConnection(holder.RepairConnectionString);
-            var cmd = new SqlCommand(query, conn);
+            SqlConnection conn = new SqlConnection(holder.RepairConnectionString);
+            SqlCommand cmd = new SqlCommand(query, conn);
             try
             {
                 conn.Open();
@@ -195,8 +195,8 @@ namespace RApID_Project_WPF
         private void buildIIP()
         {
             string query = "SELECT * FROM tblManufacturingTechIssues ORDER BY ID;";
-            var conn = new SqlConnection(holder.RepairConnectionString);
-            var cmd = new SqlCommand(query, conn);
+            SqlConnection conn = new SqlConnection(holder.RepairConnectionString);
+            SqlCommand cmd = new SqlCommand(query, conn);
             try
             {
                 conn.Open();
@@ -204,7 +204,7 @@ namespace RApID_Project_WPF
                 {
                     while (reader.Read())
                     {
-                        var iipc = new IssueItemProblemCombinations
+                        IssueItemProblemCombinations iipc = new IssueItemProblemCombinations
                         {
                             Issue = reader["Issue"].ToString(),
                             Item = reader["Item"].ToString(),
@@ -394,7 +394,7 @@ namespace RApID_Project_WPF
             {
                 if (uie.GetType().Name.Equals("ComboBox"))
                 {
-                    var cb = (ComboBox)uie;
+                    ComboBox cb = (ComboBox)uie;
                     if (!string.IsNullOrEmpty(cb.Text))
                     {
                         bUI3DataFound = true;
@@ -406,7 +406,7 @@ namespace RApID_Project_WPF
             {
                 if (uie.GetType().Name.Equals("ComboBox"))
                 {
-                    var cb = (ComboBox)uie;
+                    ComboBox cb = (ComboBox)uie;
                     if (!string.IsNullOrEmpty(cb.Text))
                     {
                         bUI2DataFound = true;
@@ -418,7 +418,7 @@ namespace RApID_Project_WPF
             {
                 if (uie.GetType().Name.Equals("ComboBox"))
                 {
-                    var cb = (ComboBox)uie;
+                    ComboBox cb = (ComboBox)uie;
                     if (!string.IsNullOrEmpty(cb.Text))
                     {
                         bUI1DataFound = true;
@@ -461,7 +461,7 @@ namespace RApID_Project_WPF
                 {
                     if (uie.GetType().Name.Equals("ComboBox"))
                     {
-                        var cb = (ComboBox)uie;
+                        ComboBox cb = (ComboBox)uie;
                         if (!string.IsNullOrEmpty(cb.Text) && !cb.Name.StartsWith("cbReportedIssue"))
                         {
                             return true;
@@ -519,7 +519,7 @@ namespace RApID_Project_WPF
 
         private void fillItemCB(ComboBox cbIssueEdit, ComboBox cbItemEdit, ComboBox cbProblemEdit)
         {
-            var lTempFindings = new List<IssueItemProblemCombinations>();
+            List<IssueItemProblemCombinations> lTempFindings = new List<IssueItemProblemCombinations>();
 
             if (cbIssueEdit.Text.ToLower().Equals("no trouble found")) { return; }
 
@@ -542,7 +542,7 @@ namespace RApID_Project_WPF
 
         private void fillProblemCB(ComboBox cbIssueEdit, ComboBox cbItemEdit, ComboBox cbProblemEdit)
         {
-            var lTempFindings = new List<IssueItemProblemCombinations>();
+            List<IssueItemProblemCombinations> lTempFindings = new List<IssueItemProblemCombinations>();
 
             for (int i = 0; i < lIIPC.Count; i++)
             {
@@ -644,7 +644,7 @@ namespace RApID_Project_WPF
         {
             try
             {
-                using (var mapper = csSerialNumberMapper.Instance)
+                using (csSerialNumberMapper mapper = csSerialNumberMapper.Instance)
                 {
                     await Task.Factory.StartNew(new Action(() => // in new task
                     {
@@ -654,17 +654,17 @@ namespace RApID_Project_WPF
                             {
                                 MessageBox.Show("Couldn't find the barcode's entry in the database.\nPlease enter information manually.",
                                         "Soft Error - Database Lookup", MessageBoxButton.OK, MessageBoxImage.Warning);
-                                new frmBoardAliases().ShowDialog();
+                                new frmBoardFileManager().ShowDialog();
                             }
                             else
                             {
-                                var (filename, found) = await mapper.FindFileAsync(".xls");
+                                (string filename, bool found) = await mapper.FindFileAsync(".xls");
 
                                 if(!found)
                                 {
                                     MessageBox.Show("We got some database info, but we still need help finindg the BOM.",
                                         "Soft Error - BOM Not Found", MessageBoxButton.OK, MessageBoxImage.Information);
-                                    frmBoardAliases techForm = new frmBoardAliases(mapper.PartNumber);
+                                    frmBoardFileManager techForm = new frmBoardFileManager(mapper.PartNumber);
                                     techForm.ShowDialog();
 
                                     if (!techForm.WasEntryFound) {
@@ -876,14 +876,14 @@ namespace RApID_Project_WPF
                 }
                 else
                 {
-                    var mpr = new MultiplePartsReplaced { RefDesignator = txtMultiRefDes.Text, PartReplaced = txtMultiPartNum.Text, PartsReplacedPartDescription = _sPRPD };
+                    MultiplePartsReplaced mpr = new MultiplePartsReplaced { RefDesignator = txtMultiRefDes.Text, PartReplaced = txtMultiPartNum.Text, PartsReplacedPartDescription = _sPRPD };
                     dgMultipleParts.Items.Add(mpr);
                     txtMultiPartNum.Text = txtMultiRefDes.Text = _sPRPD = string.Empty;
                 }
             }
             else if (!string.IsNullOrEmpty(txtMultiRefDes.Text))
             {
-                var mpr = new MultiplePartsReplaced { RefDesignator = txtMultiRefDes.Text, PartReplaced = string.Empty, PartsReplacedPartDescription = string.Empty };
+                MultiplePartsReplaced mpr = new MultiplePartsReplaced { RefDesignator = txtMultiRefDes.Text, PartReplaced = string.Empty, PartsReplacedPartDescription = string.Empty };
                 dgMultipleParts.Items.Add(mpr);
                 txtMultiRefDes.Text = string.Empty;
             }
@@ -901,14 +901,14 @@ namespace RApID_Project_WPF
                 }
                 else
                 {
-                    var mpr = new MultiplePartsReplaced { RefDesignator = txtMultiRefDes_2.Text, PartReplaced = txtMultiPartNum_2.Text, PartsReplacedPartDescription = _sPRPD };
+                    MultiplePartsReplaced mpr = new MultiplePartsReplaced { RefDesignator = txtMultiRefDes_2.Text, PartReplaced = txtMultiPartNum_2.Text, PartsReplacedPartDescription = _sPRPD };
                     dgMultipleParts_2.Items.Add(mpr);
                     txtMultiPartNum_2.Text = txtMultiRefDes_2.Text = _sPRPD = string.Empty;
                 }
             }
             else if (!string.IsNullOrEmpty(txtMultiRefDes_2.Text))
             {
-                var mpr = new MultiplePartsReplaced { RefDesignator = txtMultiRefDes_2.Text, PartReplaced = string.Empty, PartsReplacedPartDescription = string.Empty };
+                MultiplePartsReplaced mpr = new MultiplePartsReplaced { RefDesignator = txtMultiRefDes_2.Text, PartReplaced = string.Empty, PartsReplacedPartDescription = string.Empty };
                 dgMultipleParts_2.Items.Add(mpr);
                 txtMultiRefDes_2.Text = string.Empty;
             }
@@ -926,13 +926,13 @@ namespace RApID_Project_WPF
                 }
                 else
                 {
-                    var mpr = new MultiplePartsReplaced { RefDesignator = txtMultiRefDes_3.Text, PartReplaced = txtMultiPartNum_3.Text, PartsReplacedPartDescription = _sPRPD };
+                    MultiplePartsReplaced mpr = new MultiplePartsReplaced { RefDesignator = txtMultiRefDes_3.Text, PartReplaced = txtMultiPartNum_3.Text, PartsReplacedPartDescription = _sPRPD };
                     dgMultipleParts_3.Items.Add(mpr);
                 }
             }
             else if (!string.IsNullOrEmpty(txtMultiRefDes_3.Text))
             {
-                var mpr = new MultiplePartsReplaced { RefDesignator = txtMultiRefDes_3.Text, PartReplaced = string.Empty, PartsReplacedPartDescription = string.Empty };
+                MultiplePartsReplaced mpr = new MultiplePartsReplaced { RefDesignator = txtMultiRefDes_3.Text, PartReplaced = string.Empty, PartsReplacedPartDescription = string.Empty };
                 dgMultipleParts_3.Items.Add(mpr);
                 txtMultiRefDes_3.Text = string.Empty;
             }
@@ -953,7 +953,7 @@ namespace RApID_Project_WPF
         /// <returns>Returns an ArrayList(2) with: 1.(bool)Has Submission Criteria Been Met, 2.(string)What submission criteria has been missed.</returns>
         private ArrayList canSubmit()
         {
-            var alReturn = new ArrayList(2);
+            ArrayList alReturn = new ArrayList(2);
             string sErrMsg = "The following items are missing:\n";
             bool bCanSubmit = true;
 
@@ -1029,8 +1029,8 @@ namespace RApID_Project_WPF
             sVar.LogHandler.CreateLogAction("Attempting to submit the tech data into the TechnicianSubmission Table.", csLogging.LogState.NOTE);
             sVar.LogHandler.CreateLogAction("SQL QUERY: " + query, csLogging.LogState.SQLQUERY);
 
-            var conn = new SqlConnection(holder.RepairConnectionString);
-            var cmd = new SqlCommand(query, conn);
+            SqlConnection conn = new SqlConnection(holder.RepairConnectionString);
+            SqlCommand cmd = new SqlCommand(query, conn);
             try
             {
                 conn.Open();
@@ -1120,8 +1120,8 @@ namespace RApID_Project_WPF
 
             string sLogString = "";
             List<UnitIssueModel> lPI = getUnitIssues();
-            var conn = new SqlConnection(holder.RepairConnectionString);
-            var cmd = new SqlCommand(query, conn);
+            SqlConnection conn = new SqlConnection(holder.RepairConnectionString);
+            SqlCommand cmd = new SqlCommand(query, conn);
             try
             {
                 for (int i = 0; i < lPI.Count; i++)
@@ -1214,7 +1214,7 @@ namespace RApID_Project_WPF
         /// </summary>
         private UnitIssueModel getUnitIssueString(int iUIData)
         {
-            var pmuiReturn = new UnitIssueModel();
+            UnitIssueModel pmuiReturn = new UnitIssueModel();
 
             if (tiUI1.IsEnabled && (iUIData == 0 || iUIData == 1)) //-Will always be enabled but doing 'if' to be uniform
             {
@@ -1265,7 +1265,7 @@ namespace RApID_Project_WPF
         /// <returns>MultiplePartsReplaced object</returns>
         private MultiplePartsReplaced getMPRString()
         {
-            var mpr = new MultiplePartsReplaced();
+            MultiplePartsReplaced mpr = new MultiplePartsReplaced();
 
             if (tiUI1.IsEnabled)
             {
@@ -1292,23 +1292,23 @@ namespace RApID_Project_WPF
         /// <returns>A list of MultiplePartsReplaced objects</returns>
         private List<MultiplePartsReplaced> getMPRString(int iUIData)
         {
-            var mpr = new List<MultiplePartsReplaced>(); //NOTE: Houses the entire list of MultiplePartsReplaced.
+            List<MultiplePartsReplaced> mpr = new List<MultiplePartsReplaced>(); //NOTE: Houses the entire list of MultiplePartsReplaced.
 
             if (tiUI1.IsEnabled && iUIData == 1)
             {
-                var res = mpr.Concat(csCrossClassInteraction.getMPRList(dgMultipleParts));
+                IEnumerable<MultiplePartsReplaced> res = mpr.Concat(csCrossClassInteraction.getMPRList(dgMultipleParts));
                 mpr = res.ToList();
             }
 
             if (tiUI2.IsEnabled && checkForUITabData(2) && iUIData == 2)
             {
-                var res = mpr.Concat(csCrossClassInteraction.getMPRList(dgMultipleParts_2));
+                IEnumerable<MultiplePartsReplaced> res = mpr.Concat(csCrossClassInteraction.getMPRList(dgMultipleParts_2));
                 mpr = res.ToList();
             }
 
             if (tiUI3.IsEnabled && checkForUITabData(3) && iUIData == 3)
             {
-                var res = mpr.Concat(csCrossClassInteraction.getMPRList(dgMultipleParts_3));
+                IEnumerable<MultiplePartsReplaced> res = mpr.Concat(csCrossClassInteraction.getMPRList(dgMultipleParts_3));
                 mpr = res.ToList();
             }
 
@@ -1320,7 +1320,7 @@ namespace RApID_Project_WPF
         /// </summary>
         private List<UnitIssueModel> getUnitIssues()
         {
-            var lMPUI = new List<UnitIssueModel>();
+            List<UnitIssueModel> lMPUI = new List<UnitIssueModel>();
 
             lMPUI.Add(getUnitIssueString(1));
 
@@ -1477,7 +1477,7 @@ namespace RApID_Project_WPF
                         }
                         else
                         {
-                            var mpr = new MultiplePartsReplaced { RefDesignator = txtMultiRefDes_2.Text.TrimEnd(), PartReplaced = txtMultiPartNum_2.Text.TrimEnd(), PartsReplacedPartDescription = _sPRPD };
+                            MultiplePartsReplaced mpr = new MultiplePartsReplaced { RefDesignator = txtMultiRefDes_2.Text.TrimEnd(), PartReplaced = txtMultiPartNum_2.Text.TrimEnd(), PartsReplacedPartDescription = _sPRPD };
                             if (string.IsNullOrEmpty(mpr.PartReplaced) && !string.IsNullOrEmpty(mpr.RefDesignator))
                                 sVar.LogHandler.CreateLogAction(string.Format("Adding Ref Designator '{0}' to dgMultipleParts. Parts Replaced is empty.", mpr.RefDesignator), csLogging.LogState.NOTE);
                             else if (!string.IsNullOrEmpty(mpr.PartReplaced) && string.IsNullOrEmpty(mpr.RefDesignator))
@@ -1535,7 +1535,7 @@ namespace RApID_Project_WPF
                         }
                         else
                         {
-                            var mpr = new MultiplePartsReplaced { RefDesignator = txtMultiRefDes_3.Text.TrimEnd(), PartReplaced = txtMultiPartNum_3.Text.TrimEnd(), PartsReplacedPartDescription = _sPRPD };
+                            MultiplePartsReplaced mpr = new MultiplePartsReplaced { RefDesignator = txtMultiRefDes_3.Text.TrimEnd(), PartReplaced = txtMultiPartNum_3.Text.TrimEnd(), PartsReplacedPartDescription = _sPRPD };
                             if (string.IsNullOrEmpty(mpr.PartReplaced) && !string.IsNullOrEmpty(mpr.RefDesignator))
                                 sVar.LogHandler.CreateLogAction(string.Format("Adding Ref Designator '{0}' to dgMultipleParts. Parts Replaced is empty.", mpr.RefDesignator), csLogging.LogState.NOTE);
                             else if (!string.IsNullOrEmpty(mpr.PartReplaced) && string.IsNullOrEmpty(mpr.RefDesignator))
@@ -1594,7 +1594,7 @@ namespace RApID_Project_WPF
                     }
                     else
                     {
-                        var mpr = new MultiplePartsReplaced { RefDesignator = txtMultiRefDes.Text.TrimEnd(), PartReplaced = txtMultiPartNum.Text.TrimEnd(), PartsReplacedPartDescription = _sPRPD.TrimEnd() };
+                        MultiplePartsReplaced mpr = new MultiplePartsReplaced { RefDesignator = txtMultiRefDes.Text.TrimEnd(), PartReplaced = txtMultiPartNum.Text.TrimEnd(), PartsReplacedPartDescription = _sPRPD.TrimEnd() };
                         if (string.IsNullOrEmpty(mpr.PartReplaced) && !string.IsNullOrEmpty(mpr.RefDesignator))
                             sVar.LogHandler.CreateLogAction(string.Format("Adding Ref Designator '{0}' to dgMultipleParts. Parts Replaced is empty.", mpr.RefDesignator), csLogging.LogState.NOTE);
                         else if (!string.IsNullOrEmpty(mpr.PartReplaced) && string.IsNullOrEmpty(mpr.RefDesignator))
@@ -1639,7 +1639,7 @@ namespace RApID_Project_WPF
             {
                 if (dgPrevRepairInfo.SelectedItem != null)
                 {
-                    var pri = new frmProductionPRI((PreviousRepairInformation)dgPrevRepairInfo.SelectedItem)
+                    frmProductionPRI pri = new frmProductionPRI((PreviousRepairInformation)dgPrevRepairInfo.SelectedItem)
                     {
                         Owner = this
                     };
@@ -1654,7 +1654,7 @@ namespace RApID_Project_WPF
 
         private void previewInput(object sender, TextCompositionEventArgs e)
         {
-            var regex = new Regex("[^0-9]+");
+            Regex regex = new Regex("[^0-9]+");
             e.Handled = regex.IsMatch(e.Text);
         }
 
@@ -1807,11 +1807,11 @@ namespace RApID_Project_WPF
 
         private void dataGrid_KeyUp(object sender, KeyEventArgs e)
         {
-            var grid = ((DataGrid)sender);
+            DataGrid grid = ((DataGrid)sender);
 
             if (e.Key == Key.Delete && grid.SelectedItem != null)
             {
-                var row = (DataGridRow)dgBOMList.ItemContainerGenerator.ContainerFromItem(grid.SelectedItem);
+                DataGridRow row = (DataGridRow)dgBOMList.ItemContainerGenerator.ContainerFromItem(grid.SelectedItem);
                 if (row != null) { row.Foreground = Brushes.Black; row.Background = Brushes.White; }
                 grid.Items.Remove(grid.SelectedItem);
             }
@@ -1842,7 +1842,7 @@ namespace RApID_Project_WPF
         {
             sVar.LogHandler.CreateLogAction((ComboBox)sender, csLogging.LogState.DROPDOWNCLOSED);
 
-            var cmbx = (ComboBox)sender;
+            ComboBox cmbx = (ComboBox)sender;
             var chosenOption = ((Control)sender).Name.ToString();
 
             if (!chosenOption.Equals("cbFromArea"))
@@ -1979,12 +1979,12 @@ namespace RApID_Project_WPF
 
         private void dgBOMList_MouseDoubleClick(object sender, MouseButtonEventArgs e)
         {
-            var targetGrid = (DataGrid)(tcUnitIssues.SelectedContent as Grid).FindName($"dgMultipleParts{(tcUnitIssues.SelectedIndex > 0 ? $"_{tcUnitIssues.SelectedIndex + 1}" : "")}");
-            var item = (MultiplePartsReplaced)dgBOMList.SelectedItem;
+            DataGrid targetGrid = (DataGrid)(tcUnitIssues.SelectedContent as Grid).FindName($"dgMultipleParts{(tcUnitIssues.SelectedIndex > 0 ? $"_{tcUnitIssues.SelectedIndex + 1}" : "")}");
+            MultiplePartsReplaced item = (MultiplePartsReplaced)dgBOMList.SelectedItem;
 
             if (!targetGrid.Items.Contains(item))
             {
-                var row = (DataGridRow)dgBOMList.ItemContainerGenerator.ContainerFromIndex(dgBOMList.SelectedIndex);
+                DataGridRow row = (DataGridRow)dgBOMList.ItemContainerGenerator.ContainerFromIndex(dgBOMList.SelectedIndex);
                 if (row != null) { row.Foreground = Brushes.White; row.Background = Brushes.DarkGreen; }
                 targetGrid.Items.Add(item);
             }
@@ -1995,16 +1995,16 @@ namespace RApID_Project_WPF
         {
             try
             {
-                var targetGrid = (DataGrid)(tcUnitIssues.SelectedContent as Grid).FindName($"dgMultipleParts{(tcUnitIssues.SelectedIndex > 0 ? $"_{tcUnitIssues.SelectedIndex + 1}" : "")}");
+                DataGrid targetGrid = (DataGrid)(tcUnitIssues.SelectedContent as Grid).FindName($"dgMultipleParts{(tcUnitIssues.SelectedIndex > 0 ? $"_{tcUnitIssues.SelectedIndex + 1}" : "")}");
                 var pgridIndex = int.Parse(PrevGrid.Name.Last().ToString());
-                var prevGrid = (DataGrid)PrevGrid.FindName($"dgMultipleParts{(pgridIndex > 0 ? $"_{pgridIndex + 1}" : "")}");
+                DataGrid prevGrid = (DataGrid)PrevGrid.FindName($"dgMultipleParts{(pgridIndex > 0 ? $"_{pgridIndex + 1}" : "")}");
                 if (prevGrid != null)
                 {
                     foreach (MultiplePartsReplaced mpr in prevGrid.Items)
                     {
                         if (dgBOMList.Items.Contains(mpr))
                         {
-                            var row = (DataGridRow)dgBOMList.ItemContainerGenerator.ContainerFromItem(mpr);
+                            DataGridRow row = (DataGridRow)dgBOMList.ItemContainerGenerator.ContainerFromItem(mpr);
                             if (row != null) { row.Foreground = Brushes.Black; row.Background = Brushes.White; }
                         }
                     }
@@ -2014,7 +2014,7 @@ namespace RApID_Project_WPF
                 {
                     if (dgBOMList.Items.Contains(mpr))
                     {
-                        var row = (DataGridRow)dgBOMList.ItemContainerGenerator.ContainerFromItem(mpr);
+                        DataGridRow row = (DataGridRow)dgBOMList.ItemContainerGenerator.ContainerFromItem(mpr);
                         if (row != null) { row.Foreground = Brushes.White; row.Background = Brushes.DarkGreen; }
                     }
                 }

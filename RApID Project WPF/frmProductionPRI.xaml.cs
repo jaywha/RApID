@@ -30,23 +30,23 @@ namespace RApID_Project_WPF
 
         private bool loadPRI()
         {
-            var conn = new SqlConnection(holder.RepairConnectionString);
+            SqlConnection conn = new SqlConnection(holder.RepairConnectionString);
 
             string query = "SELECT * FROM TechnicianSubmission WHERE ID = '" + PRI.ID + "'"; 
             string logQuery = "SELECT * FROM TechLogs WHERE ID = @logID";
             string actionQuery = "SELECT * FROM TechLogActions WHERE ActionID = @aid";
             string unitIssueQuery = $"SELECT * FROM TechnicianUnitIssues WHERE ID = '{PRI.ID}'";
 
-            var cmd = new SqlCommand(query, conn);
-            var logCmd = new SqlCommand(logQuery, conn);
-            var actionCmd = new SqlCommand(actionQuery, conn);
-            var unitIssueCmd = new SqlCommand(unitIssueQuery, conn);
+            SqlCommand cmd = new SqlCommand(query, conn);
+            SqlCommand logCmd = new SqlCommand(logQuery, conn);
+            SqlCommand actionCmd = new SqlCommand(actionQuery, conn);
+            SqlCommand unitIssueCmd = new SqlCommand(unitIssueQuery, conn);
 
             try
             {
                 conn.Open();
 
-                using (var reader = cmd.ExecuteReader())
+                using (SqlDataReader reader = cmd.ExecuteReader())
                 {
                     while (reader.Read())
                     {
@@ -73,7 +73,7 @@ namespace RApID_Project_WPF
                     }
                 }
 
-                using(var reader = unitIssueCmd.ExecuteReader())
+                using(SqlDataReader reader = unitIssueCmd.ExecuteReader())
                 {
                     while(reader.Read())
                     {
@@ -97,7 +97,7 @@ namespace RApID_Project_WPF
                             continue;
                         }
 
-                        var (Tab, ActualTabIndex) = ucIssues.AddTabItem();
+                        (System.Windows.Controls.TabItem Tab, int ActualTabIndex) = ucIssues.AddTabItem();
                         ucIssues[ActualTabIndex].FillUnitIssue(
                             reader["ReportedIssue"].ToString().EmptyIfNull(),
                             reader["TestResult"].ToString().EmptyIfNull(),
@@ -126,7 +126,7 @@ namespace RApID_Project_WPF
 
                 ucTechActions.Visibility = Visibility.Visible;
 
-                using (var reader = logCmd.ExecuteReader())
+                using (SqlDataReader reader = logCmd.ExecuteReader())
                 {
                     reader.Read(); // only one record
 
@@ -140,11 +140,11 @@ namespace RApID_Project_WPF
                 }
 
                 ucTechActions.LogToView.lActions = new System.Collections.Generic.List<csLogAction>();
-                using (var reader = actionCmd.ExecuteReader())
+                using (SqlDataReader reader = actionCmd.ExecuteReader())
                 {
                     while(reader.Read())
                     {
-                        var @action = new csLogAction()
+                        csLogAction @action = new csLogAction()
                         {
                             ControlType = reader["ControlType"].ToString().EmptyIfNull(),
                             ControlName = reader["ControlName"].ToString().EmptyIfNull(),

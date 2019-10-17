@@ -173,11 +173,6 @@
     <Compile Include="..\..\Linked Items\csSQL\csSQL\csSQLClass.cs">
       <Link>csSQLClass.cs</Link>
     </Compile>
-    <Compile Include="BoardAliasDataSet.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>BoardAliasDataSet.xsd</DependentUpon>
-    </Compile>
     <Compile Include="Classes\csClassHelper.cs" />
     <Compile Include="Classes\csCrossClassInteraction.cs" />
     <Compile Include="Classes\csPrintQCDQELabel.cs" />
@@ -192,11 +187,11 @@
     <Compile Include="CustomControls\AssemblyLinkLabel.Designer.cs">
       <DependentUpon>AssemblyLinkLabel.cs</DependentUpon>
     </Compile>
-    <Compile Include="frmBoardAliases.cs">
+    <Compile Include="frmBoardFileManager.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="frmBoardAliases.Designer.cs">
-      <DependentUpon>frmBoardAliases.cs</DependentUpon>
+    <Compile Include="frmBoardFileManager.Designer.cs">
+      <DependentUpon>frmBoardFileManager.cs</DependentUpon>
     </Compile>
     <Compile Include="frmFullCustomerInformation.xaml.cs">
       <DependentUpon>frmFullCustomerInformation.xaml</DependentUpon>
@@ -245,10 +240,10 @@
     <Compile Include="Classes\ServiceManager.cs" />
     <Compile Include="Classes\Settings.cs" />
     <Compile Include="Classes\StaticVars.cs" />
-    <Compile Include="PCBAAliasesDataSet.Designer.cs">
+    <Compile Include="PCBAliasDataSet.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
-      <DependentUpon>PCBAAliasesDataSet.xsd</DependentUpon>
+      <DependentUpon>PCBAliasDataSet.xsd</DependentUpon>
     </Compile>
     <Compile Include="TestWindow.xaml.cs">
       <DependentUpon>TestWindow.xaml</DependentUpon>
@@ -401,35 +396,24 @@
     <EmbeddedResource Include="CustomControls\AssemblyLinkLabel.resx">
       <DependentUpon>AssemblyLinkLabel.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="frmBoardAliases.resx">
-      <DependentUpon>frmBoardAliases.cs</DependentUpon>
+    <EmbeddedResource Include="frmBoardFileManager.resx">
+      <DependentUpon>frmBoardFileManager.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
-    <None Include="BoardAliasDataSet.xsc">
-      <DependentUpon>BoardAliasDataSet.xsd</DependentUpon>
-    </None>
-    <None Include="BoardAliasDataSet.xsd">
-      <Generator>MSDataSetGenerator</Generator>
-      <LastGenOutput>BoardAliasDataSet.Designer.cs</LastGenOutput>
-      <SubType>Designer</SubType>
-    </None>
-    <None Include="BoardAliasDataSet.xss">
-      <DependentUpon>BoardAliasDataSet.xsd</DependentUpon>
-    </None>
     <None Include="packages.config" />
-    <None Include="PCBAAliasesDataSet.xsc">
-      <DependentUpon>PCBAAliasesDataSet.xsd</DependentUpon>
+    <None Include="PCBAliasDataSet.xsc">
+      <DependentUpon>PCBAliasDataSet.xsd</DependentUpon>
     </None>
-    <None Include="PCBAAliasesDataSet.xsd">
+    <None Include="PCBAliasDataSet.xsd">
       <Generator>MSDataSetGenerator</Generator>
-      <LastGenOutput>PCBAAliasesDataSet.Designer.cs</LastGenOutput>
+      <LastGenOutput>PCBAliasDataSet.Designer.cs</LastGenOutput>
       <SubType>Designer</SubType>
     </None>
-    <None Include="PCBAAliasesDataSet.xss">
-      <DependentUpon>PCBAAliasesDataSet.xsd</DependentUpon>
+    <None Include="PCBAliasDataSet.xss">
+      <DependentUpon>PCBAliasDataSet.xsd</DependentUpon>
     </None>
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>

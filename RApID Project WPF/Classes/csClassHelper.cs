@@ -21,7 +21,7 @@ namespace RApID_Project_WPF
         /// <returns>DataGridTextColumn</returns>
         public static System.Windows.Controls.DataGridTextColumn newColumn(string _header, string _binding)
         {
-            var newCol = new System.Windows.Controls.DataGridTextColumn();
+            System.Windows.Controls.DataGridTextColumn newCol = new System.Windows.Controls.DataGridTextColumn();
             newCol.Header = _header;
             newCol.Binding = new System.Windows.Data.Binding(_binding);
             return newCol;
@@ -126,7 +126,7 @@ namespace RApID_Project_WPF
             if(MultiPartsReplaced != null && MultiPartsReplaced.Count > 0)
             {
                 str += $"\tMultiple Parts Replaced {{\n";
-                foreach(var part in MultiPartsReplaced)
+                foreach(MultiplePartsReplaced part in MultiPartsReplaced)
                 {
                     str += $"\t\t{part.ToString()}\n";
                 }

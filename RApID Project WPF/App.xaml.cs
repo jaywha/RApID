@@ -24,7 +24,7 @@ namespace RApID_Project_WPF
                 Directory.CreateDirectory(csExceptionLogger.csExceptionLogger.DefaultLogLocation);
             }
 
-            var application = new App();
+            App application = new App();
             application.InitializeComponent();
             application.Run();
         }

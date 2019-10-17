@@ -110,11 +110,11 @@ namespace RApID_Project_WPF
         {
             try
             {
-                using (var mapper = csSerialNumberMapper.Instance)
+                using (csSerialNumberMapper mapper = csSerialNumberMapper.Instance)
                 {
                     await Task.Factory.StartNew(new Action(() => // in new task
                     {
-                        var mapOps = Dispatcher.BeginInvoke(new Action(async () => // perform dispatched UI actions
+                        DispatcherOperation mapOps = Dispatcher.BeginInvoke(new Action(async () => // perform dispatched UI actions
                         {
                             Console.WriteLine("(TestWindow.xaml.cs) ==> Mapper successfully started...");
                             if (!mapper.GetData(txtSerialNumber.Text))
@@ -125,7 +125,7 @@ namespace RApID_Project_WPF
                             else
                             {
                                 MessageBox.Show(mapper.Success(), "DEBUG", MessageBoxButton.OK, MessageBoxImage.Information);
-                                var result = await mapper.FindFileAsync(".xls");
+                                (string filename, bool found) result = await mapper.FindFileAsync(".xls");
                                 csCrossClassInteraction.DoExcelOperations(result.filename, progMapper,
                                 new Tuple<Control, Control>(unitIssue.cmbxRefDesignator, unitIssue.cmbxPartNumber));
 
@@ -171,7 +171,7 @@ namespace RApID_Project_WPF
 
         private void pcbaalias_click(object sender, RoutedEventArgs e)
         {
-            var frm = new frmBoardAliases();
+            frmBoardFileManager frm = new frmBoardFileManager();
             frm.ShowDialog();
         }
     }

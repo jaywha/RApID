@@ -45,7 +45,7 @@ namespace RApID_Project_WPF
             }
             else
             {
-                var printLabel = new csPrintQCDQELabel(cbLocation.Text.ToString(), System.Environment.UserName, DateTime.Now.ToString("MM/dd/yyyy hh:mm tt"), txtQCDQEID.Text.ToString());
+                csPrintQCDQELabel printLabel = new csPrintQCDQELabel(cbLocation.Text.ToString(), System.Environment.UserName, DateTime.Now.ToString("MM/dd/yyyy hh:mm tt"), txtQCDQEID.Text.ToString());
                 printLabel.PrintLabel();
             }
         }
@@ -57,7 +57,7 @@ namespace RApID_Project_WPF
 
         private void txtQCDQEID_TextChanged(object sender, TextChangedEventArgs e)
         {
-            var pattern = new Regex(@"^\d+$");
+            Regex pattern = new Regex(@"^\d+$");
             if(!pattern.IsMatch(((TextBox)sender).Text))
             {
                 MessageBox.Show("Please only enter numbers for the ID.",

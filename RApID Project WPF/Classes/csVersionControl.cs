@@ -18,14 +18,14 @@ namespace RApID_Project_WPF
         public double CurrentVersion
         {
             get; private set;
-        } = 1.3;
+        } = 1.4;
         public DispatcherTimer tVersionChecker;
 
         private void tVersionChecker_Tick(object sender, EventArgs e)
         {
             try
             {
-                using (var reader = new StreamReader(_fileCheckLocation))
+                using (StreamReader reader = new StreamReader(_fileCheckLocation))
                 {
                     string sVer = reader.ReadLine();
                     double dVer = Convert.ToDouble(sVer);

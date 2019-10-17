@@ -54,7 +54,7 @@ namespace RApID_Project_WPF
 
             //-Convert the timestamp of the file into a format we can understand.
             string sFormat = "MMddyyhhmmsstt";
-            var res = DateTime.ParseExact(sSplit[1], sFormat, CultureInfo.InvariantCulture);
+            DateTime res = DateTime.ParseExact(sSplit[1], sFormat, CultureInfo.InvariantCulture);
 
             _logDispName = $"{sSplit[0]}: {res.ToString("MM/dd/yyyy hh:mm:ss tt")}";
         }
@@ -138,7 +138,7 @@ namespace RApID_Project_WPF
                         for (int i = 0; i < Files.Length; i++)
                         {
                             string[] sFileSplit = Files[i].Split(splitters, StringSplitOptions.RemoveEmptyEntries);
-                            var li = new LogInfo(lbTechList.SelectedItem.ToString(), sFileSplit[sFileSplit.Length - 1]);
+                            LogInfo li = new LogInfo(lbTechList.SelectedItem.ToString(), sFileSplit[sFileSplit.Length - 1]);
                             if (li.LogDisplayName.Contains("2016") || li.LogDisplayName.Contains("2017")) continue;
                             lbLogsToView.Items.Add(li.LogDisplayName);
                             lLogList.Add(li);

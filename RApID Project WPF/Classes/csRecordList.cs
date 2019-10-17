@@ -39,7 +39,7 @@ namespace RApID_Project_WPF
         internal async Task GetData(CancellationToken cancelation, Label lbl, ProgressBar prog, Dispatcher UIThread, string _query = "",
             string lblMsg = "", string notifyTitle = "", string notifyMsg = "")
         {
-            var recs = new List<Record>();
+            List<Record> recs = new List<Record>();
             if (string.IsNullOrEmpty(_query))
             {
                 _query = $"SELECT * FROM [Repair].[dbo].[TechnicianSubmission]";
@@ -49,11 +49,11 @@ namespace RApID_Project_WPF
 
             await Task.Factory.StartNew(() =>
             {
-                using (var conn = new SqlConnection(csObjectHolder.csObjectHolder.ObjectHolderInstance().RepairConnectionString))
+                using (SqlConnection conn = new SqlConnection(csObjectHolder.csObjectHolder.ObjectHolderInstance().RepairConnectionString))
                 {
                     conn.Open();
                     #region SqlDataReader
-                    using (var reader = new SqlCommand(_query, conn).ExecuteReader())
+                    using (SqlDataReader reader = new SqlCommand(_query, conn).ExecuteReader())
                     {
                         while (reader.Read())
                         {
@@ -601,7 +601,7 @@ namespace RApID_Project_WPF
         {
             int vindex = 0;
 
-            var newRecord = new Record();
+            Record newRecord = new Record();
 
             if (vals[vindex] == null || vals[vindex] == DBNull.Value) { vals[vindex] = Default.Value; }
             newRecord.ID = int.TryParse(vals[vindex]?.ToString(), out int id_res) ? id_res : 0; vindex++;

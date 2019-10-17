@@ -44,8 +44,8 @@ namespace RApID_Project_WPF
                 query = "SELECT DISTINCT PossibleAssemblies, ProductName FROM ProductTestParams ORDER BY ProductName ASC";
             else query = "Select DISTINCT PartNumber, PartName From ItemMaster Where XRefCode = 'UC' OR XRefCode = 'XD' Order By PartName ASC";
 
-            var conn = new SqlConnection(holder.HummingBirdConnectionString);
-            var cmd = new SqlCommand(query, conn);
+            SqlConnection conn = new SqlConnection(holder.HummingBirdConnectionString);
+            SqlCommand cmd = new SqlCommand(query, conn);
             try
             {
                 conn.Open();
@@ -105,8 +105,8 @@ namespace RApID_Project_WPF
             {
                 try
                 {
-                    var drv = (DataRowView)dgvPartNumber.SelectedItem;
-                    var selItem = new DGVPARTNUMNAMEITEM() { PartNumber = drv[0].ToString(), PartName = drv[1].ToString(), PartSeries = csCrossClassInteraction.SeriesQuery(drv[0].ToString()) };
+                    DataRowView drv = (DataRowView)dgvPartNumber.SelectedItem;
+                    DGVPARTNUMNAMEITEM selItem = new DGVPARTNUMNAMEITEM() { PartNumber = drv[0].ToString(), PartName = drv[1].ToString(), PartSeries = csCrossClassInteraction.SeriesQuery(drv[0].ToString()) };
                     sVar.SelectedPartNumberPartName = selItem;
                     sVar.SelectedPartNumberPartName.PartNumberSelected = true;
                     this.Close();
@@ -135,7 +135,7 @@ namespace RApID_Project_WPF
         {
             try
             {
-                var dtSearch = new DataTable();
+                DataTable dtSearch = new DataTable();
                 dtSearch.Columns.Add("Part Number");
                 dtSearch.Columns.Add("Part Name");
                 string dtQuery = (!string.IsNullOrEmpty(txtSearchName.Text))
