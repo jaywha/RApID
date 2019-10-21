@@ -15,6 +15,7 @@ using System.Data.Sql;
 using System.Data.SqlClient;
 using RApID_Project_WPF;
 using System.Threading;
+using System.Windows.Forms;
 
 namespace EricStabileLibrary
 {
@@ -76,6 +77,40 @@ namespace EricStabileLibrary
     /// </summary>
     public static class Extensions
     {
+        /// <summary>
+        /// Aggregates all of the <paramref name="elements"/> using their <see cref="string.ToString"/>
+        /// with an appended <see cref="Environment.NewLine"/>
+        /// </summary>
+        /// <typeparam name="T">{Generic Type}</typeparam>
+        /// <param name="elements">List of <typeparamref name="T"/> elements</param>
+        /// <param name="prefix">[Optional] string prefix for each element </param>
+        /// <param name="suffix">[Optional] string suffix for each element </param>
+        /// <returns><see cref="ToStrings{T}(IList{T}, string, string)"/>+<see cref="Environment.NewLine"/></returns>
+        public static string ToStringsln<T>(this IList<T> elements,
+            string prefix = "",
+            string suffix = "")
+            => ToStrings(elements, prefix, suffix) + Environment.NewLine;
+
+        /// <summary>
+        /// Aggregates all of the <paramref name="elements"/> using their <see cref="string.ToString"/>
+        /// </summary>
+        /// <typeparam name="T">{Generic Type}</typeparam>
+        /// <param name="elements">List of <typeparamref name="T"/> elements</param>
+        /// <param name="prefix">[Optional] string prefix for each element </param>
+        /// <param name="suffix">[Optional] string suffix for each element </param>
+        /// <returns>A single string of each element</returns>
+        public static string ToStrings<T>(this IList<T> elements, 
+            string prefix = "",
+            string suffix = "")
+        {
+            string result = "";
+            foreach(T element in elements)
+            {
+                result += prefix  + element.ToString() + suffix;
+            }
+            return result.Remove(result.Length-suffix.Length);
+        }
+
         /// <summary>
         /// Quick extension method for forcing combo boxes to accept manual input.
         /// </summary>

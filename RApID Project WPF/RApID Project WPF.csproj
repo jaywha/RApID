@@ -140,6 +140,7 @@
     <Reference Include="System.DirectoryServices.AccountManagement" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.IO.Compression" />
+    <Reference Include="System.Messaging" />
     <Reference Include="System.Runtime.Caching" />
     <Reference Include="System.ValueTuple, Version=4.0.2.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
       <HintPath>..\packages\System.ValueTuple.4.4.0\lib\net461\System.ValueTuple.dll</HintPath>
@@ -428,6 +429,7 @@
     <WCFMetadata Include="Service References\" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Resources\Board.png" />
     <None Include="Resources\refresh.png" />
     <Resource Include="Resources\trashcan.png" />
     <Resource Include="Resources\close.png" />

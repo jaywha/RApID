@@ -6,6 +6,7 @@ using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -38,7 +39,9 @@ namespace RApID_Project_WPF.CustomControls
         /// <param name="link">[Optional] Sets this <see cref="Link"/></param>
         /// <param name="displayText">[Optional] Sets this <see cref="LinkLabel.Text"/></param>
         /// <param name="img">[Optional] The image icon for this file extension.</param>
-        public AssemblyLinkLabel(string link = "", string displayText = "", Image img = null)
+        /// <param name="name">[Optional] The name of this control. </param>
+        public AssemblyLinkLabel(string link = "", string displayText = "", Image img = null,
+            string name = "")
         {
             if (!string.IsNullOrWhiteSpace(link))
             {
@@ -48,6 +51,11 @@ namespace RApID_Project_WPF.CustomControls
             if (!string.IsNullOrWhiteSpace(displayText))
             {
                 Text = displayText;
+            }
+
+            if (!string.IsNullOrWhiteSpace(name))
+            {
+                Name = name;
             }
 
             if(img != null) Image = img;
