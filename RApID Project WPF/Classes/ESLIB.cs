@@ -81,7 +81,7 @@ namespace EricStabileLibrary
         /// Aggregates all of the <paramref name="elements"/> using their <see cref="string.ToString"/>
         /// with an appended <see cref="Environment.NewLine"/>
         /// </summary>
-        /// <typeparam name="T">{Generic Type}</typeparam>
+        /// <typeparam name="T">{Generic Type Parameter}</typeparam>
         /// <param name="elements">List of <typeparamref name="T"/> elements</param>
         /// <param name="prefix">[Optional] string prefix for each element </param>
         /// <param name="suffix">[Optional] string suffix for each element </param>
@@ -94,7 +94,7 @@ namespace EricStabileLibrary
         /// <summary>
         /// Aggregates all of the <paramref name="elements"/> using their <see cref="string.ToString"/>
         /// </summary>
-        /// <typeparam name="T">{Generic Type}</typeparam>
+        /// <typeparam name="T">{Generic Type Parameter}</typeparam>
         /// <param name="elements">List of <typeparamref name="T"/> elements</param>
         /// <param name="prefix">[Optional] string prefix for each element </param>
         /// <param name="suffix">[Optional] string suffix for each element </param>
@@ -103,11 +103,13 @@ namespace EricStabileLibrary
             string prefix = "",
             string suffix = "")
         {
-            string result = "";
+            StringBuilder builder = new StringBuilder();
+            if (elements == null || elements.Count == 0) return string.Empty;
             foreach(T element in elements)
             {
-                result += prefix  + element.ToString() + suffix;
+                builder.Append(prefix  + element.ToString() + suffix);
             }
+            string result = builder.ToString();
             return result.Remove(result.Length-suffix.Length);
         }
 
@@ -120,6 +122,21 @@ namespace EricStabileLibrary
             cmbx.IsReadOnly = false;
             cmbx.IsEnabled = true;
             cmbx.IsEditable = true;
+        }
+
+        /// <summary>
+        /// Will add each element's ToString() result to an <see cref="AutoCompleteStringCollection"/>
+        /// </summary>
+        /// <typeparam name="T">{Generic Type Parameter}</typeparam>
+        /// <param name="list">The calling list about to be converted.</param>
+        /// <returns>The <see cref="AutoCompleteStringCollection"/> containing <paramref name="list"/>'s elements</returns>
+        public static AutoCompleteStringCollection AsAutoCompleteStringCollection<T>(this IList<T> list) {
+            AutoCompleteStringCollection result = new AutoCompleteStringCollection();
+            foreach(T element in list)
+            {
+                result.Add(element.ToString());
+            }
+            return result;
         }
 
         /// <summary>

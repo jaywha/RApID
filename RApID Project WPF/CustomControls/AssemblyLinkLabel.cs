@@ -6,6 +6,7 @@ using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Linq;
+using System.Media;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
@@ -91,26 +92,33 @@ namespace RApID_Project_WPF.CustomControls
         /// <summary> Will start the default associated process on the linked item. </summary>
         public void Activate()
         {
+            if (Link == null) SystemSounds.Exclamation.Play();
+
             try
             {
                 Console.WriteLine(ToString() + "\n\t|--> Link Activated!\n");
                 Process.Start(Link);
             }
+            catch (ArgumentException ae) {
+                csExceptionLogger.csExceptionLogger.Write($"Link_Activate", ae);
+                MessageBox.Show("The path used bad characters!",
+                    "Link::Activate() - ArgumentException", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
             catch (Win32Exception wex)
             {
-                csExceptionLogger.csExceptionLogger.Write($"Link_Activate->({Link})", wex);
+                csExceptionLogger.csExceptionLogger.Write($"Link_Activate)", wex);
                 MessageBox.Show("Couldn't start the process meant for this link.\nPlease ensure you have permission to access the path given.",
                     "Link::Activate() - Win32Exception", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
             catch (ObjectDisposedException ode)
             {
-                csExceptionLogger.csExceptionLogger.Write($"Link_Activate->({Link})", ode);
+                csExceptionLogger.csExceptionLogger.Write($"Link_Activate", ode);
                 MessageBox.Show("The process object was disposed before the process stopped!",
                     "Link::Activate() - ObjectDisposedException", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
             catch (FileNotFoundException fnfe)
             {
-                csExceptionLogger.csExceptionLogger.Write($"Link_Activate->({Link})", fnfe);
+                csExceptionLogger.csExceptionLogger.Write($"Link_Activate", fnfe);
                 MessageBox.Show("Couldn't find the file specificed in the link!",
                     "Link::Activate() - FileNotFoundException", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }

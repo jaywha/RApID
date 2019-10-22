@@ -29,11 +29,11 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle5 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle6 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmBoardFileManager));
-            this.cxmnuLinkMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.cxmnuSchematicLinksMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.changeFilePathToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.deleteSchematicLinkToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -51,6 +51,7 @@
             this.lblPartName = new System.Windows.Forms.Label();
             this.spltpnlAliasToDetail = new System.Windows.Forms.SplitContainer();
             this.panel1 = new System.Windows.Forms.Panel();
+            this.pbxBoard = new System.Windows.Forms.PictureBox();
             this.pnlFilePaths = new System.Windows.Forms.Panel();
             this.grpbxSchematicFiles = new System.Windows.Forms.GroupBox();
             this.flowSchematicLinks = new System.Windows.Forms.FlowLayoutPanel();
@@ -64,18 +65,15 @@
             this.bOMFileNameDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.schematicPathsDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.cxmnuDatabaseMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.refreshToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.pCBAAliasesBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.pCBAliasDataSet = new RApID_Project_WPF.PCBAliasDataSet();
-            this.cxmnuAliasesMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
-            this.deleteAliasToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.imgSchematics = new System.Windows.Forms.ImageList(this.components);
             this.lblWarning = new System.Windows.Forms.Label();
             this.spltpnlMain = new System.Windows.Forms.SplitContainer();
             this.errorProvider = new System.Windows.Forms.ErrorProvider(this.components);
             this.pCBAAliasesTableAdapter = new RApID_Project_WPF.PCBAliasDataSetTableAdapters.PCBAAliasesTableAdapter();
-            this.pbxBoard = new System.Windows.Forms.PictureBox();
-            this.refreshToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.cxmnuLinkMenu.SuspendLayout();
+            this.cxmnuSchematicLinksMenu.SuspendLayout();
             this.tcDataViewer.SuspendLayout();
             this.tbTechnicianView.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.spltpnlTechView)).BeginInit();
@@ -93,6 +91,7 @@
             this.spltpnlAliasToDetail.Panel2.SuspendLayout();
             this.spltpnlAliasToDetail.SuspendLayout();
             this.panel1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pbxBoard)).BeginInit();
             this.pnlFilePaths.SuspendLayout();
             this.grpbxSchematicFiles.SuspendLayout();
             this.grpbxBOMLinkHolder.SuspendLayout();
@@ -101,23 +100,21 @@
             this.cxmnuDatabaseMenu.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pCBAAliasesBindingSource)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pCBAliasDataSet)).BeginInit();
-            this.cxmnuAliasesMenu.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.spltpnlMain)).BeginInit();
             this.spltpnlMain.Panel1.SuspendLayout();
             this.spltpnlMain.Panel2.SuspendLayout();
             this.spltpnlMain.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.errorProvider)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pbxBoard)).BeginInit();
             this.SuspendLayout();
             // 
-            // cxmnuLinkMenu
+            // cxmnuSchematicLinksMenu
             // 
-            this.cxmnuLinkMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.cxmnuSchematicLinksMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.changeFilePathToolStripMenuItem,
             this.toolStripSeparator1,
             this.deleteSchematicLinkToolStripMenuItem});
-            this.cxmnuLinkMenu.Name = "cxmnuLinkMenu";
-            this.cxmnuLinkMenu.Size = new System.Drawing.Size(200, 54);
+            this.cxmnuSchematicLinksMenu.Name = "cxmnuLinkMenu";
+            this.cxmnuSchematicLinksMenu.Size = new System.Drawing.Size(200, 54);
             // 
             // changeFilePathToolStripMenuItem
             // 
@@ -317,6 +314,17 @@
             this.panel1.Size = new System.Drawing.Size(262, 213);
             this.panel1.TabIndex = 0;
             // 
+            // pbxBoard
+            // 
+            this.pbxBoard.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.pbxBoard.Image = global::RApID_Project_WPF.Properties.Resources.Board;
+            this.pbxBoard.Location = new System.Drawing.Point(0, 0);
+            this.pbxBoard.Name = "pbxBoard";
+            this.pbxBoard.Size = new System.Drawing.Size(262, 213);
+            this.pbxBoard.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            this.pbxBoard.TabIndex = 0;
+            this.pbxBoard.TabStop = false;
+            // 
             // pnlFilePaths
             // 
             this.pnlFilePaths.BackColor = System.Drawing.Color.Black;
@@ -417,14 +425,14 @@
             this.dgvDatabaseTable.AllowUserToDeleteRows = false;
             this.dgvDatabaseTable.AutoGenerateColumns = false;
             this.dgvDatabaseTable.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
-            dataGridViewCellStyle4.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle4.BackColor = System.Drawing.SystemColors.Control;
-            dataGridViewCellStyle4.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle4.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle4.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle4.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle4.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.dgvDatabaseTable.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle4;
+            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle1.BackColor = System.Drawing.SystemColors.Control;
+            dataGridViewCellStyle1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle1.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle1.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle1.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.dgvDatabaseTable.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle1;
             this.dgvDatabaseTable.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dgvDatabaseTable.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.partNumberDataGridViewTextBoxColumn,
@@ -433,26 +441,26 @@
             this.schematicPathsDataGridViewTextBoxColumn});
             this.dgvDatabaseTable.ContextMenuStrip = this.cxmnuDatabaseMenu;
             this.dgvDatabaseTable.DataSource = this.pCBAAliasesBindingSource;
-            dataGridViewCellStyle5.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle5.BackColor = System.Drawing.Color.DimGray;
-            dataGridViewCellStyle5.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle5.ForeColor = System.Drawing.SystemColors.ButtonHighlight;
-            dataGridViewCellStyle5.SelectionBackColor = System.Drawing.SystemColors.HotTrack;
-            dataGridViewCellStyle5.SelectionForeColor = System.Drawing.SystemColors.ControlLightLight;
-            dataGridViewCellStyle5.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
-            this.dgvDatabaseTable.DefaultCellStyle = dataGridViewCellStyle5;
+            dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle2.BackColor = System.Drawing.Color.DimGray;
+            dataGridViewCellStyle2.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle2.ForeColor = System.Drawing.SystemColors.ButtonHighlight;
+            dataGridViewCellStyle2.SelectionBackColor = System.Drawing.SystemColors.HotTrack;
+            dataGridViewCellStyle2.SelectionForeColor = System.Drawing.SystemColors.ControlLightLight;
+            dataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+            this.dgvDatabaseTable.DefaultCellStyle = dataGridViewCellStyle2;
             this.dgvDatabaseTable.Dock = System.Windows.Forms.DockStyle.Fill;
             this.dgvDatabaseTable.Location = new System.Drawing.Point(3, 3);
             this.dgvDatabaseTable.Name = "dgvDatabaseTable";
             this.dgvDatabaseTable.ReadOnly = true;
-            dataGridViewCellStyle6.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle6.BackColor = System.Drawing.SystemColors.Control;
-            dataGridViewCellStyle6.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle6.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle6.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle6.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle6.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.dgvDatabaseTable.RowHeadersDefaultCellStyle = dataGridViewCellStyle6;
+            dataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle3.BackColor = System.Drawing.SystemColors.Control;
+            dataGridViewCellStyle3.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle3.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle3.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle3.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle3.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.dgvDatabaseTable.RowHeadersDefaultCellStyle = dataGridViewCellStyle3;
             this.dgvDatabaseTable.Size = new System.Drawing.Size(786, 397);
             this.dgvDatabaseTable.TabIndex = 0;
             // 
@@ -489,7 +497,15 @@
             this.cxmnuDatabaseMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.refreshToolStripMenuItem});
             this.cxmnuDatabaseMenu.Name = "cxmnuDatabaseMenu";
-            this.cxmnuDatabaseMenu.Size = new System.Drawing.Size(114, 26);
+            this.cxmnuDatabaseMenu.Size = new System.Drawing.Size(181, 48);
+            // 
+            // refreshToolStripMenuItem
+            // 
+            this.refreshToolStripMenuItem.Image = global::RApID_Project_WPF.Properties.Resources.refresh;
+            this.refreshToolStripMenuItem.Name = "refreshToolStripMenuItem";
+            this.refreshToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.refreshToolStripMenuItem.Text = "Refresh";
+            this.refreshToolStripMenuItem.Click += new System.EventHandler(this.refreshToolStripMenuItem_Click);
             // 
             // pCBAAliasesBindingSource
             // 
@@ -500,20 +516,6 @@
             // 
             this.pCBAliasDataSet.DataSetName = "PCBAliasDataSet";
             this.pCBAliasDataSet.SchemaSerializationMode = System.Data.SchemaSerializationMode.IncludeSchema;
-            // 
-            // cxmnuAliasesMenu
-            // 
-            this.cxmnuAliasesMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.deleteAliasToolStripMenuItem});
-            this.cxmnuAliasesMenu.Name = "cxmnuAliasesMenu";
-            this.cxmnuAliasesMenu.Size = new System.Drawing.Size(226, 26);
-            // 
-            // deleteAliasToolStripMenuItem
-            // 
-            this.deleteAliasToolStripMenuItem.Name = "deleteAliasToolStripMenuItem";
-            this.deleteAliasToolStripMenuItem.Size = new System.Drawing.Size(225, 22);
-            this.deleteAliasToolStripMenuItem.Text = "Delete Selected Part Number";
-            this.deleteAliasToolStripMenuItem.Click += new System.EventHandler(this.deletePartNumberToolStripMenuItem_Click);
             // 
             // imgSchematics
             // 
@@ -566,25 +568,6 @@
             // 
             this.pCBAAliasesTableAdapter.ClearBeforeFill = true;
             // 
-            // pbxBoard
-            // 
-            this.pbxBoard.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.pbxBoard.Image = global::RApID_Project_WPF.Properties.Resources.Board;
-            this.pbxBoard.Location = new System.Drawing.Point(0, 0);
-            this.pbxBoard.Name = "pbxBoard";
-            this.pbxBoard.Size = new System.Drawing.Size(262, 213);
-            this.pbxBoard.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
-            this.pbxBoard.TabIndex = 0;
-            this.pbxBoard.TabStop = false;
-            // 
-            // refreshToolStripMenuItem
-            // 
-            this.refreshToolStripMenuItem.Image = global::RApID_Project_WPF.Properties.Resources.refresh;
-            this.refreshToolStripMenuItem.Name = "refreshToolStripMenuItem";
-            this.refreshToolStripMenuItem.Size = new System.Drawing.Size(113, 22);
-            this.refreshToolStripMenuItem.Text = "Refresh";
-            this.refreshToolStripMenuItem.Click += new System.EventHandler(this.refreshToolStripMenuItem_Click);
-            // 
             // frmBoardFileManager
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -598,7 +581,7 @@
             this.Text = "PCB File Manager";
             this.Load += new System.EventHandler(this.frmBoardAliases_Load);
             this.PreviewKeyDown += new System.Windows.Forms.PreviewKeyDownEventHandler(this.frmBoardAliases_PreviewKeyDown);
-            this.cxmnuLinkMenu.ResumeLayout(false);
+            this.cxmnuSchematicLinksMenu.ResumeLayout(false);
             this.tcDataViewer.ResumeLayout(false);
             this.tbTechnicianView.ResumeLayout(false);
             this.spltpnlTechView.Panel1.ResumeLayout(false);
@@ -618,6 +601,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.spltpnlAliasToDetail)).EndInit();
             this.spltpnlAliasToDetail.ResumeLayout(false);
             this.panel1.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.pbxBoard)).EndInit();
             this.pnlFilePaths.ResumeLayout(false);
             this.grpbxSchematicFiles.ResumeLayout(false);
             this.grpbxBOMLinkHolder.ResumeLayout(false);
@@ -627,20 +611,18 @@
             this.cxmnuDatabaseMenu.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.pCBAAliasesBindingSource)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pCBAliasDataSet)).EndInit();
-            this.cxmnuAliasesMenu.ResumeLayout(false);
             this.spltpnlMain.Panel1.ResumeLayout(false);
             this.spltpnlMain.Panel1.PerformLayout();
             this.spltpnlMain.Panel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.spltpnlMain)).EndInit();
             this.spltpnlMain.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.errorProvider)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pbxBoard)).EndInit();
             this.ResumeLayout(false);
 
         }
 
         #endregion
-        private System.Windows.Forms.ContextMenuStrip cxmnuLinkMenu;
+        private System.Windows.Forms.ContextMenuStrip cxmnuSchematicLinksMenu;
         private System.Windows.Forms.ToolStripMenuItem changeFilePathToolStripMenuItem;
         private System.Windows.Forms.TabControl tcDataViewer;
         private System.Windows.Forms.TabPage tbTechnicianView;
@@ -667,8 +649,6 @@
         private System.Windows.Forms.GroupBox grpbxSchematicFiles;
         private System.Windows.Forms.FlowLayoutPanel flowSchematicLinks;
         private System.Windows.Forms.Button btnSearch;
-        private System.Windows.Forms.ContextMenuStrip cxmnuAliasesMenu;
-        private System.Windows.Forms.ToolStripMenuItem deleteAliasToolStripMenuItem;
         private System.Windows.Forms.Button btnChangeBOMPath;
         private System.Windows.Forms.ContextMenuStrip cxmnuDatabaseMenu;
         private System.Windows.Forms.ToolStripMenuItem refreshToolStripMenuItem;

@@ -37,8 +37,8 @@ namespace RApID_Project_WPF
         const string EMPTY_FILE_PATH = "BOMPath";
         static bool FirstTimeToday = true;
 
-        DesignFileDataModel SelectedModel = new DesignFileDataModel();
-        List<DesignFileDataModel> MasterList = new List<DesignFileDataModel>();
+        DesignFileSet SelectedModel = new DesignFileSet();
+        List<DesignFileSet> MasterList = new List<DesignFileSet>();
         int CurrentDesignFileIndex = -1;
         int SchematicFileIndex = 0; // tracks index of Schematic File Link to handle during modifications
 
@@ -223,8 +223,8 @@ namespace RApID_Project_WPF
         }
 
         private void deleteSchematicLinkToolStripMenuItem_Click(object sender, EventArgs e) {
-            CurrentSchematics.RemoveAt(SchematicFileIndex-1);
-            flowSchematicLinks.Controls.RemoveAt(SchematicFileIndex-1);
+            CurrentSchematics.RemoveAt(SchematicFileIndex);
+            flowSchematicLinks.Controls.RemoveAt(SchematicFileIndex);
             using (SqlConnection conn = new SqlConnection(csObjectHolder.csObjectHolder.ObjectHolderInstance().RepairConnectionString))
             {
                 conn.Open();
@@ -251,31 +251,12 @@ namespace RApID_Project_WPF
             HandleTextBoxEntry(new KeyEventArgs(Keys.Enter));
         }
 
-        private ToolStripMenuItem AddNewSchematicLink = new ToolStripMenuItem("Add New Schematic Link...");
-        private void flowSchematicLinks_MouseDown(object sender, MouseEventArgs e)
-        {
-            if (e.Button == MouseButtons.Right)
-            {
-                var tempMenuItem = cxmnuLinkMenu.Items.Add(AddNewSchematicLink);
-                AddNewSchematicLink.Click += AddNewSchematicLink_Click;
-
-                cxmnuLinkMenu.Show(MousePosition.X, MousePosition.Y);
-                cxmnuLinkMenu.Closed += cxmnuLinkMenu_Closed;
-            }
-        }
-
         private void AddNewSchematicLink_Click(object sender, EventArgs e)
         {
             bNewSchematic = true;
             bSchematic = true;
             bBOM = false;
             changeFilePathToolStripMenuItem_Click(sender, e);
-        }
-
-        private void cxmnuLinkMenu_Closed(object sender, EventArgs e)
-        {
-            cxmnuLinkMenu.Items.Remove(AddNewSchematicLink);
-            cxmnuLinkMenu.Closed -= cxmnuLinkMenu_Closed;
         }
 
         /// <summary>
@@ -291,6 +272,7 @@ namespace RApID_Project_WPF
             CurrentBOMs.Clear();
             CurrentBOMNames.Clear();
             CurrentSchematics.Clear();
+            flowSchematicLinks.Controls.Clear();
             CurrentPartNumbers.Clear();
         }
 
@@ -315,8 +297,6 @@ namespace RApID_Project_WPF
                     var rowsAffected = cmd.ExecuteNonQuery();
                 }
             }
-
-            MasterList[CurrentDesignFileIndex++].PartNumber = partNumber;
         }
 
         private void deletePartNumberToolStripMenuItem_Click(object sender, EventArgs e)
@@ -347,7 +327,7 @@ namespace RApID_Project_WPF
 
             if(e.Button == MouseButtons.Right)
             {
-                cxmnuLinkMenu.Show(MousePosition.X, MousePosition.Y);
+                cxmnuSchematicLinksMenu.Show(MousePosition.X, MousePosition.Y);
             }
         }
 
@@ -358,7 +338,7 @@ namespace RApID_Project_WPF
 
             if (e.Button == MouseButtons.Right)
             {
-                SchematicFileIndex = 0;
+                SchematicFileIndex = -1;
                 foreach(Control c in flowSchematicLinks.Controls)
                 {
                     System.Drawing.Point screenPoint = PointToScreen(c.Location);
@@ -366,13 +346,14 @@ namespace RApID_Project_WPF
                         break;
                     else SchematicFileIndex++;
                 }
-                cxmnuLinkMenu.Show(MousePosition.X, MousePosition.Y);
+                cxmnuSchematicLinksMenu.Show(MousePosition.X, MousePosition.Y);
             }
         }
 
         private void lnkBOMFile_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            if (e.Button == MouseButtons.Left && !(string.IsNullOrEmpty(e.Link.ToString()) || e.Link.ToString().Equals("")))
+            if (e.Button == MouseButtons.Left && !(string.IsNullOrEmpty(e.Link.ToString()) || e.Link.ToString().Equals(""))
+                && !lnkBOMFile.Text.Equals("BOMPath"))
             {
                 try
                 {
@@ -426,7 +407,7 @@ namespace RApID_Project_WPF
                     dataFound = reader.Read();
                     if (dataFound) {
                         do {
-                            DesignFileDataModel model = new DesignFileDataModel() {
+                            DesignFileSet model = new DesignFileSet() {
                                 PartNumber = reader[0]?.ToString(),
                                 BOMFileName = reader[2]?.ToString(),
                                 BOMFilePath = reader[1]?.ToString()
@@ -437,27 +418,31 @@ namespace RApID_Project_WPF
                             CurrentBOMNames.EnsureElement(reader[2]?.ToString());
                             lnkBOMFile.Text = reader[2]?.ToString();
                             StringBuilder sb = new StringBuilder();
-                            sb.Append("Reading New Schematic Files {");
-                            foreach (var @string in reader[3].ToString().Split(','))
+                            if (!string.IsNullOrWhiteSpace(reader[3].ToString().Trim()))
                             {
-                                var name = @string.Substring(@string.LastIndexOf('\\') + 1) ?? "not set";
-                                var ext = @string.Substring(@string.LastIndexOf('.') + 1) ?? "other";
-                                System.Drawing.Image img = imgSchematics.Images[
-                                        (!string.IsNullOrWhiteSpace(ext) && new List<string>() { "pdf", "asc" }.Contains(ext)
-                                        ? ext : "other")
-                                    ];
+                                sb.Append("Reading New Schematic Files {");
+                            
+                                foreach (var @string in reader[3].ToString().Split(','))
+                                {
+                                    var name = @string.Substring(@string.LastIndexOf('\\') + 1) ?? "not set";
+                                    var ext = @string.Substring(@string.LastIndexOf('.') + 1) ?? "other";
+                                    System.Drawing.Image img = imgSchematics.Images[
+                                            (!string.IsNullOrWhiteSpace(ext) && new List<string>() { "pdf", "asc" }.Contains(ext)
+                                            ? ext : "other")
+                                        ];
 
-                                sb.Append("\n");
-                                sb.Append($"\t[AssemblyLinkItem] ==> {@string}");
-                                AssemblyLinkLabel link = new AssemblyLinkLabel(@string, name, img,
-                                    ext.Equals("pdf") ? "Assembly File" :
-                                    ext.Contains("xls") ? "BOM File" :
-                                    "Other File");
+                                    sb.Append("\n");
+                                    sb.Append($"\t[AssemblyLinkItem] ==> {@string}");
+                                    AssemblyLinkLabel link = new AssemblyLinkLabel(@string, name, img,
+                                        ext.Equals("pdf") ? "Assembly File" :
+                                        ext.Contains("xls") ? "BOM File" :
+                                        "Other File");
 
-                                CurrentSchematics.Add(link);
-                                flowSchematicLinks.Controls.Add(link);
+                                    CurrentSchematics.Add(link);
+                                    flowSchematicLinks.Controls.Add(link);
+                                }
+                                model.SchematicLinks = CurrentSchematics;
                             }
-                            model.SchematicLinks = CurrentSchematics;
                             sb.AppendLine("\n}");
                             Console.Write(sb.ToString());
                             Console.WriteLine(model.ToString());
@@ -503,6 +488,38 @@ namespace RApID_Project_WPF
             }
         }
         #endregion
+
+        private ToolStripMenuItem AddNewSchematicLink = new ToolStripMenuItem("Add New Schematic Link...");
+        private ToolStripMenuItem ChangeFilePath = new ToolStripMenuItem("Change File Path...");
+        private ToolStripMenuItem DeleteSchematicLink = new ToolStripMenuItem("Delete Schematic Link...");
+
+        private void flowSchematicLinks_MouseDown(object sender, MouseEventArgs e)
+        {
+            if (e.Button == MouseButtons.Right)
+            {
+                ChangeFilePath.Click -= changeFilePathToolStripMenuItem_Click;
+                DeleteSchematicLink.Click -= deleteSchematicLinkToolStripMenuItem_Click;
+
+                cxmnuSchematicLinksMenu.Items.Clear();
+                cxmnuSchematicLinksMenu.Items.Add(AddNewSchematicLink);
+                AddNewSchematicLink.Click += AddNewSchematicLink_Click;
+
+                cxmnuSchematicLinksMenu.Show(MousePosition.X, MousePosition.Y);
+                cxmnuSchematicLinksMenu.Closed += cxmnuLinkMenu_Closed;
+            }
+        }
+
+        private void cxmnuLinkMenu_Closed(object sender, EventArgs e)
+        {
+            cxmnuSchematicLinksMenu.Items.Clear();
+            cxmnuSchematicLinksMenu.Items.Add(ChangeFilePath);
+            cxmnuSchematicLinksMenu.Items.Add(new ToolStripSeparator());
+            cxmnuSchematicLinksMenu.Items.Add(DeleteSchematicLink);
+
+            ChangeFilePath.Click += changeFilePathToolStripMenuItem_Click;
+            DeleteSchematicLink.Click += deleteSchematicLinkToolStripMenuItem_Click;
+            cxmnuSchematicLinksMenu.Closed -= cxmnuLinkMenu_Closed;
+        }
     }
 
     /// <summary>
@@ -520,7 +537,7 @@ namespace RApID_Project_WPF
         public WhiningException(string message = "") : base(message) {}
     }
 
-    public class DesignFileDataModel : INotifyPropertyChanged {
+    public class DesignFileSet : INotifyPropertyChanged {
         #region PropertyChanged Implementation
         public event PropertyChangedEventHandler PropertyChanged;
         private void OnPropertyChanged([CallerMemberName] string propName = "") => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propName));
@@ -569,7 +586,7 @@ namespace RApID_Project_WPF
         }
         #endregion
 
-        public DesignFileDataModel([CallerMemberName] string callerName = "") {
+        public DesignFileSet([CallerMemberName] string callerName = "") {
             CallerMemberName = callerName;
         }
 
