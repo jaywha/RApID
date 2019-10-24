@@ -228,7 +228,7 @@
                                 <TabItem Name="tiUI2" Header="Unit Issue #2" IsEnabled="False">
                                     <Grid Name="gridUI2" Background="#FFE5E5E5">
                                         <Label Content="Reported Issue:" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10,10,0,0" />
-                                        <ComboBox Name="cbReportedIssue_2" Margin="10,35,0,0" DropDownClosed="cbDDClosed" Style="{StaticResource Combobox}" IsEnabled="False" />
+                                        <ComboBox Name="cbReportedIssue_2" Margin="10,35,0,0" DropDownClosed="cbDDClosed" Style="{StaticResource Combobox}"/>
 
                                         <Label Content="Test Result:" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10,70,0,0" />
                                         <ComboBox Name="cbTestResult_2" Margin="10,95,0,0" DropDownClosed="cbDDClosed" Style="{StaticResource Combobox}" />
@@ -265,7 +265,7 @@
                                 <TabItem Name="tiUI3" Header="Unit Issue #3" IsEnabled="False">
                                     <Grid Name="gridUI3" Background="#FFE5E5E5">
                                         <Label Content="Reported Issue:" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10,10,0,0" />
-                                        <ComboBox Name="cbReportedIssue_3" Margin="10,35,0,0" DropDownClosed="cbDDClosed" Style="{StaticResource Combobox}" IsEnabled="False" />
+                                        <ComboBox Name="cbReportedIssue_3" Margin="10,35,0,0" DropDownClosed="cbDDClosed" Style="{StaticResource Combobox}" />
 
                                         <Label Content="Test Result:" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10,70,0,0" />
                                         <ComboBox Name="cbTestResult_3" Margin="10,95,0,0" DropDownClosed="cbDDClosed" Style="{StaticResource Combobox}" />
@@ -325,12 +325,16 @@
                     </TabItem>
 
                     <TabItem Header="EOL Test">
-                        <uc:ucEOLTab x:Name="ucEOLTab" SerialNumber="{Binding Path=Text, ElementName=txtSerialNumber, Mode=TwoWay}" PartSeries="{Binding Path=Text, ElementName=txtPartSeries, Mode=TwoWay}"
-                                 VerticalAlignment="top" HorizontalAlignment="Left"/>
+                        <uc:ucEOLTab x:Name="ucEOLTab" 
+                                     SerialNumber="{Binding Path=Text, ElementName=txtSerialNumber, Mode=TwoWay}" 
+                                     PartSeries="{Binding Path=Text, ElementName=txtPartSeries, Mode=TwoWay}"
+                                     VerticalAlignment="top" HorizontalAlignment="Left"/>
                     </TabItem>
 
                     <TabItem Header="AOI">
-                        <uc:ucAOITab x:Name="ucAOITab" SerialNumber="{Binding Path=Text, ElementName=txtSerialNumber, Mode=TwoWay}" VerticalAlignment="top" HorizontalAlignment="Left"/>
+                        <uc:ucAOITab x:Name="ucAOITab"
+                                     SerialNumber="{Binding Path=Text, ElementName=txtSerialNumber, Mode=TwoWay}" 
+                                     VerticalAlignment="top" HorizontalAlignment="Left"/>
                     </TabItem>
 
                 </TabControl>

@@ -39,6 +39,10 @@ namespace RApID_Project_WPF.UserControls
         {
             InitializeComponent();
             holder.vGetServerName("");
+
+            #region Get Latest Test (First In Combobox)
+
+            #endregion
         }
 
         /// <summary>
@@ -47,25 +51,29 @@ namespace RApID_Project_WPF.UserControls
         internal void Fill()
         {
             Reset();
-            string query = $"SELECT TestID FROM tblEOL WHERE PCBSerial = '{SerialNumber}';";
+            string query = $"SELECT TestID FROM tblEOL WHERE PCBSerial = '{SerialNumber}' ORDER BY [DateAndTime] DESC";
             cbEOLTestID.PullItemsFromQuery(query);
 
-            query = $"SELECT TestID FROM tblPre WHERE PCBSerial = '{SerialNumber}';";
+            query = $"SELECT TestID FROM tblPre WHERE PCBSerial = '{SerialNumber}' ORDER BY [DateAndTime] DESC";
             cbPRETestID.PullItemsFromQuery(query);
 
-            query = $"SELECT TestID FROM tblPost WHERE PCBSerial = '{SerialNumber}';";
+            query = $"SELECT TestID FROM tblPost WHERE PCBSerial = '{SerialNumber}' ORDER BY [DateAndTime] DESC";
             cbPOSTTestID.PullItemsFromQuery(query);
 
             if (cbEOLTestID.Items.Count > 0)
             {
+                cbEOLTestID.SelectedIndex = 0;
                 cbBEAMSTestType.Items.Add("EOL");
             }
 
-            if (cbPRETestID.Items.Count > 0)
+            if (cbPRETestID.Items.Count > 0) {
+                cbPRETestID.SelectedIndex = 0;
                 cbBEAMSTestType.Items.Add("PRE");
+            }
 
             if (cbPOSTTestID.Items.Count > 0)
             {
+                cbPOSTTestID.SelectedIndex = 0;
                 cbBEAMSTestType.Items.Add("POST");
             }
         }

@@ -174,7 +174,8 @@ namespace RApID_Project_WPF
                 {
                     while (reader.Read())
                     {
-                        if (!string.IsNullOrEmpty(reader["TypeOfReturn"].ToString()))
+                        if (!string.IsNullOrEmpty(reader["TypeOfReturn"].ToString())
+                            && !reader["TypeOfReturn"].ToString().Trim().ToLower().Equals("production"))
                             lTOR.Add(reader["TypeOfReturn"].ToString());
 
                         if (!string.IsNullOrEmpty(reader["TypeOfFailure"].ToString()))
