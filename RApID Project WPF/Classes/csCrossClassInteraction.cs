@@ -7,6 +7,7 @@ using ExcelDataReader;
 using RApID_Project_WPF.UserControls;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Data.SqlClient;
 using System.Drawing;
 using System.IO;
@@ -44,8 +45,8 @@ namespace RApID_Project_WPF
         private const string bomlogfiledir = @"P:\EE Process Test\Logs\RApID\_BOMReadings\";
         private static readonly string bomlogfile = $"{DateTime.Now:y\\MMMM\\dd}-BOMLog.txt";
 
-        public static List<string> ReferenceDesignators { get; private set; } = new List<string>();
-        public static List<string> PartNumbers { get; private set; } = new List<string>();
+        public static ObservableCollection<string> ReferenceDesignators { get; private set; } = new ObservableCollection<string>();
+        public static ObservableCollection<string> PartNumbers { get; private set; } = new ObservableCollection<string>();
 
         /// <summary>
         /// Takes an empy datagrid and fills it with the appropriate columns based on the criteria.

@@ -131,12 +131,12 @@
             <Label Name="lblRPNumber" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="310,10,0,0" />
             <Label Name="lblBarcode" Content="Serial Number:" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10,39,0,0" FontWeight="Bold" />
             <TextBox Name="txtBarcode" HorizontalAlignment="Left" VerticalAlignment="Top" TextWrapping="Wrap" Width="200" Height="23" Margin="105,41,0,0" KeyDown="txtBarcode_KeyDown" PreviewTextInput="PreviewTextInput"  />
-            <Button Name="btnSendToQC" Content="Send To QC" HorizontalAlignment="Left" VerticalAlignment="Top" Width="100" Height="46" Style="{StaticResource RepairButtons}" Margin="890,1,0,0" Click="btnSendToQC_Click" />
-            <Button Name="btnSendToDQE" Content="Send To DQE" HorizontalAlignment="Left" VerticalAlignment="Top" Width="100" Height="46" Style="{StaticResource RepairButtons}" Margin="890,47,0,0" Click="btnSendToDQE_Click"/>
-            <Button Name="btnStartOver" Content="Start Over" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="995,1,0,0" Width="91" Height="46" Style="{StaticResource RepairButtons}" Click="btnStartOver_Click"/>
-            <Button Name="btnComplete" Content="Complete" HorizontalAlignment="Left" Margin="995,47,0,0" VerticalAlignment="Top" Width="91" Height="46" Style="{StaticResource RepairButtons}" Click="btnComplete_Click"/>
+            <Button Name="btnSendToQC" Content="Send To QC" HorizontalAlignment="Left" VerticalAlignment="Top" Width="100" Height="46" Style="{StaticResource RepairButtons}" Margin="685,1,0,0" Click="btnSendToQC_Click" />
+            <Button Name="btnSendToDQE" Content="Send To DQE" HorizontalAlignment="Left" VerticalAlignment="Top" Width="100" Height="46" Style="{StaticResource RepairButtons}" Margin="785,1,0,0" Click="btnSendToDQE_Click"/>
+            <Button Name="btnStartOver" Content="Start Over" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="890,1,0,0" Width="91" Height="46" Style="{StaticResource RepairButtons}" Click="btnStartOver_Click"/>
+            <Button Name="btnComplete" Content="Complete" HorizontalAlignment="Left" Margin="987,1,0,0" VerticalAlignment="Top" Width="91" Height="46" Style="{StaticResource RepairButtons}" Click="btnComplete_Click"/>
 
-            <TabControl HorizontalAlignment="Left" Height="665" Margin="2,75,0,0" VerticalAlignment="Top" Width="1086">
+            <TabControl x:Name="tbMain" HorizontalAlignment="Left" Height="665" Margin="2,75,0,0" VerticalAlignment="Top" Width="1086" SelectionChanged="TabControl_SelectionChanged">
                 <TabItem Header="DataLog">
                     <Grid Background = "#FFE5E5E5">
 
@@ -205,7 +205,7 @@
                                     <Border x:Name="brdRefDes" Margin="10,335,180,226"/>
                                     <ComboBox x:Name="txtRefDes" Margin="10,335,180,226" IsTextSearchEnabled="True" IsEditable="True" HorizontalAlignment="Left" VerticalAlignment="Top" VerticalContentAlignment="Center" Width="100" Height="23"
                                                 SelectionChanged="refDesIndexChanged" GotFocus="txtGotFocus" LostFocus="txtLostFocus" KeyUp="txtMultiRefKeyUp" IsReadOnly="False"/>
-                                    
+
 
                                     <Label Content="Part Replaced" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="115,310,0,0" />
                                     <ComboBox x:Name="txtPartReplaced" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="115,335,0,0" VerticalContentAlignment="Center" Width="100" Height="23"
@@ -247,7 +247,7 @@
                                     <Border x:Name="brdRefDes_2" Margin="10,335,180,226"/>
                                     <ComboBox x:Name="txtRefDes_2" Margin="10,335,180,226" IsTextSearchEnabled="True" IsEditable="True" HorizontalAlignment="Left" VerticalAlignment="Top" VerticalContentAlignment="Center" Width="100" Height="23"
                                                   SelectionChanged="refDesIndexChanged" GotFocus="txtGotFocus" LostFocus="txtLostFocus" KeyUp="txtMultiRefKeyUp"/>
-                                    
+
 
                                     <Label Content="Part Replaced" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="115,310,0,0" />
                                     <ComboBox x:Name="txtPartReplaced_2" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="115,335,0,0" VerticalContentAlignment="Center" Width="100" Height="23" 
@@ -289,7 +289,7 @@
                                     <Border x:Name="brdRefDes_3" Margin="10,335,180,226"/>
                                     <ComboBox x:Name="txtRefDes_3" Margin="10,335,180,226" IsTextSearchEnabled="True" IsEditable="True" HorizontalAlignment="Left" VerticalAlignment="Top" VerticalContentAlignment="Center" Width="100" Height="23"
                                               SelectionChanged="refDesIndexChanged" GotFocus="txtGotFocus" LostFocus="txtLostFocus" KeyUp="txtMultiRefKeyUp"/>
-                                    
+
 
                                     <Label Content="Part Replaced" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="115,310,0,0" />
                                     <ComboBox x:Name="txtPartReplaced_3" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="115,335,0,0" VerticalContentAlignment="Center" Width="100" Height="23" 
@@ -440,8 +440,14 @@
             </TabControl>
 
 
-            <ToolBar Name="tbSPStatus" HorizontalAlignment="Stretch" Margin="0,740,0,0" VerticalAlignment="Top" Width="auto" Height="34" Header="Serial Port Status:">
-                <Label Name="tbPortStatus" Content="Port Status: Closed" Height="34" ToolBar.OverflowMode="Never" VerticalAlignment="Top" HorizontalAlignment="Left" Padding="5,7,5,0" />
+            <ToolBar Name="tbSPStatus" HorizontalAlignment="Stretch" Margin="0,740,0,0" VerticalAlignment="Top" Width="auto" Height="34">
+                <Button x:Name="btnTech" HorizontalAlignment="Left" VerticalAlignment="Center" Width="30" Height="30" BorderBrush="Black" BorderThickness="2" ToolTip="PCB Alias Form"
+                        Click="BtnTech_Click" Style="{StaticResource RepairButtons}">
+                    <StackPanel>
+                        <Image Source="Resources/wtech.png" Margin="2"/>
+                    </StackPanel>
+                </Button>
+                <Label Name="tbPortStatus" Content="Serial Port Status: Closed" Height="34" ToolBar.OverflowMode="Never" VerticalAlignment="Top" HorizontalAlignment="Left" Padding="5,7,5,0" />
                 <Separator />
                 <Label Name="tbPortName" Content="Port Name:" Height="34" ToolBar.OverflowMode="Never" VerticalAlignment="Top" HorizontalAlignment="Left" Padding="5,7,5,0"/>
                 <Separator />
@@ -479,6 +485,7 @@
                     </StackPanel>
                 </Label>
                 <ProgressBar x:Name="progMapper" Height="20" VerticalAlignment="Center" HorizontalAlignment="Right" Width="100" IsIndeterminate="True" Visibility="Collapsed"/>
+                
                 <x:Code>
                     <![CDATA[
                         private void LabelDoubleClick(object sender, System.Windows.RoutedEventArgs args) {

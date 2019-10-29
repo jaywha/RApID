@@ -339,8 +339,14 @@
 
                 </TabControl>
 
-                <ToolBar Name="tbSPStatus" HorizontalAlignment="Stretch" Margin="25,740,0,0" VerticalAlignment="Top" Width="auto" Height="34" Header="Serial Port Status:" Grid.ColumnSpan="2">
-                    <Label Name="tbPortStatus" Content="Port Status: Closed" Height="34" ToolBar.OverflowMode="Never" VerticalAlignment="Top" HorizontalAlignment="Left" Padding="5,7,5,0" />
+                <ToolBar Name="tbSPStatus" HorizontalAlignment="Stretch" Margin="25,740,0,0" VerticalAlignment="Top" Width="auto" Height="34" Grid.ColumnSpan="2">
+                    <Button x:Name="btnTech" HorizontalAlignment="Left" VerticalAlignment="Center" Width="30" Height="30" BorderBrush="Black" BorderThickness="2" ToolTip="PCB Alias Form"
+                            Click="btnTech_Click" Style="{StaticResource RepairButtons}">
+                        <StackPanel>
+                            <Image Source="Resources/wtech.png" Margin="2"/>
+                        </StackPanel>
+                    </Button>
+                    <Label Name="tbPortStatus" Content="Serial Port Status: Closed" Height="34" ToolBar.OverflowMode="Never" VerticalAlignment="Top" HorizontalAlignment="Left" Padding="5,7,5,0" />
                     <Separator />
                     <Label Name="tbPortName" Content="Port Name:" Height="34" ToolBar.OverflowMode="Never" VerticalAlignment="Top" HorizontalAlignment="Left" Padding="5,7,5,0"/>
                     <Separator />

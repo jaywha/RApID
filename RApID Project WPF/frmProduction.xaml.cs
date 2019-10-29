@@ -4,6 +4,7 @@ using SNMapperLib;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Data.SqlClient;
 using System.IO.Ports;
@@ -1794,7 +1795,7 @@ namespace RApID_Project_WPF
 
             if(sender is ComboBox cbox)
             {
-                tbox = (cbox.Template.FindName("PART_EditableTextBox", cbox) as TextBox);
+                tbox = (cbox.Template.FindName("PART_EditableTextBox", cbox) as TextBox); 
             } else if (sender is TextBox ttbox) {
                 tbox = ttbox;
             } else {
@@ -1848,10 +1849,10 @@ namespace RApID_Project_WPF
             if (!chosenOption.Equals("cbFromArea"))
                 handleUnitIssues((ComboBox)sender);
 
-            if (chosenOption.Equals("cbReportedIssue"))
+            /*if (chosenOption.Equals("cbReportedIssue"))
             {
                 cbReportedIssue_2.Text = cbReportedIssue_3.Text = cbReportedIssue.Text;
-            }
+            }*/
 
             //NOTE: Need to handle the Issue, Item and Problem items separately
             if (chosenOption.StartsWith("cbIssue"))
@@ -2036,6 +2037,12 @@ namespace RApID_Project_WPF
         private void ExpBOMInfo_Collapsed(object sender, RoutedEventArgs e)
         {
             expBOMInfo.Margin = new Thickness(15, 200, 1050, 300);
+        }
+
+        private void btnTech_Click(object sender, RoutedEventArgs e)
+        {
+            frmBoardFileManager alias = new frmBoardFileManager(directDialog: true) { StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen };
+            alias.Show();
         }
     }
 }

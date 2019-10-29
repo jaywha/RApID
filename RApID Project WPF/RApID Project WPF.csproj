@@ -429,6 +429,7 @@
     <WCFMetadata Include="Service References\" />
   </ItemGroup>
   <ItemGroup>
+    <Resource Include="Resources\wtech.png" />
     <None Include="Resources\Board.png" />
     <None Include="Resources\refresh.png" />
     <Resource Include="Resources\trashcan.png" />

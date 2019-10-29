@@ -4,6 +4,7 @@ using SNMapperLib;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Data.SqlClient;
 using System.IO.Ports;
@@ -1383,8 +1384,8 @@ namespace RApID_Project_WPF
                             new Tuple<Control, Control>(txtRefDes_2, txtPartReplaced_2),
                             new Tuple<Control, Control>(txtRefDes_3, txtPartReplaced_3));
 
-                            OrigRefSource = txtRefDes.Items.Cast<string>().ToList();
-                            OrigPartSource = txtPartReplaced.Items.Cast<string>().ToList();
+                            OrigRefSource = csCrossClassInteraction.ReferenceDesignators;
+                            OrigPartSource = csCrossClassInteraction.PartNumbers;
 
                             csCrossClassInteraction.MapperSuccessMessage(filename, mapper.PartNumber);
 
@@ -1772,9 +1773,9 @@ namespace RApID_Project_WPF
         }
 
         /// <summary> The original list of reference designators pulled from the BOM. </summary>
-        private List<string> OrigRefSource;
+        private ObservableCollection<string> OrigRefSource = new ObservableCollection<string>();
         /// <summary> The original list of part numbers pulled from the BOM. </summary>
-        private List<string> OrigPartSource;
+        private ObservableCollection<string> OrigPartSource = new ObservableCollection<string>();
         private void txtMultiRefKeyUp(object sender, KeyEventArgs e)
         {
             /*if (sender is ComboBox cbox)
@@ -2377,10 +2378,10 @@ namespace RApID_Project_WPF
             if (!((Control)sender).Name.ToString().Equals("cbTOF") && !((Control)sender).Name.ToString().Equals("cbTOR"))
                 handleUnitIssues((ComboBox)sender);
 
-            if (((Control)sender).Name.Equals("cbReportedIssue"))
+            /*if (((Control)sender).Name.Equals("cbReportedIssue"))
             {
                 cbReportedIssue_2.Text = cbReportedIssue_3.Text = cbReportedIssue.Text;
-            }
+            }*/
 
             if (((Control)sender).Name.ToString().Equals("cbTOR"))
             {
@@ -2436,6 +2437,20 @@ namespace RApID_Project_WPF
                 case 2:
                     dgMultipleParts_3.Items.RemoveAt(dgMultipleParts_3.SelectedIndex);
                     break;
+            }
+        }
+
+        private void BtnTech_Click(object sender, RoutedEventArgs e)
+        {
+            frmBoardFileManager alias = new frmBoardFileManager(directDialog: true) { StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen };
+            alias.Show();
+        }
+
+        private void TabControl_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if((tbMain.SelectedItem as TabItem).Header.Equals("EOL Test"))
+            {
+                //TODO: ucEOLTab.Dispatcher.Invoke(() => ucEOLTab.TriggerDropDowns());
             }
         }
     }

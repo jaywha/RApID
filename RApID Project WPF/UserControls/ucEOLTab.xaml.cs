@@ -79,6 +79,15 @@ namespace RApID_Project_WPF.UserControls
         }
 
         /// <summary>
+        /// Auto fills the listbox data panes with the first test in the combo box choices.
+        /// </summary>
+        internal void TriggerDropDowns() {
+            cbEOLTestID_DropDownClosed(null, null);
+            cbPRETestID_DropDownClosed(null, null);
+            cbPOSTTestID_DropDownClosed(null, null);
+        }
+
+        /// <summary>
         /// Resets the EOL Test Tab
         /// </summary>
         internal void Reset()

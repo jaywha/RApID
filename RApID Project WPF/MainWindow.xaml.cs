@@ -103,23 +103,24 @@ namespace RApID_Project_WPF
         {
             string msgTitle = "";
             string msgWelcome = $"Important updates related to RApID will show up here.";
-
             if (DateTime.Now.Hour >= 4 && DateTime.Now.Hour < 12)
             {
                 msgTitle = "Good Morning";
-            } else if (DateTime.Now.ToLocalTime().Hour >= 12 && DateTime.Now.ToLocalTime().Hour < 17)
+            }
+            else if (DateTime.Now.ToLocalTime().Hour >= 12 && DateTime.Now.ToLocalTime().Hour < 17)
             {
                 msgTitle = "Good Afternoon";
-            } else // DateTime.Now is between 17 and 4
+            }
+            else // DateTime.Now is between 17 and 4
             {
                 msgTitle = "Good Evening";
             }
-
-            await Task.Factory.StartNew(new Action(() => {
-                var uName = UserPrincipal.Current.DisplayName.Trim().Split(',');
-                FullName = uName[1].Trim() + " " + uName[0].Trim();
-                Notify.ShowBalloonTip(msgTitle + $", {FullName}!", msgWelcome, BalloonIcon.Info);
-            }));
+            Notify.ShowBalloonTip(msgTitle, msgWelcome, BalloonIcon.Info);
+            /*await Task.Factory.StartNew(new Action(() => {
+                          var uName = UserPrincipal.Current.DisplayName.Trim().Split(',');
+                          FullName = uName[1].Trim() + " " + uName[0].Trim();
+                          Notify.ShowBalloonTip(msgTitle + $", {FullName}!", msgWelcome, BalloonIcon.Info);
+                      }));*/
         }
 
         private void btnClicks(object sender, RoutedEventArgs e)
