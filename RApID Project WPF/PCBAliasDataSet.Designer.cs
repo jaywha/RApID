@@ -24,7 +24,7 @@ namespace RApID_Project_WPF {
     [global::System.ComponentModel.Design.HelpKeywordAttribute("vs.data.DataSet")]
     public partial class PCBAliasDataSet : global::System.Data.DataSet {
         
-        private PCBAAliasesDataTable tablePCBAAliases;
+        private TechAliasesDataTable tableTechAliases;
         
         private global::System.Data.SchemaSerializationMode _schemaSerializationMode = global::System.Data.SchemaSerializationMode.IncludeSchema;
         
@@ -54,8 +54,8 @@ namespace RApID_Project_WPF {
             if ((this.DetermineSchemaSerializationMode(info, context) == global::System.Data.SchemaSerializationMode.IncludeSchema)) {
                 global::System.Data.DataSet ds = new global::System.Data.DataSet();
                 ds.ReadXmlSchema(new global::System.Xml.XmlTextReader(new global::System.IO.StringReader(strSchema)));
-                if ((ds.Tables["PCBAAliases"] != null)) {
-                    base.Tables.Add(new PCBAAliasesDataTable(ds.Tables["PCBAAliases"]));
+                if ((ds.Tables["TechAliases"] != null)) {
+                    base.Tables.Add(new TechAliasesDataTable(ds.Tables["TechAliases"]));
                 }
                 this.DataSetName = ds.DataSetName;
                 this.Prefix = ds.Prefix;
@@ -79,9 +79,9 @@ namespace RApID_Project_WPF {
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
         [global::System.ComponentModel.Browsable(false)]
         [global::System.ComponentModel.DesignerSerializationVisibility(global::System.ComponentModel.DesignerSerializationVisibility.Content)]
-        public PCBAAliasesDataTable PCBAAliases {
+        public TechAliasesDataTable TechAliases {
             get {
-                return this.tablePCBAAliases;
+                return this.tableTechAliases;
             }
         }
         
@@ -152,8 +152,8 @@ namespace RApID_Project_WPF {
                 this.Reset();
                 global::System.Data.DataSet ds = new global::System.Data.DataSet();
                 ds.ReadXml(reader);
-                if ((ds.Tables["PCBAAliases"] != null)) {
-                    base.Tables.Add(new PCBAAliasesDataTable(ds.Tables["PCBAAliases"]));
+                if ((ds.Tables["TechAliases"] != null)) {
+                    base.Tables.Add(new TechAliasesDataTable(ds.Tables["TechAliases"]));
                 }
                 this.DataSetName = ds.DataSetName;
                 this.Prefix = ds.Prefix;
@@ -188,10 +188,10 @@ namespace RApID_Project_WPF {
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
         internal void InitVars(bool initTable) {
-            this.tablePCBAAliases = ((PCBAAliasesDataTable)(base.Tables["PCBAAliases"]));
+            this.tableTechAliases = ((TechAliasesDataTable)(base.Tables["TechAliases"]));
             if ((initTable == true)) {
-                if ((this.tablePCBAAliases != null)) {
-                    this.tablePCBAAliases.InitVars();
+                if ((this.tableTechAliases != null)) {
+                    this.tableTechAliases.InitVars();
                 }
             }
         }
@@ -204,13 +204,13 @@ namespace RApID_Project_WPF {
             this.Namespace = "http://tempuri.org/PCBAliasDataSet.xsd";
             this.EnforceConstraints = true;
             this.SchemaSerializationMode = global::System.Data.SchemaSerializationMode.IncludeSchema;
-            this.tablePCBAAliases = new PCBAAliasesDataTable();
-            base.Tables.Add(this.tablePCBAAliases);
+            this.tableTechAliases = new TechAliasesDataTable();
+            base.Tables.Add(this.tableTechAliases);
         }
         
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
-        private bool ShouldSerializePCBAAliases() {
+        private bool ShouldSerializeTechAliases() {
             return false;
         }
         
@@ -270,14 +270,14 @@ namespace RApID_Project_WPF {
         }
         
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
-        public delegate void PCBAAliasesRowChangeEventHandler(object sender, PCBAAliasesRowChangeEvent e);
+        public delegate void TechAliasesRowChangeEventHandler(object sender, TechAliasesRowChangeEvent e);
         
         /// <summary>
         ///Represents the strongly named DataTable class.
         ///</summary>
         [global::System.Serializable()]
         [global::System.Xml.Serialization.XmlSchemaProviderAttribute("GetTypedTableSchema")]
-        public partial class PCBAAliasesDataTable : global::System.Data.TypedTableBase<PCBAAliasesRow> {
+        public partial class TechAliasesDataTable : global::System.Data.TypedTableBase<TechAliasesRow> {
             
             private global::System.Data.DataColumn columnID;
             
@@ -285,14 +285,12 @@ namespace RApID_Project_WPF {
             
             private global::System.Data.DataColumn columnBOMPath;
             
-            private global::System.Data.DataColumn columnBOMFileName;
-            
             private global::System.Data.DataColumn columnSchematicPaths;
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
-            public PCBAAliasesDataTable() {
-                this.TableName = "PCBAAliases";
+            public TechAliasesDataTable() {
+                this.TableName = "TechAliases";
                 this.BeginInit();
                 this.InitClass();
                 this.EndInit();
@@ -300,7 +298,7 @@ namespace RApID_Project_WPF {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
-            internal PCBAAliasesDataTable(global::System.Data.DataTable table) {
+            internal TechAliasesDataTable(global::System.Data.DataTable table) {
                 this.TableName = table.TableName;
                 if ((table.CaseSensitive != table.DataSet.CaseSensitive)) {
                     this.CaseSensitive = table.CaseSensitive;
@@ -317,7 +315,7 @@ namespace RApID_Project_WPF {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
-            protected PCBAAliasesDataTable(global::System.Runtime.Serialization.SerializationInfo info, global::System.Runtime.Serialization.StreamingContext context) : 
+            protected TechAliasesDataTable(global::System.Runtime.Serialization.SerializationInfo info, global::System.Runtime.Serialization.StreamingContext context) : 
                     base(info, context) {
                 this.InitVars();
             }
@@ -348,14 +346,6 @@ namespace RApID_Project_WPF {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
-            public global::System.Data.DataColumn BOMFileNameColumn {
-                get {
-                    return this.columnBOMFileName;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
             public global::System.Data.DataColumn SchematicPathsColumn {
                 get {
                     return this.columnSchematicPaths;
@@ -373,49 +363,48 @@ namespace RApID_Project_WPF {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
-            public PCBAAliasesRow this[int index] {
+            public TechAliasesRow this[int index] {
                 get {
-                    return ((PCBAAliasesRow)(this.Rows[index]));
+                    return ((TechAliasesRow)(this.Rows[index]));
                 }
             }
             
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
-            public event PCBAAliasesRowChangeEventHandler PCBAAliasesRowChanging;
+            public event TechAliasesRowChangeEventHandler TechAliasesRowChanging;
             
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
-            public event PCBAAliasesRowChangeEventHandler PCBAAliasesRowChanged;
+            public event TechAliasesRowChangeEventHandler TechAliasesRowChanged;
             
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
-            public event PCBAAliasesRowChangeEventHandler PCBAAliasesRowDeleting;
+            public event TechAliasesRowChangeEventHandler TechAliasesRowDeleting;
             
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
-            public event PCBAAliasesRowChangeEventHandler PCBAAliasesRowDeleted;
+            public event TechAliasesRowChangeEventHandler TechAliasesRowDeleted;
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
-            public void AddPCBAAliasesRow(PCBAAliasesRow row) {
+            public void AddTechAliasesRow(TechAliasesRow row) {
                 this.Rows.Add(row);
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
-            public PCBAAliasesRow AddPCBAAliasesRow(string PartNumber, string BOMPath, string BOMFileName, string SchematicPaths) {
-                PCBAAliasesRow rowPCBAAliasesRow = ((PCBAAliasesRow)(this.NewRow()));
+            public TechAliasesRow AddTechAliasesRow(string PartNumber, string BOMPath, string SchematicPaths) {
+                TechAliasesRow rowTechAliasesRow = ((TechAliasesRow)(this.NewRow()));
                 object[] columnValuesArray = new object[] {
                         null,
                         PartNumber,
                         BOMPath,
-                        BOMFileName,
                         SchematicPaths};
-                rowPCBAAliasesRow.ItemArray = columnValuesArray;
-                this.Rows.Add(rowPCBAAliasesRow);
-                return rowPCBAAliasesRow;
+                rowTechAliasesRow.ItemArray = columnValuesArray;
+                this.Rows.Add(rowTechAliasesRow);
+                return rowTechAliasesRow;
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
             public override global::System.Data.DataTable Clone() {
-                PCBAAliasesDataTable cln = ((PCBAAliasesDataTable)(base.Clone()));
+                TechAliasesDataTable cln = ((TechAliasesDataTable)(base.Clone()));
                 cln.InitVars();
                 return cln;
             }
@@ -423,7 +412,7 @@ namespace RApID_Project_WPF {
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
             protected override global::System.Data.DataTable CreateInstance() {
-                return new PCBAAliasesDataTable();
+                return new TechAliasesDataTable();
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
@@ -432,7 +421,6 @@ namespace RApID_Project_WPF {
                 this.columnID = base.Columns["ID"];
                 this.columnPartNumber = base.Columns["PartNumber"];
                 this.columnBOMPath = base.Columns["BOMPath"];
-                this.columnBOMFileName = base.Columns["BOMFileName"];
                 this.columnSchematicPaths = base.Columns["SchematicPaths"];
             }
             
@@ -445,8 +433,6 @@ namespace RApID_Project_WPF {
                 base.Columns.Add(this.columnPartNumber);
                 this.columnBOMPath = new global::System.Data.DataColumn("BOMPath", typeof(string), null, global::System.Data.MappingType.Element);
                 base.Columns.Add(this.columnBOMPath);
-                this.columnBOMFileName = new global::System.Data.DataColumn("BOMFileName", typeof(string), null, global::System.Data.MappingType.Element);
-                base.Columns.Add(this.columnBOMFileName);
                 this.columnSchematicPaths = new global::System.Data.DataColumn("SchematicPaths", typeof(string), null, global::System.Data.MappingType.Element);
                 base.Columns.Add(this.columnSchematicPaths);
                 this.columnID.AutoIncrement = true;
@@ -456,34 +442,33 @@ namespace RApID_Project_WPF {
                 this.columnID.ReadOnly = true;
                 this.columnPartNumber.MaxLength = 50;
                 this.columnBOMPath.MaxLength = 250;
-                this.columnBOMFileName.MaxLength = 100;
                 this.columnSchematicPaths.MaxLength = 2000;
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
-            public PCBAAliasesRow NewPCBAAliasesRow() {
-                return ((PCBAAliasesRow)(this.NewRow()));
+            public TechAliasesRow NewTechAliasesRow() {
+                return ((TechAliasesRow)(this.NewRow()));
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
             protected override global::System.Data.DataRow NewRowFromBuilder(global::System.Data.DataRowBuilder builder) {
-                return new PCBAAliasesRow(builder);
+                return new TechAliasesRow(builder);
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
             protected override global::System.Type GetRowType() {
-                return typeof(PCBAAliasesRow);
+                return typeof(TechAliasesRow);
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
             protected override void OnRowChanged(global::System.Data.DataRowChangeEventArgs e) {
                 base.OnRowChanged(e);
-                if ((this.PCBAAliasesRowChanged != null)) {
-                    this.PCBAAliasesRowChanged(this, new PCBAAliasesRowChangeEvent(((PCBAAliasesRow)(e.Row)), e.Action));
+                if ((this.TechAliasesRowChanged != null)) {
+                    this.TechAliasesRowChanged(this, new TechAliasesRowChangeEvent(((TechAliasesRow)(e.Row)), e.Action));
                 }
             }
             
@@ -491,8 +476,8 @@ namespace RApID_Project_WPF {
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
             protected override void OnRowChanging(global::System.Data.DataRowChangeEventArgs e) {
                 base.OnRowChanging(e);
-                if ((this.PCBAAliasesRowChanging != null)) {
-                    this.PCBAAliasesRowChanging(this, new PCBAAliasesRowChangeEvent(((PCBAAliasesRow)(e.Row)), e.Action));
+                if ((this.TechAliasesRowChanging != null)) {
+                    this.TechAliasesRowChanging(this, new TechAliasesRowChangeEvent(((TechAliasesRow)(e.Row)), e.Action));
                 }
             }
             
@@ -500,8 +485,8 @@ namespace RApID_Project_WPF {
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
             protected override void OnRowDeleted(global::System.Data.DataRowChangeEventArgs e) {
                 base.OnRowDeleted(e);
-                if ((this.PCBAAliasesRowDeleted != null)) {
-                    this.PCBAAliasesRowDeleted(this, new PCBAAliasesRowChangeEvent(((PCBAAliasesRow)(e.Row)), e.Action));
+                if ((this.TechAliasesRowDeleted != null)) {
+                    this.TechAliasesRowDeleted(this, new TechAliasesRowChangeEvent(((TechAliasesRow)(e.Row)), e.Action));
                 }
             }
             
@@ -509,14 +494,14 @@ namespace RApID_Project_WPF {
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
             protected override void OnRowDeleting(global::System.Data.DataRowChangeEventArgs e) {
                 base.OnRowDeleting(e);
-                if ((this.PCBAAliasesRowDeleting != null)) {
-                    this.PCBAAliasesRowDeleting(this, new PCBAAliasesRowChangeEvent(((PCBAAliasesRow)(e.Row)), e.Action));
+                if ((this.TechAliasesRowDeleting != null)) {
+                    this.TechAliasesRowDeleting(this, new TechAliasesRowChangeEvent(((TechAliasesRow)(e.Row)), e.Action));
                 }
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
-            public void RemovePCBAAliasesRow(PCBAAliasesRow row) {
+            public void RemoveTechAliasesRow(TechAliasesRow row) {
                 this.Rows.Remove(row);
             }
             
@@ -543,7 +528,7 @@ namespace RApID_Project_WPF {
                 type.Attributes.Add(attribute1);
                 global::System.Xml.Schema.XmlSchemaAttribute attribute2 = new global::System.Xml.Schema.XmlSchemaAttribute();
                 attribute2.Name = "tableTypeName";
-                attribute2.FixedValue = "PCBAAliasesDataTable";
+                attribute2.FixedValue = "TechAliasesDataTable";
                 type.Attributes.Add(attribute2);
                 type.Particle = sequence;
                 global::System.Xml.Schema.XmlSchema dsSchema = ds.GetSchemaSerializable();
@@ -587,25 +572,25 @@ namespace RApID_Project_WPF {
         /// <summary>
         ///Represents strongly named DataRow class.
         ///</summary>
-        public partial class PCBAAliasesRow : global::System.Data.DataRow {
+        public partial class TechAliasesRow : global::System.Data.DataRow {
             
-            private PCBAAliasesDataTable tablePCBAAliases;
+            private TechAliasesDataTable tableTechAliases;
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
-            internal PCBAAliasesRow(global::System.Data.DataRowBuilder rb) : 
+            internal TechAliasesRow(global::System.Data.DataRowBuilder rb) : 
                     base(rb) {
-                this.tablePCBAAliases = ((PCBAAliasesDataTable)(this.Table));
+                this.tableTechAliases = ((TechAliasesDataTable)(this.Table));
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
             public int ID {
                 get {
-                    return ((int)(this[this.tablePCBAAliases.IDColumn]));
+                    return ((int)(this[this.tableTechAliases.IDColumn]));
                 }
                 set {
-                    this[this.tablePCBAAliases.IDColumn] = value;
+                    this[this.tableTechAliases.IDColumn] = value;
                 }
             }
             
@@ -614,14 +599,14 @@ namespace RApID_Project_WPF {
             public string PartNumber {
                 get {
                     try {
-                        return ((string)(this[this.tablePCBAAliases.PartNumberColumn]));
+                        return ((string)(this[this.tableTechAliases.PartNumberColumn]));
                     }
                     catch (global::System.InvalidCastException e) {
-                        throw new global::System.Data.StrongTypingException("The value for column \'PartNumber\' in table \'PCBAAliases\' is DBNull.", e);
+                        throw new global::System.Data.StrongTypingException("The value for column \'PartNumber\' in table \'TechAliases\' is DBNull.", e);
                     }
                 }
                 set {
-                    this[this.tablePCBAAliases.PartNumberColumn] = value;
+                    this[this.tableTechAliases.PartNumberColumn] = value;
                 }
             }
             
@@ -630,30 +615,14 @@ namespace RApID_Project_WPF {
             public string BOMPath {
                 get {
                     try {
-                        return ((string)(this[this.tablePCBAAliases.BOMPathColumn]));
+                        return ((string)(this[this.tableTechAliases.BOMPathColumn]));
                     }
                     catch (global::System.InvalidCastException e) {
-                        throw new global::System.Data.StrongTypingException("The value for column \'BOMPath\' in table \'PCBAAliases\' is DBNull.", e);
+                        throw new global::System.Data.StrongTypingException("The value for column \'BOMPath\' in table \'TechAliases\' is DBNull.", e);
                     }
                 }
                 set {
-                    this[this.tablePCBAAliases.BOMPathColumn] = value;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
-            public string BOMFileName {
-                get {
-                    try {
-                        return ((string)(this[this.tablePCBAAliases.BOMFileNameColumn]));
-                    }
-                    catch (global::System.InvalidCastException e) {
-                        throw new global::System.Data.StrongTypingException("The value for column \'BOMFileName\' in table \'PCBAAliases\' is DBNull.", e);
-                    }
-                }
-                set {
-                    this[this.tablePCBAAliases.BOMFileNameColumn] = value;
+                    this[this.tableTechAliases.BOMPathColumn] = value;
                 }
             }
             
@@ -662,63 +631,51 @@ namespace RApID_Project_WPF {
             public string SchematicPaths {
                 get {
                     try {
-                        return ((string)(this[this.tablePCBAAliases.SchematicPathsColumn]));
+                        return ((string)(this[this.tableTechAliases.SchematicPathsColumn]));
                     }
                     catch (global::System.InvalidCastException e) {
-                        throw new global::System.Data.StrongTypingException("The value for column \'SchematicPaths\' in table \'PCBAAliases\' is DBNull.", e);
+                        throw new global::System.Data.StrongTypingException("The value for column \'SchematicPaths\' in table \'TechAliases\' is DBNull.", e);
                     }
                 }
                 set {
-                    this[this.tablePCBAAliases.SchematicPathsColumn] = value;
+                    this[this.tableTechAliases.SchematicPathsColumn] = value;
                 }
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
             public bool IsPartNumberNull() {
-                return this.IsNull(this.tablePCBAAliases.PartNumberColumn);
+                return this.IsNull(this.tableTechAliases.PartNumberColumn);
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
             public void SetPartNumberNull() {
-                this[this.tablePCBAAliases.PartNumberColumn] = global::System.Convert.DBNull;
+                this[this.tableTechAliases.PartNumberColumn] = global::System.Convert.DBNull;
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
             public bool IsBOMPathNull() {
-                return this.IsNull(this.tablePCBAAliases.BOMPathColumn);
+                return this.IsNull(this.tableTechAliases.BOMPathColumn);
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
             public void SetBOMPathNull() {
-                this[this.tablePCBAAliases.BOMPathColumn] = global::System.Convert.DBNull;
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
-            public bool IsBOMFileNameNull() {
-                return this.IsNull(this.tablePCBAAliases.BOMFileNameColumn);
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
-            public void SetBOMFileNameNull() {
-                this[this.tablePCBAAliases.BOMFileNameColumn] = global::System.Convert.DBNull;
+                this[this.tableTechAliases.BOMPathColumn] = global::System.Convert.DBNull;
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
             public bool IsSchematicPathsNull() {
-                return this.IsNull(this.tablePCBAAliases.SchematicPathsColumn);
+                return this.IsNull(this.tableTechAliases.SchematicPathsColumn);
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
             public void SetSchematicPathsNull() {
-                this[this.tablePCBAAliases.SchematicPathsColumn] = global::System.Convert.DBNull;
+                this[this.tableTechAliases.SchematicPathsColumn] = global::System.Convert.DBNull;
             }
         }
         
@@ -726,22 +683,22 @@ namespace RApID_Project_WPF {
         ///Row event argument class
         ///</summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
-        public class PCBAAliasesRowChangeEvent : global::System.EventArgs {
+        public class TechAliasesRowChangeEvent : global::System.EventArgs {
             
-            private PCBAAliasesRow eventRow;
+            private TechAliasesRow eventRow;
             
             private global::System.Data.DataRowAction eventAction;
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
-            public PCBAAliasesRowChangeEvent(PCBAAliasesRow row, global::System.Data.DataRowAction action) {
+            public TechAliasesRowChangeEvent(TechAliasesRow row, global::System.Data.DataRowAction action) {
                 this.eventRow = row;
                 this.eventAction = action;
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
-            public PCBAAliasesRow Row {
+            public TechAliasesRow Row {
                 get {
                     return this.eventRow;
                 }
@@ -769,7 +726,7 @@ namespace RApID_Project_WPF.PCBAliasDataSetTableAdapters {
     [global::System.ComponentModel.DesignerAttribute("Microsoft.VSDesigner.DataSource.Design.TableAdapterDesigner, Microsoft.VSDesigner" +
         ", Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a")]
     [global::System.ComponentModel.Design.HelpKeywordAttribute("vs.data.TableAdapter")]
-    public partial class PCBAAliasesTableAdapter : global::System.ComponentModel.Component {
+    public partial class TechAliasesTableAdapter : global::System.ComponentModel.Component {
         
         private global::System.Data.SqlClient.SqlDataAdapter _adapter;
         
@@ -783,7 +740,7 @@ namespace RApID_Project_WPF.PCBAliasDataSetTableAdapters {
         
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
-        public PCBAAliasesTableAdapter() {
+        public TechAliasesTableAdapter() {
             this.ClearBeforeFill = true;
         }
         
@@ -880,21 +837,19 @@ namespace RApID_Project_WPF.PCBAliasDataSetTableAdapters {
             this._adapter = new global::System.Data.SqlClient.SqlDataAdapter();
             global::System.Data.Common.DataTableMapping tableMapping = new global::System.Data.Common.DataTableMapping();
             tableMapping.SourceTable = "Table";
-            tableMapping.DataSetTable = "PCBAAliases";
+            tableMapping.DataSetTable = "TechAliases";
             tableMapping.ColumnMappings.Add("ID", "ID");
             tableMapping.ColumnMappings.Add("PartNumber", "PartNumber");
             tableMapping.ColumnMappings.Add("BOMPath", "BOMPath");
-            tableMapping.ColumnMappings.Add("BOMFileName", "BOMFileName");
             tableMapping.ColumnMappings.Add("SchematicPaths", "SchematicPaths");
             this._adapter.TableMappings.Add(tableMapping);
             this._adapter.InsertCommand = new global::System.Data.SqlClient.SqlCommand();
             this._adapter.InsertCommand.Connection = this.Connection;
-            this._adapter.InsertCommand.CommandText = "INSERT INTO [dbo].[PCBAAliases] ([PartNumber], [BOMPath], [BOMFileName], [Schemat" +
-                "icPaths]) VALUES (@PartNumber, @BOMPath, @BOMFileName, @SchematicPaths)";
+            this._adapter.InsertCommand.CommandText = "INSERT INTO [dbo].[TechAliases] ([PartNumber], [BOMPath], [SchematicPaths]) VALUE" +
+                "S (@PartNumber, @BOMPath, @SchematicPaths)";
             this._adapter.InsertCommand.CommandType = global::System.Data.CommandType.Text;
             this._adapter.InsertCommand.Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@PartNumber", global::System.Data.SqlDbType.NVarChar, 0, global::System.Data.ParameterDirection.Input, 0, 0, "PartNumber", global::System.Data.DataRowVersion.Current, false, null, "", "", ""));
             this._adapter.InsertCommand.Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@BOMPath", global::System.Data.SqlDbType.NVarChar, 0, global::System.Data.ParameterDirection.Input, 0, 0, "BOMPath", global::System.Data.DataRowVersion.Current, false, null, "", "", ""));
-            this._adapter.InsertCommand.Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@BOMFileName", global::System.Data.SqlDbType.NVarChar, 0, global::System.Data.ParameterDirection.Input, 0, 0, "BOMFileName", global::System.Data.DataRowVersion.Current, false, null, "", "", ""));
             this._adapter.InsertCommand.Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@SchematicPaths", global::System.Data.SqlDbType.NVarChar, 0, global::System.Data.ParameterDirection.Input, 0, 0, "SchematicPaths", global::System.Data.DataRowVersion.Current, false, null, "", "", ""));
         }
         
@@ -911,7 +866,7 @@ namespace RApID_Project_WPF.PCBAliasDataSetTableAdapters {
             this._commandCollection = new global::System.Data.SqlClient.SqlCommand[1];
             this._commandCollection[0] = new global::System.Data.SqlClient.SqlCommand();
             this._commandCollection[0].Connection = this.Connection;
-            this._commandCollection[0].CommandText = "SELECT ID, PartNumber, BOMPath, BOMFileName, SchematicPaths FROM dbo.PCBAAliases";
+            this._commandCollection[0].CommandText = "SELECT ID, PartNumber, BOMPath, SchematicPaths FROM dbo.TechAliases";
             this._commandCollection[0].CommandType = global::System.Data.CommandType.Text;
         }
         
@@ -919,7 +874,7 @@ namespace RApID_Project_WPF.PCBAliasDataSetTableAdapters {
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
         [global::System.ComponentModel.Design.HelpKeywordAttribute("vs.data.TableAdapter")]
         [global::System.ComponentModel.DataObjectMethodAttribute(global::System.ComponentModel.DataObjectMethodType.Fill, true)]
-        public virtual int Fill(PCBAliasDataSet.PCBAAliasesDataTable dataTable) {
+        public virtual int Fill(PCBAliasDataSet.TechAliasesDataTable dataTable) {
             this.Adapter.SelectCommand = this.CommandCollection[0];
             if ((this.ClearBeforeFill == true)) {
                 dataTable.Clear();
@@ -932,9 +887,9 @@ namespace RApID_Project_WPF.PCBAliasDataSetTableAdapters {
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
         [global::System.ComponentModel.Design.HelpKeywordAttribute("vs.data.TableAdapter")]
         [global::System.ComponentModel.DataObjectMethodAttribute(global::System.ComponentModel.DataObjectMethodType.Select, true)]
-        public virtual PCBAliasDataSet.PCBAAliasesDataTable GetData() {
+        public virtual PCBAliasDataSet.TechAliasesDataTable GetData() {
             this.Adapter.SelectCommand = this.CommandCollection[0];
-            PCBAliasDataSet.PCBAAliasesDataTable dataTable = new PCBAliasDataSet.PCBAAliasesDataTable();
+            PCBAliasDataSet.TechAliasesDataTable dataTable = new PCBAliasDataSet.TechAliasesDataTable();
             this.Adapter.Fill(dataTable);
             return dataTable;
         }
@@ -942,7 +897,7 @@ namespace RApID_Project_WPF.PCBAliasDataSetTableAdapters {
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
         [global::System.ComponentModel.Design.HelpKeywordAttribute("vs.data.TableAdapter")]
-        public virtual int Update(PCBAliasDataSet.PCBAAliasesDataTable dataTable) {
+        public virtual int Update(PCBAliasDataSet.TechAliasesDataTable dataTable) {
             return this.Adapter.Update(dataTable);
         }
         
@@ -950,7 +905,7 @@ namespace RApID_Project_WPF.PCBAliasDataSetTableAdapters {
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
         [global::System.ComponentModel.Design.HelpKeywordAttribute("vs.data.TableAdapter")]
         public virtual int Update(PCBAliasDataSet dataSet) {
-            return this.Adapter.Update(dataSet, "PCBAAliases");
+            return this.Adapter.Update(dataSet, "TechAliases");
         }
         
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
@@ -967,51 +922,6 @@ namespace RApID_Project_WPF.PCBAliasDataSetTableAdapters {
         public virtual int Update(global::System.Data.DataRow[] dataRows) {
             return this.Adapter.Update(dataRows);
         }
-        
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
-        [global::System.ComponentModel.Design.HelpKeywordAttribute("vs.data.TableAdapter")]
-        [global::System.ComponentModel.DataObjectMethodAttribute(global::System.ComponentModel.DataObjectMethodType.Insert, true)]
-        public virtual int Insert(string PartNumber, string BOMPath, string BOMFileName, string SchematicPaths) {
-            if ((PartNumber == null)) {
-                this.Adapter.InsertCommand.Parameters[0].Value = global::System.DBNull.Value;
-            }
-            else {
-                this.Adapter.InsertCommand.Parameters[0].Value = ((string)(PartNumber));
-            }
-            if ((BOMPath == null)) {
-                this.Adapter.InsertCommand.Parameters[1].Value = global::System.DBNull.Value;
-            }
-            else {
-                this.Adapter.InsertCommand.Parameters[1].Value = ((string)(BOMPath));
-            }
-            if ((BOMFileName == null)) {
-                this.Adapter.InsertCommand.Parameters[2].Value = global::System.DBNull.Value;
-            }
-            else {
-                this.Adapter.InsertCommand.Parameters[2].Value = ((string)(BOMFileName));
-            }
-            if ((SchematicPaths == null)) {
-                this.Adapter.InsertCommand.Parameters[3].Value = global::System.DBNull.Value;
-            }
-            else {
-                this.Adapter.InsertCommand.Parameters[3].Value = ((string)(SchematicPaths));
-            }
-            global::System.Data.ConnectionState previousConnectionState = this.Adapter.InsertCommand.Connection.State;
-            if (((this.Adapter.InsertCommand.Connection.State & global::System.Data.ConnectionState.Open) 
-                        != global::System.Data.ConnectionState.Open)) {
-                this.Adapter.InsertCommand.Connection.Open();
-            }
-            try {
-                int returnValue = this.Adapter.InsertCommand.ExecuteNonQuery();
-                return returnValue;
-            }
-            finally {
-                if ((previousConnectionState == global::System.Data.ConnectionState.Closed)) {
-                    this.Adapter.InsertCommand.Connection.Close();
-                }
-            }
-        }
     }
     
     /// <summary>
@@ -1026,7 +936,7 @@ namespace RApID_Project_WPF.PCBAliasDataSetTableAdapters {
         
         private UpdateOrderOption _updateOrder;
         
-        private PCBAAliasesTableAdapter _pCBAAliasesTableAdapter;
+        private TechAliasesTableAdapter _techAliasesTableAdapter;
         
         private bool _backupDataSetBeforeUpdate;
         
@@ -1048,12 +958,12 @@ namespace RApID_Project_WPF.PCBAliasDataSetTableAdapters {
         [global::System.ComponentModel.EditorAttribute("Microsoft.VSDesigner.DataSource.Design.TableAdapterManagerPropertyEditor, Microso" +
             "ft.VSDesigner, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3" +
             "a", "System.Drawing.Design.UITypeEditor")]
-        public PCBAAliasesTableAdapter PCBAAliasesTableAdapter {
+        public TechAliasesTableAdapter TechAliasesTableAdapter {
             get {
-                return this._pCBAAliasesTableAdapter;
+                return this._techAliasesTableAdapter;
             }
             set {
-                this._pCBAAliasesTableAdapter = value;
+                this._techAliasesTableAdapter = value;
             }
         }
         
@@ -1076,9 +986,9 @@ namespace RApID_Project_WPF.PCBAliasDataSetTableAdapters {
                 if ((this._connection != null)) {
                     return this._connection;
                 }
-                if (((this._pCBAAliasesTableAdapter != null) 
-                            && (this._pCBAAliasesTableAdapter.Connection != null))) {
-                    return this._pCBAAliasesTableAdapter.Connection;
+                if (((this._techAliasesTableAdapter != null) 
+                            && (this._techAliasesTableAdapter.Connection != null))) {
+                    return this._techAliasesTableAdapter.Connection;
                 }
                 return null;
             }
@@ -1093,7 +1003,7 @@ namespace RApID_Project_WPF.PCBAliasDataSetTableAdapters {
         public int TableAdapterInstanceCount {
             get {
                 int count = 0;
-                if ((this._pCBAAliasesTableAdapter != null)) {
+                if ((this._techAliasesTableAdapter != null)) {
                     count = (count + 1);
                 }
                 return count;
@@ -1107,12 +1017,12 @@ namespace RApID_Project_WPF.PCBAliasDataSetTableAdapters {
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
         private int UpdateUpdatedRows(PCBAliasDataSet dataSet, global::System.Collections.Generic.List<global::System.Data.DataRow> allChangedRows, global::System.Collections.Generic.List<global::System.Data.DataRow> allAddedRows) {
             int result = 0;
-            if ((this._pCBAAliasesTableAdapter != null)) {
-                global::System.Data.DataRow[] updatedRows = dataSet.PCBAAliases.Select(null, null, global::System.Data.DataViewRowState.ModifiedCurrent);
+            if ((this._techAliasesTableAdapter != null)) {
+                global::System.Data.DataRow[] updatedRows = dataSet.TechAliases.Select(null, null, global::System.Data.DataViewRowState.ModifiedCurrent);
                 updatedRows = this.GetRealUpdatedRows(updatedRows, allAddedRows);
                 if (((updatedRows != null) 
                             && (0 < updatedRows.Length))) {
-                    result = (result + this._pCBAAliasesTableAdapter.Update(updatedRows));
+                    result = (result + this._techAliasesTableAdapter.Update(updatedRows));
                     allChangedRows.AddRange(updatedRows);
                 }
             }
@@ -1126,11 +1036,11 @@ namespace RApID_Project_WPF.PCBAliasDataSetTableAdapters {
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
         private int UpdateInsertedRows(PCBAliasDataSet dataSet, global::System.Collections.Generic.List<global::System.Data.DataRow> allAddedRows) {
             int result = 0;
-            if ((this._pCBAAliasesTableAdapter != null)) {
-                global::System.Data.DataRow[] addedRows = dataSet.PCBAAliases.Select(null, null, global::System.Data.DataViewRowState.Added);
+            if ((this._techAliasesTableAdapter != null)) {
+                global::System.Data.DataRow[] addedRows = dataSet.TechAliases.Select(null, null, global::System.Data.DataViewRowState.Added);
                 if (((addedRows != null) 
                             && (0 < addedRows.Length))) {
-                    result = (result + this._pCBAAliasesTableAdapter.Update(addedRows));
+                    result = (result + this._techAliasesTableAdapter.Update(addedRows));
                     allAddedRows.AddRange(addedRows);
                 }
             }
@@ -1144,11 +1054,11 @@ namespace RApID_Project_WPF.PCBAliasDataSetTableAdapters {
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
         private int UpdateDeletedRows(PCBAliasDataSet dataSet, global::System.Collections.Generic.List<global::System.Data.DataRow> allChangedRows) {
             int result = 0;
-            if ((this._pCBAAliasesTableAdapter != null)) {
-                global::System.Data.DataRow[] deletedRows = dataSet.PCBAAliases.Select(null, null, global::System.Data.DataViewRowState.Deleted);
+            if ((this._techAliasesTableAdapter != null)) {
+                global::System.Data.DataRow[] deletedRows = dataSet.TechAliases.Select(null, null, global::System.Data.DataViewRowState.Deleted);
                 if (((deletedRows != null) 
                             && (0 < deletedRows.Length))) {
-                    result = (result + this._pCBAAliasesTableAdapter.Update(deletedRows));
+                    result = (result + this._techAliasesTableAdapter.Update(deletedRows));
                     allChangedRows.AddRange(deletedRows);
                 }
             }
@@ -1191,8 +1101,8 @@ namespace RApID_Project_WPF.PCBAliasDataSetTableAdapters {
             if ((dataSet.HasChanges() == false)) {
                 return 0;
             }
-            if (((this._pCBAAliasesTableAdapter != null) 
-                        && (this.MatchTableAdapterConnection(this._pCBAAliasesTableAdapter.Connection) == false))) {
+            if (((this._techAliasesTableAdapter != null) 
+                        && (this.MatchTableAdapterConnection(this._techAliasesTableAdapter.Connection) == false))) {
                 throw new global::System.ArgumentException("All TableAdapters managed by a TableAdapterManager must use the same connection s" +
                         "tring.");
             }
@@ -1228,13 +1138,13 @@ namespace RApID_Project_WPF.PCBAliasDataSetTableAdapters {
             try {
                 // ---- Prepare for update -----------
                 //
-                if ((this._pCBAAliasesTableAdapter != null)) {
-                    revertConnections.Add(this._pCBAAliasesTableAdapter, this._pCBAAliasesTableAdapter.Connection);
-                    this._pCBAAliasesTableAdapter.Connection = ((global::System.Data.SqlClient.SqlConnection)(workConnection));
-                    this._pCBAAliasesTableAdapter.Transaction = ((global::System.Data.SqlClient.SqlTransaction)(workTransaction));
-                    if (this._pCBAAliasesTableAdapter.Adapter.AcceptChangesDuringUpdate) {
-                        this._pCBAAliasesTableAdapter.Adapter.AcceptChangesDuringUpdate = false;
-                        adaptersWithAcceptChangesDuringUpdate.Add(this._pCBAAliasesTableAdapter.Adapter);
+                if ((this._techAliasesTableAdapter != null)) {
+                    revertConnections.Add(this._techAliasesTableAdapter, this._techAliasesTableAdapter.Connection);
+                    this._techAliasesTableAdapter.Connection = ((global::System.Data.SqlClient.SqlConnection)(workConnection));
+                    this._techAliasesTableAdapter.Transaction = ((global::System.Data.SqlClient.SqlTransaction)(workTransaction));
+                    if (this._techAliasesTableAdapter.Adapter.AcceptChangesDuringUpdate) {
+                        this._techAliasesTableAdapter.Adapter.AcceptChangesDuringUpdate = false;
+                        adaptersWithAcceptChangesDuringUpdate.Add(this._techAliasesTableAdapter.Adapter);
                     }
                 }
                 // 
@@ -1295,9 +1205,9 @@ namespace RApID_Project_WPF.PCBAliasDataSetTableAdapters {
                 if (workConnOpened) {
                     workConnection.Close();
                 }
-                if ((this._pCBAAliasesTableAdapter != null)) {
-                    this._pCBAAliasesTableAdapter.Connection = ((global::System.Data.SqlClient.SqlConnection)(revertConnections[this._pCBAAliasesTableAdapter]));
-                    this._pCBAAliasesTableAdapter.Transaction = null;
+                if ((this._techAliasesTableAdapter != null)) {
+                    this._techAliasesTableAdapter.Connection = ((global::System.Data.SqlClient.SqlConnection)(revertConnections[this._techAliasesTableAdapter]));
+                    this._techAliasesTableAdapter.Transaction = null;
                 }
                 if ((0 < adaptersWithAcceptChangesDuringUpdate.Count)) {
                     global::System.Data.Common.DataAdapter[] adapters = new System.Data.Common.DataAdapter[adaptersWithAcceptChangesDuringUpdate.Count];

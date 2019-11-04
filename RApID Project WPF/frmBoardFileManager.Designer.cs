@@ -46,33 +46,30 @@
             this.txtPartNumber = new System.Windows.Forms.TextBox();
             this.btnSearch = new System.Windows.Forms.Button();
             this.btnReset = new System.Windows.Forms.Button();
+            this.grpbxBOMLinkHolder = new System.Windows.Forms.GroupBox();
+            this.flowBOMFiles = new System.Windows.Forms.FlowLayoutPanel();
+            this.spltpnlAliasToDetail = new System.Windows.Forms.SplitContainer();
+            this.panel1 = new System.Windows.Forms.Panel();
             this.grpbxPartNumberDetail = new System.Windows.Forms.GroupBox();
             this.lblCommodityClass = new System.Windows.Forms.Label();
             this.lblPartName = new System.Windows.Forms.Label();
-            this.spltpnlAliasToDetail = new System.Windows.Forms.SplitContainer();
-            this.panel1 = new System.Windows.Forms.Panel();
-            this.pbxBoard = new System.Windows.Forms.PictureBox();
             this.pnlFilePaths = new System.Windows.Forms.Panel();
             this.grpbxSchematicFiles = new System.Windows.Forms.GroupBox();
             this.flowSchematicLinks = new System.Windows.Forms.FlowLayoutPanel();
-            this.grpbxBOMLinkHolder = new System.Windows.Forms.GroupBox();
-            this.btnChangeBOMPath = new System.Windows.Forms.Button();
-            this.lnkBOMFile = new System.Windows.Forms.LinkLabel();
             this.tbDatabaseView = new System.Windows.Forms.TabPage();
             this.dgvDatabaseTable = new System.Windows.Forms.DataGridView();
-            this.partNumberDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.bOMPathDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.bOMFileNameDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.schematicPathsDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.dataGridViewTextBoxColumn1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.dataGridViewTextBoxColumn2 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.dataGridViewTextBoxColumn3 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.cxmnuDatabaseMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.refreshToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.pCBAAliasesBindingSource = new System.Windows.Forms.BindingSource(this.components);
+            this.techAliasesBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.pCBAliasDataSet = new RApID_Project_WPF.PCBAliasDataSet();
             this.imgSchematics = new System.Windows.Forms.ImageList(this.components);
             this.lblWarning = new System.Windows.Forms.Label();
             this.spltpnlMain = new System.Windows.Forms.SplitContainer();
             this.errorProvider = new System.Windows.Forms.ErrorProvider(this.components);
-            this.pCBAAliasesTableAdapter = new RApID_Project_WPF.PCBAliasDataSetTableAdapters.PCBAAliasesTableAdapter();
+            this.techAliasesTableAdapter = new RApID_Project_WPF.PCBAliasDataSetTableAdapters.TechAliasesTableAdapter();
             this.cxmnuSchematicLinksMenu.SuspendLayout();
             this.tcDataViewer.SuspendLayout();
             this.tbTechnicianView.SuspendLayout();
@@ -85,20 +82,19 @@
             this.spltpnlPartNumToDetail.Panel2.SuspendLayout();
             this.spltpnlPartNumToDetail.SuspendLayout();
             this.flopnlPartNumberInput.SuspendLayout();
-            this.grpbxPartNumberDetail.SuspendLayout();
+            this.grpbxBOMLinkHolder.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.spltpnlAliasToDetail)).BeginInit();
             this.spltpnlAliasToDetail.Panel1.SuspendLayout();
             this.spltpnlAliasToDetail.Panel2.SuspendLayout();
             this.spltpnlAliasToDetail.SuspendLayout();
             this.panel1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pbxBoard)).BeginInit();
+            this.grpbxPartNumberDetail.SuspendLayout();
             this.pnlFilePaths.SuspendLayout();
             this.grpbxSchematicFiles.SuspendLayout();
-            this.grpbxBOMLinkHolder.SuspendLayout();
             this.tbDatabaseView.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgvDatabaseTable)).BeginInit();
             this.cxmnuDatabaseMenu.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pCBAAliasesBindingSource)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.techAliasesBindingSource)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pCBAliasDataSet)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.spltpnlMain)).BeginInit();
             this.spltpnlMain.Panel1.SuspendLayout();
@@ -190,9 +186,9 @@
             // 
             // spltpnlPartNumToDetail.Panel2
             // 
-            this.spltpnlPartNumToDetail.Panel2.Controls.Add(this.grpbxPartNumberDetail);
+            this.spltpnlPartNumToDetail.Panel2.Controls.Add(this.grpbxBOMLinkHolder);
             this.spltpnlPartNumToDetail.Size = new System.Drawing.Size(786, 180);
-            this.spltpnlPartNumToDetail.SplitterDistance = 262;
+            this.spltpnlPartNumToDetail.SplitterDistance = 281;
             this.spltpnlPartNumToDetail.TabIndex = 0;
             // 
             // flopnlPartNumberInput
@@ -207,7 +203,7 @@
             this.flopnlPartNumberInput.ForeColor = System.Drawing.Color.Goldenrod;
             this.flopnlPartNumberInput.Location = new System.Drawing.Point(0, 0);
             this.flopnlPartNumberInput.Name = "flopnlPartNumberInput";
-            this.flopnlPartNumberInput.Size = new System.Drawing.Size(262, 180);
+            this.flopnlPartNumberInput.Size = new System.Drawing.Size(281, 180);
             this.flopnlPartNumberInput.TabIndex = 0;
             // 
             // lblPartNumberLabel
@@ -255,6 +251,56 @@
             this.btnReset.UseVisualStyleBackColor = false;
             this.btnReset.Click += new System.EventHandler(this.btnReset_Click);
             // 
+            // grpbxBOMLinkHolder
+            // 
+            this.grpbxBOMLinkHolder.BackColor = System.Drawing.Color.Black;
+            this.grpbxBOMLinkHolder.Controls.Add(this.flowBOMFiles);
+            this.grpbxBOMLinkHolder.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.grpbxBOMLinkHolder.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.grpbxBOMLinkHolder.ForeColor = System.Drawing.Color.Gold;
+            this.grpbxBOMLinkHolder.Location = new System.Drawing.Point(0, 0);
+            this.grpbxBOMLinkHolder.Name = "grpbxBOMLinkHolder";
+            this.grpbxBOMLinkHolder.Size = new System.Drawing.Size(501, 180);
+            this.grpbxBOMLinkHolder.TabIndex = 6;
+            this.grpbxBOMLinkHolder.TabStop = false;
+            this.grpbxBOMLinkHolder.Text = "BOM File Link";
+            // 
+            // flowBOMFiles
+            // 
+            this.flowBOMFiles.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.flowBOMFiles.Location = new System.Drawing.Point(3, 22);
+            this.flowBOMFiles.Name = "flowBOMFiles";
+            this.flowBOMFiles.Size = new System.Drawing.Size(495, 155);
+            this.flowBOMFiles.TabIndex = 0;
+            this.flowBOMFiles.MouseDown += new System.Windows.Forms.MouseEventHandler(this.flowSchematicLinks_MouseDown);
+            // 
+            // spltpnlAliasToDetail
+            // 
+            this.spltpnlAliasToDetail.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.spltpnlAliasToDetail.Location = new System.Drawing.Point(0, 0);
+            this.spltpnlAliasToDetail.Name = "spltpnlAliasToDetail";
+            // 
+            // spltpnlAliasToDetail.Panel1
+            // 
+            this.spltpnlAliasToDetail.Panel1.Controls.Add(this.panel1);
+            // 
+            // spltpnlAliasToDetail.Panel2
+            // 
+            this.spltpnlAliasToDetail.Panel2.Controls.Add(this.pnlFilePaths);
+            this.spltpnlAliasToDetail.Size = new System.Drawing.Size(786, 213);
+            this.spltpnlAliasToDetail.SplitterDistance = 280;
+            this.spltpnlAliasToDetail.TabIndex = 0;
+            // 
+            // panel1
+            // 
+            this.panel1.BackColor = System.Drawing.Color.Black;
+            this.panel1.Controls.Add(this.grpbxPartNumberDetail);
+            this.panel1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.panel1.Location = new System.Drawing.Point(0, 0);
+            this.panel1.Name = "panel1";
+            this.panel1.Size = new System.Drawing.Size(280, 213);
+            this.panel1.TabIndex = 0;
+            // 
             // grpbxPartNumberDetail
             // 
             this.grpbxPartNumberDetail.BackColor = System.Drawing.Color.Black;
@@ -264,7 +310,7 @@
             this.grpbxPartNumberDetail.ForeColor = System.Drawing.Color.Goldenrod;
             this.grpbxPartNumberDetail.Location = new System.Drawing.Point(0, 0);
             this.grpbxPartNumberDetail.Name = "grpbxPartNumberDetail";
-            this.grpbxPartNumberDetail.Size = new System.Drawing.Size(520, 180);
+            this.grpbxPartNumberDetail.Size = new System.Drawing.Size(280, 213);
             this.grpbxPartNumberDetail.TabIndex = 0;
             this.grpbxPartNumberDetail.TabStop = false;
             this.grpbxPartNumberDetail.Text = "Part Number Details";
@@ -287,67 +333,26 @@
             this.lblPartName.TabIndex = 0;
             this.lblPartName.Text = "Part Name: <NAME>";
             // 
-            // spltpnlAliasToDetail
-            // 
-            this.spltpnlAliasToDetail.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.spltpnlAliasToDetail.Location = new System.Drawing.Point(0, 0);
-            this.spltpnlAliasToDetail.Name = "spltpnlAliasToDetail";
-            // 
-            // spltpnlAliasToDetail.Panel1
-            // 
-            this.spltpnlAliasToDetail.Panel1.Controls.Add(this.panel1);
-            // 
-            // spltpnlAliasToDetail.Panel2
-            // 
-            this.spltpnlAliasToDetail.Panel2.Controls.Add(this.pnlFilePaths);
-            this.spltpnlAliasToDetail.Size = new System.Drawing.Size(786, 213);
-            this.spltpnlAliasToDetail.SplitterDistance = 262;
-            this.spltpnlAliasToDetail.TabIndex = 0;
-            // 
-            // panel1
-            // 
-            this.panel1.BackColor = System.Drawing.Color.Black;
-            this.panel1.Controls.Add(this.pbxBoard);
-            this.panel1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.panel1.Location = new System.Drawing.Point(0, 0);
-            this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(262, 213);
-            this.panel1.TabIndex = 0;
-            // 
-            // pbxBoard
-            // 
-            this.pbxBoard.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.pbxBoard.Image = global::RApID_Project_WPF.Properties.Resources.Board;
-            this.pbxBoard.Location = new System.Drawing.Point(0, 0);
-            this.pbxBoard.Name = "pbxBoard";
-            this.pbxBoard.Size = new System.Drawing.Size(262, 213);
-            this.pbxBoard.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
-            this.pbxBoard.TabIndex = 0;
-            this.pbxBoard.TabStop = false;
-            // 
             // pnlFilePaths
             // 
             this.pnlFilePaths.BackColor = System.Drawing.Color.Black;
             this.pnlFilePaths.Controls.Add(this.grpbxSchematicFiles);
-            this.pnlFilePaths.Controls.Add(this.grpbxBOMLinkHolder);
             this.pnlFilePaths.Dock = System.Windows.Forms.DockStyle.Fill;
             this.pnlFilePaths.ForeColor = System.Drawing.Color.Gold;
             this.pnlFilePaths.Location = new System.Drawing.Point(0, 0);
             this.pnlFilePaths.Name = "pnlFilePaths";
-            this.pnlFilePaths.Size = new System.Drawing.Size(520, 213);
+            this.pnlFilePaths.Size = new System.Drawing.Size(502, 213);
             this.pnlFilePaths.TabIndex = 5;
             // 
             // grpbxSchematicFiles
             // 
-            this.grpbxSchematicFiles.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
             this.grpbxSchematicFiles.Controls.Add(this.flowSchematicLinks);
+            this.grpbxSchematicFiles.Dock = System.Windows.Forms.DockStyle.Fill;
             this.grpbxSchematicFiles.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.grpbxSchematicFiles.ForeColor = System.Drawing.Color.Gold;
-            this.grpbxSchematicFiles.Location = new System.Drawing.Point(3, 69);
+            this.grpbxSchematicFiles.Location = new System.Drawing.Point(0, 0);
             this.grpbxSchematicFiles.Name = "grpbxSchematicFiles";
-            this.grpbxSchematicFiles.Size = new System.Drawing.Size(512, 139);
+            this.grpbxSchematicFiles.Size = new System.Drawing.Size(502, 213);
             this.grpbxSchematicFiles.TabIndex = 7;
             this.grpbxSchematicFiles.TabStop = false;
             this.grpbxSchematicFiles.Text = "Schematic File Links";
@@ -359,53 +364,9 @@
             this.flowSchematicLinks.ForeColor = System.Drawing.Color.Gold;
             this.flowSchematicLinks.Location = new System.Drawing.Point(3, 22);
             this.flowSchematicLinks.Name = "flowSchematicLinks";
-            this.flowSchematicLinks.Size = new System.Drawing.Size(506, 114);
+            this.flowSchematicLinks.Size = new System.Drawing.Size(496, 188);
             this.flowSchematicLinks.TabIndex = 0;
             this.flowSchematicLinks.MouseDown += new System.Windows.Forms.MouseEventHandler(this.flowSchematicLinks_MouseDown);
-            // 
-            // grpbxBOMLinkHolder
-            // 
-            this.grpbxBOMLinkHolder.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.grpbxBOMLinkHolder.Controls.Add(this.btnChangeBOMPath);
-            this.grpbxBOMLinkHolder.Controls.Add(this.lnkBOMFile);
-            this.grpbxBOMLinkHolder.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.grpbxBOMLinkHolder.ForeColor = System.Drawing.Color.Gold;
-            this.grpbxBOMLinkHolder.Location = new System.Drawing.Point(3, 3);
-            this.grpbxBOMLinkHolder.Name = "grpbxBOMLinkHolder";
-            this.grpbxBOMLinkHolder.Size = new System.Drawing.Size(512, 60);
-            this.grpbxBOMLinkHolder.TabIndex = 6;
-            this.grpbxBOMLinkHolder.TabStop = false;
-            this.grpbxBOMLinkHolder.Text = "BOM File Link";
-            // 
-            // btnChangeBOMPath
-            // 
-            this.btnChangeBOMPath.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnChangeBOMPath.BackColor = System.Drawing.Color.DimGray;
-            this.btnChangeBOMPath.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnChangeBOMPath.ForeColor = System.Drawing.Color.AliceBlue;
-            this.btnChangeBOMPath.Location = new System.Drawing.Point(480, 22);
-            this.btnChangeBOMPath.Name = "btnChangeBOMPath";
-            this.btnChangeBOMPath.Size = new System.Drawing.Size(26, 23);
-            this.btnChangeBOMPath.TabIndex = 1;
-            this.btnChangeBOMPath.Text = "...";
-            this.btnChangeBOMPath.UseVisualStyleBackColor = false;
-            this.btnChangeBOMPath.Click += new System.EventHandler(this.btnChangeBOMPath_Click);
-            // 
-            // lnkBOMFile
-            // 
-            this.lnkBOMFile.ActiveLinkColor = System.Drawing.Color.FromArgb(((int)(((byte)(128)))), ((int)(((byte)(255)))), ((int)(((byte)(128)))));
-            this.lnkBOMFile.AutoSize = true;
-            this.lnkBOMFile.LinkColor = System.Drawing.Color.Cyan;
-            this.lnkBOMFile.Location = new System.Drawing.Point(6, 22);
-            this.lnkBOMFile.Name = "lnkBOMFile";
-            this.lnkBOMFile.Size = new System.Drawing.Size(78, 20);
-            this.lnkBOMFile.TabIndex = 0;
-            this.lnkBOMFile.TabStop = true;
-            this.lnkBOMFile.Text = "BOMPath";
-            this.lnkBOMFile.VisitedLinkColor = System.Drawing.Color.FromArgb(((int)(((byte)(128)))), ((int)(((byte)(128)))), ((int)(((byte)(255)))));
-            this.lnkBOMFile.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.lnkBOMFile_LinkClicked);
-            this.lnkBOMFile.MouseDown += new System.Windows.Forms.MouseEventHandler(this.lnkBOMFile_Click);
             // 
             // tbDatabaseView
             // 
@@ -435,12 +396,11 @@
             this.dgvDatabaseTable.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle1;
             this.dgvDatabaseTable.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dgvDatabaseTable.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
-            this.partNumberDataGridViewTextBoxColumn,
-            this.bOMPathDataGridViewTextBoxColumn,
-            this.bOMFileNameDataGridViewTextBoxColumn,
-            this.schematicPathsDataGridViewTextBoxColumn});
+            this.dataGridViewTextBoxColumn1,
+            this.dataGridViewTextBoxColumn2,
+            this.dataGridViewTextBoxColumn3});
             this.dgvDatabaseTable.ContextMenuStrip = this.cxmnuDatabaseMenu;
-            this.dgvDatabaseTable.DataSource = this.pCBAAliasesBindingSource;
+            this.dgvDatabaseTable.DataSource = this.techAliasesBindingSource;
             dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
             dataGridViewCellStyle2.BackColor = System.Drawing.Color.DimGray;
             dataGridViewCellStyle2.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
@@ -464,53 +424,46 @@
             this.dgvDatabaseTable.Size = new System.Drawing.Size(786, 397);
             this.dgvDatabaseTable.TabIndex = 0;
             // 
-            // partNumberDataGridViewTextBoxColumn
+            // dataGridViewTextBoxColumn1
             // 
-            this.partNumberDataGridViewTextBoxColumn.DataPropertyName = "PartNumber";
-            this.partNumberDataGridViewTextBoxColumn.HeaderText = "PartNumber";
-            this.partNumberDataGridViewTextBoxColumn.Name = "partNumberDataGridViewTextBoxColumn";
-            this.partNumberDataGridViewTextBoxColumn.ReadOnly = true;
+            this.dataGridViewTextBoxColumn1.DataPropertyName = "PartNumber";
+            this.dataGridViewTextBoxColumn1.HeaderText = "PartNumber";
+            this.dataGridViewTextBoxColumn1.Name = "dataGridViewTextBoxColumn1";
+            this.dataGridViewTextBoxColumn1.ReadOnly = true;
             // 
-            // bOMPathDataGridViewTextBoxColumn
+            // dataGridViewTextBoxColumn2
             // 
-            this.bOMPathDataGridViewTextBoxColumn.DataPropertyName = "BOMPath";
-            this.bOMPathDataGridViewTextBoxColumn.HeaderText = "BOMPath";
-            this.bOMPathDataGridViewTextBoxColumn.Name = "bOMPathDataGridViewTextBoxColumn";
-            this.bOMPathDataGridViewTextBoxColumn.ReadOnly = true;
+            this.dataGridViewTextBoxColumn2.DataPropertyName = "BOMPath";
+            this.dataGridViewTextBoxColumn2.HeaderText = "BOMPath";
+            this.dataGridViewTextBoxColumn2.Name = "dataGridViewTextBoxColumn2";
+            this.dataGridViewTextBoxColumn2.ReadOnly = true;
             // 
-            // bOMFileNameDataGridViewTextBoxColumn
+            // dataGridViewTextBoxColumn3
             // 
-            this.bOMFileNameDataGridViewTextBoxColumn.DataPropertyName = "BOMFileName";
-            this.bOMFileNameDataGridViewTextBoxColumn.HeaderText = "BOMFileName";
-            this.bOMFileNameDataGridViewTextBoxColumn.Name = "bOMFileNameDataGridViewTextBoxColumn";
-            this.bOMFileNameDataGridViewTextBoxColumn.ReadOnly = true;
-            // 
-            // schematicPathsDataGridViewTextBoxColumn
-            // 
-            this.schematicPathsDataGridViewTextBoxColumn.DataPropertyName = "SchematicPaths";
-            this.schematicPathsDataGridViewTextBoxColumn.HeaderText = "SchematicPaths";
-            this.schematicPathsDataGridViewTextBoxColumn.Name = "schematicPathsDataGridViewTextBoxColumn";
-            this.schematicPathsDataGridViewTextBoxColumn.ReadOnly = true;
+            this.dataGridViewTextBoxColumn3.DataPropertyName = "SchematicPaths";
+            this.dataGridViewTextBoxColumn3.HeaderText = "SchematicPaths";
+            this.dataGridViewTextBoxColumn3.Name = "dataGridViewTextBoxColumn3";
+            this.dataGridViewTextBoxColumn3.ReadOnly = true;
             // 
             // cxmnuDatabaseMenu
             // 
             this.cxmnuDatabaseMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.refreshToolStripMenuItem});
             this.cxmnuDatabaseMenu.Name = "cxmnuDatabaseMenu";
-            this.cxmnuDatabaseMenu.Size = new System.Drawing.Size(181, 48);
+            this.cxmnuDatabaseMenu.Size = new System.Drawing.Size(114, 26);
             // 
             // refreshToolStripMenuItem
             // 
             this.refreshToolStripMenuItem.Image = global::RApID_Project_WPF.Properties.Resources.refresh;
             this.refreshToolStripMenuItem.Name = "refreshToolStripMenuItem";
-            this.refreshToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.refreshToolStripMenuItem.Size = new System.Drawing.Size(113, 22);
             this.refreshToolStripMenuItem.Text = "Refresh";
             this.refreshToolStripMenuItem.Click += new System.EventHandler(this.refreshToolStripMenuItem_Click);
             // 
-            // pCBAAliasesBindingSource
+            // techAliasesBindingSource
             // 
-            this.pCBAAliasesBindingSource.DataMember = "PCBAAliases";
-            this.pCBAAliasesBindingSource.DataSource = this.pCBAliasDataSet;
+            this.techAliasesBindingSource.DataMember = "TechAliases";
+            this.techAliasesBindingSource.DataSource = this.pCBAliasDataSet;
             // 
             // pCBAliasDataSet
             // 
@@ -527,16 +480,14 @@
             // 
             // lblWarning
             // 
-            this.lblWarning.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.lblWarning.AutoSize = true;
+            this.lblWarning.Dock = System.Windows.Forms.DockStyle.Fill;
             this.lblWarning.Font = new System.Drawing.Font("Microsoft Sans Serif", 20.25F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Italic))), System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblWarning.Location = new System.Drawing.Point(12, 9);
+            this.lblWarning.Location = new System.Drawing.Point(0, 0);
             this.lblWarning.Name = "lblWarning";
-            this.lblWarning.Size = new System.Drawing.Size(552, 31);
+            this.lblWarning.Size = new System.Drawing.Size(800, 46);
             this.lblWarning.TabIndex = 0;
             this.lblWarning.Text = "Database Changes Are Immediately LIVE";
+            this.lblWarning.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // spltpnlMain
             // 
@@ -564,9 +515,9 @@
             this.errorProvider.BlinkRate = 333;
             this.errorProvider.ContainerControl = this;
             // 
-            // pCBAAliasesTableAdapter
+            // techAliasesTableAdapter
             // 
-            this.pCBAAliasesTableAdapter.ClearBeforeFill = true;
+            this.techAliasesTableAdapter.ClearBeforeFill = true;
             // 
             // frmBoardFileManager
             // 
@@ -594,25 +545,22 @@
             this.spltpnlPartNumToDetail.ResumeLayout(false);
             this.flopnlPartNumberInput.ResumeLayout(false);
             this.flopnlPartNumberInput.PerformLayout();
-            this.grpbxPartNumberDetail.ResumeLayout(false);
-            this.grpbxPartNumberDetail.PerformLayout();
+            this.grpbxBOMLinkHolder.ResumeLayout(false);
             this.spltpnlAliasToDetail.Panel1.ResumeLayout(false);
             this.spltpnlAliasToDetail.Panel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.spltpnlAliasToDetail)).EndInit();
             this.spltpnlAliasToDetail.ResumeLayout(false);
             this.panel1.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.pbxBoard)).EndInit();
+            this.grpbxPartNumberDetail.ResumeLayout(false);
+            this.grpbxPartNumberDetail.PerformLayout();
             this.pnlFilePaths.ResumeLayout(false);
             this.grpbxSchematicFiles.ResumeLayout(false);
-            this.grpbxBOMLinkHolder.ResumeLayout(false);
-            this.grpbxBOMLinkHolder.PerformLayout();
             this.tbDatabaseView.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.dgvDatabaseTable)).EndInit();
             this.cxmnuDatabaseMenu.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.pCBAAliasesBindingSource)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.techAliasesBindingSource)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pCBAliasDataSet)).EndInit();
             this.spltpnlMain.Panel1.ResumeLayout(false);
-            this.spltpnlMain.Panel1.PerformLayout();
             this.spltpnlMain.Panel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.spltpnlMain)).EndInit();
             this.spltpnlMain.ResumeLayout(false);
@@ -645,24 +593,25 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn aliasDataGridViewTextBoxColumn;
         private System.Windows.Forms.ErrorProvider errorProvider;
         private System.Windows.Forms.GroupBox grpbxBOMLinkHolder;
-        private System.Windows.Forms.LinkLabel lnkBOMFile;
         private System.Windows.Forms.GroupBox grpbxSchematicFiles;
         private System.Windows.Forms.FlowLayoutPanel flowSchematicLinks;
         private System.Windows.Forms.Button btnSearch;
-        private System.Windows.Forms.Button btnChangeBOMPath;
         private System.Windows.Forms.ContextMenuStrip cxmnuDatabaseMenu;
         private System.Windows.Forms.ToolStripMenuItem refreshToolStripMenuItem;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
         private System.Windows.Forms.ToolStripMenuItem deleteSchematicLinkToolStripMenuItem;
         private System.Windows.Forms.Button btnReset;
-        private PCBAliasDataSet pCBAliasDataSet;
-        private System.Windows.Forms.BindingSource pCBAAliasesBindingSource;
-        private PCBAliasDataSetTableAdapters.PCBAAliasesTableAdapter pCBAAliasesTableAdapter;
         private System.Windows.Forms.DataGridViewTextBoxColumn partNumberDataGridViewTextBoxColumn;
         private System.Windows.Forms.DataGridViewTextBoxColumn bOMPathDataGridViewTextBoxColumn;
         private System.Windows.Forms.DataGridViewTextBoxColumn bOMFileNameDataGridViewTextBoxColumn;
         private System.Windows.Forms.DataGridViewTextBoxColumn schematicPathsDataGridViewTextBoxColumn;
         private System.Windows.Forms.Panel panel1;
-        private System.Windows.Forms.PictureBox pbxBoard;
+        private System.Windows.Forms.FlowLayoutPanel flowBOMFiles;
+        private PCBAliasDataSet pCBAliasDataSet;
+        private System.Windows.Forms.BindingSource techAliasesBindingSource;
+        private PCBAliasDataSetTableAdapters.TechAliasesTableAdapter techAliasesTableAdapter;
+        private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn1;
+        private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn2;
+        private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn3;
     }
 }

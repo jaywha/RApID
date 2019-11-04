@@ -42,7 +42,7 @@ namespace RApID_Project_WPF.CustomControls
         /// <param name="img">[Optional] The image icon for this file extension.</param>
         /// <param name="name">[Optional] The name of this control. </param>
         public AssemblyLinkLabel(string link = "", string displayText = "", Image img = null,
-            string name = "")
+            string name = "", MouseEventHandler handler = null)
         {
             if (!string.IsNullOrWhiteSpace(link))
             {
@@ -76,6 +76,7 @@ namespace RApID_Project_WPF.CustomControls
             BorderStyle = BorderStyle.Fixed3D;
             Cursor = Cursors.Hand;
             MouseDown += AssemblyLinkLabel_MouseDown;
+            if (handler != null) ChangeLink += handler;
         }
         #endregion
 
@@ -83,7 +84,7 @@ namespace RApID_Project_WPF.CustomControls
             if (e.Button == MouseButtons.Left)
             {
                 Activate();
-            } else
+            } else if(ChangeLink != null)
             {
                 ChangeLink?.Invoke(sender, e);
             }
