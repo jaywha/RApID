@@ -115,12 +115,13 @@ namespace RApID_Project_WPF
             {
                 msgTitle = "Good Evening";
             }
-            Notify.ShowBalloonTip(msgTitle, msgWelcome, BalloonIcon.Info);
-            /*await Task.Factory.StartNew(new Action(() => {
-                          var uName = UserPrincipal.Current.DisplayName.Trim().Split(',');
-                          FullName = uName[1].Trim() + " " + uName[0].Trim();
-                          Notify.ShowBalloonTip(msgTitle + $", {FullName}!", msgWelcome, BalloonIcon.Info);
-                      }));*/
+
+            await Task.Factory.StartNew(new Action(() => {
+                Notify.ShowBalloonTip(msgTitle, msgWelcome, BalloonIcon.Info);
+                /*var uName = UserPrincipal.Current.DisplayName.Trim().Split(',');
+                FullName = uName[1].Trim() + " " + uName[0].Trim();
+                Notify.ShowBalloonTip(msgTitle + $", {FullName}!", msgWelcome, BalloonIcon.Info);*/
+            }));
         }
 
         private void btnClicks(object sender, RoutedEventArgs e)

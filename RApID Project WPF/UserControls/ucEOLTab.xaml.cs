@@ -60,20 +60,15 @@ namespace RApID_Project_WPF.UserControls
             query = $"SELECT TestID FROM tblPost WHERE PCBSerial = '{SerialNumber}' ORDER BY [DateAndTime] DESC";
             cbPOSTTestID.PullItemsFromQuery(query);
 
-            if (cbEOLTestID.Items.Count > 0)
-            {
-                cbEOLTestID.SelectedIndex = 0;
+            if (cbEOLTestID.Items.Count > 0) {
                 cbBEAMSTestType.Items.Add("EOL");
             }
 
             if (cbPRETestID.Items.Count > 0) {
-                cbPRETestID.SelectedIndex = 0;
                 cbBEAMSTestType.Items.Add("PRE");
             }
 
-            if (cbPOSTTestID.Items.Count > 0)
-            {
-                cbPOSTTestID.SelectedIndex = 0;
+            if (cbPOSTTestID.Items.Count > 0) {
                 cbBEAMSTestType.Items.Add("POST");
             }
         }
@@ -82,9 +77,9 @@ namespace RApID_Project_WPF.UserControls
         /// Auto fills the listbox data panes with the first test in the combo box choices.
         /// </summary>
         internal void TriggerDropDowns() {
-            cbEOLTestID_DropDownClosed(null, null);
-            cbPRETestID_DropDownClosed(null, null);
-            cbPOSTTestID_DropDownClosed(null, null);
+            cbEOLTestID.SelectedIndex = 0;
+            cbPRETestID.SelectedIndex = 0;
+            cbPOSTTestID.SelectedIndex = 0;
         }
 
         /// <summary>
@@ -109,11 +104,14 @@ namespace RApID_Project_WPF.UserControls
         {
             if (!string.IsNullOrEmpty(cbEOLTestID.Text))
             {
-                initS.InitSplash1("Loading EOL Data...");
-                csCrossClassInteraction.lsvFillFromQuery(holder.HummingBirdConnectionString,
-                    "SELECT * FROM tblEOL WHERE TestID = '" + cbEOLTestID.Text + "';", lsvEOL);
-                csSplashScreenHelper.ShowText("Done...");
-                csSplashScreenHelper.Hide();
+                Dispatcher.Invoke(() =>
+                {
+                    initS.InitSplash1("Loading EOL Data...");
+                    csCrossClassInteraction.lsvFillFromQuery(holder.HummingBirdConnectionString,
+                        "SELECT * FROM tblEOL WHERE TestID = '" + cbEOLTestID.Text + "';", lsvEOL);
+                    csSplashScreenHelper.ShowText("Done...");
+                    csSplashScreenHelper.Hide();
+                });
             }
         }
 
@@ -121,11 +119,14 @@ namespace RApID_Project_WPF.UserControls
         {
             if (!string.IsNullOrEmpty(cbPRETestID.Text))
             {
-                initS.InitSplash1("Loading PRE Data...");
-                csCrossClassInteraction.lsvFillFromQuery(holder.HummingBirdConnectionString,
-                    "SELECT * FROM tblPRE WHERE TestID = '" + cbPRETestID.Text + "';", lsvPreBurnIn);
-                csSplashScreenHelper.ShowText("Done...");
-                csSplashScreenHelper.Hide();
+                Dispatcher.Invoke(() =>
+                {
+                    initS.InitSplash1("Loading PRE Data...");
+                    csCrossClassInteraction.lsvFillFromQuery(holder.HummingBirdConnectionString,
+                        "SELECT * FROM tblPRE WHERE TestID = '" + cbPRETestID.Text + "';", lsvPreBurnIn);
+                    csSplashScreenHelper.ShowText("Done...");
+                    csSplashScreenHelper.Hide();
+                });
             }
         }
 
@@ -133,11 +134,14 @@ namespace RApID_Project_WPF.UserControls
         {
             if (!string.IsNullOrEmpty(cbPOSTTestID.Text))
             {
-                initS.InitSplash1("Loading POST Data...");
-                csCrossClassInteraction.lsvFillFromQuery(holder.HummingBirdConnectionString,
-                    "SELECT * FROM tblPOST WHERE TestID = '" + cbPOSTTestID.Text + "';", lsvPostBurnIn);
-                csSplashScreenHelper.ShowText("Done...");
-                csSplashScreenHelper.Hide();
+                Dispatcher.Invoke(() =>
+                {
+                    initS.InitSplash1("Loading POST Data...");
+                    csCrossClassInteraction.lsvFillFromQuery(holder.HummingBirdConnectionString,
+                        "SELECT * FROM tblPOST WHERE TestID = '" + cbPOSTTestID.Text + "';", lsvPostBurnIn);
+                    csSplashScreenHelper.ShowText("Done...");
+                    csSplashScreenHelper.Hide();
+                });
             }
         }
 

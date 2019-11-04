@@ -117,6 +117,13 @@ namespace RApID_Project_WPF
             ucAOITab.dgAOI.dgBuildView(DataGridTypes.AOI);
             ucAOITab.dgDefectCodes.dgBuildView(DataGridTypes.DEFECTCODES);
             dgPrevRepairInfo.dgBuildView(DataGridTypes.PREVREPAIRINFO);
+
+            txtPartReplaced.ItemsSource = OrigPartSource;
+            txtPartReplaced_2.ItemsSource = OrigPartSource;
+            txtPartReplaced_3.ItemsSource = OrigPartSource;
+            txtRefDes.ItemsSource = OrigRefSource;
+            txtRefDes_2.ItemsSource = OrigRefSource;
+            txtRefDes_3.ItemsSource = OrigRefSource;
         }
 
         /// <summary>
@@ -1379,13 +1386,8 @@ namespace RApID_Project_WPF
                         else
                         {
                             (string filename, bool found) = await mapper.FindFileAsync(".xls");
-                            csCrossClassInteraction.DoExcelOperations(filename, progMapper,
-                            new Tuple<Control, Control>(txtRefDes, txtPartReplaced),
-                            new Tuple<Control, Control>(txtRefDes_2, txtPartReplaced_2),
-                            new Tuple<Control, Control>(txtRefDes_3, txtPartReplaced_3));
-
-                            OrigRefSource = csCrossClassInteraction.ReferenceDesignators;
-                            OrigPartSource = csCrossClassInteraction.PartNumbers;
+                            csCrossClassInteraction.ExcelDispatcher = Dispatcher.CurrentDispatcher;
+                            csCrossClassInteraction.DoExcelOperations(filename, progMapper, OrigRefSource, OrigPartSource);
 
                             csCrossClassInteraction.MapperSuccessMessage(filename, mapper.PartNumber);
 

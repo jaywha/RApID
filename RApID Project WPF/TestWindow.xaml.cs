@@ -2,6 +2,7 @@
 using SNMapperLib;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -22,11 +23,17 @@ namespace RApID_Project_WPF
     /// </summary>
     public partial class TestWindow : Window
     {
+        public ObservableCollection<string> RefDes = new ObservableCollection<string>();
+        public ObservableCollection<string> PartNum = new ObservableCollection<string>();
+
 
         public TestWindow()
         {
             InitializeComponent();
             tcUnitIssues.AddTabItem(unitIssue.Copy(), "Modelled Tab");
+
+            unitIssue.cmbxRefDesignator.ItemsSource = RefDes;
+            unitIssue.cmbxPartNumber.ItemsSource = PartNum;
         }
 
         private void btnUCSwitch_Click(object sender, RoutedEventArgs e)
@@ -126,8 +133,7 @@ namespace RApID_Project_WPF
                             {
                                 MessageBox.Show(mapper.Success(), "DEBUG", MessageBoxButton.OK, MessageBoxImage.Information);
                                 (string filename, bool found) result = await mapper.FindFileAsync(".xls");
-                                csCrossClassInteraction.DoExcelOperations(result.filename, progMapper,
-                                new Tuple<Control, Control>(unitIssue.cmbxRefDesignator, unitIssue.cmbxPartNumber));
+                                csCrossClassInteraction.DoExcelOperations(result.filename, progMapper, RefDes, PartNum);
 
                                 csCrossClassInteraction.MapperSuccessMessage(result.filename, mapper.PartNumber);
 

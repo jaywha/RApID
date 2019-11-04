@@ -19,6 +19,8 @@ namespace RApID_Project_WPF.Classes
         #region Property Changed Implementation
         /// <summary> Event to trigger when a property is changed and propogate data. </summary>
         public event PropertyChangedEventHandler PropertyChanged;
+        private void OnPropertyChanged([CallerMemberName] string propName = "")
+            => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propName));
         #endregion
 
         #region Static Property Changed Implementation

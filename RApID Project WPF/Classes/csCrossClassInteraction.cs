@@ -18,7 +18,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Documents;
-using DesginatorPair = System.Tuple<System.Windows.Controls.Control, System.Windows.Controls.Control>;
+using System.Windows.Threading;
 
 namespace RApID_Project_WPF
 {
@@ -44,9 +44,6 @@ namespace RApID_Project_WPF
         private static csObjectHolder.csObjectHolder holder = csObjectHolder.csObjectHolder.ObjectHolderInstance();
         private const string bomlogfiledir = @"P:\EE Process Test\Logs\RApID\_BOMReadings\";
         private static readonly string bomlogfile = $"{DateTime.Now:y\\MMMM\\dd}-BOMLog.txt";
-
-        public static ObservableCollection<string> ReferenceDesignators { get; private set; } = new ObservableCollection<string>();
-        public static ObservableCollection<string> PartNumbers { get; private set; } = new ObservableCollection<string>();
 
         /// <summary>
         /// Takes an empy datagrid and fills it with the appropriate columns based on the criteria.
@@ -204,14 +201,16 @@ namespace RApID_Project_WPF
             });
         }
 
+        public static Dispatcher ExcelDispatcher { get; set; }
+
         /// <summary>
         /// Does the excel operations for grabbing Reference and Part numbers.
         /// </summary>
         /// <param name="filePath">Path to the Excel file - normally the BoM file.</param>
         /// <param name="progData">Any related progress bar to semi-report operation progress.</param>
-        /// <param name="designators">A list of reference and part number designators to give autocompletion.</param>
-        public static void DoExcelOperations(string filePath, ProgressBar progData = null, params DesginatorPair[] designators)
-            => DoExcelOperations(filePath, progData, null, designators);
+        /// <param name="designators">The two collections to fill - refdes & partnum.</param>
+        public static void DoExcelOperations(string filePath, ProgressBar progData = null, params ObservableCollection<string>[] designators)
+            => DoExcelOperations(filePath, progData, null, null, designators);
 
         /// <summary>
         /// Does the excel operations for grabbing Reference and Part numbers.
@@ -219,15 +218,16 @@ namespace RApID_Project_WPF
         /// <param name="filePath">Path to the Excel file - normally the BoM file.</param>
         /// <param name="progData">Any related progress bar to semi-report operation progress.</param>
         /// <param name="bomlist">The datagrid to fill with the results, if any.</param>
-        /// <param name="designators">A list of reference and part number designators to give autocompletion.</param>
-        public static async void DoExcelOperations(string filePath, ProgressBar progData = null, DataGrid bomlist = null, params DesginatorPair[] designators)
+        /// <param name="collections">The two collections to fill - refdes & partnum.</param>
+        public static async void DoExcelOperations(string filePath, ProgressBar progData = null, DataGrid bomlist = null,
+            Expander expander = null, params ObservableCollection<string>[] collections)
         {
             try
             {
                 Directory.CreateDirectory(bomlogfiledir);
                 File.Create(Path.Combine(bomlogfiledir, bomlogfile));
 
-                await Task.Factory.StartNew(new Action(() =>
+                await Task.Factory.StartNew(new Action(async () =>
                 {
                     if (progData != null) progData.Dispatcher.Invoke(() => progData.Visibility = Visibility.Visible);
                     if (string.IsNullOrEmpty(filePath))
@@ -247,6 +247,7 @@ namespace RApID_Project_WPF
 
                             progData.Dispatcher.Invoke(() =>
                             {
+                                frmProduction._bomRecordsTotal = reader.RowCount;
                                 progData.Maximum = reader.RowCount;
                             });
                             while (reader.Read() && !string.IsNullOrEmpty(reader.GetValue(0)?.ToString())
@@ -254,59 +255,35 @@ namespace RApID_Project_WPF
                             {
                                 var rd = reader.GetValue(0).ToString();
                                 var pn = reader.GetValue(4).ToString();
-                                ReferenceDesignators.Add(rd);
-                                PartNumbers.Add(pn);
-
-                                progData.Dispatcher.Invoke(() =>
+                                if (collections != null && collections.Length > 0)
                                 {
+                                    if (ExcelDispatcher != null)
+                                    {
+                                        ExcelDispatcher.Invoke(() => collections[0]?.Add(rd));
+                                        ExcelDispatcher.Invoke(() => collections[1]?.Add(pn));
+                                    }
+                                }
+
+                                if (bomlist != null)
+                                    await bomlist.Dispatcher.BeginInvoke(new Action(() =>
+                                    {
+                                        frmProduction._bomRecordsDone++;
+                                        bomlist.Items.Add(new MultiplePartsReplaced(rd, pn, GetPartReplacedPartDescription(pn)));
+                                        if (frmProduction._bomRecordsDone == frmProduction._bomRecordsTotal)
+                                            frmProduction._bomRecordsDone = 0;
+                                    }), DispatcherPriority.Background);
+
+                                progData.Dispatcher.Invoke(() => {
                                     progData.Value++;
                                 });
                             }
                         }
                     }
-
-                    var firstDesignator = designators[0].Item1 != null && designators[0].Item2 != null;
-                    foreach (DesginatorPair designator in designators)
-                    {
-                        Control reference = designator.Item1;
-                        Control partnumber = designator.Item2;
-
-                        if (reference is ComboBox refbox)
-                        {
-                            refbox.Dispatcher.Invoke(() =>
-                            {
-                                if(firstDesignator) File.AppendAllText(bomlogfiledir + bomlogfile, "Reference Designators {\n");
-                                foreach (var refDes in ReferenceDesignators)
-                                {
-                                    if(firstDesignator) File.AppendAllText(bomlogfiledir + bomlogfile, $"\t{refDes}\n");
-                                    refbox.Items.Add(refDes);
-                                }
-                                if(firstDesignator) File.AppendAllText(bomlogfiledir + bomlogfile, "}\n\n");
-                            });
-                        }
-
-                        if (partnumber is ComboBox invbox)
-                        {
-                            invbox.Dispatcher.Invoke(() =>
-                            {
-                                if(firstDesignator) File.AppendAllText(bomlogfiledir + bomlogfile, "Part Numbers {\n");
-                                foreach (var partNumber in PartNumbers)
-                                {
-                                    if(firstDesignator) File.AppendAllText(bomlogfiledir + bomlogfile, $"\t{partNumber}\n");
-                                    invbox.Items.Add(partNumber);
-                                }
-                                if(firstDesignator) File.AppendAllText(bomlogfiledir + bomlogfile, "}\n");
-                            });
-                        }
-
-                        firstDesignator = false;
-                    }
-
+                })).ContinueWith((antecedent) => {
                     GC.Collect();
-                    Thread.Sleep(500);
-
                     if (progData != null) progData.Dispatcher.Invoke(() => progData.Visibility = Visibility.Hidden);
-                }));
+                    if (expander != null) expander.Dispatcher.Invoke(() => expander.IsExpanded = true);
+                });
             }
             catch (IOException ioe)
             {
@@ -314,28 +291,20 @@ namespace RApID_Project_WPF
             }
         }
 
-        /// <summary>
-        /// Updates the <see cref="ApplicationCache"/> with any data related to the <see cref="MultiplePartsReplaced"/> model for the given component number.
-        /// </summary>
-        /// <param name="cacheTarget">Either Part Number or Reference Designators</param>
-        /// <param name="filePath">The Excel File path </param>
-        private static void UpdateCache(string cacheTarget, string filePath)
+        public static List<string> ColumnAsList(this DataGrid dg, int columnIndex)
         {
-            var componentNumber = filePath.Substring(filePath.LastIndexOf('\\') + 1, 8);
-
-            string data = "";
-            switch (cacheTarget)
-            {
-                case "PN":
-                    data = PartNumbers.Aggregate((curr, next) => $"{curr},{next}");
-                    break;
-                case "RD":
-                    data = ReferenceDesignators.Aggregate((curr, next) => $"{curr},{next}");
-                    break;
-                default:
-                    Console.WriteLine($"[WARN]: RApID_Project_WPF::csCrossClassInteraction.UpdateCache() with unknown cacheTarget = {cacheTarget}.");
-                    return;
+            List<string> result = new List<string>();
+            for (var i = 0; i < dg.Items.Count; i++) {
+                DataGridRow row = (DataGridRow)dg.ItemContainerGenerator.ContainerFromIndex(i);
+                MultiplePartsReplaced mpr = (row.Item as MultiplePartsReplaced);
+                var token = columnIndex == 0
+                    ? mpr.RefDesignator
+                    : columnIndex == 1
+                    ? mpr.PartReplaced
+                    : mpr.PartsReplacedPartDescription;
+                result.Add(token);
             }
+            return result;
         }
 
         /// <summary>

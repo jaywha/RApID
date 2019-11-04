@@ -50,6 +50,30 @@ namespace RApID_Project_WPF
                 OnPropertyChanged();
             }
         }
+
+        internal static int _bomRecordsDone = 0;
+        public int BOMRecordsDone
+        {
+            get { return _bomRecordsDone; }
+            set {
+                _bomRecordsDone = value;
+                OnPropertyChanged();
+            }
+        }
+
+        internal static int _bomRecordsTotal = 0;
+        public int BOMRecordsTotal
+        {
+            get { return _bomRecordsTotal; }
+            set {
+                _bomRecordsTotal = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private ObservableCollection<MultiplePartsReplaced> BOMList = new ObservableCollection<MultiplePartsReplaced>();
+
+
         #endregion
 
         public event PropertyChangedEventHandler PropertyChanged;
@@ -289,8 +313,8 @@ namespace RApID_Project_WPF
             cbxScrap.IsChecked = false;
             dgPrevRepairInfo.Items.Clear();
             rtbAdditionalComments.Document.Blocks.Clear();
-            dgBOMList.Items.Clear();
-            dgBOMList.Items.Refresh();
+            BOMList.Clear();
+            BOMList.Clear();
 
             ucEOLTab.lblEOL.Content = "End of Line";
             ucEOLTab.lblPOST.Content = "Post Burn-In";            
@@ -299,12 +323,7 @@ namespace RApID_Project_WPF
             ucEOLTab.Reset();
             ucAOITab.Reset();
 
-            txtMultiRefDes.Items.Clear();
-            txtMultiRefDes_2.Items.Clear();
-            txtMultiRefDes_3.Items.Clear();
-            txtMultiPartNum.Items.Clear();
-            txtMultiPartNum_2.Items.Clear();
-            txtMultiPartNum_3.Items.Clear();
+            BOMList.Clear();
 
             txtSerialNumber.Focus();
         }
@@ -677,11 +696,7 @@ namespace RApID_Project_WPF
                                     }
                                 }
 
-                                csCrossClassInteraction.DoExcelOperations(filename, progMapper, dgBOMList,
-                                new Tuple<Control, Control>(txtMultiRefDes, txtMultiPartNum),
-                                new Tuple<Control, Control>(txtMultiRefDes_2, txtMultiPartNum_2),
-                                new Tuple<Control, Control>(txtMultiRefDes_3, txtMultiPartNum_3));
-
+                                csCrossClassInteraction.DoExcelOperations(filename, progMapper, dgBOMList, expBOMInfo);
                                 csCrossClassInteraction.MapperSuccessMessage(filename, mapper.PartNumber);
 
                                 BOMFileActive = true;
@@ -1400,10 +1415,8 @@ namespace RApID_Project_WPF
             serialPortStatusUpdate();
         }
 
-        private void btnStartOver_Click(object sender, RoutedEventArgs e)
-        {
-            resetForm(true);
-        }
+        private void btnStartOver_Click(object sender, RoutedEventArgs e) 
+            => resetForm(true);
 
         private void btnComplete_Click(object sender, RoutedEventArgs e)
         {
@@ -1439,10 +1452,8 @@ namespace RApID_Project_WPF
                     {
                         sVar.LogHandler.CreateLogAction((Button)sender, csLogging.LogState.CLICK);
 
-                        if (BOMFileActive && (!txtMultiRefDes_2.Items.Contains(txtMultiRefDes_2.Text)
-                        || dgMultipleParts_2.Items
-                        .OfType<MultiplePartsReplaced>()
-                        .Where(mpr => mpr.RefDesignator.Equals(txtMultiRefDes_2.Text)).Count() > 0))
+                        /*if (BOMFileActive && (!refDesList.Contains(txtMultiRefDes_2.Text)
+                        || partNumList.Where(refdes => refdes.Equals(txtMultiRefDes_2.Text)).Count() > 0))
                         {
                             brdRefDes_2.BorderBrush = Brushes.Red;
                             brdRefDes_2.BorderThickness = new Thickness(1.0);
@@ -1455,7 +1466,7 @@ namespace RApID_Project_WPF
                             brdRefDes_2.BorderThickness = new Thickness(0.0);
                         }
 
-                        if (BOMFileActive && !txtMultiRefDes_2.Items.Contains(txtMultiRefDes_2.Text))
+                        if (BOMFileActive && !refDesList.Contains(txtMultiRefDes_2.Text))
                         {
                             string sWarning = string.Format($"The Reference Designator entered ( {txtMultiRefDes_2.Text} ) does not exist.\n" +
                                 "Please verify the Part Number and try again.");
@@ -1476,18 +1487,19 @@ namespace RApID_Project_WPF
                             txtMultiRefDes_2.Focus();
                             txtMultiRefDes_2.SelectAll();
                         }
-                        else
-                        {
-                            MultiplePartsReplaced mpr = new MultiplePartsReplaced { RefDesignator = txtMultiRefDes_2.Text.TrimEnd(), PartReplaced = txtMultiPartNum_2.Text.TrimEnd(), PartsReplacedPartDescription = _sPRPD };
-                            if (string.IsNullOrEmpty(mpr.PartReplaced) && !string.IsNullOrEmpty(mpr.RefDesignator))
-                                sVar.LogHandler.CreateLogAction(string.Format("Adding Ref Designator '{0}' to dgMultipleParts. Parts Replaced is empty.", mpr.RefDesignator), csLogging.LogState.NOTE);
-                            else if (!string.IsNullOrEmpty(mpr.PartReplaced) && string.IsNullOrEmpty(mpr.RefDesignator))
-                                sVar.LogHandler.CreateLogAction(string.Format("Adding Part Replaced '{0}' to dgMultipleParts. Ref Designator is empty.", mpr.PartReplaced), csLogging.LogState.NOTE);
-                            else sVar.LogHandler.CreateLogAction(string.Format("Adding Part Replaced '{0}' and Ref Designator '{1}' to dgMultipleParts.", mpr.PartReplaced, mpr.RefDesignator), csLogging.LogState.NOTE);
+                        else*/
+                        
+                        MultiplePartsReplaced mpr = new MultiplePartsReplaced { RefDesignator = txtMultiRefDes_2.Text.TrimEnd(), PartReplaced = txtMultiPartNum_2.Text.TrimEnd(),
+                            PartsReplacedPartDescription = csCrossClassInteraction.GetPartReplacedPartDescription(txtMultiPartNum_2.Text.TrimEnd()) };
+                        if (string.IsNullOrEmpty(mpr.PartReplaced) && !string.IsNullOrEmpty(mpr.RefDesignator))
+                            sVar.LogHandler.CreateLogAction(string.Format("Adding Ref Designator '{0}' to dgMultipleParts. Parts Replaced is empty.", mpr.RefDesignator), csLogging.LogState.NOTE);
+                        else if (!string.IsNullOrEmpty(mpr.PartReplaced) && string.IsNullOrEmpty(mpr.RefDesignator))
+                            sVar.LogHandler.CreateLogAction(string.Format("Adding Part Replaced '{0}' to dgMultipleParts. Ref Designator is empty.", mpr.PartReplaced), csLogging.LogState.NOTE);
+                        else sVar.LogHandler.CreateLogAction(string.Format("Adding Part Replaced '{0}' and Ref Designator '{1}' to dgMultipleParts.", mpr.PartReplaced, mpr.RefDesignator), csLogging.LogState.NOTE);
 
-                            dgMultipleParts_2.Items.Add(mpr);
-                            txtMultiPartNum_2.Text = txtMultiRefDes_2.Text = string.Empty;
-                        }
+                        dgMultipleParts_2.Items.Add(mpr);
+                        txtMultiPartNum_2.Text = txtMultiRefDes_2.Text = string.Empty;
+                        
                     }
                 }
                 else if (((Control)sender).Name.EndsWith("3"))
@@ -1497,10 +1509,8 @@ namespace RApID_Project_WPF
                     {
                         sVar.LogHandler.CreateLogAction((Button)sender, csLogging.LogState.CLICK);
 
-                        if (BOMFileActive && (!txtMultiRefDes_3.Items.Contains(txtMultiRefDes_3.Text)
-                        || dgMultipleParts_3.Items
-                        .OfType<MultiplePartsReplaced>()
-                        .Where(mpr => mpr.RefDesignator.Equals(txtMultiRefDes_3.Text)).Count() > 0))
+                        /*if (BOMFileActive && (!refDesList.Contains(txtMultiRefDes_3.Text)
+                        || partNumList.Where(mpr => mpr.Equals(txtMultiRefDes_3.Text)).Count() > 0))
                         {
                             brdRefDes_3.BorderBrush = Brushes.Red;
                             brdRefDes_3.BorderThickness = new Thickness(1.0);
@@ -1513,7 +1523,7 @@ namespace RApID_Project_WPF
                             brdRefDes_3.BorderThickness = new Thickness(0.0);
                         }
 
-                        if (BOMFileActive && !txtMultiRefDes_3.Items.Contains(txtMultiRefDes_3.Text))
+                        if (BOMFileActive && !refDesList.Contains(txtMultiRefDes_3.Text))
                         {
                             string sWarning = string.Format($"The Reference Designator entered ( {txtMultiRefDes_3.Text} ) does not exist.\n" +
                                 "Please verify the Part Number and try again.");
@@ -1534,9 +1544,10 @@ namespace RApID_Project_WPF
                             txtMultiRefDes_3.Focus();
                             txtMultiRefDes_3.SelectAll();
                         }
-                        else
-                        {
-                            MultiplePartsReplaced mpr = new MultiplePartsReplaced { RefDesignator = txtMultiRefDes_3.Text.TrimEnd(), PartReplaced = txtMultiPartNum_3.Text.TrimEnd(), PartsReplacedPartDescription = _sPRPD };
+                        else*/
+                        
+                            MultiplePartsReplaced mpr = new MultiplePartsReplaced { RefDesignator = txtMultiRefDes_3.Text.TrimEnd(), PartReplaced = txtMultiPartNum_3.Text.TrimEnd(),
+                                PartsReplacedPartDescription = csCrossClassInteraction.GetPartReplacedPartDescription(txtMultiPartNum_3.Text.TrimEnd()) };
                             if (string.IsNullOrEmpty(mpr.PartReplaced) && !string.IsNullOrEmpty(mpr.RefDesignator))
                                 sVar.LogHandler.CreateLogAction(string.Format("Adding Ref Designator '{0}' to dgMultipleParts. Parts Replaced is empty.", mpr.RefDesignator), csLogging.LogState.NOTE);
                             else if (!string.IsNullOrEmpty(mpr.PartReplaced) && string.IsNullOrEmpty(mpr.RefDesignator))
@@ -1545,7 +1556,7 @@ namespace RApID_Project_WPF
 
                             dgMultipleParts_3.Items.Add(mpr);
                             txtMultiPartNum_3.Text = txtMultiRefDes_3.Text = string.Empty;
-                        }
+                        
                     }
                 }
             }
@@ -1556,10 +1567,8 @@ namespace RApID_Project_WPF
                 {
                     sVar.LogHandler.CreateLogAction((Button)sender, csLogging.LogState.CLICK);
 
-                    if (BOMFileActive && (!txtMultiRefDes.Items.Contains(txtMultiRefDes.Text)
-                        || dgMultipleParts.Items
-                        .OfType<MultiplePartsReplaced>()
-                        .Where(mpr => mpr.RefDesignator.Equals(txtMultiRefDes.Text)).Count() > 0))
+                    /*if (BOMFileActive && (!refDesList.Contains(txtMultiRefDes.Text)
+                        || partNumList.Where(mpr => mpr.Equals(txtMultiRefDes.Text)).Count() > 0))
                     {
                         brdRefDes.BorderBrush = Brushes.Red;
                         brdRefDes.BorderThickness = new Thickness(1.0);
@@ -1572,7 +1581,7 @@ namespace RApID_Project_WPF
                         brdRefDes.BorderThickness = new Thickness(0.0);
                     }
 
-                    if (BOMFileActive & !txtMultiRefDes.Items.Contains(txtMultiRefDes.Text))
+                    if (BOMFileActive & !refDesList.Contains(txtMultiRefDes.Text))
                     {
                         string sWarning = string.Format($"The Reference Designator entered ( {txtMultiRefDes.Text} ) does not exist.\n" +
                             "Please verify the Part Number and try again.");
@@ -1593,9 +1602,10 @@ namespace RApID_Project_WPF
                         txtMultiRefDes.Focus();
                         txtMultiRefDes.SelectAll();
                     }
-                    else
-                    {
-                        MultiplePartsReplaced mpr = new MultiplePartsReplaced { RefDesignator = txtMultiRefDes.Text.TrimEnd(), PartReplaced = txtMultiPartNum.Text.TrimEnd(), PartsReplacedPartDescription = _sPRPD.TrimEnd() };
+                    else*/
+                    
+                        MultiplePartsReplaced mpr = new MultiplePartsReplaced { RefDesignator = txtMultiRefDes.Text.TrimEnd(), PartReplaced = txtMultiPartNum.Text.TrimEnd(),
+                            PartsReplacedPartDescription = csCrossClassInteraction.GetPartReplacedPartDescription(txtMultiPartNum.Text.TrimEnd()) };
                         if (string.IsNullOrEmpty(mpr.PartReplaced) && !string.IsNullOrEmpty(mpr.RefDesignator))
                             sVar.LogHandler.CreateLogAction(string.Format("Adding Ref Designator '{0}' to dgMultipleParts. Parts Replaced is empty.", mpr.RefDesignator), csLogging.LogState.NOTE);
                         else if (!string.IsNullOrEmpty(mpr.PartReplaced) && string.IsNullOrEmpty(mpr.RefDesignator))
@@ -1604,7 +1614,7 @@ namespace RApID_Project_WPF
 
                         dgMultipleParts.Items.Add(mpr);
                         txtMultiPartNum.Text = txtMultiRefDes.Text = string.Empty;
-                    }
+                    
                 }
             }
         }
@@ -1961,20 +1971,22 @@ namespace RApID_Project_WPF
 
         private void refDesIndexChanged(object sender, SelectionChangedEventArgs e)
         {
+            //TODO: Lookup ref designator in universal list to match part number
+
             if (sender is Control c && c.Name.Contains("_"))
             {
                 if (c.Name.EndsWith("2"))
                 {
-                    txtMultiPartNum_2.SelectedIndex = txtMultiRefDes_2.SelectedIndex;
+                    txtMultiPartNum_2.Text = (BOMList[txtMultiRefDes_2.SelectedIndex] as MultiplePartsReplaced).PartReplaced;
                 }
                 else if (c.Name.EndsWith("3"))
                 {
-                    txtMultiPartNum_3.SelectedIndex = txtMultiRefDes_3.SelectedIndex;
+                    txtMultiPartNum_3.Text = (BOMList[txtMultiRefDes_3.SelectedIndex] as MultiplePartsReplaced).PartReplaced;
                 }
             }
             else
             {
-                txtMultiPartNum.SelectedIndex = txtMultiRefDes.SelectedIndex;
+                txtMultiPartNum.Text = (BOMList[txtMultiRefDes.SelectedIndex] as MultiplePartsReplaced).PartReplaced;
             }
         }
 
@@ -1986,8 +1998,11 @@ namespace RApID_Project_WPF
             if (!targetGrid.Items.Contains(item))
             {
                 DataGridRow row = (DataGridRow)dgBOMList.ItemContainerGenerator.ContainerFromIndex(dgBOMList.SelectedIndex);
-                if (row != null) { row.Foreground = Brushes.White; row.Background = Brushes.DarkGreen; }
-                targetGrid.Items.Add(item);
+                if (row != null && !targetGrid.Items.Contains(item)) {
+
+                    targetGrid.Items.Add(item);
+                    row.Foreground = Brushes.White; row.Background = Brushes.DarkGreen;
+                }
             }
         }
 
@@ -2003,7 +2018,7 @@ namespace RApID_Project_WPF
                 {
                     foreach (MultiplePartsReplaced mpr in prevGrid.Items)
                     {
-                        if (dgBOMList.Items.Contains(mpr))
+                        if (BOMList.Contains(mpr))
                         {
                             DataGridRow row = (DataGridRow)dgBOMList.ItemContainerGenerator.ContainerFromItem(mpr);
                             if (row != null) { row.Foreground = Brushes.Black; row.Background = Brushes.White; }
@@ -2013,7 +2028,7 @@ namespace RApID_Project_WPF
 
                 foreach (MultiplePartsReplaced mpr in targetGrid.Items)
                 {
-                    if (dgBOMList.Items.Contains(mpr))
+                    if (BOMList.Contains(mpr))
                     {
                         DataGridRow row = (DataGridRow)dgBOMList.ItemContainerGenerator.ContainerFromItem(mpr);
                         if (row != null) { row.Foreground = Brushes.White; row.Background = Brushes.DarkGreen; }
@@ -2031,12 +2046,12 @@ namespace RApID_Project_WPF
 
         private void ExpBOMInfo_Expanded(object sender, RoutedEventArgs e)
         {
-            expBOMInfo.Margin = new Thickness(15, 200, 650, 300);
+            expBOMInfo.Margin = new Thickness(605, 345, 10, 6);
         }
 
         private void ExpBOMInfo_Collapsed(object sender, RoutedEventArgs e)
         {
-            expBOMInfo.Margin = new Thickness(15, 200, 1050, 300);
+            expBOMInfo.Margin = new Thickness(605, 345, 10, 265);
         }
 
         private void btnTech_Click(object sender, RoutedEventArgs e)
