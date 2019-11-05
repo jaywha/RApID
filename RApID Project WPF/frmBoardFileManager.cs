@@ -47,6 +47,7 @@ namespace RApID_Project_WPF
                 lblCommodityClass.Text = lblCommodityClass.Text.Replace("<CLASS>", _selectedModel.CommodityClass);
                 flowBOMFiles.Controls.AddRange(_selectedModel.BOMFiles.ToArray());
                 flowSchematicLinks.Controls.AddRange(_selectedModel.SchematicLinks.ToArray());
+                CurrentDesignFileIndex = MasterList.IndexOf(value);
             }
         }
         List<DesignFileSet> MasterList = new List<DesignFileSet>();
@@ -168,8 +169,8 @@ namespace RApID_Project_WPF
 
             if (bBOM)
             {
-                var ext = "." + ofd.SafeFileName.Split('.').Last();
-                System.Drawing.Image img = imgSchematics.Images[(new List<string>() { ".pdf", ".asc" }.Contains(ext) ? ext : "other")];
+                var ext = ofd.SafeFileName.Split('.').Last();
+                System.Drawing.Image img = imgSchematics.Images[(new List<string>() { "xls", "xlsx" }.Contains(ext) ? ext : "other")];
                 if (bNewBOM)
                 {
                     AssemblyLinkLabel link = new AssemblyLinkLabel(ofd.FileName, ofd.SafeFileName, img, handler: lnkBOMFile_MouseDown);
@@ -180,9 +181,9 @@ namespace RApID_Project_WPF
                 else
                 {
                     AssemblyLinkLabel newAssemblyLink = new AssemblyLinkLabel(ofd.FileName, ofd.SafeFileName, img, handler: lnkBOMFile_MouseDown);
-                    _selectedModel.SchematicLinks.RemoveAt(CurrentDesignFileIndex - 1);
-                    _selectedModel.SchematicLinks.Insert(CurrentDesignFileIndex - 1, newAssemblyLink);
-                    flowSchematicLinks.Controls.RemoveAt(CurrentDesignFileIndex - 1);
+                    _selectedModel.SchematicLinks.RemoveAt(CurrentDesignFileIndex);
+                    _selectedModel.SchematicLinks.Insert(CurrentDesignFileIndex, newAssemblyLink);
+                    flowSchematicLinks.Controls.RemoveAt(CurrentDesignFileIndex);
                     flowSchematicLinks.Controls.Add(newAssemblyLink);
                 }
                 bBOM = false;
@@ -190,7 +191,7 @@ namespace RApID_Project_WPF
             else if (bSchematic)
             {
                 var ext = "." + ofd.SafeFileName.Split('.').Last();
-                System.Drawing.Image img = imgSchematics.Images[(new List<string>() { ".pdf", ".asc" }.Contains(ext) ? ext : "other")];
+                System.Drawing.Image img = imgSchematics.Images[(new List<string>() { "pdf", "asc" }.Contains(ext) ? ext : "other")];
                 if (bNewSchematic) {
                     AssemblyLinkLabel link = new AssemblyLinkLabel(ofd.FileName, ofd.SafeFileName, img, handler: lnkSchematicFile_MouseDown);
                     _selectedModel.SchematicLinks.Add(link);
@@ -198,9 +199,9 @@ namespace RApID_Project_WPF
                     bNewSchematic = false;
                 } else {
                     AssemblyLinkLabel newAssemblyLink = new AssemblyLinkLabel(ofd.FileName, ofd.SafeFileName, img, handler: lnkSchematicFile_MouseDown);
-                    _selectedModel.SchematicLinks.RemoveAt(CurrentDesignFileIndex-1);
-                    _selectedModel.SchematicLinks.Insert(CurrentDesignFileIndex-1, newAssemblyLink);
-                    flowSchematicLinks.Controls.RemoveAt(CurrentDesignFileIndex-1);
+                    _selectedModel.SchematicLinks.RemoveAt(CurrentDesignFileIndex);
+                    _selectedModel.SchematicLinks.Insert(CurrentDesignFileIndex, newAssemblyLink);
+                    flowSchematicLinks.Controls.RemoveAt(CurrentDesignFileIndex);
                     flowSchematicLinks.Controls.Add(newAssemblyLink);
                 }
                 bBOM = false;
@@ -404,7 +405,9 @@ namespace RApID_Project_WPF
                     dataFound = reader.Read();
                     if (dataFound) {
                         DesignFileSet model = new DesignFileSet() {
-                            PartNumber = reader[0]?.ToString()
+                            PartNumber = reader[0]?.ToString(),
+                            PartName = _selectedModel.PartName,
+                            CommodityClass = _selectedModel.CommodityClass
                         };
 
                         StringBuilder sb = new StringBuilder();
@@ -429,10 +432,9 @@ namespace RApID_Project_WPF
                                     "Other File",
                                     handler: lnkBOMFile_MouseDown);
 
-                                _selectedModel.BOMFiles.Add(link);
+                                model.BOMFiles.Add(link);
                                 flowBOMFiles.Controls.Add(link);
                             }
-                            model.BOMFiles = _selectedModel.BOMFiles;
                         }
                         sb = new StringBuilder();
                         if (!string.IsNullOrWhiteSpace(reader[2].ToString().Trim()))
@@ -456,10 +458,9 @@ namespace RApID_Project_WPF
                                     "Other File",
                                     handler: lnkSchematicFile_MouseDown);
 
-                                _selectedModel.SchematicLinks.Add(link);
+                                model.SchematicLinks.Add(link);
                                 flowSchematicLinks.Controls.Add(link);
                             }
-                            model.SchematicLinks = _selectedModel.SchematicLinks;
                         }
                         sb.AppendLine("\n}");
                         Console.Write(sb.ToString());
@@ -489,14 +490,6 @@ namespace RApID_Project_WPF
             }
         }
 
-        private void btnChangeBOMPath_Click(object sender, EventArgs e)
-        {
-            bBOM = true;
-            bSchematic = false;
-
-            changeFilePathToolStripMenuItem_Click(null, null);
-        }
-
         private void refreshToolStripMenuItem_Click(object sender, EventArgs e)
         {
             techAliasesTableAdapter.Fill(pCBAliasDataSet.TechAliases);
@@ -507,6 +500,22 @@ namespace RApID_Project_WPF
         private ToolStripMenuItem ChangeFilePath = new ToolStripMenuItem("Change File Path...");
         private ToolStripMenuItem DeleteSchematicLink = new ToolStripMenuItem("Delete Schematic Link...");
 
+        private void flowBOMFiles_MouseDown(object sender, MouseEventArgs e)
+        {
+            if (e.Button == MouseButtons.Right)
+            {
+                ChangeFilePath.Click -= changeFilePathToolStripMenuItem_Click;
+                DeleteSchematicLink.Click -= deleteSchematicLinkToolStripMenuItem_Click;
+
+                cxmnuSchematicLinksMenu.Items.Clear();
+                cxmnuSchematicLinksMenu.Items.Add(AddNewBOMFile);
+                AddNewSchematicLink.Click += AddNewBOMFile_Click;
+
+                cxmnuSchematicLinksMenu.Show(MousePosition.X, MousePosition.Y);
+                cxmnuSchematicLinksMenu.Closed += cxmnuLinkMenu_Closed;
+            }
+        }
+
         private void flowSchematicLinks_MouseDown(object sender, MouseEventArgs e)
         {
             if (e.Button == MouseButtons.Right)
@@ -515,17 +524,8 @@ namespace RApID_Project_WPF
                 DeleteSchematicLink.Click -= deleteSchematicLinkToolStripMenuItem_Click;
 
                 cxmnuSchematicLinksMenu.Items.Clear();
-
-                FlowLayoutPanel flw = sender as FlowLayoutPanel;
-                if (flw.Name.Equals(nameof(flowSchematicLinks)))
-                {
-                    cxmnuSchematicLinksMenu.Items.Add(AddNewSchematicLink);
-                    AddNewSchematicLink.Click += AddNewSchematicLink_Click;
-                } else if(flw.Name.Equals(nameof(flowBOMFiles)))
-                {
-                    cxmnuSchematicLinksMenu.Items.Add(AddNewBOMFile);
-                    AddNewSchematicLink.Click += AddNewBOMFile_Click;
-                }
+                cxmnuSchematicLinksMenu.Items.Add(AddNewSchematicLink);
+                AddNewSchematicLink.Click += AddNewSchematicLink_Click;
 
                 cxmnuSchematicLinksMenu.Show(MousePosition.X, MousePosition.Y);
                 cxmnuSchematicLinksMenu.Closed += cxmnuLinkMenu_Closed;
@@ -543,6 +543,8 @@ namespace RApID_Project_WPF
             DeleteSchematicLink.Click += deleteSchematicLinkToolStripMenuItem_Click;
             cxmnuSchematicLinksMenu.Closed -= cxmnuLinkMenu_Closed;
         }
+
+        private void lblPartNumberLabel_DoubleClick(object sender, EventArgs e) => Process.Start(ELEC_ROOT_DIR);
     }
 
     /// <summary>
@@ -569,7 +571,7 @@ namespace RApID_Project_WPF
         readonly string CallerMemberName;
 
         #region Properties
-        private string _partNumber;
+        private string _partNumber = string.Empty;
         public string PartNumber
         {
             get => _partNumber;
@@ -579,7 +581,7 @@ namespace RApID_Project_WPF
             }
         }
 
-        private string _partName;   
+        private string _partName = string.Empty;   
         public string PartName
         {
             get => _partName;
@@ -589,7 +591,7 @@ namespace RApID_Project_WPF
             }
         }
 
-        private string _commodityClass;
+        private string _commodityClass = string.Empty;
         public string CommodityClass
         {
             get => _commodityClass;
@@ -599,9 +601,7 @@ namespace RApID_Project_WPF
             }
         }
 
-
-
-        private List<AssemblyLinkLabel> _bomFiles;
+        private List<AssemblyLinkLabel> _bomFiles = new List<AssemblyLinkLabel>();
         public List<AssemblyLinkLabel> BOMFiles
         {
             get => _bomFiles;
@@ -611,7 +611,7 @@ namespace RApID_Project_WPF
             }
         }
 
-        private List<AssemblyLinkLabel> _schematicLinks;
+        private List<AssemblyLinkLabel> _schematicLinks = new List<AssemblyLinkLabel>();
         public List<AssemblyLinkLabel> SchematicLinks
         {
             get => _schematicLinks;

@@ -70,6 +70,10 @@
             this.spltpnlMain = new System.Windows.Forms.SplitContainer();
             this.errorProvider = new System.Windows.Forms.ErrorProvider(this.components);
             this.techAliasesTableAdapter = new RApID_Project_WPF.PCBAliasDataSetTableAdapters.TechAliasesTableAdapter();
+            this.cxmnuBOMFilesMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.toolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
+            this.toolStripMenuItem2 = new System.Windows.Forms.ToolStripMenuItem();
             this.cxmnuSchematicLinksMenu.SuspendLayout();
             this.tcDataViewer.SuspendLayout();
             this.tbTechnicianView.SuspendLayout();
@@ -101,6 +105,7 @@
             this.spltpnlMain.Panel2.SuspendLayout();
             this.spltpnlMain.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.errorProvider)).BeginInit();
+            this.cxmnuBOMFilesMenu.SuspendLayout();
             this.SuspendLayout();
             // 
             // cxmnuSchematicLinksMenu
@@ -216,6 +221,7 @@
             this.lblPartNumberLabel.Size = new System.Drawing.Size(102, 20);
             this.lblPartNumberLabel.TabIndex = 0;
             this.lblPartNumberLabel.Text = "Part Number:";
+            this.lblPartNumberLabel.DoubleClick += new System.EventHandler(this.lblPartNumberLabel_DoubleClick);
             // 
             // txtPartNumber
             // 
@@ -272,7 +278,7 @@
             this.flowBOMFiles.Name = "flowBOMFiles";
             this.flowBOMFiles.Size = new System.Drawing.Size(495, 155);
             this.flowBOMFiles.TabIndex = 0;
-            this.flowBOMFiles.MouseDown += new System.Windows.Forms.MouseEventHandler(this.flowSchematicLinks_MouseDown);
+            this.flowBOMFiles.MouseDown += new System.Windows.Forms.MouseEventHandler(this.flowBOMFiles_MouseDown);
             // 
             // spltpnlAliasToDetail
             // 
@@ -477,6 +483,8 @@
             this.imgSchematics.Images.SetKeyName(0, "pdf");
             this.imgSchematics.Images.SetKeyName(1, "asc");
             this.imgSchematics.Images.SetKeyName(2, "other");
+            this.imgSchematics.Images.SetKeyName(3, "xls");
+            this.imgSchematics.Images.SetKeyName(4, "xlsx");
             // 
             // lblWarning
             // 
@@ -518,6 +526,32 @@
             // techAliasesTableAdapter
             // 
             this.techAliasesTableAdapter.ClearBeforeFill = true;
+            // 
+            // cxmnuBOMFilesMenu
+            // 
+            this.cxmnuBOMFilesMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.toolStripMenuItem1,
+            this.toolStripSeparator2,
+            this.toolStripMenuItem2});
+            this.cxmnuBOMFilesMenu.Name = "cxmnuLinkMenu";
+            this.cxmnuBOMFilesMenu.Size = new System.Drawing.Size(200, 54);
+            // 
+            // toolStripMenuItem1
+            // 
+            this.toolStripMenuItem1.Name = "toolStripMenuItem1";
+            this.toolStripMenuItem1.Size = new System.Drawing.Size(199, 22);
+            this.toolStripMenuItem1.Text = "Change File Path...";
+            // 
+            // toolStripSeparator2
+            // 
+            this.toolStripSeparator2.Name = "toolStripSeparator2";
+            this.toolStripSeparator2.Size = new System.Drawing.Size(196, 6);
+            // 
+            // toolStripMenuItem2
+            // 
+            this.toolStripMenuItem2.Name = "toolStripMenuItem2";
+            this.toolStripMenuItem2.Size = new System.Drawing.Size(199, 22);
+            this.toolStripMenuItem2.Text = "Delete Schematic Link...";
             // 
             // frmBoardFileManager
             // 
@@ -565,6 +599,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.spltpnlMain)).EndInit();
             this.spltpnlMain.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.errorProvider)).EndInit();
+            this.cxmnuBOMFilesMenu.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -613,5 +648,9 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn1;
         private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn2;
         private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn3;
+        private System.Windows.Forms.ContextMenuStrip cxmnuBOMFilesMenu;
+        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem1;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator2;
+        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem2;
     }
 }

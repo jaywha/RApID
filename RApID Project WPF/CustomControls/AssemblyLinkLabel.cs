@@ -93,7 +93,7 @@ namespace RApID_Project_WPF.CustomControls
         /// <summary> Will start the default associated process on the linked item. </summary>
         public void Activate()
         {
-            if (Link == null) SystemSounds.Exclamation.Play();
+            if (Link == null || Link.Equals("BOMFile") || Link.Equals("ASSYLink")) SystemSounds.Beep.Play();
 
             try
             {
