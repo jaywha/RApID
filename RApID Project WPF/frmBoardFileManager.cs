@@ -186,7 +186,6 @@ namespace RApID_Project_WPF
                     flowSchematicLinks.Controls.RemoveAt(CurrentDesignFileIndex);
                     flowSchematicLinks.Controls.Add(newAssemblyLink);
                 }
-                bBOM = false;
             }
             else if (bSchematic)
             {
@@ -204,7 +203,6 @@ namespace RApID_Project_WPF
                     flowSchematicLinks.Controls.RemoveAt(CurrentDesignFileIndex);
                     flowSchematicLinks.Controls.Add(newAssemblyLink);
                 }
-                bBOM = false;
             }
 
             using (SqlConnection conn = new SqlConnection(csObjectHolder.csObjectHolder.ObjectHolderInstance().RepairConnectionString))
@@ -216,15 +214,23 @@ namespace RApID_Project_WPF
                 {
                     cmd.Parameters.AddWithValue("@Pnum", _selectedModel.PartNumber);
                     cmd.Parameters.AddWithValue("@BomPath", _selectedModel.BOMFiles.ToStrings(suffix: ","));
-                    var schematicPaths = "";
-                    foreach (AssemblyLinkLabel schematic in _selectedModel.SchematicLinks)
+                    var assemblyLinks = "";
+                    var collection = (bBOM && !bSchematic) ? _selectedModel.BOMFiles : _selectedModel.SchematicLinks;
+                    foreach (AssemblyLinkLabel assemblyLink in collection)
                     {
-                        schematicPaths += schematic.Link + ",";
+                        assemblyLinks += assemblyLink.Link + ",";
                     }
-                    cmd.Parameters.AddWithValue("@SchPath", schematicPaths.Substring(0, schematicPaths.Length-1));
-                    var rowsAffected = cmd.ExecuteNonQuery();
+                    cmd.Parameters.AddWithValue("@SchPath", assemblyLinks.Substring(0, assemblyLinks.Length-1));
+                    if(cmd.ExecuteNonQuery() > 0) {
+                        // success
+                    } else {
+                        // failure
+                    }
                 }
             }
+
+            bSchematic = false;
+            bBOM = false;
         }
 
         private void deleteSchematicLinkToolStripMenuItem_Click(object sender, EventArgs e) {
