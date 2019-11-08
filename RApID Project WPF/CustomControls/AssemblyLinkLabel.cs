@@ -60,7 +60,7 @@ namespace RApID_Project_WPF.CustomControls
             }
 
             if(img != null) Image = img;
-
+            
             Enabled = true;
             ForeColor = Color.Cyan;
             LinkColor = Color.Cyan;

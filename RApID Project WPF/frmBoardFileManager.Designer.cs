@@ -35,6 +35,7 @@
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
             this.cxmnuSchematicLinksMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.changeFilePathToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.changeTagToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.deleteSchematicLinkToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.cxmnuDatabaseMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
@@ -44,13 +45,6 @@
             this.imgSchematics = new System.Windows.Forms.ImageList(this.components);
             this.lblWarning = new System.Windows.Forms.Label();
             this.spltpnlMain = new System.Windows.Forms.SplitContainer();
-            this.errorProvider = new System.Windows.Forms.ErrorProvider(this.components);
-            this.techAliasesTableAdapter = new RApID_Project_WPF.PCBAliasDataSetTableAdapters.TechAliasesTableAdapter();
-            this.cxmnuBOMFilesMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
-            this.toolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
-            this.toolStripMenuItem2 = new System.Windows.Forms.ToolStripMenuItem();
-            this.statusStrip1 = new System.Windows.Forms.StatusStrip();
             this.spltpnlActualForm = new System.Windows.Forms.SplitContainer();
             this.tcDataViewer = new System.Windows.Forms.TabControl();
             this.tbTechnicianView = new System.Windows.Forms.TabPage();
@@ -76,8 +70,12 @@
             this.dataGridViewTextBoxColumn1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.dataGridViewTextBoxColumn2 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.dataGridViewTextBoxColumn3 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.statusStrip1 = new System.Windows.Forms.StatusStrip();
             this.progbarStatus = new System.Windows.Forms.ToolStripProgressBar();
             this.lblStatus = new System.Windows.Forms.ToolStripStatusLabel();
+            this.errorProvider = new System.Windows.Forms.ErrorProvider(this.components);
+            this.techAliasesTableAdapter = new RApID_Project_WPF.PCBAliasDataSetTableAdapters.TechAliasesTableAdapter();
+            this.infoProvider = new System.Windows.Forms.ErrorProvider(this.components);
             this.cxmnuSchematicLinksMenu.SuspendLayout();
             this.cxmnuDatabaseMenu.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.techAliasesBindingSource)).BeginInit();
@@ -86,9 +84,6 @@
             this.spltpnlMain.Panel1.SuspendLayout();
             this.spltpnlMain.Panel2.SuspendLayout();
             this.spltpnlMain.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.errorProvider)).BeginInit();
-            this.cxmnuBOMFilesMenu.SuspendLayout();
-            this.statusStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.spltpnlActualForm)).BeginInit();
             this.spltpnlActualForm.Panel1.SuspendLayout();
             this.spltpnlActualForm.Panel2.SuspendLayout();
@@ -115,16 +110,22 @@
             this.grpbxSchematicFiles.SuspendLayout();
             this.tbDatabaseView.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgvDatabaseTable)).BeginInit();
+            this.statusStrip1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.errorProvider)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.infoProvider)).BeginInit();
             this.SuspendLayout();
             // 
             // cxmnuSchematicLinksMenu
             // 
             this.cxmnuSchematicLinksMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.changeFilePathToolStripMenuItem,
+            this.changeTagToolStripMenuItem,
             this.toolStripSeparator1,
             this.deleteSchematicLinkToolStripMenuItem});
             this.cxmnuSchematicLinksMenu.Name = "cxmnuLinkMenu";
-            this.cxmnuSchematicLinksMenu.Size = new System.Drawing.Size(200, 54);
+            this.cxmnuSchematicLinksMenu.Size = new System.Drawing.Size(200, 76);
+            this.cxmnuSchematicLinksMenu.Closed += new System.Windows.Forms.ToolStripDropDownClosedEventHandler(this.cxmnuSchematicLinksMenu_Closed);
+            this.cxmnuSchematicLinksMenu.Opened += new System.EventHandler(this.cxmnuSchematicLinksMenu_Opened);
             // 
             // changeFilePathToolStripMenuItem
             // 
@@ -132,6 +133,13 @@
             this.changeFilePathToolStripMenuItem.Size = new System.Drawing.Size(199, 22);
             this.changeFilePathToolStripMenuItem.Text = "Change File Path...";
             this.changeFilePathToolStripMenuItem.Click += new System.EventHandler(this.changeFilePathToolStripMenuItem_Click);
+            // 
+            // changeTagToolStripMenuItem
+            // 
+            this.changeTagToolStripMenuItem.Name = "changeTagToolStripMenuItem";
+            this.changeTagToolStripMenuItem.Size = new System.Drawing.Size(199, 22);
+            this.changeTagToolStripMenuItem.Text = "Change Tag...";
+            this.changeTagToolStripMenuItem.Click += new System.EventHandler(this.ChangeTag_Click);
             // 
             // toolStripSeparator1
             // 
@@ -212,53 +220,6 @@
             this.spltpnlMain.SplitterDistance = 53;
             this.spltpnlMain.TabIndex = 0;
             // 
-            // errorProvider
-            // 
-            this.errorProvider.BlinkRate = 333;
-            this.errorProvider.ContainerControl = this;
-            // 
-            // techAliasesTableAdapter
-            // 
-            this.techAliasesTableAdapter.ClearBeforeFill = true;
-            // 
-            // cxmnuBOMFilesMenu
-            // 
-            this.cxmnuBOMFilesMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.toolStripMenuItem1,
-            this.toolStripSeparator2,
-            this.toolStripMenuItem2});
-            this.cxmnuBOMFilesMenu.Name = "cxmnuLinkMenu";
-            this.cxmnuBOMFilesMenu.Size = new System.Drawing.Size(200, 54);
-            // 
-            // toolStripMenuItem1
-            // 
-            this.toolStripMenuItem1.Name = "toolStripMenuItem1";
-            this.toolStripMenuItem1.Size = new System.Drawing.Size(199, 22);
-            this.toolStripMenuItem1.Text = "Change File Path...";
-            // 
-            // toolStripSeparator2
-            // 
-            this.toolStripSeparator2.Name = "toolStripSeparator2";
-            this.toolStripSeparator2.Size = new System.Drawing.Size(196, 6);
-            // 
-            // toolStripMenuItem2
-            // 
-            this.toolStripMenuItem2.Name = "toolStripMenuItem2";
-            this.toolStripMenuItem2.Size = new System.Drawing.Size(199, 22);
-            this.toolStripMenuItem2.Text = "Delete Schematic Link...";
-            // 
-            // statusStrip1
-            // 
-            this.statusStrip1.BackColor = System.Drawing.Color.Black;
-            this.statusStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.progbarStatus,
-            this.lblStatus});
-            this.statusStrip1.Location = new System.Drawing.Point(0, 3);
-            this.statusStrip1.Name = "statusStrip1";
-            this.statusStrip1.Size = new System.Drawing.Size(800, 22);
-            this.statusStrip1.TabIndex = 3;
-            this.statusStrip1.Text = "statusStrip1";
-            // 
             // spltpnlActualForm
             // 
             this.spltpnlActualForm.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -277,6 +238,7 @@
             // 
             this.spltpnlActualForm.Panel2.BackColor = System.Drawing.Color.Black;
             this.spltpnlActualForm.Panel2.Controls.Add(this.statusStrip1);
+            this.spltpnlActualForm.Panel2Collapsed = true;
             this.spltpnlActualForm.Size = new System.Drawing.Size(800, 497);
             this.spltpnlActualForm.SplitterDistance = 471;
             this.spltpnlActualForm.SplitterWidth = 1;
@@ -290,7 +252,7 @@
             this.tcDataViewer.Location = new System.Drawing.Point(0, 0);
             this.tcDataViewer.Name = "tcDataViewer";
             this.tcDataViewer.SelectedIndex = 0;
-            this.tcDataViewer.Size = new System.Drawing.Size(800, 471);
+            this.tcDataViewer.Size = new System.Drawing.Size(800, 497);
             this.tcDataViewer.TabIndex = 2;
             // 
             // tbTechnicianView
@@ -300,7 +262,7 @@
             this.tbTechnicianView.Location = new System.Drawing.Point(4, 22);
             this.tbTechnicianView.Name = "tbTechnicianView";
             this.tbTechnicianView.Padding = new System.Windows.Forms.Padding(3);
-            this.tbTechnicianView.Size = new System.Drawing.Size(792, 445);
+            this.tbTechnicianView.Size = new System.Drawing.Size(792, 471);
             this.tbTechnicianView.TabIndex = 0;
             this.tbTechnicianView.Text = "Technician View";
             this.tbTechnicianView.ToolTipText = "Shows main format for managing part number aliases.";
@@ -320,8 +282,8 @@
             // spltpnlTechView.Panel2
             // 
             this.spltpnlTechView.Panel2.Controls.Add(this.spltpnlAliasToDetail);
-            this.spltpnlTechView.Size = new System.Drawing.Size(786, 439);
-            this.spltpnlTechView.SplitterDistance = 198;
+            this.spltpnlTechView.Size = new System.Drawing.Size(786, 465);
+            this.spltpnlTechView.SplitterDistance = 208;
             this.spltpnlTechView.TabIndex = 6;
             // 
             // spltpnlPartNumToDetail
@@ -337,7 +299,7 @@
             // spltpnlPartNumToDetail.Panel2
             // 
             this.spltpnlPartNumToDetail.Panel2.Controls.Add(this.grpbxBOMLinkHolder);
-            this.spltpnlPartNumToDetail.Size = new System.Drawing.Size(786, 198);
+            this.spltpnlPartNumToDetail.Size = new System.Drawing.Size(786, 208);
             this.spltpnlPartNumToDetail.SplitterDistance = 281;
             this.spltpnlPartNumToDetail.TabIndex = 0;
             // 
@@ -353,7 +315,7 @@
             this.flopnlPartNumberInput.ForeColor = System.Drawing.Color.Goldenrod;
             this.flopnlPartNumberInput.Location = new System.Drawing.Point(0, 0);
             this.flopnlPartNumberInput.Name = "flopnlPartNumberInput";
-            this.flopnlPartNumberInput.Size = new System.Drawing.Size(281, 198);
+            this.flopnlPartNumberInput.Size = new System.Drawing.Size(281, 208);
             this.flopnlPartNumberInput.TabIndex = 0;
             // 
             // lblPartNumberLabel
@@ -376,6 +338,7 @@
             this.txtPartNumber.Name = "txtPartNumber";
             this.txtPartNumber.Size = new System.Drawing.Size(144, 26);
             this.txtPartNumber.TabIndex = 1;
+            this.txtPartNumber.KeyDown += new System.Windows.Forms.KeyEventHandler(this.txtPartNumber_KeyDown);
             // 
             // btnSearch
             // 
@@ -387,6 +350,7 @@
             this.btnSearch.TabIndex = 3;
             this.btnSearch.Text = "Search";
             this.btnSearch.UseVisualStyleBackColor = false;
+            this.btnSearch.Click += new System.EventHandler(this.btnSearch_Click);
             // 
             // btnReset
             // 
@@ -397,6 +361,7 @@
             this.btnReset.TabIndex = 4;
             this.btnReset.Text = "Reset";
             this.btnReset.UseVisualStyleBackColor = false;
+            this.btnReset.Click += new System.EventHandler(this.btnReset_Click);
             // 
             // grpbxBOMLinkHolder
             // 
@@ -407,7 +372,7 @@
             this.grpbxBOMLinkHolder.ForeColor = System.Drawing.Color.Gold;
             this.grpbxBOMLinkHolder.Location = new System.Drawing.Point(0, 0);
             this.grpbxBOMLinkHolder.Name = "grpbxBOMLinkHolder";
-            this.grpbxBOMLinkHolder.Size = new System.Drawing.Size(501, 198);
+            this.grpbxBOMLinkHolder.Size = new System.Drawing.Size(501, 208);
             this.grpbxBOMLinkHolder.TabIndex = 6;
             this.grpbxBOMLinkHolder.TabStop = false;
             this.grpbxBOMLinkHolder.Text = "BOM File Link";
@@ -417,8 +382,9 @@
             this.flowBOMFiles.Dock = System.Windows.Forms.DockStyle.Fill;
             this.flowBOMFiles.Location = new System.Drawing.Point(3, 22);
             this.flowBOMFiles.Name = "flowBOMFiles";
-            this.flowBOMFiles.Size = new System.Drawing.Size(495, 173);
+            this.flowBOMFiles.Size = new System.Drawing.Size(495, 183);
             this.flowBOMFiles.TabIndex = 0;
+            this.flowBOMFiles.MouseDown += new System.Windows.Forms.MouseEventHandler(this.flowBOMFiles_MouseDown);
             // 
             // spltpnlAliasToDetail
             // 
@@ -433,7 +399,7 @@
             // spltpnlAliasToDetail.Panel2
             // 
             this.spltpnlAliasToDetail.Panel2.Controls.Add(this.pnlFilePaths);
-            this.spltpnlAliasToDetail.Size = new System.Drawing.Size(786, 237);
+            this.spltpnlAliasToDetail.Size = new System.Drawing.Size(786, 253);
             this.spltpnlAliasToDetail.SplitterDistance = 280;
             this.spltpnlAliasToDetail.TabIndex = 0;
             // 
@@ -444,7 +410,7 @@
             this.panel1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panel1.Location = new System.Drawing.Point(0, 0);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(280, 237);
+            this.panel1.Size = new System.Drawing.Size(280, 253);
             this.panel1.TabIndex = 0;
             // 
             // grpbxPartNumberDetail
@@ -456,7 +422,7 @@
             this.grpbxPartNumberDetail.ForeColor = System.Drawing.Color.Goldenrod;
             this.grpbxPartNumberDetail.Location = new System.Drawing.Point(0, 0);
             this.grpbxPartNumberDetail.Name = "grpbxPartNumberDetail";
-            this.grpbxPartNumberDetail.Size = new System.Drawing.Size(280, 237);
+            this.grpbxPartNumberDetail.Size = new System.Drawing.Size(280, 253);
             this.grpbxPartNumberDetail.TabIndex = 0;
             this.grpbxPartNumberDetail.TabStop = false;
             this.grpbxPartNumberDetail.Text = "Part Number Details";
@@ -487,7 +453,7 @@
             this.pnlFilePaths.ForeColor = System.Drawing.Color.Gold;
             this.pnlFilePaths.Location = new System.Drawing.Point(0, 0);
             this.pnlFilePaths.Name = "pnlFilePaths";
-            this.pnlFilePaths.Size = new System.Drawing.Size(502, 237);
+            this.pnlFilePaths.Size = new System.Drawing.Size(502, 253);
             this.pnlFilePaths.TabIndex = 5;
             // 
             // grpbxSchematicFiles
@@ -498,7 +464,7 @@
             this.grpbxSchematicFiles.ForeColor = System.Drawing.Color.Gold;
             this.grpbxSchematicFiles.Location = new System.Drawing.Point(0, 0);
             this.grpbxSchematicFiles.Name = "grpbxSchematicFiles";
-            this.grpbxSchematicFiles.Size = new System.Drawing.Size(502, 237);
+            this.grpbxSchematicFiles.Size = new System.Drawing.Size(502, 253);
             this.grpbxSchematicFiles.TabIndex = 7;
             this.grpbxSchematicFiles.TabStop = false;
             this.grpbxSchematicFiles.Text = "Schematic File Links";
@@ -510,8 +476,9 @@
             this.flowSchematicLinks.ForeColor = System.Drawing.Color.Gold;
             this.flowSchematicLinks.Location = new System.Drawing.Point(3, 22);
             this.flowSchematicLinks.Name = "flowSchematicLinks";
-            this.flowSchematicLinks.Size = new System.Drawing.Size(496, 212);
+            this.flowSchematicLinks.Size = new System.Drawing.Size(496, 228);
             this.flowSchematicLinks.TabIndex = 0;
+            this.flowSchematicLinks.MouseDown += new System.Windows.Forms.MouseEventHandler(this.flowSchematicLinks_MouseDown);
             // 
             // tbDatabaseView
             // 
@@ -568,6 +535,7 @@
             this.dgvDatabaseTable.RowHeadersDefaultCellStyle = dataGridViewCellStyle3;
             this.dgvDatabaseTable.Size = new System.Drawing.Size(786, 465);
             this.dgvDatabaseTable.TabIndex = 0;
+            this.dgvDatabaseTable.CellDoubleClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgvDatabaseTable_CellDoubleClick);
             // 
             // dataGridViewTextBoxColumn1
             // 
@@ -590,10 +558,25 @@
             this.dataGridViewTextBoxColumn3.Name = "dataGridViewTextBoxColumn3";
             this.dataGridViewTextBoxColumn3.ReadOnly = true;
             // 
+            // statusStrip1
+            // 
+            this.statusStrip1.BackColor = System.Drawing.Color.Black;
+            this.statusStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.progbarStatus,
+            this.lblStatus});
+            this.statusStrip1.Location = new System.Drawing.Point(0, 24);
+            this.statusStrip1.Name = "statusStrip1";
+            this.statusStrip1.Size = new System.Drawing.Size(150, 22);
+            this.statusStrip1.TabIndex = 3;
+            this.statusStrip1.Text = "statusStrip1";
+            // 
             // progbarStatus
             // 
+            this.progbarStatus.ForeColor = System.Drawing.Color.Green;
+            this.progbarStatus.Maximum = 3;
             this.progbarStatus.Name = "progbarStatus";
             this.progbarStatus.Size = new System.Drawing.Size(200, 16);
+            this.progbarStatus.Step = 1;
             this.progbarStatus.Style = System.Windows.Forms.ProgressBarStyle.Continuous;
             // 
             // lblStatus
@@ -601,8 +584,24 @@
             this.lblStatus.BackColor = System.Drawing.Color.Transparent;
             this.lblStatus.ForeColor = System.Drawing.Color.Goldenrod;
             this.lblStatus.Name = "lblStatus";
-            this.lblStatus.Size = new System.Drawing.Size(59, 17);
+            this.lblStatus.Size = new System.Drawing.Size(59, 15);
             this.lblStatus.Text = "Loading...";
+            // 
+            // errorProvider
+            // 
+            this.errorProvider.BlinkRate = 333;
+            this.errorProvider.ContainerControl = this;
+            // 
+            // techAliasesTableAdapter
+            // 
+            this.techAliasesTableAdapter.ClearBeforeFill = true;
+            // 
+            // infoProvider
+            // 
+            this.infoProvider.BlinkRate = 500;
+            this.infoProvider.BlinkStyle = System.Windows.Forms.ErrorBlinkStyle.NeverBlink;
+            this.infoProvider.ContainerControl = this;
+            this.infoProvider.Icon = ((System.Drawing.Icon)(resources.GetObject("infoProvider.Icon")));
             // 
             // frmBoardFileManager
             // 
@@ -625,10 +624,6 @@
             this.spltpnlMain.Panel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.spltpnlMain)).EndInit();
             this.spltpnlMain.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.errorProvider)).EndInit();
-            this.cxmnuBOMFilesMenu.ResumeLayout(false);
-            this.statusStrip1.ResumeLayout(false);
-            this.statusStrip1.PerformLayout();
             this.spltpnlActualForm.Panel1.ResumeLayout(false);
             this.spltpnlActualForm.Panel2.ResumeLayout(false);
             this.spltpnlActualForm.Panel2.PerformLayout();
@@ -658,6 +653,10 @@
             this.grpbxSchematicFiles.ResumeLayout(false);
             this.tbDatabaseView.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.dgvDatabaseTable)).EndInit();
+            this.statusStrip1.ResumeLayout(false);
+            this.statusStrip1.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.errorProvider)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.infoProvider)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -682,10 +681,6 @@
         private PCBAliasDataSet pCBAliasDataSet;
         private System.Windows.Forms.BindingSource techAliasesBindingSource;
         private PCBAliasDataSetTableAdapters.TechAliasesTableAdapter techAliasesTableAdapter;
-        private System.Windows.Forms.ContextMenuStrip cxmnuBOMFilesMenu;
-        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem1;
-        private System.Windows.Forms.ToolStripSeparator toolStripSeparator2;
-        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem2;
         private System.Windows.Forms.SplitContainer spltpnlActualForm;
         private System.Windows.Forms.TabControl tcDataViewer;
         private System.Windows.Forms.TabPage tbTechnicianView;
@@ -714,5 +709,7 @@
         private System.Windows.Forms.StatusStrip statusStrip1;
         private System.Windows.Forms.ToolStripProgressBar progbarStatus;
         private System.Windows.Forms.ToolStripStatusLabel lblStatus;
+        private System.Windows.Forms.ToolStripMenuItem changeTagToolStripMenuItem;
+        private System.Windows.Forms.ErrorProvider infoProvider;
     }
 }

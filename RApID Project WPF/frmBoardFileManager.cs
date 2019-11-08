@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data.SqlClient;
 using System.Diagnostics;
+using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Runtime.CompilerServices;
@@ -37,6 +38,19 @@ namespace RApID_Project_WPF
         const string EMPTY_FILE_PATH = "BOMPath";
         static bool FirstTimeToday = true;
 
+        /// <summary>
+        /// Manage Tooltips
+        /// </summary>
+        ToolTip SetterTip = new ToolTip()
+        {
+            AutoPopDelay = 5000,
+            InitialDelay = 1000,
+            ReshowDelay = 500,
+            ShowAlways = true,
+            UseAnimation = true,
+            ToolTipIcon = ToolTipIcon.Info
+        };
+
         private DesignFileSet _selectedModel = new DesignFileSet();
         public DesignFileSet SelectedModel {
             get => _selectedModel;
@@ -55,15 +69,6 @@ namespace RApID_Project_WPF
         int SchematicFileIndex = 0; // tracks index of Schematic File Link to handle during modifications
         int BOMFileIndex = 0; // tracks index of BOM File Link to handle during modifications
 
-        ToolTip SetterTip = new ToolTip()
-        {
-            AutoPopDelay = 5000,
-            InitialDelay = 1000,
-            ReshowDelay = 500,
-            ShowAlways = true,
-            UseAnimation = true,
-            ToolTipIcon = ToolTipIcon.Info
-        };
         bool bBOM;
         bool bSchematic;
         bool bNewSchematic;
@@ -132,8 +137,14 @@ namespace RApID_Project_WPF
 
         private void btnSearch_Click(object sender, EventArgs e) => HandleTextBoxEntry(new KeyEventArgs(Keys.Enter));
         private void btnReset_Click(object sender, EventArgs e) => ResetAllData(resetPN: true);
-
         private void txtPartNumber_KeyDown(object sender, KeyEventArgs e) => HandleTextBoxEntry(e);
+
+        private void ResetStatus()
+        {
+            lblStatus.Text = "";
+            progbarStatus.Value = 0;
+            progbarStatus.ForeColor = System.Drawing.Color.Green;
+        }
 
         private void frmBoardAliases_PreviewKeyDown(object sender, PreviewKeyDownEventArgs e)
         {
@@ -148,6 +159,14 @@ namespace RApID_Project_WPF
             => techAliasesTableAdapter.Fill(pCBAliasDataSet.TechAliases);
 
         #region Context Menu
+
+        private void ChangeTag_Click(object sender, EventArgs e)
+        {
+            var control = bBOM ? _selectedModel.BOMFiles[BOMFileIndex] : _selectedModel.SchematicLinks[SchematicFileIndex];
+            var def = control.Tag?.ToString() ?? "";
+            control.Tag = Interaction.InputBox("Please enter a new Tag value", "New Assembly Item Tag", def, MousePosition.X, MousePosition.Y);
+            infoProvider.SetError(control, control.Tag?.ToString() ?? "");
+        }
 
         private void changeFilePathToolStripMenuItem_Click(object sender, EventArgs e)
         {
@@ -164,13 +183,17 @@ namespace RApID_Project_WPF
                 Multiselect = false
             };
 
+            spltpnlActualForm.Panel2Collapsed = false;
+            progbarStatus.Value = 0;
+            lblStatus.Text = "Changing "+(bBOM ? "BOM file path" : "Schematic link path")+"...";
+
             if (ofd.ShowDialog() != DialogResult.OK ||                
                 string.IsNullOrWhiteSpace(ofd.FileName)) return;
 
             if (bBOM)
             {
                 var ext = ofd.SafeFileName.Split('.').Last();
-                System.Drawing.Image img = imgSchematics.Images[(new List<string>() { "xls", "xlsx" }.Contains(ext) ? ext : "other")];
+                Image img = imgSchematics.Images[(new List<string>() { "xls", "xlsx" }.Contains(ext) ? ext : "other")];
                 if (bNewBOM)
                 {
                     AssemblyLinkLabel link = new AssemblyLinkLabel(ofd.FileName, ofd.SafeFileName, img, handler: lnkBOMFile_MouseDown);
@@ -181,16 +204,16 @@ namespace RApID_Project_WPF
                 else
                 {
                     AssemblyLinkLabel newAssemblyLink = new AssemblyLinkLabel(ofd.FileName, ofd.SafeFileName, img, handler: lnkBOMFile_MouseDown);
-                    _selectedModel.SchematicLinks.RemoveAt(CurrentDesignFileIndex);
-                    _selectedModel.SchematicLinks.Insert(CurrentDesignFileIndex, newAssemblyLink);
-                    flowSchematicLinks.Controls.RemoveAt(CurrentDesignFileIndex);
+                    _selectedModel.SchematicLinks.RemoveAt(BOMFileIndex);
+                    _selectedModel.SchematicLinks.Insert(BOMFileIndex, newAssemblyLink);
+                    flowSchematicLinks.Controls.RemoveAt(BOMFileIndex);
                     flowSchematicLinks.Controls.Add(newAssemblyLink);
                 }
             }
             else if (bSchematic)
             {
                 var ext = "." + ofd.SafeFileName.Split('.').Last();
-                System.Drawing.Image img = imgSchematics.Images[(new List<string>() { "pdf", "asc" }.Contains(ext) ? ext : "other")];
+                Image img = imgSchematics.Images[(new List<string>() { "pdf", "asc" }.Contains(ext) ? ext : "other")];
                 if (bNewSchematic) {
                     AssemblyLinkLabel link = new AssemblyLinkLabel(ofd.FileName, ofd.SafeFileName, img, handler: lnkSchematicFile_MouseDown);
                     _selectedModel.SchematicLinks.Add(link);
@@ -198,12 +221,15 @@ namespace RApID_Project_WPF
                     bNewSchematic = false;
                 } else {
                     AssemblyLinkLabel newAssemblyLink = new AssemblyLinkLabel(ofd.FileName, ofd.SafeFileName, img, handler: lnkSchematicFile_MouseDown);
-                    _selectedModel.SchematicLinks.RemoveAt(CurrentDesignFileIndex);
-                    _selectedModel.SchematicLinks.Insert(CurrentDesignFileIndex, newAssemblyLink);
-                    flowSchematicLinks.Controls.RemoveAt(CurrentDesignFileIndex);
+                    _selectedModel.SchematicLinks.RemoveAt(SchematicFileIndex);
+                    _selectedModel.SchematicLinks.Insert(SchematicFileIndex, newAssemblyLink);
+                    flowSchematicLinks.Controls.RemoveAt(SchematicFileIndex);
                     flowSchematicLinks.Controls.Add(newAssemblyLink);
                 }
             }
+
+            lblStatus.Text = "Changing database entry...";
+            progbarStatus.PerformStep();            
 
             using (SqlConnection conn = new SqlConnection(csObjectHolder.csObjectHolder.ObjectHolderInstance().RepairConnectionString))
             {
@@ -220,17 +246,21 @@ namespace RApID_Project_WPF
                     {
                         assemblyLinks += assemblyLink.Link + ",";
                     }
+                    progbarStatus.PerformStep();
                     cmd.Parameters.AddWithValue("@SchPath", assemblyLinks.Substring(0, assemblyLinks.Length-1));
                     if(cmd.ExecuteNonQuery() > 0) {
-                        // success
+                        lblStatus.Text = "Change successfull!";
+                        progbarStatus.PerformStep();
                     } else {
-                        // failure
+                        lblStatus.Text = "DB_FAILURE --> Couldn't update database!";
+                        progbarStatus.ForeColor = System.Drawing.Color.Red;
                     }
                 }
             }
 
             bSchematic = false;
             bBOM = false;
+            ResetStatus();
         }
 
         private void deleteSchematicLinkToolStripMenuItem_Click(object sender, EventArgs e) {
@@ -292,6 +322,138 @@ namespace RApID_Project_WPF
             flowBOMFiles.Controls.Clear();
             flowSchematicLinks.Controls.Clear();
             MasterList.Clear();
+        }
+
+        private void GetPartNumberDetailsAndAliases()
+        {
+            var validPartNumber = false;
+
+            using (SqlConnection conn = new SqlConnection(csObjectHolder.csObjectHolder.ObjectHolderInstance().HummingBirdConnectionString))
+            {
+                conn.Open();
+                using (SqlCommand cmd = new SqlCommand("SELECT PartName, CommodityClass FROM [HummingBird].[dbo].[ItemMaster] " +
+                    "WHERE [PartNumber] = @Pnum AND ([StockingType] <> 'O' AND [StockingType] <> 'U')", conn))
+                {
+                    cmd.Parameters.AddWithValue("@Pnum", txtPartNumber.Text);
+
+                    SqlDataReader reader = cmd.ExecuteReader();
+                    validPartNumber = reader.HasRows;
+                    if (validPartNumber && reader.Read())
+                    {
+                        _selectedModel.PartName = reader[0].ToString();
+                        _selectedModel.CommodityClass = reader[1].ToString();
+                    }
+                }
+            }
+
+            if (!validPartNumber)
+            {
+                errorProvider.SetError(txtPartNumber, "Part Number not found in ItemMaster table!");
+                return;
+            }
+
+            bool dataFound = false;
+            using (SqlConnection conn = new SqlConnection(csObjectHolder.csObjectHolder.ObjectHolderInstance().RepairConnectionString))
+            {
+                conn.Open();
+                using (SqlCommand cmd = new SqlCommand("SELECT PartNumber, BOMPath, SchematicPaths FROM [Repair].[dbo].[TechAliases] " +
+                    "WHERE [PartNumber] = @Pnum", conn))
+                {
+                    cmd.Parameters.AddWithValue("@Pnum", txtPartNumber.Text);
+
+                    SqlDataReader reader = cmd.ExecuteReader();
+
+                    dataFound = reader.Read();
+                    if (dataFound)
+                    {
+                        DesignFileSet model = new DesignFileSet()
+                        {
+                            PartNumber = reader[0]?.ToString(),
+                            PartName = _selectedModel.PartName,
+                            CommodityClass = _selectedModel.CommodityClass
+                        };
+
+                        StringBuilder sb = new StringBuilder();
+                        if (!string.IsNullOrWhiteSpace(reader[1].ToString().Trim()))
+                        {
+                            sb.Append("Reading New BOM Files {");
+
+                            foreach (var @string in reader[1].ToString().Split(','))
+                            {
+                                var name = @string.Substring(@string.LastIndexOf('\\') + 1) ?? "not set";
+                                var ext = @string.Substring(@string.LastIndexOf('.') + 1) ?? "other";
+                                System.Drawing.Image img = imgSchematics.Images[
+                                        (!string.IsNullOrWhiteSpace(ext) && new List<string>() { "pdf", "asc" }.Contains(ext)
+                                        ? ext : "other")
+                                    ];
+
+                                sb.Append("\n");
+                                sb.Append($"\t[AssemblyLinkItem] ==> {@string}");
+                                AssemblyLinkLabel link = new AssemblyLinkLabel(@string, name, img,
+                                    ext.Equals("pdf") ? "Assembly File" :
+                                    ext.Contains("xls") ? "BOM File" :
+                                    "Other File",
+                                    handler: lnkBOMFile_MouseDown);
+
+                                model.BOMFiles.Add(link);
+                                flowBOMFiles.Controls.Add(link);
+                            }
+                        }
+                        sb = new StringBuilder();
+                        if (!string.IsNullOrWhiteSpace(reader[2].ToString().Trim()))
+                        {
+                            sb.Append("Reading New Schematic Files {");
+
+                            foreach (var @string in reader[2].ToString().Split(','))
+                            {
+                                var name = @string.Substring(@string.LastIndexOf('\\') + 1) ?? "not set";
+                                var ext = @string.Substring(@string.LastIndexOf('.') + 1) ?? "other";
+                                System.Drawing.Image img = imgSchematics.Images[
+                                        (!string.IsNullOrWhiteSpace(ext) && new List<string>() { "pdf", "asc" }.Contains(ext)
+                                        ? ext : "other")
+                                    ];
+
+                                sb.Append("\n");
+                                sb.Append($"\t[AssemblyLinkItem] ==> {@string}");
+                                AssemblyLinkLabel link = new AssemblyLinkLabel(@string, name, img,
+                                    ext.Equals("pdf") ? "Assembly File" :
+                                    ext.Contains("xls") ? "BOM File" :
+                                    "Other File",
+                                    handler: lnkSchematicFile_MouseDown);
+
+                                model.SchematicLinks.Add(link);
+                                flowSchematicLinks.Controls.Add(link);
+                            }
+                        }
+                        sb.AppendLine("\n}");
+                        Console.Write(sb.ToString());
+                        Console.WriteLine(model.ToString());
+                        SelectedModel = model;
+                    }
+                    else
+                    {
+                        if (MasterList.Count == 0)
+                        {
+                            DialogResult answer = MessageBox.Show("No current data exists for this part number.\n" +
+                                "Would you like to create a new entry to save your selected BOM file?\n" +
+                                "Pressing [No] will reset the form.",
+                                "Prompt to Create New Database Entry",
+                                MessageBoxButtons.YesNoCancel,
+                                MessageBoxIcon.Question);
+                            if (answer == DialogResult.Yes)
+                                AddNewDatabaseRow(txtPartNumber.Text);
+                            else if (answer == DialogResult.No)
+                                ResetAllData(resetPN: true);
+                            return;
+                        }
+                    }
+                }
+            }
+            if (!dataFound)
+            {
+                errorProvider.SetError(btnSearch, "New Part Number!\nPlease associate a BOM File from the L: drive.");
+                return;
+            }
         }
 
         private void AddNewDatabaseRow(string partNumber)
@@ -372,130 +534,6 @@ namespace RApID_Project_WPF
         }
         #endregion
 
-        private void GetPartNumberDetailsAndAliases()
-        {
-            var validPartNumber = false;
-
-            using (SqlConnection conn = new SqlConnection(csObjectHolder.csObjectHolder.ObjectHolderInstance().HummingBirdConnectionString))
-            {
-                conn.Open();
-                using (SqlCommand cmd = new SqlCommand("SELECT PartName, CommodityClass FROM [HummingBird].[dbo].[ItemMaster] " +
-                    "WHERE [PartNumber] = @Pnum AND ([StockingType] <> 'O' AND [StockingType] <> 'U')", conn))
-                {
-                    cmd.Parameters.AddWithValue("@Pnum", txtPartNumber.Text);
-
-                    SqlDataReader reader = cmd.ExecuteReader();
-                    validPartNumber = reader.HasRows;
-                    if (validPartNumber && reader.Read())
-                    {
-                        _selectedModel.PartName = reader[0].ToString();
-                        _selectedModel.CommodityClass = reader[1].ToString();
-                    }
-                }
-            }
-
-            if (!validPartNumber) {
-                errorProvider.SetError(txtPartNumber, "Part Number not found in ItemMaster table!");
-                return;
-            }
-
-            bool dataFound = false;
-            using (SqlConnection conn = new SqlConnection(csObjectHolder.csObjectHolder.ObjectHolderInstance().RepairConnectionString)) {
-                conn.Open();
-                using (SqlCommand cmd = new SqlCommand("SELECT PartNumber, BOMPath, SchematicPaths FROM [Repair].[dbo].[TechAliases] " +
-                    "WHERE [PartNumber] = @Pnum", conn)) {
-                    cmd.Parameters.AddWithValue("@Pnum", txtPartNumber.Text);
-
-                    SqlDataReader reader = cmd.ExecuteReader();
-
-                    dataFound = reader.Read();
-                    if (dataFound) {
-                        DesignFileSet model = new DesignFileSet() {
-                            PartNumber = reader[0]?.ToString(),
-                            PartName = _selectedModel.PartName,
-                            CommodityClass = _selectedModel.CommodityClass
-                        };
-
-                        StringBuilder sb = new StringBuilder();
-                        if (!string.IsNullOrWhiteSpace(reader[1].ToString().Trim()))
-                        {
-                            sb.Append("Reading New BOM Files {");
-
-                            foreach (var @string in reader[1].ToString().Split(','))
-                            {
-                                var name = @string.Substring(@string.LastIndexOf('\\') + 1) ?? "not set";
-                                var ext = @string.Substring(@string.LastIndexOf('.') + 1) ?? "other";
-                                System.Drawing.Image img = imgSchematics.Images[
-                                        (!string.IsNullOrWhiteSpace(ext) && new List<string>() { "pdf", "asc" }.Contains(ext)
-                                        ? ext : "other")
-                                    ];
-
-                                sb.Append("\n");
-                                sb.Append($"\t[AssemblyLinkItem] ==> {@string}");
-                                AssemblyLinkLabel link = new AssemblyLinkLabel(@string, name, img,
-                                    ext.Equals("pdf") ? "Assembly File" :
-                                    ext.Contains("xls") ? "BOM File" :
-                                    "Other File",
-                                    handler: lnkBOMFile_MouseDown);
-
-                                model.BOMFiles.Add(link);
-                                flowBOMFiles.Controls.Add(link);
-                            }
-                        }
-                        sb = new StringBuilder();
-                        if (!string.IsNullOrWhiteSpace(reader[2].ToString().Trim()))
-                        {
-                            sb.Append("Reading New Schematic Files {");
-                            
-                            foreach (var @string in reader[2].ToString().Split(','))
-                            {
-                                var name = @string.Substring(@string.LastIndexOf('\\') + 1) ?? "not set";
-                                var ext = @string.Substring(@string.LastIndexOf('.') + 1) ?? "other";
-                                System.Drawing.Image img = imgSchematics.Images[
-                                        (!string.IsNullOrWhiteSpace(ext) && new List<string>() { "pdf", "asc" }.Contains(ext)
-                                        ? ext : "other")
-                                    ];
-
-                                sb.Append("\n");
-                                sb.Append($"\t[AssemblyLinkItem] ==> {@string}");
-                                AssemblyLinkLabel link = new AssemblyLinkLabel(@string, name, img,
-                                    ext.Equals("pdf") ? "Assembly File" :
-                                    ext.Contains("xls") ? "BOM File" :
-                                    "Other File",
-                                    handler: lnkSchematicFile_MouseDown);
-
-                                model.SchematicLinks.Add(link);
-                                flowSchematicLinks.Controls.Add(link);
-                            }
-                        }
-                        sb.AppendLine("\n}");
-                        Console.Write(sb.ToString());
-                        Console.WriteLine(model.ToString());
-                        SelectedModel = model;
-                    } else {
-                        if (MasterList.Count == 0)
-                        {
-                            DialogResult answer = MessageBox.Show("No current data exists for this part number.\n" +
-                                "Would you like to create a new entry to save your selected BOM file?\n" +
-                                "Pressing [No] will reset the form.",
-                                "Prompt to Create New Database Entry",
-                                MessageBoxButtons.YesNoCancel,
-                                MessageBoxIcon.Question);
-                            if (answer == DialogResult.Yes)
-                                AddNewDatabaseRow(txtPartNumber.Text);
-                            else if (answer == DialogResult.No)
-                                ResetAllData(resetPN: true);
-                            return;
-                        }
-                    }
-                }
-            }
-            if(!dataFound) {
-                errorProvider.SetError(btnSearch, "New Part Number!\nPlease associate a BOM File from the L: drive.");
-                return;
-            }
-        }
-
         private void refreshToolStripMenuItem_Click(object sender, EventArgs e)
         {
             techAliasesTableAdapter.Fill(pCBAliasDataSet.TechAliases);
@@ -505,6 +543,7 @@ namespace RApID_Project_WPF
         private ToolStripMenuItem AddNewBOMFile = new ToolStripMenuItem("Add new BOM File...");
         private ToolStripMenuItem ChangeFilePath = new ToolStripMenuItem("Change File Path...");
         private ToolStripMenuItem DeleteSchematicLink = new ToolStripMenuItem("Delete Schematic Link...");
+        private ToolStripMenuItem ChangeTag = new ToolStripMenuItem("Change Tag...");
 
         private void flowBOMFiles_MouseDown(object sender, MouseEventArgs e)
         {
@@ -518,7 +557,7 @@ namespace RApID_Project_WPF
                 AddNewSchematicLink.Click += AddNewBOMFile_Click;
 
                 cxmnuSchematicLinksMenu.Show(MousePosition.X, MousePosition.Y);
-                cxmnuSchematicLinksMenu.Closed += cxmnuLinkMenu_Closed;
+                cxmnuSchematicLinksMenu.Closed += cxmnuSchematicLinksMenu_Closed;
             }
         }
 
@@ -534,23 +573,40 @@ namespace RApID_Project_WPF
                 AddNewSchematicLink.Click += AddNewSchematicLink_Click;
 
                 cxmnuSchematicLinksMenu.Show(MousePosition.X, MousePosition.Y);
-                cxmnuSchematicLinksMenu.Closed += cxmnuLinkMenu_Closed;
+                cxmnuSchematicLinksMenu.Closed += cxmnuSchematicLinksMenu_Closed;
             }
         }
 
-        private void cxmnuLinkMenu_Closed(object sender, EventArgs e)
+        private void lblPartNumberLabel_DoubleClick(object sender, EventArgs e) => Process.Start(ELEC_ROOT_DIR);
+
+        private void dgvDatabaseTable_CellDoubleClick(object sender, DataGridViewCellEventArgs e) {
+            txtPartNumber.Text = dgvDatabaseTable.Rows[e.RowIndex].Cells[0].Value.ToString();
+            tcDataViewer.SelectedIndex = 0;
+            HandleTextBoxEntry(new KeyEventArgs(Keys.Enter));
+        }
+
+        private void cxmnuSchematicLinksMenu_Closed(object sender, ToolStripDropDownClosedEventArgs e)
         {
             cxmnuSchematicLinksMenu.Items.Clear();
             cxmnuSchematicLinksMenu.Items.Add(ChangeFilePath);
+            cxmnuSchematicLinksMenu.Items.Add(ChangeTag);
             cxmnuSchematicLinksMenu.Items.Add(new ToolStripSeparator());
             cxmnuSchematicLinksMenu.Items.Add(DeleteSchematicLink);
 
             ChangeFilePath.Click += changeFilePathToolStripMenuItem_Click;
+            ChangeTag.Click += ChangeTag_Click;
             DeleteSchematicLink.Click += deleteSchematicLinkToolStripMenuItem_Click;
-            cxmnuSchematicLinksMenu.Closed -= cxmnuLinkMenu_Closed;
+            cxmnuSchematicLinksMenu.Closed -= cxmnuSchematicLinksMenu_Closed;
         }
 
-        private void lblPartNumberLabel_DoubleClick(object sender, EventArgs e) => Process.Start(ELEC_ROOT_DIR);
+        private void cxmnuSchematicLinksMenu_Opened(object sender, EventArgs e)
+        {
+            Console.Write(
+            $"\nLink Menu Activated by {GetChildAtPoint(new Point(MousePosition.X, MousePosition.Y))?.Name ?? "?"}{{\n" +
+                $"\tSender ==> {sender?.ToString() ?? "no sender?"},\n" +
+                $"\tArgs ==> {e?.ToString() ?? "no args?"}\n" +
+            $"}}\n");
+        }
     }
 
     /// <summary>
@@ -568,6 +624,9 @@ namespace RApID_Project_WPF
         public WhiningException(string message = "") : base(message) {}
     }
 
+    /// <summary>
+    /// Model for all data shown in the form (row data in SQL table also)
+    /// </summary>
     public class DesignFileSet : INotifyPropertyChanged {
         #region PropertyChanged Implementation
         public event PropertyChangedEventHandler PropertyChanged;
