@@ -1,6 +1,7 @@
 ﻿using EricStabileLibrary;
 using Microsoft.VisualBasic;
 using RApID_Project_WPF.CustomControls;
+using RApID_Project_WPF.PCBAliasDataSetTableAdapters;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -91,6 +92,8 @@ namespace RApID_Project_WPF
 
         private void frmBoardAliases_Load(object sender, EventArgs e)
         {
+            // TODO: This line of code loads data into the 'pCBAliasDataSet.TechAlias' table. You can move, or remove it, as needed.
+            this.techAliasTableAdapter.Fill(this.pCBAliasDataSet.TechAlias);
             if (!DirectDialog && FirstTimeToday)
             {
                 DialogResult ans = MessageBox.Show("Please use this form to enter in the correct information to locate the files related to this repair item.",
@@ -114,7 +117,7 @@ namespace RApID_Project_WPF
                 FirstTimeToday = false;
             }
 
-            techAliasesTableAdapter.Fill(pCBAliasDataSet.TechAliases);
+            new TechAliasTableAdapter().Fill(pCBAliasDataSet.TechAlias);
 
             txtPartNumber.Focus();
             
@@ -143,7 +146,7 @@ namespace RApID_Project_WPF
         {
             lblStatus.Text = "";
             progbarStatus.Value = 0;
-            progbarStatus.ForeColor = System.Drawing.Color.Green;
+            progbarStatus.ForeColor = Color.Green;
         }
 
         private void frmBoardAliases_PreviewKeyDown(object sender, PreviewKeyDownEventArgs e)
@@ -156,16 +159,44 @@ namespace RApID_Project_WPF
         }
 
         private void tcDataViewer_SelectedIndexChanged(object sender, EventArgs e)
-            => techAliasesTableAdapter.Fill(pCBAliasDataSet.TechAliases);
+            => new TechAliasTableAdapter().Fill(pCBAliasDataSet.TechAlias);
 
         #region Context Menu
 
         private void ChangeTag_Click(object sender, EventArgs e)
         {
+            Console.WriteLine($"ChangeTag --> bBOM? ==> {bBOM}");
             var control = bBOM ? _selectedModel.BOMFiles[BOMFileIndex] : _selectedModel.SchematicLinks[SchematicFileIndex];
             var def = control.Tag?.ToString() ?? "";
             control.Tag = Interaction.InputBox("Please enter a new Tag value", "New Assembly Item Tag", def, MousePosition.X, MousePosition.Y);
             infoProvider.SetError(control, control.Tag?.ToString() ?? "");
+
+            if(!string.IsNullOrWhiteSpace(control.Tag?.ToString() ?? ""))
+            {
+                using (SqlConnection conn = new SqlConnection(csObjectHolder.csObjectHolder.ObjectHolderInstance().RepairConnectionString))
+                {
+                    using (SqlCommand cmd = new SqlCommand($"UPDATE TechAlias SET {(bBOM ? "[BOMTags]" : "[SchematicTags]")} = @value WHERE PartNumber = @pn ", conn))
+                    {
+                        try
+                        {
+                            conn.Open();
+                            string resultant = "";
+                            if (bBOM) {
+                                _selectedModel.BOMTags[BOMFileIndex] = control.Tag?.ToString() ?? "";
+                                resultant = _selectedModel.BOMTags.ToStrings(suffix: ",");
+                            } else {
+                                _selectedModel.SchematicTags[SchematicFileIndex] = control.Tag?.ToString() ?? "";
+                                resultant = _selectedModel.SchematicTags.ToStrings(suffix: ",");
+                            }
+                            cmd.Parameters.AddWithValue("@pn", _selectedModel.PartNumber);
+                            cmd.Parameters.AddWithValue("@value", resultant);
+                            int result = cmd.ExecuteNonQuery();
+                            conn.Close();
+                        }
+                        catch (Exception ex) { MessageBox.Show(ex.Message); }
+                    }
+                }
+            }
         }
 
         private void changeFilePathToolStripMenuItem_Click(object sender, EventArgs e)
@@ -204,10 +235,10 @@ namespace RApID_Project_WPF
                 else
                 {
                     AssemblyLinkLabel newAssemblyLink = new AssemblyLinkLabel(ofd.FileName, ofd.SafeFileName, img, handler: lnkBOMFile_MouseDown);
-                    _selectedModel.SchematicLinks.RemoveAt(BOMFileIndex);
-                    _selectedModel.SchematicLinks.Insert(BOMFileIndex, newAssemblyLink);
-                    flowSchematicLinks.Controls.RemoveAt(BOMFileIndex);
-                    flowSchematicLinks.Controls.Add(newAssemblyLink);
+                    _selectedModel.BOMFiles.RemoveAt(BOMFileIndex);
+                    _selectedModel.BOMFiles.Insert(BOMFileIndex, newAssemblyLink);
+                    flowBOMFiles.Controls.RemoveAt(BOMFileIndex);
+                    flowBOMFiles.Controls.Add(newAssemblyLink);
                 }
             }
             else if (bSchematic)
@@ -234,26 +265,20 @@ namespace RApID_Project_WPF
             using (SqlConnection conn = new SqlConnection(csObjectHolder.csObjectHolder.ObjectHolderInstance().RepairConnectionString))
             {
                 conn.Open();
-                using (SqlCommand cmd = new SqlCommand("UPDATE [Repair].[dbo].[TechAliases] SET " +
+                using (SqlCommand cmd = new SqlCommand("UPDATE [Repair].[dbo].[TechAlias] SET " +
                     "BOMPath = @BomPath, SchematicPaths = @SchPath " +
                     "WHERE [PartNumber] = @Pnum", conn))
                 {
                     cmd.Parameters.AddWithValue("@Pnum", _selectedModel.PartNumber);
                     cmd.Parameters.AddWithValue("@BomPath", _selectedModel.BOMFiles.ToStrings(suffix: ","));
-                    var assemblyLinks = "";
-                    var collection = (bBOM && !bSchematic) ? _selectedModel.BOMFiles : _selectedModel.SchematicLinks;
-                    foreach (AssemblyLinkLabel assemblyLink in collection)
-                    {
-                        assemblyLinks += assemblyLink.Link + ",";
-                    }
+                    cmd.Parameters.AddWithValue("@SchPath", _selectedModel.SchematicLinks.ToStrings(suffix: ","));
                     progbarStatus.PerformStep();
-                    cmd.Parameters.AddWithValue("@SchPath", assemblyLinks.Substring(0, assemblyLinks.Length-1));
                     if(cmd.ExecuteNonQuery() > 0) {
                         lblStatus.Text = "Change successfull!";
                         progbarStatus.PerformStep();
                     } else {
                         lblStatus.Text = "DB_FAILURE --> Couldn't update database!";
-                        progbarStatus.ForeColor = System.Drawing.Color.Red;
+                        progbarStatus.ForeColor = Color.Red;
                     }
                 }
             }
@@ -269,7 +294,7 @@ namespace RApID_Project_WPF
             using (SqlConnection conn = new SqlConnection(csObjectHolder.csObjectHolder.ObjectHolderInstance().RepairConnectionString))
             {
                 conn.Open();
-                using (SqlCommand cmd = new SqlCommand("UPDATE [Repair].[dbo].[TechAliases] SET " +
+                using (SqlCommand cmd = new SqlCommand("UPDATE [Repair].[dbo].[TechAlias] SET " +
                     "SchematicPaths = @SchPath " +
                     "WHERE [PartNumber] = @Pnum", conn))
                 {
@@ -356,7 +381,7 @@ namespace RApID_Project_WPF
             using (SqlConnection conn = new SqlConnection(csObjectHolder.csObjectHolder.ObjectHolderInstance().RepairConnectionString))
             {
                 conn.Open();
-                using (SqlCommand cmd = new SqlCommand("SELECT PartNumber, BOMPath, SchematicPaths FROM [Repair].[dbo].[TechAliases] " +
+                using (SqlCommand cmd = new SqlCommand("SELECT PartNumber, BOMPath, SchematicPaths, BOMTags, SchematicTags FROM [Repair].[dbo].[TechAlias] " +
                     "WHERE [PartNumber] = @Pnum", conn))
                 {
                     cmd.Parameters.AddWithValue("@Pnum", txtPartNumber.Text);
@@ -370,7 +395,9 @@ namespace RApID_Project_WPF
                         {
                             PartNumber = reader[0]?.ToString(),
                             PartName = _selectedModel.PartName,
-                            CommodityClass = _selectedModel.CommodityClass
+                            CommodityClass = _selectedModel.CommodityClass,
+                            BOMTags = reader[3].ToString().Split(',').ToList(),
+                            SchematicTags = reader[4].ToString().Split(',').ToList(),
                         };
 
                         StringBuilder sb = new StringBuilder();
@@ -378,6 +405,7 @@ namespace RApID_Project_WPF
                         {
                             sb.Append("Reading New BOM Files {");
 
+                            var counter = 0;
                             foreach (var @string in reader[1].ToString().Split(','))
                             {
                                 var name = @string.Substring(@string.LastIndexOf('\\') + 1) ?? "not set";
@@ -395,20 +423,27 @@ namespace RApID_Project_WPF
                                     "Other File",
                                     handler: lnkBOMFile_MouseDown);
 
+                                if (model.BOMTags != null && model.BOMTags.Count > counter) {
+                                    link.Tag = model.BOMTags[counter];
+                                    infoProvider.SetError(link, model.BOMTags[counter++]);
+                                }
+
                                 model.BOMFiles.Add(link);
                                 flowBOMFiles.Controls.Add(link);
                             }
                         }
+                        Console.Write(sb.ToString());
                         sb = new StringBuilder();
                         if (!string.IsNullOrWhiteSpace(reader[2].ToString().Trim()))
                         {
                             sb.Append("Reading New Schematic Files {");
 
+                            var counter = 0;
                             foreach (var @string in reader[2].ToString().Split(','))
                             {
                                 var name = @string.Substring(@string.LastIndexOf('\\') + 1) ?? "not set";
                                 var ext = @string.Substring(@string.LastIndexOf('.') + 1) ?? "other";
-                                System.Drawing.Image img = imgSchematics.Images[
+                                Image img = imgSchematics.Images[
                                         (!string.IsNullOrWhiteSpace(ext) && new List<string>() { "pdf", "asc" }.Contains(ext)
                                         ? ext : "other")
                                     ];
@@ -420,6 +455,11 @@ namespace RApID_Project_WPF
                                     ext.Contains("xls") ? "BOM File" :
                                     "Other File",
                                     handler: lnkSchematicFile_MouseDown);
+
+                                if (model.SchematicTags != null && model.SchematicTags.Count > counter) {
+                                    link.Tag = model.SchematicTags[counter];
+                                    infoProvider.SetError(link, model.SchematicTags[counter++]);
+                                }
 
                                 model.SchematicLinks.Add(link);
                                 flowSchematicLinks.Controls.Add(link);
@@ -464,7 +504,7 @@ namespace RApID_Project_WPF
             using (SqlConnection conn = new SqlConnection(csObjectHolder.csObjectHolder.ObjectHolderInstance().RepairConnectionString))
             {
                 conn.Open();
-                using (SqlCommand cmd = new SqlCommand("INSERT INTO TechAliases (PartNumber, BOMPath, SchematicPaths) " +
+                using (SqlCommand cmd = new SqlCommand("INSERT INTO TechAlias (PartNumber, BOMPath, SchematicPaths) " +
                     "VALUES (@Pnum, @BomPath, @SchPaths)", conn))
                 {
                     cmd.Parameters.AddWithValue("@Pnum", partNumber);
@@ -480,7 +520,7 @@ namespace RApID_Project_WPF
             using (SqlConnection conn = new SqlConnection(csObjectHolder.csObjectHolder.ObjectHolderInstance().RepairConnectionString))
             {
                 conn.Open();
-                using (SqlCommand cmd = new SqlCommand("DELETE FROM TechAliases WHERE PartNumber = @Pnum", conn))
+                using (SqlCommand cmd = new SqlCommand("DELETE FROM TechAlias WHERE PartNumber = @Pnum", conn))
                 {
                     cmd.Parameters.AddWithValue("@Pnum", txtPartNumber.Text);
                     var rowsAffected = cmd.ExecuteNonQuery();
@@ -536,7 +576,7 @@ namespace RApID_Project_WPF
 
         private void refreshToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            techAliasesTableAdapter.Fill(pCBAliasDataSet.TechAliases);
+            new TechAliasTableAdapter().Fill(pCBAliasDataSet.TechAlias);
         }
 
         private ToolStripMenuItem AddNewSchematicLink = new ToolStripMenuItem("Add New Schematic Link...");
@@ -676,6 +716,27 @@ namespace RApID_Project_WPF
             }
         }
 
+        private List<string> _bomTags = new List<string>();
+        public List<string> BOMTags
+        {
+            get => _bomTags;
+            set {
+                _bomTags = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private List<string> _assyTags = new List<string>();
+        public List<string> SchematicTags
+        {
+            get => _assyTags;
+            set {
+                _assyTags = value;
+                OnPropertyChanged();
+            }
+        }
+
+
         private List<AssemblyLinkLabel> _schematicLinks = new List<AssemblyLinkLabel>();
         public List<AssemblyLinkLabel> SchematicLinks
         {
@@ -697,8 +758,14 @@ namespace RApID_Project_WPF
             $"\t{nameof(BOMFiles)} {{\n" +
             BOMFiles.ToStringsln(prefix: "\t\t", suffix: "\n") +
             $"\t}}\n" +
+            $"\t{nameof(BOMTags)} {{\n" +
+            BOMTags.ToStringsln(prefix: "\t\t", suffix: "\n") +
+            $"\t}}\n" +
             $"\t{nameof(SchematicLinks)} {{\n" +
             SchematicLinks.ToStringsln(prefix: "\t\t", suffix: "\n") +
+            $"\t}}\n" +
+            $"\t{nameof(SchematicTags)} {{\n" +
+            SchematicTags.ToStringsln(prefix: "\t\t", suffix: "\n") +
             $"\t}}\n" +
             $"}}";
     }
