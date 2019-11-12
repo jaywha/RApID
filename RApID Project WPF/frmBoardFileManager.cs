@@ -151,11 +151,13 @@ namespace RApID_Project_WPF
 
         private void frmBoardAliases_PreviewKeyDown(object sender, PreviewKeyDownEventArgs e)
         {
+            #if DEBUG
             if (e.KeyCode == Keys.A && e.Modifiers == (Keys.LShiftKey | Keys.RControlKey))
             {
                 dgvDatabaseTable.AllowUserToAddRows = !dgvDatabaseTable.AllowUserToAddRows;
                 dgvDatabaseTable.AllowUserToDeleteRows = !dgvDatabaseTable.AllowUserToDeleteRows;
             }
+            #endif
         }
 
         private void tcDataViewer_SelectedIndexChanged(object sender, EventArgs e)
@@ -165,7 +167,6 @@ namespace RApID_Project_WPF
 
         private void ChangeTag_Click(object sender, EventArgs e)
         {
-            Console.WriteLine($"ChangeTag --> bBOM? ==> {bBOM}");
             var control = bBOM ? _selectedModel.BOMFiles[BOMFileIndex] : _selectedModel.SchematicLinks[SchematicFileIndex];
             var def = control.Tag?.ToString() ?? "";
             control.Tag = Interaction.InputBox("Please enter a new Tag value", "New Assembly Item Tag", def, MousePosition.X, MousePosition.Y);
@@ -289,28 +290,57 @@ namespace RApID_Project_WPF
         }
 
         private void deleteSchematicLinkToolStripMenuItem_Click(object sender, EventArgs e) {
-            _selectedModel.SchematicLinks.RemoveAt(SchematicFileIndex);
-            flowSchematicLinks.Controls.RemoveAt(SchematicFileIndex);
-            using (SqlConnection conn = new SqlConnection(csObjectHolder.csObjectHolder.ObjectHolderInstance().RepairConnectionString))
+
+            if (bSchematic)
             {
-                conn.Open();
-                using (SqlCommand cmd = new SqlCommand("UPDATE [Repair].[dbo].[TechAlias] SET " +
-                    "SchematicPaths = @SchPath " +
-                    "WHERE [PartNumber] = @Pnum", conn))
+                _selectedModel.SchematicLinks.RemoveAt(SchematicFileIndex);
+                flowSchematicLinks.Controls.RemoveAt(SchematicFileIndex);
+                using (SqlConnection conn = new SqlConnection(csObjectHolder.csObjectHolder.ObjectHolderInstance().RepairConnectionString))
                 {
-                    var schematicPaths = "";
-                    foreach (AssemblyLinkLabel schematic in _selectedModel.SchematicLinks)
+                    conn.Open();
+                    using (SqlCommand cmd = new SqlCommand("UPDATE [Repair].[dbo].[TechAlias] SET " +
+                        "SchematicPaths = @SchPath " +
+                        "WHERE [PartNumber] = @Pnum", conn))
                     {
-                        schematicPaths += schematic.Link + ",";
+                        var schematicPaths = "";
+                        foreach (AssemblyLinkLabel schematic in _selectedModel.SchematicLinks)
+                        {
+                            schematicPaths += schematic.Link + ",";
+                        }
+                        if (string.IsNullOrWhiteSpace(schematicPaths) || schematicPaths.Length <= 1)
+                            cmd.Parameters.AddWithValue("@SchPath", DBNull.Value);
+                        else
+                            cmd.Parameters.AddWithValue("@SchPath", schematicPaths.Substring(0, schematicPaths.Length - 1));
+
+                        cmd.Parameters.AddWithValue("@Pnum", txtPartNumber.Text);
+
+                        int rowsAffected = cmd.ExecuteNonQuery();
                     }
-                    if(string.IsNullOrWhiteSpace(schematicPaths) || schematicPaths.Length <= 1)
-                        cmd.Parameters.AddWithValue("@SchPath", DBNull.Value);
-                    else
-                        cmd.Parameters.AddWithValue("@SchPath", schematicPaths.Substring(0, schematicPaths.Length - 1));
+                }
+            } else if(bBOM) {
+                _selectedModel.BOMFiles.RemoveAt(BOMFileIndex);
+                flowBOMFiles.Controls.RemoveAt(BOMFileIndex);
+                using (SqlConnection conn = new SqlConnection(csObjectHolder.csObjectHolder.ObjectHolderInstance().RepairConnectionString))
+                {
+                    conn.Open();
+                    using (SqlCommand cmd = new SqlCommand("UPDATE [Repair].[dbo].[TechAlias] SET " +
+                        "BOMPath = @BOMPaths " +
+                        "WHERE [PartNumber] = @Pnum", conn))
+                    {
+                        var bomFiles = "";
+                        foreach (AssemblyLinkLabel bomFile in _selectedModel.BOMFiles)
+                        {
+                            bomFiles += bomFile.Link + ",";
+                        }
+                        if (string.IsNullOrWhiteSpace(bomFiles) || bomFiles.Length <= 1)
+                            cmd.Parameters.AddWithValue("@BOMPaths", DBNull.Value);
+                        else
+                            cmd.Parameters.AddWithValue("@BOMPaths", bomFiles.Substring(0, bomFiles.Length - 1));
 
-                    cmd.Parameters.AddWithValue("@Pnum", txtPartNumber.Text);
+                        cmd.Parameters.AddWithValue("@Pnum", txtPartNumber.Text);
 
-                    int rowsAffected = cmd.ExecuteNonQuery();
+                        int rowsAffected = cmd.ExecuteNonQuery();
+                    }
                 }
             }
 
@@ -537,11 +567,11 @@ namespace RApID_Project_WPF
         #region Link Label
         private void lnkBOMFile_MouseDown(object sender, MouseEventArgs e)
         {
-            bSchematic = false;
-            bBOM = true;
-
             if (e.Button == MouseButtons.Right)
             {
+                bSchematic = false;
+                bBOM = true;
+
                 BOMFileIndex = -1;
                 foreach (Control c in flowBOMFiles.Controls)
                 {
@@ -556,11 +586,11 @@ namespace RApID_Project_WPF
 
         private void lnkSchematicFile_MouseDown(object sender, MouseEventArgs e)
         {
-            bSchematic = true;
-            bBOM = false;
-
             if (e.Button == MouseButtons.Right)
             {
+                bSchematic = true;
+                bBOM = false;
+
                 SchematicFileIndex = -1;
                 foreach(Control c in flowSchematicLinks.Controls)
                 {
@@ -590,11 +620,12 @@ namespace RApID_Project_WPF
             if (e.Button == MouseButtons.Right)
             {
                 ChangeFilePath.Click -= changeFilePathToolStripMenuItem_Click;
+                ChangeTag.Click -= ChangeTag_Click;
                 DeleteSchematicLink.Click -= deleteSchematicLinkToolStripMenuItem_Click;
 
                 cxmnuSchematicLinksMenu.Items.Clear();
                 cxmnuSchematicLinksMenu.Items.Add(AddNewBOMFile);
-                AddNewSchematicLink.Click += AddNewBOMFile_Click;
+                AddNewBOMFile.Click += AddNewBOMFile_Click;
 
                 cxmnuSchematicLinksMenu.Show(MousePosition.X, MousePosition.Y);
                 cxmnuSchematicLinksMenu.Closed += cxmnuSchematicLinksMenu_Closed;
@@ -606,6 +637,7 @@ namespace RApID_Project_WPF
             if (e.Button == MouseButtons.Right)
             {
                 ChangeFilePath.Click -= changeFilePathToolStripMenuItem_Click;
+                ChangeTag.Click -= ChangeTag_Click;
                 DeleteSchematicLink.Click -= deleteSchematicLinkToolStripMenuItem_Click;
 
                 cxmnuSchematicLinksMenu.Items.Clear();
@@ -625,27 +657,20 @@ namespace RApID_Project_WPF
             HandleTextBoxEntry(new KeyEventArgs(Keys.Enter));
         }
 
+        private ToolStripSeparator Divider = new ToolStripSeparator();
         private void cxmnuSchematicLinksMenu_Closed(object sender, ToolStripDropDownClosedEventArgs e)
         {
-            cxmnuSchematicLinksMenu.Items.Clear();
-            cxmnuSchematicLinksMenu.Items.Add(ChangeFilePath);
-            cxmnuSchematicLinksMenu.Items.Add(ChangeTag);
-            cxmnuSchematicLinksMenu.Items.Add(new ToolStripSeparator());
-            cxmnuSchematicLinksMenu.Items.Add(DeleteSchematicLink);
-
             ChangeFilePath.Click += changeFilePathToolStripMenuItem_Click;
             ChangeTag.Click += ChangeTag_Click;
             DeleteSchematicLink.Click += deleteSchematicLinkToolStripMenuItem_Click;
-            cxmnuSchematicLinksMenu.Closed -= cxmnuSchematicLinksMenu_Closed;
-        }
 
-        private void cxmnuSchematicLinksMenu_Opened(object sender, EventArgs e)
-        {
-            Console.Write(
-            $"\nLink Menu Activated by {GetChildAtPoint(new Point(MousePosition.X, MousePosition.Y))?.Name ?? "?"}{{\n" +
-                $"\tSender ==> {sender?.ToString() ?? "no sender?"},\n" +
-                $"\tArgs ==> {e?.ToString() ?? "no args?"}\n" +
-            $"}}\n");
+            cxmnuSchematicLinksMenu.Items.Clear();
+            cxmnuSchematicLinksMenu.Items.Add(ChangeFilePath);
+            cxmnuSchematicLinksMenu.Items.Add(ChangeTag);
+            cxmnuSchematicLinksMenu.Items.Add(Divider);
+            cxmnuSchematicLinksMenu.Items.Add(DeleteSchematicLink);
+
+            cxmnuSchematicLinksMenu.Closed -= cxmnuSchematicLinksMenu_Closed;
         }
     }
 

@@ -22,7 +22,7 @@ namespace RApID_Project_WPF.CustomControls
         /// <summary>
         /// Exposes the change link event to other classes
         /// </summary>
-        public static event MouseEventHandler ChangeLink;
+        public event MouseEventHandler ChangeLink;
 
         /// <summary> URL or File Path </summary>
         [Description("URL or File Path")]

@@ -66,16 +66,16 @@
             this.flowSchematicLinks = new System.Windows.Forms.FlowLayoutPanel();
             this.tbDatabaseView = new System.Windows.Forms.TabPage();
             this.dgvDatabaseTable = new System.Windows.Forms.DataGridView();
+            this.dataGridViewTextBoxColumn4 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.dataGridViewTextBoxColumn5 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.dataGridViewTextBoxColumn6 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.techAliasBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
             this.progbarStatus = new System.Windows.Forms.ToolStripProgressBar();
             this.lblStatus = new System.Windows.Forms.ToolStripStatusLabel();
             this.errorProvider = new System.Windows.Forms.ErrorProvider(this.components);
             this.infoProvider = new System.Windows.Forms.ErrorProvider(this.components);
-            this.techAliasBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.techAliasTableAdapter = new RApID_Project_WPF.PCBAliasDataSetTableAdapters.TechAliasTableAdapter();
-            this.dataGridViewTextBoxColumn4 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.dataGridViewTextBoxColumn5 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.dataGridViewTextBoxColumn6 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.cxmnuSchematicLinksMenu.SuspendLayout();
             this.cxmnuDatabaseMenu.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pCBAliasDataSet)).BeginInit();
@@ -109,10 +109,10 @@
             this.grpbxSchematicFiles.SuspendLayout();
             this.tbDatabaseView.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgvDatabaseTable)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.techAliasBindingSource)).BeginInit();
             this.statusStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.errorProvider)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.infoProvider)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.techAliasBindingSource)).BeginInit();
             this.SuspendLayout();
             // 
             // cxmnuSchematicLinksMenu
@@ -125,7 +125,6 @@
             this.cxmnuSchematicLinksMenu.Name = "cxmnuLinkMenu";
             this.cxmnuSchematicLinksMenu.Size = new System.Drawing.Size(200, 76);
             this.cxmnuSchematicLinksMenu.Closed += new System.Windows.Forms.ToolStripDropDownClosedEventHandler(this.cxmnuSchematicLinksMenu_Closed);
-            this.cxmnuSchematicLinksMenu.Opened += new System.EventHandler(this.cxmnuSchematicLinksMenu_Opened);
             // 
             // changeFilePathToolStripMenuItem
             // 
@@ -533,6 +532,32 @@
             this.dgvDatabaseTable.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgvDatabaseTable_CellDoubleClick);
             this.dgvDatabaseTable.CellDoubleClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgvDatabaseTable_CellDoubleClick);
             // 
+            // dataGridViewTextBoxColumn4
+            // 
+            this.dataGridViewTextBoxColumn4.DataPropertyName = "PartNumber";
+            this.dataGridViewTextBoxColumn4.HeaderText = "PartNumber";
+            this.dataGridViewTextBoxColumn4.Name = "dataGridViewTextBoxColumn4";
+            this.dataGridViewTextBoxColumn4.ReadOnly = true;
+            // 
+            // dataGridViewTextBoxColumn5
+            // 
+            this.dataGridViewTextBoxColumn5.DataPropertyName = "BOMPath";
+            this.dataGridViewTextBoxColumn5.HeaderText = "BOMPath";
+            this.dataGridViewTextBoxColumn5.Name = "dataGridViewTextBoxColumn5";
+            this.dataGridViewTextBoxColumn5.ReadOnly = true;
+            // 
+            // dataGridViewTextBoxColumn6
+            // 
+            this.dataGridViewTextBoxColumn6.DataPropertyName = "SchematicPaths";
+            this.dataGridViewTextBoxColumn6.HeaderText = "SchematicPaths";
+            this.dataGridViewTextBoxColumn6.Name = "dataGridViewTextBoxColumn6";
+            this.dataGridViewTextBoxColumn6.ReadOnly = true;
+            // 
+            // techAliasBindingSource
+            // 
+            this.techAliasBindingSource.DataMember = "TechAlias";
+            this.techAliasBindingSource.DataSource = this.pCBAliasDataSet;
+            // 
             // statusStrip1
             // 
             this.statusStrip1.BackColor = System.Drawing.Color.Black;
@@ -574,35 +599,9 @@
             this.infoProvider.ContainerControl = this;
             this.infoProvider.Icon = ((System.Drawing.Icon)(resources.GetObject("infoProvider.Icon")));
             // 
-            // techAliasBindingSource
-            // 
-            this.techAliasBindingSource.DataMember = "TechAlias";
-            this.techAliasBindingSource.DataSource = this.pCBAliasDataSet;
-            // 
             // techAliasTableAdapter
             // 
             this.techAliasTableAdapter.ClearBeforeFill = true;
-            // 
-            // dataGridViewTextBoxColumn4
-            // 
-            this.dataGridViewTextBoxColumn4.DataPropertyName = "PartNumber";
-            this.dataGridViewTextBoxColumn4.HeaderText = "PartNumber";
-            this.dataGridViewTextBoxColumn4.Name = "dataGridViewTextBoxColumn4";
-            this.dataGridViewTextBoxColumn4.ReadOnly = true;
-            // 
-            // dataGridViewTextBoxColumn5
-            // 
-            this.dataGridViewTextBoxColumn5.DataPropertyName = "BOMPath";
-            this.dataGridViewTextBoxColumn5.HeaderText = "BOMPath";
-            this.dataGridViewTextBoxColumn5.Name = "dataGridViewTextBoxColumn5";
-            this.dataGridViewTextBoxColumn5.ReadOnly = true;
-            // 
-            // dataGridViewTextBoxColumn6
-            // 
-            this.dataGridViewTextBoxColumn6.DataPropertyName = "SchematicPaths";
-            this.dataGridViewTextBoxColumn6.HeaderText = "SchematicPaths";
-            this.dataGridViewTextBoxColumn6.Name = "dataGridViewTextBoxColumn6";
-            this.dataGridViewTextBoxColumn6.ReadOnly = true;
             // 
             // frmBoardFileManager
             // 
@@ -653,11 +652,11 @@
             this.grpbxSchematicFiles.ResumeLayout(false);
             this.tbDatabaseView.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.dgvDatabaseTable)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.techAliasBindingSource)).EndInit();
             this.statusStrip1.ResumeLayout(false);
             this.statusStrip1.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.errorProvider)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.infoProvider)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.techAliasBindingSource)).EndInit();
             this.ResumeLayout(false);
 
         }
