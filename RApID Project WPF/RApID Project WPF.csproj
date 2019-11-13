@@ -224,6 +224,12 @@
     <Compile Include="frmSplashScreen.xaml.cs">
       <DependentUpon>frmSplashScreen.xaml</DependentUpon>
     </Compile>
+    <Compile Include="frmTextRequest.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="frmTextRequest.Designer.cs">
+      <DependentUpon>frmTextRequest.cs</DependentUpon>
+    </Compile>
     <Compile Include="frmViewFullLog.xaml.cs">
       <DependentUpon>frmViewFullLog.xaml</DependentUpon>
     </Compile>
@@ -399,6 +405,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="frmBoardFileManager.resx">
       <DependentUpon>frmBoardFileManager.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="frmTextRequest.resx">
+      <DependentUpon>frmTextRequest.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>

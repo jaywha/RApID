@@ -287,6 +287,10 @@ namespace RApID_Project_WPF {
             
             private global::System.Data.DataColumn columnSchematicPaths;
             
+            private global::System.Data.DataColumn columnBOMTags;
+            
+            private global::System.Data.DataColumn columnSchematicTags;
+            
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
             public TechAliasDataTable() {
@@ -354,6 +358,22 @@ namespace RApID_Project_WPF {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
+            public global::System.Data.DataColumn BOMTagsColumn {
+                get {
+                    return this.columnBOMTags;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
+            public global::System.Data.DataColumn SchematicTagsColumn {
+                get {
+                    return this.columnSchematicTags;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
             [global::System.ComponentModel.Browsable(false)]
             public int Count {
                 get {
@@ -389,13 +409,15 @@ namespace RApID_Project_WPF {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
-            public TechAliasRow AddTechAliasRow(string PartNumber, string BOMPath, string SchematicPaths) {
+            public TechAliasRow AddTechAliasRow(string PartNumber, string BOMPath, string SchematicPaths, string BOMTags, string SchematicTags) {
                 TechAliasRow rowTechAliasRow = ((TechAliasRow)(this.NewRow()));
                 object[] columnValuesArray = new object[] {
                         null,
                         PartNumber,
                         BOMPath,
-                        SchematicPaths};
+                        SchematicPaths,
+                        BOMTags,
+                        SchematicTags};
                 rowTechAliasRow.ItemArray = columnValuesArray;
                 this.Rows.Add(rowTechAliasRow);
                 return rowTechAliasRow;
@@ -422,6 +444,8 @@ namespace RApID_Project_WPF {
                 this.columnPartNumber = base.Columns["PartNumber"];
                 this.columnBOMPath = base.Columns["BOMPath"];
                 this.columnSchematicPaths = base.Columns["SchematicPaths"];
+                this.columnBOMTags = base.Columns["BOMTags"];
+                this.columnSchematicTags = base.Columns["SchematicTags"];
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
@@ -435,6 +459,10 @@ namespace RApID_Project_WPF {
                 base.Columns.Add(this.columnBOMPath);
                 this.columnSchematicPaths = new global::System.Data.DataColumn("SchematicPaths", typeof(string), null, global::System.Data.MappingType.Element);
                 base.Columns.Add(this.columnSchematicPaths);
+                this.columnBOMTags = new global::System.Data.DataColumn("BOMTags", typeof(string), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnBOMTags);
+                this.columnSchematicTags = new global::System.Data.DataColumn("SchematicTags", typeof(string), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnSchematicTags);
                 this.columnID.AutoIncrement = true;
                 this.columnID.AutoIncrementSeed = -1;
                 this.columnID.AutoIncrementStep = -1;
@@ -443,6 +471,8 @@ namespace RApID_Project_WPF {
                 this.columnPartNumber.MaxLength = 50;
                 this.columnBOMPath.MaxLength = 250;
                 this.columnSchematicPaths.MaxLength = 2000;
+                this.columnBOMTags.MaxLength = 2000;
+                this.columnSchematicTags.MaxLength = 2000;
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
@@ -644,6 +674,38 @@ namespace RApID_Project_WPF {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
+            public string BOMTags {
+                get {
+                    try {
+                        return ((string)(this[this.tableTechAlias.BOMTagsColumn]));
+                    }
+                    catch (global::System.InvalidCastException e) {
+                        throw new global::System.Data.StrongTypingException("The value for column \'BOMTags\' in table \'TechAlias\' is DBNull.", e);
+                    }
+                }
+                set {
+                    this[this.tableTechAlias.BOMTagsColumn] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
+            public string SchematicTags {
+                get {
+                    try {
+                        return ((string)(this[this.tableTechAlias.SchematicTagsColumn]));
+                    }
+                    catch (global::System.InvalidCastException e) {
+                        throw new global::System.Data.StrongTypingException("The value for column \'SchematicTags\' in table \'TechAlias\' is DBNull.", e);
+                    }
+                }
+                set {
+                    this[this.tableTechAlias.SchematicTagsColumn] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
             public bool IsPartNumberNull() {
                 return this.IsNull(this.tableTechAlias.PartNumberColumn);
             }
@@ -676,6 +738,30 @@ namespace RApID_Project_WPF {
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
             public void SetSchematicPathsNull() {
                 this[this.tableTechAlias.SchematicPathsColumn] = global::System.Convert.DBNull;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
+            public bool IsBOMTagsNull() {
+                return this.IsNull(this.tableTechAlias.BOMTagsColumn);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
+            public void SetBOMTagsNull() {
+                this[this.tableTechAlias.BOMTagsColumn] = global::System.Convert.DBNull;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
+            public bool IsSchematicTagsNull() {
+                return this.IsNull(this.tableTechAlias.SchematicTagsColumn);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
+            public void SetSchematicTagsNull() {
+                this[this.tableTechAlias.SchematicTagsColumn] = global::System.Convert.DBNull;
             }
         }
         
@@ -842,15 +928,20 @@ namespace RApID_Project_WPF.PCBAliasDataSetTableAdapters {
             tableMapping.ColumnMappings.Add("PartNumber", "PartNumber");
             tableMapping.ColumnMappings.Add("BOMPath", "BOMPath");
             tableMapping.ColumnMappings.Add("SchematicPaths", "SchematicPaths");
+            tableMapping.ColumnMappings.Add("BOMTags", "BOMTags");
+            tableMapping.ColumnMappings.Add("SchematicTags", "SchematicTags");
             this._adapter.TableMappings.Add(tableMapping);
             this._adapter.InsertCommand = new global::System.Data.SqlClient.SqlCommand();
             this._adapter.InsertCommand.Connection = this.Connection;
-            this._adapter.InsertCommand.CommandText = "INSERT INTO [dbo].[TechAlias] ([PartNumber], [BOMPath], [SchematicPaths]) VALUES " +
-                "(@PartNumber, @BOMPath, @SchematicPaths)";
+            this._adapter.InsertCommand.CommandText = "INSERT INTO [dbo].[TechAlias] ([PartNumber], [BOMPath], [BOMTags], [SchematicPath" +
+                "s], [SchematicTags]) VALUES (@PartNumber, @BOMPath, @BOMTags, @SchematicPaths, @" +
+                "SchematicTags)";
             this._adapter.InsertCommand.CommandType = global::System.Data.CommandType.Text;
-            this._adapter.InsertCommand.Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@PartNumber", global::System.Data.SqlDbType.NVarChar, 0, global::System.Data.ParameterDirection.Input, 0, 0, "PartNumber", global::System.Data.DataRowVersion.Current, false, null, "", "", ""));
-            this._adapter.InsertCommand.Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@BOMPath", global::System.Data.SqlDbType.NVarChar, 0, global::System.Data.ParameterDirection.Input, 0, 0, "BOMPath", global::System.Data.DataRowVersion.Current, false, null, "", "", ""));
-            this._adapter.InsertCommand.Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@SchematicPaths", global::System.Data.SqlDbType.NVarChar, 0, global::System.Data.ParameterDirection.Input, 0, 0, "SchematicPaths", global::System.Data.DataRowVersion.Current, false, null, "", "", ""));
+            this._adapter.InsertCommand.Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@PartNumber", global::System.Data.SqlDbType.VarChar, 0, global::System.Data.ParameterDirection.Input, 0, 0, "PartNumber", global::System.Data.DataRowVersion.Current, false, null, "", "", ""));
+            this._adapter.InsertCommand.Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@BOMPath", global::System.Data.SqlDbType.VarChar, 0, global::System.Data.ParameterDirection.Input, 0, 0, "BOMPath", global::System.Data.DataRowVersion.Current, false, null, "", "", ""));
+            this._adapter.InsertCommand.Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@BOMTags", global::System.Data.SqlDbType.VarChar, 0, global::System.Data.ParameterDirection.Input, 0, 0, "BOMTags", global::System.Data.DataRowVersion.Current, false, null, "", "", ""));
+            this._adapter.InsertCommand.Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@SchematicPaths", global::System.Data.SqlDbType.VarChar, 0, global::System.Data.ParameterDirection.Input, 0, 0, "SchematicPaths", global::System.Data.DataRowVersion.Current, false, null, "", "", ""));
+            this._adapter.InsertCommand.Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@SchematicTags", global::System.Data.SqlDbType.VarChar, 0, global::System.Data.ParameterDirection.Input, 0, 0, "SchematicTags", global::System.Data.DataRowVersion.Current, false, null, "", "", ""));
         }
         
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
@@ -866,7 +957,8 @@ namespace RApID_Project_WPF.PCBAliasDataSetTableAdapters {
             this._commandCollection = new global::System.Data.SqlClient.SqlCommand[1];
             this._commandCollection[0] = new global::System.Data.SqlClient.SqlCommand();
             this._commandCollection[0].Connection = this.Connection;
-            this._commandCollection[0].CommandText = "SELECT ID, PartNumber, BOMPath, SchematicPaths FROM dbo.TechAlias";
+            this._commandCollection[0].CommandText = "SELECT ID, PartNumber, BOMPath, BOMTags, SchematicPaths, SchematicTags FROM dbo.T" +
+                "echAlias";
             this._commandCollection[0].CommandType = global::System.Data.CommandType.Text;
         }
         

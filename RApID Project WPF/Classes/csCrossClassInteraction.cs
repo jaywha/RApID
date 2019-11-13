@@ -4,6 +4,7 @@
  */
 
 using ExcelDataReader;
+using RApID_Project_WPF.CustomControls;
 using RApID_Project_WPF.UserControls;
 using System;
 using System.Collections.Generic;
@@ -12,6 +13,7 @@ using System.Data.SqlClient;
 using System.Drawing;
 using System.IO;
 using System.Linq;
+using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
@@ -182,6 +184,20 @@ namespace RApID_Project_WPF
             //move to the centre
             w.Left = (((workAreaWidth - (w.Width * dpiScaling)) / 2) + (workArea.Left * dpiScaling));
             w.Top = (((workAreaHeight - (w.Height * dpiScaling)) / 2) + (workArea.Top * dpiScaling));
+        }
+
+        /// <summary>
+        /// Creates a new <see cref="System.Collections.Generic.List{string}"/> from calling <see cref="AssemblyLinkLabel"/> enumerable.
+        /// </summary>
+        /// <param name="assemblyLinks">Calling Enumerable of type <see cref="AssemblyLinkLabel"/></param>
+        /// <returns><see cref="System.Collections.Generic.List{string}"/></returns>
+        public static List<string> GetLinks(this IEnumerable<AssemblyLinkLabel> assemblyLinks)
+        {
+            List<string> result = new List<string>();
+            foreach(AssemblyLinkLabel label in assemblyLinks) {
+                result.Add(label.Link);
+            }
+            return result;
         }
 
         public static void MapperSuccessMessage(string filename, string PN = "")
