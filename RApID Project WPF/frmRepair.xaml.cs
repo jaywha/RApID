@@ -1385,7 +1385,16 @@ namespace RApID_Project_WPF
                         }
                         else
                         {
-                            (string filename, bool found) = await mapper.FindFileAsync(".xls");
+                            (string filename, string notes, bool found) = await mapper.FindFileAsync(".xls");
+                            if (filename.Contains(",")) {
+                                frmMultipleItems fmi = new frmMultipleItems(MultipleItemType.BOMFiles) {
+                                    BOMFiles = filename.Split(',').ToList(),
+                                    Notes = notes.Split('|')[0].Split(',').ToList()
+                                };
+                                fmi.ShowDialog();
+                                filename = sVar.SelectedBOMFile.FilePath;
+                            }
+
                             csCrossClassInteraction.ExcelDispatcher = Dispatcher.CurrentDispatcher;
                             csCrossClassInteraction.DoExcelOperations(filename, progMapper, OrigRefSource, OrigPartSource);
 
@@ -1523,7 +1532,7 @@ namespace RApID_Project_WPF
             else
             {
                 sVar.LogHandler.CreateLogAction("Multiple RP Numbers Found. Opening frmMultipleRP to let user pick the correct RP Number.", csLogging.LogState.NOTE);
-                frmMultipleRP fmrp = new frmMultipleRP(txtOrderNumber.Text.ToString().TrimEnd());
+                frmMultipleItems fmrp = new frmMultipleItems(txtOrderNumber.Text.ToString().TrimEnd());
                 fmrp.ShowDialog();
                 if (!string.IsNullOrEmpty(sVar.SelectedRPNumber.RPNumber))
                 {
@@ -2444,7 +2453,8 @@ namespace RApID_Project_WPF
 
         private void BtnTech_Click(object sender, RoutedEventArgs e)
         {
-            frmBoardFileManager alias = new frmBoardFileManager(directDialog: true) { StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen };
+            var pn = txtPartNumber?.Text ?? "";
+            frmBoardFileManager alias = new frmBoardFileManager(partNumber: pn, directDialog: true) { StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen };
             alias.Show();
         }
 

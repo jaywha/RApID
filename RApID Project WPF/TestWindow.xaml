@@ -4,15 +4,33 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:RApID_Project_WPF"
+        xmlns:classes="clr-namespace:RApID_Project_WPF.Classes"
         xmlns:sys="clr-namespace:System;assembly=mscorlib"
         xmlns:UserControls="clr-namespace:RApID_Project_WPF.UserControls"
         x:Class="RApID_Project_WPF.TestWindow"
-        mc:Ignorable="d"
+        mc:Ignorable="d" Name="wndTestWindow"
         Title="TestWindow" Height="527.674" Width="849.313">
     <Window.Resources>
         <UserControls:BoolToStringConverter x:Key="StatusConv"/>
         <UserControls:VisibilityToBoolConverter x:Key="VisToBoolConv"/>
         <UserControls:CombiningConverter x:Key="VisStatusConv" Converter1="{StaticResource VisToBoolConv}" Converter2="{StaticResource StatusConv}"/>
+        <ControlTemplate x:Key="validationTemplate">
+            <DockPanel>
+                <AdornedElementPlaceholder/>
+                <TextBlock Foreground="Crimson" FontSize="24" FontWeight="DemiBold">‼</TextBlock>
+            </DockPanel>
+        </ControlTemplate>
+        <Style x:Key="textBoxInError" TargetType="{x:Type TextBox}">
+            <Style.Triggers>
+                <Trigger Property="Validation.HasError" Value="true">
+                    <Setter Property="ToolTip"
+        Value="{Binding RelativeSource={x:Static RelativeSource.Self},
+                        Path=(Validation.Errors)/ErrorContent}"/>
+                    <Setter Property="BorderBrush" Value="Red"/>
+                    <Setter Property="BorderThickness" Value="0.5"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
     </Window.Resources>
     <Window.Background>
         <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
@@ -156,6 +174,31 @@
                 </StackPanel>
             </Button>
             <Button Content="Test PCBA Aliases Maanager Form" HorizontalAlignment="Left" Margin="561,375,0,0" VerticalAlignment="Top" Width="291" Click="pcbaalias_click"/>
+
+            <Label Content="Reference Number Regex" HorizontalAlignment="Left" Margin="369,197,0,0" VerticalAlignment="Top"/>
+            <TextBox x:Name="txtRefNumber" HorizontalAlignment="Left" Height="23" Margin="369,228,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="192"
+                     Validation.ErrorTemplate="{StaticResource validationTemplate}" CharacterCasing="Upper"
+                     Style="{StaticResource textBoxInError}">
+                <TextBox.Text>
+                    <Binding Path="RefNumber" ElementName="wndTestWindow" UpdateSourceTrigger="PropertyChanged">
+                        <Binding.ValidationRules>
+                            <classes:ReferenceNumberRule/>
+                        </Binding.ValidationRules>
+                    </Binding>
+                </TextBox.Text>
+            </TextBox>
+            <Label Content="Part Number Regex" HorizontalAlignment="Left" Margin="369,256,0,0" VerticalAlignment="Top"/>
+            <TextBox x:Name="txtPartNumber" HorizontalAlignment="Left" Height="23" Margin="369,285,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="192"
+                     Validation.ErrorTemplate="{StaticResource validationTemplate}" CharacterCasing="Upper"
+                     Style="{StaticResource textBoxInError}">
+                <TextBox.Text>
+                    <Binding Path="PartNumber" ElementName="wndTestWindow" UpdateSourceTrigger="PropertyChanged">
+                        <Binding.ValidationRules>
+                            <classes:PartNumberRule/>
+                        </Binding.ValidationRules>
+                    </Binding>
+                </TextBox.Text>
+            </TextBox>
         </Grid>
     </Viewbox>
 </Window>

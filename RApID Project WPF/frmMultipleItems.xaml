@@ -1,9 +1,9 @@
-﻿<Window x:Class="RApID_Project_WPF.frmMultipleRP"
+﻿<Window x:Class="RApID_Project_WPF.frmMultipleItems"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Title="Multiple RP Numbers Found" Height="300" Width="465" Loaded="Window_Loaded" WindowStartupLocation="CenterScreen" ResizeMode="NoResize">
+        Title="Multiple Items Found" Height="300" Width="465" Loaded="Window_Loaded" WindowStartupLocation="CenterScreen" ResizeMode="NoResize">
     <Grid>
-        <DataGrid Name="dgRPInfo" HorizontalAlignment="Stretch" Height="215" Margin="10,10,10,0" VerticalAlignment="Top" Width="auto" BeginningEdit="dgRPInfo_BeginningEdit" MouseDoubleClick="dgRPInfo_MouseDoubleClick">
+        <DataGrid Name="dgItemInfo" HorizontalAlignment="Stretch" Height="215" Margin="10,10,10,0" VerticalAlignment="Top" Width="auto" BeginningEdit="dgItemInfo_BeginningEdit" MouseDoubleClick="dgItemInfo_MouseDoubleClick">
             <!--<DataGrid.Columns>
                 <DataGridTextColumn Binding="{Binding VMRPNumber}" Header="RP Number"/>
                 <DataGridTextColumn Binding="{Binding VMCustomerNumber}" Header="Customer Number"/>

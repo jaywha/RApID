@@ -76,6 +76,76 @@ namespace RApID_Project_WPF
 
         #endregion
 
+        #region Validation Properties
+        private string referenceNumber1 = string.Empty;
+        public string ReferenceNumber1
+        {
+            get => referenceNumber1;
+            set {
+                referenceNumber1 = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private string referenceNumber2 = string.Empty;
+        public string ReferenceNumber2
+        {
+            get => referenceNumber2;
+            set
+            {
+                referenceNumber2 = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private string referenceNumber3 = string.Empty;
+        public string ReferenceNumber3
+        {
+            get => referenceNumber3;
+            set
+            {
+                referenceNumber3 = value;
+                OnPropertyChanged();
+            }
+        }
+
+        // ======================================================================
+
+        private string partNumber1 = string.Empty;
+        public string PartNumber1
+        {
+            get => partNumber1;
+            set
+            {
+                partNumber1 = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private string partNumber2 = string.Empty;
+        public string PartNumber2
+        {
+            get => partNumber2;
+            set
+            {
+                partNumber2 = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private string partNumber3 = string.Empty;
+        public string PartNumber3
+        {
+            get => partNumber3;
+            set
+            {
+                partNumber3 = value;
+                OnPropertyChanged();
+            }
+        }
+
+        #endregion
+
         public event PropertyChangedEventHandler PropertyChanged;
         private void OnPropertyChanged([CallerMemberName] string propName = "") => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propName));
 
@@ -323,6 +393,7 @@ namespace RApID_Project_WPF
             ucEOLTab.Reset();
             ucAOITab.Reset();
 
+            dgBOMList.Items.Clear();
             BOMList.Clear();
 
             txtSerialNumber.Focus();
@@ -678,10 +749,9 @@ namespace RApID_Project_WPF
                             }
                             else
                             {
-                                (string filename, bool found) = await mapper.FindFileAsync(".xls");
+                                (string filename, string notes, bool found) = await mapper.FindFileAsync(".xls");
 
-                                if(!found)
-                                {
+                                /*if (!found) {
                                     MessageBox.Show("We got some database info, but we still need help finindg the BOM.",
                                         "Soft Error - BOM Not Found", MessageBoxButton.OK, MessageBoxImage.Information);
                                     frmBoardFileManager techForm = new frmBoardFileManager(mapper.PartNumber);
@@ -694,6 +764,15 @@ namespace RApID_Project_WPF
                                     } else {
                                         filename = techForm.BOMFileName;
                                     }
+                                } else */
+                                if (filename.Contains(",")) {
+                                    frmMultipleItems fmi = new frmMultipleItems(MultipleItemType.BOMFiles)
+                                    {
+                                        BOMFiles = filename.Split(',').ToList(),
+                                        Notes = notes.Split('|')[0].Split(',').ToList()
+                                    };
+                                    fmi.ShowDialog();
+                                    filename = sVar.SelectedBOMFile.FilePath;
                                 }
 
                                 csCrossClassInteraction.DoExcelOperations(filename, progMapper, dgBOMList, expBOMInfo);

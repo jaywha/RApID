@@ -3,7 +3,9 @@ using SNMapperLib;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
@@ -21,11 +23,45 @@ namespace RApID_Project_WPF
     /// <summary>
     /// Interaction logic for TestWindow.xaml
     /// </summary>
-    public partial class TestWindow : Window
+    public partial class TestWindow : Window, INotifyPropertyChanged
     {
         public ObservableCollection<string> RefDes = new ObservableCollection<string>();
         public ObservableCollection<string> PartNum = new ObservableCollection<string>();
 
+        private TextBox _partNumberTBOX;
+        public TextBox PartNumberTBOX
+        {
+            get => _partNumberTBOX;
+            private set {
+                _partNumberTBOX = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private string _refNumber = string.Empty;
+        public string RefNumber
+        {
+            get => _refNumber;
+            set {
+                _refNumber = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private string _partNumber = string.Empty;
+        public string PartNumber
+        {
+            get => _partNumber;
+            set
+            {
+                _partNumber = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public event PropertyChangedEventHandler PropertyChanged;
+        private void OnPropertyChanged([CallerMemberName] string propName = "")
+            => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propName));
 
         public TestWindow()
         {
@@ -34,6 +70,7 @@ namespace RApID_Project_WPF
 
             unitIssue.cmbxRefDesignator.ItemsSource = RefDes;
             unitIssue.cmbxPartNumber.ItemsSource = PartNum;
+            PartNumberTBOX = txtPartNumber;
         }
 
         private void btnUCSwitch_Click(object sender, RoutedEventArgs e)
@@ -113,6 +150,7 @@ namespace RApID_Project_WPF
         }
 
         public bool BOMFileActive = false;
+
         private async void MapRefDesToPartNum()
         {
             try
@@ -132,7 +170,7 @@ namespace RApID_Project_WPF
                             else
                             {
                                 MessageBox.Show(mapper.Success(), "DEBUG", MessageBoxButton.OK, MessageBoxImage.Information);
-                                (string filename, bool found) result = await mapper.FindFileAsync(".xls");
+                                (string filename, string notes, bool found) result = await mapper.FindFileAsync(".xls");
                                 csCrossClassInteraction.DoExcelOperations(result.filename, progMapper, RefDes, PartNum);
 
                                 csCrossClassInteraction.MapperSuccessMessage(result.filename, mapper.PartNumber);
@@ -179,6 +217,11 @@ namespace RApID_Project_WPF
         {
             frmBoardFileManager frm = new frmBoardFileManager();
             frm.ShowDialog();
+        }
+
+        private void TxtRegex_LostFocus(object sender, RoutedEventArgs e)
+        {
+            
         }
     }
 }

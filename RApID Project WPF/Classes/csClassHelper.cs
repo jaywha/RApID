@@ -94,6 +94,13 @@ namespace RApID_Project_WPF
         public CustomerInformation CustInfo { get; set; }
     }
 
+    public class MULTIPLEBOM
+    {
+        public string Filename { get; set; }
+        public string Notes { get; set; }
+        public string FilePath { get; set; }
+    }
+
     /// <summary>
     /// Mirrors merged unit issue properties similar to the <see cref="UserControls.ucUnitIssue"/> user control.
     /// </summary>

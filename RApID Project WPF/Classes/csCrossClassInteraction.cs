@@ -37,7 +37,9 @@ namespace RApID_Project_WPF
         /// <summary> UNUSED <para/> (Part Name,Part Number)</summary>
         PARTNUMBERNAME,
         /// <summary> Multiple RP Numbers <para/> (Repair Number, Customer Number, Customer Name)</summary>
-        CUSTOMERINFO
+        CUSTOMERINFO,
+        /// <summary> Multiple BOM Files <para/> (FileName, Notes)</summary>
+        BOMFILES
     }
 
     public static class csCrossClassInteraction
@@ -93,6 +95,10 @@ namespace RApID_Project_WPF
                     dgToBuid.Columns.Add(DataGridViewHelper.newColumn("RP Number", "RPNumber"));
                     dgToBuid.Columns.Add(DataGridViewHelper.newColumn("Customer Number", "CustomerNumber"));
                     dgToBuid.Columns.Add(DataGridViewHelper.newColumn("Customer Name", "CustomerName"));
+                    break;
+                case DataGridTypes.BOMFILES:
+                    dgToBuid.Columns.Add(DataGridViewHelper.newColumn("File Name","Filename"));
+                    dgToBuid.Columns.Add(DataGridViewHelper.newColumn("Notes","Notes"));
                     break;
                 default:
                     break;

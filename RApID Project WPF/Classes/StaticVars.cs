@@ -48,5 +48,8 @@ namespace RApID_Project_WPF
         public DGVMULTIPLERP SelectedRPNumber { get; set; }
             = new DGVMULTIPLERP { RPNumber = "", LineNumber = -1, CustInfo = new CustomerInformation() };
 
+        public MULTIPLEBOM SelectedBOMFile { get; set; }
+            = new MULTIPLEBOM { Filename = "BOMFile", Notes = "Nope!" };
+
     }
 }

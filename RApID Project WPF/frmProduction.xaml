@@ -4,13 +4,34 @@
         xmlns:rapid_project_wpf="clr-namespace:RApID_Project_WPF"
         xmlns:uc="clr-namespace:RApID_Project_WPF.UserControls"
         xmlns:sys="clr-namespace:System;assembly=mscorlib"
+        xmlns:classes="clr-namespace:RApID_Project_WPF.Classes"
         x:Name="wndMain"
         Title="Production" Width="1104" Height="815" MinWidth="300" MinHeight="300" Background="#FF808285" Loaded="Window_Loaded" Closing="Window_Closing">
     <Window.Resources>
+        <ControlTemplate x:Key="validationTemplate">
+            <DockPanel>
+                <AdornedElementPlaceholder/>
+                <TextBlock Foreground="Crimson" FontSize="18" FontWeight="DemiBold">!</TextBlock>
+            </DockPanel>
+        </ControlTemplate>
+        
         <Style x:Key="ComboBoxBaseStyle" TargetType="{x:Type ComboBox}">
             <Setter Property="Width" Value="275" />
             <Setter Property="HorizontalAlignment" Value="Left" />
             <Setter Property="VerticalAlignment" Value="Top" />
+        </Style>
+
+        <Style x:Key="ComboBoxInError" TargetType="{x:Type ComboBox}" BasedOn="{StaticResource ComboBoxBaseStyle}">
+            <Setter Property="AllowDrop" Value="False"/>
+            <Style.Triggers>
+                <Trigger Property="Validation.HasError" Value="true">
+                    <Setter Property="ToolTip"
+        Value="{Binding RelativeSource={x:Static RelativeSource.Self},
+                        Path=(Validation.Errors)/ErrorContent}"/>
+                    <Setter Property="BorderBrush" Value="Red"/>
+                    <Setter Property="BorderThickness" Value="0.5"/>
+                </Trigger>
+            </Style.Triggers>
         </Style>
 
         <Style x:Key="TextboxBaseStyle" TargetType="{x:Type TextBox}">
@@ -190,11 +211,29 @@
 
                                         <Label Name="lblRefDes" Content="Ref Designator" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10,310,0,0" Visibility="Hidden"/>
                                         <Border x:Name="brdRefDes" Margin="10,335,180,226">
-                                            <ComboBox x:Name="txtMultiRefDes" IsEditable="True" Style="{StaticResource Combobox}" IsReadOnly="False" Width="100" Visibility="Hidden" KeyUp="txtMultiRefKeyUp" SelectionChanged="refDesIndexChanged"/>
+                                            <ComboBox x:Name="txtMultiRefDes" IsEditable="True" Style="{StaticResource ComboBoxInError}" IsReadOnly="False" Width="100" Visibility="Hidden" KeyUp="txtMultiRefKeyUp" SelectionChanged="refDesIndexChanged"
+                                                      Validation.ErrorTemplate="{StaticResource validationTemplate}">
+                                                <ComboBox.Text>
+                                                    <Binding Path="ReferenceNumber1" ElementName="wndMain" UpdateSourceTrigger="PropertyChanged">
+                                                        <Binding.ValidationRules>
+                                                            <classes:ReferenceNumberRule/>
+                                                        </Binding.ValidationRules>
+                                                    </Binding>
+                                                </ComboBox.Text>
+                                            </ComboBox>
                                         </Border>
 
                                         <Label Name="lblPartNum" Content="Part Number" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="150,310,0,0" Visibility="Hidden"/>
-                                        <ComboBox x:Name="txtMultiPartNum" IsEditable="True" Margin="150,335,0,0" Style="{StaticResource Combobox}" Width="100" Visibility="Hidden"/>
+                                        <ComboBox x:Name="txtMultiPartNum" IsEditable="True" Margin="150,335,0,0" Style="{StaticResource ComboBoxInError}" Width="100" Visibility="Hidden"
+                                                  Validation.ErrorTemplate="{StaticResource validationTemplate}">
+                                            <ComboBox.Text>
+                                                <Binding Path="PartNumber1" ElementName="wndMain" UpdateSourceTrigger="PropertyChanged">
+                                                    <Binding.ValidationRules>
+                                                        <classes:PartNumberRule/>
+                                                    </Binding.ValidationRules>
+                                                </Binding>
+                                            </ComboBox.Text>
+                                        </ComboBox>
                                         <Button Name="btnAddRefPart" Margin="255,335,0,0" Content="Add" HorizontalAlignment="Left" VerticalAlignment="Top" Width="35" Visibility="Hidden" Click="btnAddRefPart_Click"/>
 
                                         <DataGrid Name="dgMultipleParts" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10,370,0,0" Width="275" Height="180" AllowDrop="True" BeginningEdit="dgBeginEdit" Visibility="Hidden" KeyUp="dataGrid_KeyUp" />
@@ -224,11 +263,29 @@
 
                                         <Label Name="lblRefDes_2" Content="Ref Designator" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10,310,0,0" Visibility="Hidden"/>
                                         <Border x:Name="brdRefDes_2" Margin="10,335,180,226">
-                                            <ComboBox x:Name="txtMultiRefDes_2" IsEditable="True" Style="{StaticResource Combobox}" IsReadOnly="False" Width="100" Visibility="Hidden" KeyUp="txtMultiRefKeyUp" SelectionChanged="refDesIndexChanged"/>
+                                            <ComboBox x:Name="txtMultiRefDes_2" IsEditable="True" Style="{StaticResource ComboBoxInError}" IsReadOnly="False" Width="100" Visibility="Hidden" KeyUp="txtMultiRefKeyUp" SelectionChanged="refDesIndexChanged"
+                                                      Validation.ErrorTemplate="{StaticResource validationTemplate}">
+                                                <ComboBox.Text>
+                                                    <Binding Path="ReferenceNumber2" ElementName="wndMain" UpdateSourceTrigger="PropertyChanged">
+                                                        <Binding.ValidationRules>
+                                                            <classes:ReferenceNumberRule/>
+                                                        </Binding.ValidationRules>
+                                                    </Binding>
+                                                </ComboBox.Text>
+                                            </ComboBox>                                                
                                         </Border>
 
                                         <Label Name="lblPartNum_2" Content="Part Number" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="150,310,0,0" Visibility="Hidden"/>
-                                        <ComboBox x:Name="txtMultiPartNum_2" IsEditable="True" Margin="150,335,0,0" Style="{StaticResource Combobox}" Width="100" Visibility="Hidden"/>
+                                        <ComboBox x:Name="txtMultiPartNum_2" IsEditable="True" Margin="150,335,0,0" Style="{StaticResource ComboBoxInError}" Width="100" Visibility="Hidden"
+                                                  Validation.ErrorTemplate="{StaticResource validationTemplate}">
+                                            <ComboBox.Text>
+                                                <Binding Path="PartNumber2" ElementName="wndMain" UpdateSourceTrigger="PropertyChanged">
+                                                    <Binding.ValidationRules>
+                                                        <classes:ReferenceNumberRule/>
+                                                    </Binding.ValidationRules>
+                                                </Binding>
+                                            </ComboBox.Text>
+                                        </ComboBox>
                                         <Button Name="btnAddRefPart_2" Margin="255,335,0,0" Content="Add" HorizontalAlignment="Left" VerticalAlignment="Top" Width="35" Visibility="Hidden" Click="btnAddRefPart_Click"/>
 
                                         <DataGrid Name="dgMultipleParts_2" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10,370,0,0" Width="275" Height="180" BeginningEdit="dgBeginEdit" Visibility="Hidden" KeyUp="dataGrid_KeyUp"/>
@@ -258,11 +315,29 @@
 
                                         <Label Name="lblRefDes_3" Content="Ref Designator" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10,310,0,0" Visibility="Hidden"/>
                                         <Border x:Name="brdRefDes_3" Margin="10,335,180,226">
-                                            <ComboBox x:Name="txtMultiRefDes_3" IsEditable="True" Style="{StaticResource Combobox}" IsReadOnly="False" Width="100" Visibility="Hidden" KeyUp="txtMultiRefKeyUp" SelectionChanged="refDesIndexChanged"/>
+                                            <ComboBox x:Name="txtMultiRefDes_3" IsEditable="True" Style="{StaticResource ComboBoxInError}" IsReadOnly="False" Width="100" Visibility="Hidden" KeyUp="txtMultiRefKeyUp" SelectionChanged="refDesIndexChanged"
+                                                      Validation.ErrorTemplate="{StaticResource validationTemplate}">
+                                                <ComboBox.Text>
+                                                    <Binding Path="ReferenceNumber3" ElementName="wndMain" UpdateSourceTrigger="PropertyChanged">
+                                                        <Binding.ValidationRules>
+                                                            <classes:ReferenceNumberRule/>
+                                                        </Binding.ValidationRules>
+                                                    </Binding>
+                                                </ComboBox.Text>
+                                            </ComboBox>
                                         </Border>
 
                                         <Label Name="lblPartNum_3" Content="Part Number" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="150,310,0,0" Visibility="Hidden"/>
-                                        <ComboBox x:Name="txtMultiPartNum_3" IsEditable="True" Margin="150,335,0,0" Style="{StaticResource Combobox}" Width="100" Visibility="Hidden"/>
+                                        <ComboBox x:Name="txtMultiPartNum_3" IsEditable="True" Margin="150,335,0,0" Style="{StaticResource ComboBoxInError}" Width="100" Visibility="Hidden"
+                                                  Validation.ErrorTemplate="{StaticResource validationTemplate}">
+                                            <ComboBox.Text>
+                                                <Binding Path="PartNumber3" ElementName="wndMain" UpdateSourceTrigger="PropertyChanged">
+                                                    <Binding.ValidationRules>
+                                                        <classes:ReferenceNumberRule/>
+                                                    </Binding.ValidationRules>
+                                                </Binding>
+                                            </ComboBox.Text>
+                                        </ComboBox>
                                         <Button Name="btnAddRefPart_3" Margin="255,335,0,0" Content="Add" HorizontalAlignment="Left" VerticalAlignment="Top" Width="35" Visibility="Hidden" Click="btnAddRefPart_Click"/>
 
                                         <DataGrid Name="dgMultipleParts_3" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10,370,0,0" Width="275" Height="180" BeginningEdit="dgBeginEdit" Visibility="Hidden" KeyUp="dataGrid_KeyUp"/>

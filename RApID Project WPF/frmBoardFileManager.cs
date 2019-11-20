@@ -109,7 +109,7 @@ namespace RApID_Project_WPF
                         Mailman.SendEmail($"{Environment.UserName} did not provide BOM assistance.",
                             $"Timestamp: {DateTime.Now}\n" +
                             $"Serial Number Mapper Data:\n" +
-                            $"{SNMapperLib.csSerialNumberMapper.Instance.AsDataPackage()}\n", ex);
+                            $"{SNMapperLib.csSerialNumberMapper.Instance.AsJSON()}\n", ex);
                         Close();
                     }
                 }
@@ -449,17 +449,12 @@ namespace RApID_Project_WPF
                             var counter = 0;
                             foreach (var @string in reader[1].ToString().Split(','))
                             {
-                                var name = @string.Substring(@string.LastIndexOf('\\') + 1) ?? "not set";
-                                var ext = @string.Substring(@string.LastIndexOf('.') + 1) ?? "other";
-                                Image img = imgSchematics.Images[
-                                        (!string.IsNullOrWhiteSpace(ext) && new List<string>() { "pdf", "asc" }.Contains(ext)
-                                        ? ext : "other")
-                                    ];
+                                var displayText = @string.Substring(@string.LastIndexOf('\\') + 1) ?? "not set";
+                                var ext = @string.Split('.').LastOrDefault() ?? "other";
+                                Image img = imgSchematics.Images[new List<string>() { "xls", "xlsx" }.Contains(ext) ? "xls" : "other"];
 
-                                AssemblyLinkLabel link = new AssemblyLinkLabel(@string, name, img,
-                                    ext.Equals("pdf") ? "Assembly File" :
-                                    ext.Contains("xls") ? "BOM File" :
-                                    "Other File",
+                                AssemblyLinkLabel link = new AssemblyLinkLabel(link: @string, displayText: displayText, img: img, 
+                                    name: ext.Contains("xls") ? "BOM File" : "Other File", 
                                     handler: lnkBOMFile_MouseDown);
 
                                 if (model.BOMTags != null && model.BOMTags.Count > counter) {
@@ -477,17 +472,12 @@ namespace RApID_Project_WPF
                             var counter = 0;
                             foreach (var @string in reader[2].ToString().Split(','))
                             {
-                                var name = @string.Substring(@string.LastIndexOf('\\') + 1) ?? "not set";
-                                var ext = @string.Substring(@string.LastIndexOf('.') + 1) ?? "other";
-                                Image img = imgSchematics.Images[
-                                        (!string.IsNullOrWhiteSpace(ext) && new List<string>() { "pdf", "asc" }.Contains(ext)
-                                        ? ext : "other")
-                                    ];
+                                var displayText = @string.Substring(@string.LastIndexOf('\\') + 1) ?? "not set";
+                                var ext = @string.Split('.').LastOrDefault() ?? "other";
+                                Image img = imgSchematics.Images[new List<string>() { "pdf", "asc" }.Contains(ext)? ext : "other"];
 
-                                AssemblyLinkLabel link = new AssemblyLinkLabel(@string, name, img,
-                                    ext.Equals("pdf") ? "Assembly File" :
-                                    ext.Contains("xls") ? "BOM File" :
-                                    "Other File",
+                                AssemblyLinkLabel link = new AssemblyLinkLabel(link: @string, displayText: displayText, img: img,
+                                    name: ext.Equals("pdf") ? "Assembly File" : "Other File",
                                     handler: lnkSchematicFile_MouseDown);
 
                                 if (model.SchematicTags != null && model.SchematicTags.Count > counter) {
@@ -508,7 +498,7 @@ namespace RApID_Project_WPF
                         if (MasterList.Count == 0)
                         {
                             DialogResult answer = MessageBox.Show("No current data exists for this part number.\n" +
-                                "Would you like to create a new entry to save your selected BOM file?\n" +
+                                "Would you like to create a new entry for it?\n" +
                                 "Pressing [No] will reset the form.",
                                 "Prompt to Create New Database Entry",
                                 MessageBoxButtons.YesNoCancel,
@@ -531,9 +521,6 @@ namespace RApID_Project_WPF
 
         private void AddNewDatabaseRow(string partNumber)
         {
-            _selectedModel.BOMFiles.Add(new AssemblyLinkLabel("BOMLink", "BOM Display Test"));
-            _selectedModel.SchematicLinks.Add(new AssemblyLinkLabel("ASSYLink", "Assembly Display Text"));
-            flowSchematicLinks.Controls.Add(new AssemblyLinkLabel("<EMPTY>", "ASSYLink"));
             using (SqlConnection conn = new SqlConnection(csObjectHolder.csObjectHolder.ObjectHolderInstance().RepairConnectionString))
             {
                 conn.Open();
@@ -546,6 +533,8 @@ namespace RApID_Project_WPF
                     var rowsAffected = cmd.ExecuteNonQuery();
                 }
             }
+
+            HandleTextBoxEntry(new KeyEventArgs(Keys.Enter));
         }
 
         private void deletePartNumberToolStripMenuItem_Click(object sender, EventArgs e)
@@ -583,7 +572,7 @@ namespace RApID_Project_WPF
                         break;
                     else BOMFileIndex++;
                 }
-                cxmnuSchematicLinksMenu.Show(MousePosition.X, MousePosition.Y);
+                cxmnuAssemblyLinksMenu.Show(MousePosition.X, MousePosition.Y);
             }
         }
 
@@ -602,7 +591,7 @@ namespace RApID_Project_WPF
                         break;
                     else SchematicFileIndex++;
                 }
-                cxmnuSchematicLinksMenu.Show(MousePosition.X, MousePosition.Y);
+                cxmnuAssemblyLinksMenu.Show(MousePosition.X, MousePosition.Y);
             }
         }
         #endregion
@@ -610,46 +599,6 @@ namespace RApID_Project_WPF
         private void refreshToolStripMenuItem_Click(object sender, EventArgs e)
         {
             new TechAliasTableAdapter().Fill(pCBAliasDataSet.TechAlias);
-        }
-
-        private ToolStripMenuItem AddNewSchematicLink = new ToolStripMenuItem("Add New Schematic Link...");
-        private ToolStripMenuItem AddNewBOMFile = new ToolStripMenuItem("Add new BOM File...");
-        private ToolStripMenuItem ChangeFilePath = new ToolStripMenuItem("Change File Path...");
-        private ToolStripMenuItem DeleteSchematicLink = new ToolStripMenuItem("Delete Schematic Link...");
-        private ToolStripMenuItem ChangeTag = new ToolStripMenuItem("Change Tag...");
-
-        private void flowBOMFiles_MouseDown(object sender, MouseEventArgs e)
-        {
-            if (e.Button == MouseButtons.Right)
-            {
-                ChangeFilePath.Click -= changeFilePathToolStripMenuItem_Click;
-                ChangeTag.Click -= ChangeTag_Click;
-                DeleteSchematicLink.Click -= deleteSchematicLinkToolStripMenuItem_Click;
-
-                cxmnuSchematicLinksMenu.Items.Clear();
-                cxmnuSchematicLinksMenu.Items.Add(AddNewBOMFile);
-                AddNewBOMFile.Click += AddNewBOMFile_Click;
-
-                cxmnuSchematicLinksMenu.Show(MousePosition.X, MousePosition.Y);
-                cxmnuSchematicLinksMenu.Closed += cxmnuSchematicLinksMenu_Closed;
-            }
-        }
-
-        private void flowSchematicLinks_MouseDown(object sender, MouseEventArgs e)
-        {
-            if (e.Button == MouseButtons.Right)
-            {
-                ChangeFilePath.Click -= changeFilePathToolStripMenuItem_Click;
-                ChangeTag.Click -= ChangeTag_Click;
-                DeleteSchematicLink.Click -= deleteSchematicLinkToolStripMenuItem_Click;
-
-                cxmnuSchematicLinksMenu.Items.Clear();
-                cxmnuSchematicLinksMenu.Items.Add(AddNewSchematicLink);
-                AddNewSchematicLink.Click += AddNewSchematicLink_Click;
-
-                cxmnuSchematicLinksMenu.Show(MousePosition.X, MousePosition.Y);
-                cxmnuSchematicLinksMenu.Closed += cxmnuSchematicLinksMenu_Closed;
-            }
         }
 
         private void lblPartNumberLabel_DoubleClick(object sender, EventArgs e) => Process.Start(ELEC_ROOT_DIR);
@@ -662,20 +611,19 @@ namespace RApID_Project_WPF
             HandleTextBoxEntry(new KeyEventArgs(Keys.Enter));
         }
 
-        private ToolStripSeparator Divider = new ToolStripSeparator();
-        private void cxmnuSchematicLinksMenu_Closed(object sender, ToolStripDropDownClosedEventArgs e)
+        private void cxmnuAssemblyLinksMenu_Opening(object sender, CancelEventArgs e)
         {
-            ChangeFilePath.Click += changeFilePathToolStripMenuItem_Click;
-            ChangeTag.Click += ChangeTag_Click;
-            DeleteSchematicLink.Click += deleteSchematicLinkToolStripMenuItem_Click;
+            cxmnuAssemblyLinksMenu.Items[3].Text = bBOM ? "Delete BOM File..." : "Delete Schematic Link...";
+        }
 
-            cxmnuSchematicLinksMenu.Items.Clear();
-            cxmnuSchematicLinksMenu.Items.Add(ChangeFilePath);
-            cxmnuSchematicLinksMenu.Items.Add(ChangeTag);
-            cxmnuSchematicLinksMenu.Items.Add(Divider);
-            cxmnuSchematicLinksMenu.Items.Add(DeleteSchematicLink);
+        private void cxmnuBOMFlowMenu_Opening(object sender, CancelEventArgs e)
+        {
+            if (cxmnuAssemblyLinksMenu.Visible) e.Cancel = true;
+        }
 
-            cxmnuSchematicLinksMenu.Closed -= cxmnuSchematicLinksMenu_Closed;
+        private void cxmnuSchematicFlowMenu_Opening(object sender, CancelEventArgs e)
+        {
+            if (cxmnuAssemblyLinksMenu.Visible) e.Cancel = true;
         }
     }
 
