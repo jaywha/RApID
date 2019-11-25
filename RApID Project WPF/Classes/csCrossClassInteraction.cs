@@ -13,6 +13,7 @@ using System.Data.SqlClient;
 using System.Drawing;
 using System.IO;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -48,6 +49,8 @@ namespace RApID_Project_WPF
         private static csObjectHolder.csObjectHolder holder = csObjectHolder.csObjectHolder.ObjectHolderInstance();
         private const string bomlogfiledir = @"P:\EE Process Test\Logs\RApID\_BOMReadings\";
         private static readonly string bomlogfile = $"{DateTime.Now:y\\MMMM\\dd}-BOMLog.txt";
+
+        public static int GetLine([CallerLineNumber] int lineNumber = 0) => lineNumber;
 
         /// <summary>
         /// Takes an empy datagrid and fills it with the appropriate columns based on the criteria.
@@ -262,6 +265,10 @@ namespace RApID_Project_WPF
 
                     using (FileStream stream = File.Open(filePath, FileMode.Open, FileAccess.Read))
                     {
+                        if(filePath.Contains("xlsm")) {
+                            ExcelReaderConfiguration reader = new ExcelReaderConfiguration();
+                        }
+
                         using (IExcelDataReader reader = ExcelReaderFactory.CreateReader(stream))
                         {
                             while (reader.NextResult() && reader.Name != null && !reader.Name.Equals("JUKI"))

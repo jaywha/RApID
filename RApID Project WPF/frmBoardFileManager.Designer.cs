@@ -36,7 +36,7 @@
             this.cxmnuAssemblyLinksMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.changeFilePathToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.changeTagToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
+            this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
             this.deleteSchematicLinkToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.cxmnuDatabaseMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.refreshToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -128,7 +128,7 @@
             this.cxmnuAssemblyLinksMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.changeFilePathToolStripMenuItem,
             this.changeTagToolStripMenuItem,
-            this.toolStripSeparator1,
+            this.toolStripSeparator2,
             this.deleteSchematicLinkToolStripMenuItem});
             this.cxmnuAssemblyLinksMenu.Name = "cxmnuLinkMenu";
             this.cxmnuAssemblyLinksMenu.Size = new System.Drawing.Size(200, 76);
@@ -148,10 +148,10 @@
             this.changeTagToolStripMenuItem.Text = "Change Tag...";
             this.changeTagToolStripMenuItem.Click += new System.EventHandler(this.ChangeTag_Click);
             // 
-            // toolStripSeparator1
+            // toolStripSeparator2
             // 
-            this.toolStripSeparator1.Name = "toolStripSeparator1";
-            this.toolStripSeparator1.Size = new System.Drawing.Size(196, 6);
+            this.toolStripSeparator2.Name = "toolStripSeparator2";
+            this.toolStripSeparator2.Size = new System.Drawing.Size(196, 6);
             // 
             // deleteSchematicLinkToolStripMenuItem
             // 
@@ -183,7 +183,6 @@
             this.imgSchematics.Images.SetKeyName(1, "asc");
             this.imgSchematics.Images.SetKeyName(2, "other");
             this.imgSchematics.Images.SetKeyName(3, "xls");
-            this.imgSchematics.Images.SetKeyName(4, "xlsx");
             // 
             // lblWarning
             // 
@@ -728,7 +727,6 @@
         private System.Windows.Forms.ErrorProvider errorProvider;
         private System.Windows.Forms.ContextMenuStrip cxmnuDatabaseMenu;
         private System.Windows.Forms.ToolStripMenuItem refreshToolStripMenuItem;
-        private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
         private System.Windows.Forms.ToolStripMenuItem deleteSchematicLinkToolStripMenuItem;
         private System.Windows.Forms.DataGridViewTextBoxColumn partNumberDataGridViewTextBoxColumn;
         private System.Windows.Forms.DataGridViewTextBoxColumn bOMPathDataGridViewTextBoxColumn;
@@ -776,5 +774,6 @@
         private System.Windows.Forms.ToolStripMenuItem mnuiAddNewBOMFileLink;
         private System.Windows.Forms.ContextMenuStrip cxmnuSchematicFlowMenu;
         private System.Windows.Forms.ToolStripMenuItem mnuiAddNewSchemaitcLink;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator2;
     }
 }

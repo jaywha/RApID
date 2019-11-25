@@ -751,21 +751,24 @@ namespace RApID_Project_WPF
                             {
                                 (string filename, string notes, bool found) = await mapper.FindFileAsync(".xls");
 
-                                /*if (!found) {
+                                /*if (!found)
+                                {
                                     MessageBox.Show("We got some database info, but we still need help finindg the BOM.",
                                         "Soft Error - BOM Not Found", MessageBoxButton.OK, MessageBoxImage.Information);
                                     frmBoardFileManager techForm = new frmBoardFileManager(mapper.PartNumber);
                                     techForm.ShowDialog();
 
-                                    if (!techForm.WasEntryFound) {
-                                        MessageBox.Show("No BOM Loaded!", "Warning: BOM Missing!", 
+                                    if (!techForm.WasEntryFound)
+                                    {
+                                        MessageBox.Show("No BOM Loaded!", "Warning: BOM Missing!",
                                             MessageBoxButton.OK, MessageBoxImage.Warning);
                                         return;
-                                    } else {
+                                    }
+                                    else
+                                    {
                                         filename = techForm.BOMFileName;
                                     }
-                                } else */
-                                if (filename.Contains(",")) {
+                                } else */if (filename.Contains(",")) {
                                     frmMultipleItems fmi = new frmMultipleItems(MultipleItemType.BOMFiles)
                                     {
                                         BOMFiles = filename.Split(',').ToList(),
@@ -2048,40 +2051,32 @@ namespace RApID_Project_WPF
             MainWindow.GlobalInstance.MakeFocus();
         }
 
-        private void refDesIndexChanged(object sender, SelectionChangedEventArgs e)
-        {
-            //TODO: Lookup ref designator in universal list to match part number
-
-            if (sender is Control c && c.Name.Contains("_"))
-            {
-                if (c.Name.EndsWith("2"))
-                {
-                    txtMultiPartNum_2.Text = (BOMList[txtMultiRefDes_2.SelectedIndex] as MultiplePartsReplaced).PartReplaced;
-                }
-                else if (c.Name.EndsWith("3"))
-                {
-                    txtMultiPartNum_3.Text = (BOMList[txtMultiRefDes_3.SelectedIndex] as MultiplePartsReplaced).PartReplaced;
-                }
-            }
-            else
-            {
-                txtMultiPartNum.Text = (BOMList[txtMultiRefDes.SelectedIndex] as MultiplePartsReplaced).PartReplaced;
-            }
-        }
+        private void refDesIndexChanged(object sender, SelectionChangedEventArgs e) 
+            => (sender as ComboBox).Text = (sender as ComboBox).Text.ToUpper();
 
         private void dgBOMList_MouseDoubleClick(object sender, MouseButtonEventArgs e)
         {
-            DataGrid targetGrid = (DataGrid)(tcUnitIssues.SelectedContent as Grid).FindName($"dgMultipleParts{(tcUnitIssues.SelectedIndex > 0 ? $"_{tcUnitIssues.SelectedIndex + 1}" : "")}");
-            MultiplePartsReplaced item = (MultiplePartsReplaced)dgBOMList.SelectedItem;
-
-            if (!targetGrid.Items.Contains(item))
+            try
             {
-                DataGridRow row = (DataGridRow)dgBOMList.ItemContainerGenerator.ContainerFromIndex(dgBOMList.SelectedIndex);
-                if (row != null && !targetGrid.Items.Contains(item)) {
+                DataGrid targetGrid = (DataGrid)(tcUnitIssues.SelectedContent as Grid).FindName($"dgMultipleParts{(tcUnitIssues.SelectedIndex > 0 ? $"_{tcUnitIssues.SelectedIndex + 1}" : "")}");
+                MultiplePartsReplaced item = (MultiplePartsReplaced)dgBOMList.SelectedItem;
 
-                    targetGrid.Items.Add(item);
-                    row.Foreground = Brushes.White; row.Background = Brushes.DarkGreen;
+                if (!targetGrid.Items.Contains(item))
+                {
+                    if (dgBOMList.SelectedIndex > dgBOMList.Items.Count) {
+                        Console.WriteLine($"Index out of bounded maximum! --> Index: {dgBOMList.SelectedIndex} > {dgBOMList.Items.Count}");
+                        return;
+                    }
+
+                    DataGridRow row = (DataGridRow)dgBOMList.ItemContainerGenerator.ContainerFromIndex(dgBOMList.SelectedIndex);
+                    if (row != null && !targetGrid.Items.Contains(item))
+                    {
+                        targetGrid.Items.Add(item);
+                        row.Foreground = Brushes.White; row.Background = Brushes.DarkGreen;
+                    }
                 }
+            } catch(Exception ex) {
+                new frmMessageBox.frmMessageBox().ShowMsg(ex.Message, $"dgBOMList_MouseDoubleClick:{csCrossClassInteraction.GetLine()}", frmMessageBox.frmMessageBox.Icon_Type.Error);
             }
         }
 
