@@ -199,7 +199,6 @@ namespace RApID_Project_WPF
             ucAOITab.dgAOI.dgBuildView(DataGridTypes.AOI);
             ucAOITab.dgDefectCodes.dgBuildView(DataGridTypes.DEFECTCODES);
             dgPrevRepairInfo.dgBuildView(DataGridTypes.PREVREPAIRINFO);
-            dgBOMList.dgBuildView(DataGridTypes.MULTIPLEPARTS);
         }
 
         private void initDataLog()
@@ -393,7 +392,6 @@ namespace RApID_Project_WPF
             ucEOLTab.Reset();
             ucAOITab.Reset();
 
-            dgBOMList.Items.Clear();
             BOMList.Clear();
 
             txtSerialNumber.Focus();
@@ -751,7 +749,7 @@ namespace RApID_Project_WPF
                             {
                                 (string filename, string notes, bool found) = await mapper.FindFileAsync(".xls");
 
-                                /*if (!found)
+                                if (!found)
                                 {
                                     MessageBox.Show("We got some database info, but we still need help finindg the BOM.",
                                         "Soft Error - BOM Not Found", MessageBoxButton.OK, MessageBoxImage.Information);
@@ -768,18 +766,29 @@ namespace RApID_Project_WPF
                                     {
                                         filename = techForm.BOMFileName;
                                     }
-                                } else */if (filename.Contains(",")) {
+                                } else if (filename.Contains(",")) {
                                     frmMultipleItems fmi = new frmMultipleItems(MultipleItemType.BOMFiles)
                                     {
                                         BOMFiles = filename.Split(',').ToList(),
                                         Notes = notes.Split('|')[0].Split(',').ToList()
                                     };
-                                    fmi.ShowDialog();
+                                    if (fmi.ShowDialog() == false) return;
                                     filename = sVar.SelectedBOMFile.FilePath;
                                 }
 
-                                csCrossClassInteraction.DoExcelOperations(filename, progMapper, dgBOMList, expBOMInfo);
+                                var refSource = new ObservableCollection<string>();
+                                var partSource = new ObservableCollection<string>();
+
+                                csCrossClassInteraction.DoExcelOperations(filename, progMapper, refSource, partSource);
                                 csCrossClassInteraction.MapperSuccessMessage(filename, mapper.PartNumber);
+
+                                txtMultiRefDes.ItemsSource = refSource;
+                                txtMultiRefDes_2.ItemsSource = refSource;
+                                txtMultiRefDes_3.ItemsSource = refSource;
+
+                                txtMultiPartNum.ItemsSource = partSource;
+                                txtMultiPartNum_2.ItemsSource = partSource;
+                                txtMultiPartNum_3.ItemsSource = partSource;
 
                                 BOMFileActive = true;
                                 CheckForManual();
@@ -812,7 +821,7 @@ namespace RApID_Project_WPF
                 ucEOLTab.Fill();
                 ucAOITab.Fill();
 
-                MapRefDesToPartNum();
+                //MapRefDesToPartNum();
             }
         }
 
@@ -1883,31 +1892,7 @@ namespace RApID_Project_WPF
 
         private void txtMultiRefKeyUp(object sender, KeyEventArgs e)
         {
-            /*TextBox tbox;
-
-            if(sender is ComboBox cbox)
-            {
-                tbox = (cbox.Template.FindName("PART_EditableTextBox", cbox) as TextBox); 
-            } else if (sender is TextBox ttbox) {
-                tbox = ttbox;
-            } else {
-                Console.WriteLine($"Null path not supported for txtMultiRefKeyUp");
-                return;
-            }
-
-            csCrossClassInteraction.checkForValidRefDes(tbox);*/
-        }
-
-        private void dataGrid_KeyUp(object sender, KeyEventArgs e)
-        {
-            DataGrid grid = ((DataGrid)sender);
-
-            if (e.Key == Key.Delete && grid.SelectedItem != null)
-            {
-                DataGridRow row = (DataGridRow)dgBOMList.ItemContainerGenerator.ContainerFromItem(grid.SelectedItem);
-                if (row != null) { row.Foreground = Brushes.Black; row.Background = Brushes.White; }
-                grid.Items.Remove(grid.SelectedItem);
-            }
+            
         }
 
         #region Log Actions
@@ -2051,81 +2036,23 @@ namespace RApID_Project_WPF
             MainWindow.GlobalInstance.MakeFocus();
         }
 
-        private void refDesIndexChanged(object sender, SelectionChangedEventArgs e) 
-            => (sender as ComboBox).Text = (sender as ComboBox).Text.ToUpper();
-
-        private void dgBOMList_MouseDoubleClick(object sender, MouseButtonEventArgs e)
+        private void refDesIndexChanged(object sender, SelectionChangedEventArgs e)
         {
-            try
+            if (sender is Control c && c.Name.Contains("_"))
             {
-                DataGrid targetGrid = (DataGrid)(tcUnitIssues.SelectedContent as Grid).FindName($"dgMultipleParts{(tcUnitIssues.SelectedIndex > 0 ? $"_{tcUnitIssues.SelectedIndex + 1}" : "")}");
-                MultiplePartsReplaced item = (MultiplePartsReplaced)dgBOMList.SelectedItem;
-
-                if (!targetGrid.Items.Contains(item))
+                if (c.Name.EndsWith("2"))
                 {
-                    if (dgBOMList.SelectedIndex > dgBOMList.Items.Count) {
-                        Console.WriteLine($"Index out of bounded maximum! --> Index: {dgBOMList.SelectedIndex} > {dgBOMList.Items.Count}");
-                        return;
-                    }
-
-                    DataGridRow row = (DataGridRow)dgBOMList.ItemContainerGenerator.ContainerFromIndex(dgBOMList.SelectedIndex);
-                    if (row != null && !targetGrid.Items.Contains(item))
-                    {
-                        targetGrid.Items.Add(item);
-                        row.Foreground = Brushes.White; row.Background = Brushes.DarkGreen;
-                    }
+                    txtMultiPartNum_2.Text = (BOMList[txtMultiRefDes_2.SelectedIndex] as MultiplePartsReplaced).PartReplaced;
                 }
-            } catch(Exception ex) {
-                new frmMessageBox.frmMessageBox().ShowMsg(ex.Message, $"dgBOMList_MouseDoubleClick:{csCrossClassInteraction.GetLine()}", frmMessageBox.frmMessageBox.Icon_Type.Error);
-            }
-        }
-
-        private Grid PrevGrid = null;
-        private void tcUnitIssues_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-            try
-            {
-                DataGrid targetGrid = (DataGrid)(tcUnitIssues.SelectedContent as Grid).FindName($"dgMultipleParts{(tcUnitIssues.SelectedIndex > 0 ? $"_{tcUnitIssues.SelectedIndex + 1}" : "")}");
-                var pgridIndex = int.Parse(PrevGrid.Name.Last().ToString());
-                DataGrid prevGrid = (DataGrid)PrevGrid.FindName($"dgMultipleParts{(pgridIndex > 0 ? $"_{pgridIndex + 1}" : "")}");
-                if (prevGrid != null)
+                else if (c.Name.EndsWith("3"))
                 {
-                    foreach (MultiplePartsReplaced mpr in prevGrid.Items)
-                    {
-                        if (BOMList.Contains(mpr))
-                        {
-                            DataGridRow row = (DataGridRow)dgBOMList.ItemContainerGenerator.ContainerFromItem(mpr);
-                            if (row != null) { row.Foreground = Brushes.Black; row.Background = Brushes.White; }
-                        }
-                    }
-                }
-
-                foreach (MultiplePartsReplaced mpr in targetGrid.Items)
-                {
-                    if (BOMList.Contains(mpr))
-                    {
-                        DataGridRow row = (DataGridRow)dgBOMList.ItemContainerGenerator.ContainerFromItem(mpr);
-                        if (row != null) { row.Foreground = Brushes.White; row.Background = Brushes.DarkGreen; }
-                    }
+                    txtMultiPartNum_3.Text = (BOMList[txtMultiRefDes_3.SelectedIndex] as MultiplePartsReplaced).PartReplaced;
                 }
             }
-            catch (Exception ex)
+            else
             {
-                Console.WriteLine(ex.Message);
-            } finally
-            {
-                PrevGrid = tcUnitIssues.SelectedContent as Grid ?? null;
+                txtMultiPartNum.Text = (BOMList[txtMultiRefDes.SelectedIndex] as MultiplePartsReplaced).PartReplaced;
             }
-        }
-
-        private void ExpBOMInfo_Expanded(object sender, RoutedEventArgs e)
-        {
-            expBOMInfo.Margin = new Thickness(605, 345, 10, 6);
-        }
-
-        private void ExpBOMInfo_Collapsed(object sender, RoutedEventArgs e)
-        {
-            expBOMInfo.Margin = new Thickness(605, 345, 10, 265);
         }
 
         private void btnTech_Click(object sender, RoutedEventArgs e)

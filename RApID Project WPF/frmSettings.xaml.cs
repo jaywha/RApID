@@ -16,6 +16,9 @@ using System.IO.Ports;
 using Microsoft.Win32;
 using WinForm = System.Windows.Forms;
 using RApID_Project_WPF.Classes;
+using System.Diagnostics;
+using System.IO;
+using System.ComponentModel;
 
 namespace RApID_Project_WPF
 {

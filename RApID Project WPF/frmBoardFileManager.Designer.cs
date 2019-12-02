@@ -53,6 +53,7 @@
             this.txtPartNumber = new System.Windows.Forms.TextBox();
             this.btnSearch = new System.Windows.Forms.Button();
             this.btnReset = new System.Windows.Forms.Button();
+            this.btnRemoteHelp = new System.Windows.Forms.Button();
             this.grpbxBOMLinkHolder = new System.Windows.Forms.GroupBox();
             this.flowBOMFiles = new System.Windows.Forms.FlowLayoutPanel();
             this.cxmnuBOMFlowMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
@@ -306,6 +307,7 @@
             this.flopnlPartNumberInput.Controls.Add(this.txtPartNumber);
             this.flopnlPartNumberInput.Controls.Add(this.btnSearch);
             this.flopnlPartNumberInput.Controls.Add(this.btnReset);
+            this.flopnlPartNumberInput.Controls.Add(this.btnRemoteHelp);
             this.flopnlPartNumberInput.Dock = System.Windows.Forms.DockStyle.Fill;
             this.flopnlPartNumberInput.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
             this.flopnlPartNumberInput.ForeColor = System.Drawing.Color.Goldenrod;
@@ -351,6 +353,7 @@
             // btnReset
             // 
             this.btnReset.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
+            this.btnReset.ForeColor = System.Drawing.Color.Gold;
             this.btnReset.Location = new System.Drawing.Point(3, 84);
             this.btnReset.Name = "btnReset";
             this.btnReset.Size = new System.Drawing.Size(144, 23);
@@ -358,6 +361,18 @@
             this.btnReset.Text = "Reset";
             this.btnReset.UseVisualStyleBackColor = false;
             this.btnReset.Click += new System.EventHandler(this.btnReset_Click);
+            // 
+            // btnRemoteHelp
+            // 
+            this.btnRemoteHelp.BackColor = System.Drawing.Color.Teal;
+            this.btnRemoteHelp.ForeColor = System.Drawing.Color.Gold;
+            this.btnRemoteHelp.Location = new System.Drawing.Point(3, 113);
+            this.btnRemoteHelp.Name = "btnRemoteHelp";
+            this.btnRemoteHelp.Size = new System.Drawing.Size(141, 23);
+            this.btnRemoteHelp.TabIndex = 5;
+            this.btnRemoteHelp.Text = "Notify Help";
+            this.btnRemoteHelp.UseVisualStyleBackColor = false;
+            this.btnRemoteHelp.Click += new System.EventHandler(this.btnRemoteHelp_Click);
             // 
             // grpbxBOMLinkHolder
             // 
@@ -775,5 +790,6 @@
         private System.Windows.Forms.ContextMenuStrip cxmnuSchematicFlowMenu;
         private System.Windows.Forms.ToolStripMenuItem mnuiAddNewSchemaitcLink;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator2;
+        private System.Windows.Forms.Button btnRemoteHelp;
     }
 }

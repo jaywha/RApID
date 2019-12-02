@@ -233,26 +233,16 @@ namespace RApID_Project_WPF
         /// </summary>
         /// <param name="filePath">Path to the Excel file - normally the BoM file.</param>
         /// <param name="progData">Any related progress bar to semi-report operation progress.</param>
-        /// <param name="designators">The two collections to fill - refdes & partnum.</param>
-        public static void DoExcelOperations(string filePath, ProgressBar progData = null, params ObservableCollection<string>[] designators)
-            => DoExcelOperations(filePath, progData, null, null, designators);
-
-        /// <summary>
-        /// Does the excel operations for grabbing Reference and Part numbers.
-        /// </summary>
-        /// <param name="filePath">Path to the Excel file - normally the BoM file.</param>
-        /// <param name="progData">Any related progress bar to semi-report operation progress.</param>
         /// <param name="bomlist">The datagrid to fill with the results, if any.</param>
         /// <param name="collections">The two collections to fill - refdes & partnum.</param>
-        public static async void DoExcelOperations(string filePath, ProgressBar progData = null, DataGrid bomlist = null,
-            Expander expander = null, params ObservableCollection<string>[] collections)
+        public static async void DoExcelOperations(string filePath, ProgressBar progData = null, params ObservableCollection<string>[] collections)
         {
             try
             {
                 Directory.CreateDirectory(bomlogfiledir);
                 File.Create(Path.Combine(bomlogfiledir, bomlogfile));
 
-                await Task.Factory.StartNew(new Action(async () =>
+                await Task.Factory.StartNew(new Action(() =>
                 {
                     if (progData != null) progData.Dispatcher.Invoke(() => progData.Visibility = Visibility.Visible);
                     if (string.IsNullOrEmpty(filePath))
@@ -265,10 +255,6 @@ namespace RApID_Project_WPF
 
                     using (FileStream stream = File.Open(filePath, FileMode.Open, FileAccess.Read))
                     {
-                        if(filePath.Contains("xlsm")) {
-                            ExcelReaderConfiguration reader = new ExcelReaderConfiguration();
-                        }
-
                         using (IExcelDataReader reader = ExcelReaderFactory.CreateReader(stream))
                         {
                             while (reader.NextResult() && reader.Name != null && !reader.Name.Equals("JUKI"))
@@ -293,15 +279,6 @@ namespace RApID_Project_WPF
                                     }
                                 }
 
-                                if (bomlist != null)
-                                    await bomlist.Dispatcher.BeginInvoke(new Action(() =>
-                                    {
-                                        frmProduction._bomRecordsDone++;
-                                        bomlist.Items.Add(new MultiplePartsReplaced(rd, pn, GetPartReplacedPartDescription(pn)));
-                                        if (frmProduction._bomRecordsDone == frmProduction._bomRecordsTotal)
-                                            frmProduction._bomRecordsDone = 0;
-                                    }), DispatcherPriority.Background);
-
                                 progData.Dispatcher.Invoke(() => {
                                     progData.Value++;
                                 });
@@ -311,7 +288,6 @@ namespace RApID_Project_WPF
                 })).ContinueWith((antecedent) => {
                     GC.Collect();
                     if (progData != null) progData.Dispatcher.Invoke(() => progData.Visibility = Visibility.Hidden);
-                    if (expander != null) expander.Dispatcher.Invoke(() => expander.IsExpanded = true);
                 });
             }
             catch (IOException ioe)

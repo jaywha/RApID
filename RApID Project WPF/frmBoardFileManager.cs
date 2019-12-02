@@ -640,6 +640,25 @@ namespace RApID_Project_WPF
         {
             if (cxmnuAssemblyLinksMenu.Visible) e.Cancel = true;
         }
+
+        private DateTime LastHelp = DateTime.Now.AddMinutes(-5);
+        private void btnRemoteHelp_Click(object sender, EventArgs e)
+        {
+            if (DateTime.Now > LastHelp.AddMinutes(5))
+            {
+                LastHelp = DateTime.Now;
+                #if !DEBUG
+                new FNS.FrmFirebaseContactForm(true).ShowDialog();
+                #else
+                FNS.Classes.FirebasePushService.SendPushNotification("fGaGwvh6EDE:APA91bG0mr3kNHuMItXz_C8DxZbBQFIgC7ADOOXLNEluAkwO9l-7Md-xYLWsiyy_4jiKyiGbwojjPhneL2Wf-AlpzJ5_IPhiQqwddaff11_Y5zTDtJ3WeO5h3kcBJ07sfj5xzKiJwOAE",
+                    $"Remote Assitance for {Environment.UserName}", $"RApID on {Environment.MachineName}", "https://drive.google.com/open?id=1Xpt7g2DoBImjtan3DQdzYwHQ_CkUV125");
+                #endif
+            } else {
+                var minute_time = DateTime.Now.Subtract(LastHelp).TotalMinutes;
+                MessageBox.Show($"Help message was sent {(minute_time > 1 ? $"{(int) minute_time} minutes" : "about a minute")} ago.\nPlease wait 5 minutes before next request.",
+                    "Please Don't Spam Help",MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            }
+        }
     }
 
     /// <summary>
@@ -662,14 +681,14 @@ namespace RApID_Project_WPF
     /// </summary>
     public class DesignFileSet : INotifyPropertyChanged
     {
-        #region PropertyChanged Implementation
+#region PropertyChanged Implementation
         public event PropertyChangedEventHandler PropertyChanged;
         private void OnPropertyChanged([CallerMemberName] string propName = "") => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propName));
-        #endregion
+#endregion
 
         readonly string CallerMemberName;
 
-        #region Properties
+#region Properties
         private string _partNumber = string.Empty;
         public string PartNumber
         {
@@ -747,7 +766,7 @@ namespace RApID_Project_WPF
                 OnPropertyChanged();
             }
         }
-        #endregion
+#endregion
 
         public DesignFileSet([CallerMemberName] string callerName = "")
         {

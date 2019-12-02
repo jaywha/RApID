@@ -236,7 +236,7 @@
                                         </ComboBox>
                                         <Button Name="btnAddRefPart" Margin="255,335,0,0" Content="Add" HorizontalAlignment="Left" VerticalAlignment="Top" Width="35" Visibility="Hidden" Click="btnAddRefPart_Click"/>
 
-                                        <DataGrid Name="dgMultipleParts" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10,370,0,0" Width="275" Height="180" AllowDrop="True" BeginningEdit="dgBeginEdit" Visibility="Hidden" KeyUp="dataGrid_KeyUp" />
+                                        <DataGrid Name="dgMultipleParts" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10,370,0,0" Width="275" Height="180" AllowDrop="True" BeginningEdit="dgBeginEdit" Visibility="Hidden" />
                                         <Button Name="btnReset" Content="Reset Unit Issue #1" Margin="10,555,0,0" Style="{StaticResource UnitIssueButtons}" Width="275" Visibility="Visible" Click="btnReset_Click"/>
                                     </Grid>
                                 </TabItem>
@@ -288,7 +288,7 @@
                                         </ComboBox>
                                         <Button Name="btnAddRefPart_2" Margin="255,335,0,0" Content="Add" HorizontalAlignment="Left" VerticalAlignment="Top" Width="35" Visibility="Hidden" Click="btnAddRefPart_Click"/>
 
-                                        <DataGrid Name="dgMultipleParts_2" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10,370,0,0" Width="275" Height="180" BeginningEdit="dgBeginEdit" Visibility="Hidden" KeyUp="dataGrid_KeyUp"/>
+                                        <DataGrid Name="dgMultipleParts_2" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10,370,0,0" Width="275" Height="180" BeginningEdit="dgBeginEdit" Visibility="Hidden" />
                                         <Button Name="btnReset_2" Content="Reset Unit Issue #2" Margin="10,555,0,0" Style="{StaticResource UnitIssueButtons}" Width="275" Visibility="Visible" Click="btnReset_Click"/>
                                     </Grid>
                                 </TabItem>
@@ -340,7 +340,7 @@
                                         </ComboBox>
                                         <Button Name="btnAddRefPart_3" Margin="255,335,0,0" Content="Add" HorizontalAlignment="Left" VerticalAlignment="Top" Width="35" Visibility="Hidden" Click="btnAddRefPart_Click"/>
 
-                                        <DataGrid Name="dgMultipleParts_3" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10,370,0,0" Width="275" Height="180" BeginningEdit="dgBeginEdit" Visibility="Hidden" KeyUp="dataGrid_KeyUp"/>
+                                        <DataGrid Name="dgMultipleParts_3" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10,370,0,0" Width="275" Height="180" BeginningEdit="dgBeginEdit" Visibility="Hidden" />
                                         <Button Name="btnReset_3" Content="Reset Unit Issue #3" Margin="10,555,0,0" Style="{StaticResource UnitIssueButtons}" Width="275" Visibility="Visible" Click="btnReset_Click"/>
                                     </Grid>
                                 </TabItem>
@@ -367,23 +367,6 @@
                                     <ComboBox Name="cbTechAction_3" Margin="10,135,0,0" DropDownClosed="cbDDClosed" Style="{StaticResource ComboBoxBaseStyle}" Width="225"/>
                                 </Grid>
                             </GroupBox>
-                            <Expander x:Name="expBOMInfo" ExpandDirection="Down" Background="SlateGray" Panel.ZIndex="10" Margin="605,345,10,265" Expanded="ExpBOMInfo_Expanded" Collapsed="ExpBOMInfo_Collapsed">
-                                <Expander.Header>
-                                    <StackPanel Orientation="Horizontal">
-                                        <TextBlock RenderTransformOrigin="0.5,0.5"><Run Text="Current BOM Info" Foreground="WhiteSmoke"/></TextBlock>
-                                        <Separator Width="5" Margin="5,0,5,0" Visibility="{Binding ElementName=wndMain, Path=BOMFileActive, Converter={StaticResource BoolToVisConv}}"/>
-                                        <Label Content="{Binding BOMRecordsDone, ElementName=wndMain}" Visibility="{Binding ElementName=wndMain, Path=BOMFileActive, Converter={StaticResource BoolToVisConv}}"/>
-                                        <Label Content="{Binding BOMRecordsTotal, ElementName=wndMain}" Visibility="{Binding ElementName=wndMain, Path=BOMFileActive, Converter={StaticResource BoolToVisConv}}"/>
-                                    </StackPanel>
-                                </Expander.Header>
-                                <Grid x:Name="grdBOMInfo" Background="SlateGray">
-                                    <StackPanel Orientation="Vertical" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Height="{Binding ActualHeight, ElementName=grdBOMInfo}">
-                                        <DataGrid x:Name="dgBOMList" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
-                              Height="{Binding ActualHeight, ElementName=grdBOMInfo}" Width="{Binding ActualWidth, ElementName=grdBOMInfo}" 
-                              IsReadOnly="True" MouseDoubleClick="dgBOMList_MouseDoubleClick" ScrollViewer.VerticalScrollBarVisibility="Auto"/>
-                                    </StackPanel>
-                                </Grid>
-                            </Expander>
                         </Grid>
                     </TabItem>
 

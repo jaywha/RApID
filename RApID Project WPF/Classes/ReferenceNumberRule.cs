@@ -19,7 +19,7 @@ namespace RApID_Project_WPF.Classes
 
             if (string.IsNullOrWhiteSpace(input)) return ValidationResult.ValidResult;
 
-            Regex pattern = new Regex("^[A-Z]{1}[0-9]{1,4}$", RegexOptions.Compiled);
+            Regex pattern = new Regex("^[a-zA-Z]{1}[0-9]{1,4}$", RegexOptions.Compiled);
 
             if (pattern.IsMatch(input))
                 return ValidationResult.ValidResult;
