@@ -648,7 +648,7 @@ namespace RApID_Project_WPF
             {
                 LastHelp = DateTime.Now;
                 #if !DEBUG
-                new FNS.FrmFirebaseContactForm(true).ShowDialog();
+                new FNS.FrmFirebaseContactForm().ShowDialog();
                 #else
                 FNS.Classes.FirebasePushService.SendPushNotification("fGaGwvh6EDE:APA91bG0mr3kNHuMItXz_C8DxZbBQFIgC7ADOOXLNEluAkwO9l-7Md-xYLWsiyy_4jiKyiGbwojjPhneL2Wf-AlpzJ5_IPhiQqwddaff11_Y5zTDtJ3WeO5h3kcBJ07sfj5xzKiJwOAE",
                     $"Remote Assitance for {Environment.UserName}", $"RApID on {Environment.MachineName}", "https://drive.google.com/open?id=1Xpt7g2DoBImjtan3DQdzYwHQ_CkUV125");
@@ -658,6 +658,11 @@ namespace RApID_Project_WPF
                 MessageBox.Show($"Help message was sent {(minute_time > 1 ? $"{(int) minute_time} minutes" : "about a minute")} ago.\nPlease wait 5 minutes before next request.",
                     "Please Don't Spam Help",MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
+        }
+
+        private void frmBoardFileManager_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            //TODO: WasEntryFound?
         }
     }
 

@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Data.SqlClient;
+using System.IO;
 using System.IO.Ports;
 using System.Linq;
 using System.Runtime.CompilerServices;
@@ -18,6 +19,7 @@ using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Threading;
+using SNM = SNMapperLib.csSerialNumberMapper;
 
 namespace RApID_Project_WPF
 {
@@ -199,6 +201,7 @@ namespace RApID_Project_WPF
             ucAOITab.dgAOI.dgBuildView(DataGridTypes.AOI);
             ucAOITab.dgDefectCodes.dgBuildView(DataGridTypes.DEFECTCODES);
             dgPrevRepairInfo.dgBuildView(DataGridTypes.PREVREPAIRINFO);
+            dgBOMList.dgBuildView(DataGridTypes.MULTIPLEPARTS);
         }
 
         private void initDataLog()
@@ -392,6 +395,7 @@ namespace RApID_Project_WPF
             ucEOLTab.Reset();
             ucAOITab.Reset();
 
+            dgBOMList.Items.Clear();
             BOMList.Clear();
 
             txtSerialNumber.Focus();
@@ -733,66 +737,88 @@ namespace RApID_Project_WPF
         {
             try
             {
-                using (csSerialNumberMapper mapper = csSerialNumberMapper.Instance)
+                using (SNM mapper = SNM.Instance)
                 {
                     await Task.Factory.StartNew(new Action(() => // in new task
                     {
                         Dispatcher.BeginInvoke(new Action(async () => // perform dispatched UI actions
                         {
-                            if (!mapper.GetData(txtSerialNumber.Text))
+                            bool techTableSuccess = false;
+                            string bompath = string.Empty;
+
+                            string filename = string.Empty;
+                            string notes = string.Empty;
+                            bool found = false;
+
+                            mapper.GetData(txtSerialNumber.Text);
+                            (techTableSuccess, bompath, _, notes) = mapper.CheckAliasTable(); // Check Alias Table for Part Number
+#if DEBUG
+                            Console.WriteLine(
+                                $"CheckAliasTable {{\n" +
+                                    $"\t\"success\" : {techTableSuccess}\n" +
+                                    $"\t\"BOM Path\" : {bompath}\n" +
+                                    $"\t\"Notes\" : {notes}\n" +
+                                $"}}\n");
+#endif
+
+                            if (techTableSuccess)
                             {
+                                found = File.Exists(Path.Combine(SNM.SchemaPath, bompath)) || File.Exists(Path.Combine(SNM.SchemaPath, bompath.Split(',')[0]));
+                                filename = Path.Combine(SNM.SchemaPath, bompath);
+#if DEBUG
+                                Console.WriteLine(
+                                $"FullResult {{\n" +
+                                    $"\t\"found\" : {found}\n" +
+                                    $"\t\"filename\" : {filename}\n" +
+                                    $"\t\"Notes\" : {notes}\n" +
+                                $"}}\n");
+#endif
+                            } else {
                                 MessageBox.Show("Couldn't find the barcode's entry in the database.\nPlease enter information manually.",
                                         "Soft Error - Database Lookup", MessageBoxButton.OK, MessageBoxImage.Warning);
-                                new frmBoardFileManager().ShowDialog();
-                            }
-                            else
-                            {
-                                (string filename, string notes, bool found) = await mapper.FindFileAsync(".xls");
-
-                                if (!found)
+                                var techForm = new frmBoardFileManager(txtPartNumber.Text);
+                                techForm.ShowDialog();
+                                if (!techForm.WasEntryFound)
                                 {
-                                    MessageBox.Show("We got some database info, but we still need help finindg the BOM.",
-                                        "Soft Error - BOM Not Found", MessageBoxButton.OK, MessageBoxImage.Information);
-                                    frmBoardFileManager techForm = new frmBoardFileManager(mapper.PartNumber);
-                                    techForm.ShowDialog();
-
-                                    if (!techForm.WasEntryFound)
-                                    {
-                                        MessageBox.Show("No BOM Loaded!", "Warning: BOM Missing!",
-                                            MessageBoxButton.OK, MessageBoxImage.Warning);
-                                        return;
-                                    }
-                                    else
-                                    {
-                                        filename = techForm.BOMFileName;
-                                    }
-                                } else if (filename.Contains(",")) {
-                                    frmMultipleItems fmi = new frmMultipleItems(MultipleItemType.BOMFiles)
-                                    {
-                                        BOMFiles = filename.Split(',').ToList(),
-                                        Notes = notes.Split('|')[0].Split(',').ToList()
-                                    };
-                                    if (fmi.ShowDialog() == false) return;
-                                    filename = sVar.SelectedBOMFile.FilePath;
+                                    MessageBox.Show("No BOM Loaded!", "Warning: BOM Missing!",
+                                        MessageBoxButton.OK, MessageBoxImage.Warning);
+                                    return;
                                 }
-
-                                var refSource = new ObservableCollection<string>();
-                                var partSource = new ObservableCollection<string>();
-
-                                csCrossClassInteraction.DoExcelOperations(filename, progMapper, refSource, partSource);
-                                csCrossClassInteraction.MapperSuccessMessage(filename, mapper.PartNumber);
-
-                                txtMultiRefDes.ItemsSource = refSource;
-                                txtMultiRefDes_2.ItemsSource = refSource;
-                                txtMultiRefDes_3.ItemsSource = refSource;
-
-                                txtMultiPartNum.ItemsSource = partSource;
-                                txtMultiPartNum_2.ItemsSource = partSource;
-                                txtMultiPartNum_3.ItemsSource = partSource;
-
-                                BOMFileActive = true;
-                                CheckForManual();
+                                else
+                                {
+                                    filename = techForm.BOMFileName;
+                                }
                             }
+
+                            if (filename.Contains(",") && !string.IsNullOrWhiteSpace(notes))
+                            {
+                                frmMultipleItems fmi = new frmMultipleItems(MultipleItemType.BOMFiles)
+                                {
+                                    BOMFiles = filename.Split(',').ToList(),
+                                    Notes = notes.Split('|')[0].Split(',').ToList()
+                                };
+                                if (fmi.ShowDialog() == false) return;
+                                filename = sVar.SelectedBOMFile.FilePath;
+                            }
+
+                            Console.WriteLine($"Using filepath ==> {filename}");
+
+                            var refSource = new ObservableCollection<string>();
+                            var partSource = new ObservableCollection<string>();
+
+                            csCrossClassInteraction.DoExcelOperations(filename, progMapper, dgBOMList, expBOMInfo, refSource, partSource);
+                            csCrossClassInteraction.MapperSuccessMessage(filename, mapper.PartNumber);
+
+                            txtMultiRefDes.ItemsSource = refSource;
+                            txtMultiRefDes_2.ItemsSource = refSource;
+                            txtMultiRefDes_3.ItemsSource = refSource;
+
+                            txtMultiPartNum.ItemsSource = partSource;
+                            txtMultiPartNum_2.ItemsSource = partSource;
+                            txtMultiPartNum_3.ItemsSource = partSource;
+
+                            BOMFileActive = true;
+                            CheckForManual();
                         }), DispatcherPriority.ApplicationIdle);
                     }));
                 }
@@ -821,7 +847,7 @@ namespace RApID_Project_WPF
                 ucEOLTab.Fill();
                 ucAOITab.Fill();
 
-                //MapRefDesToPartNum();
+                MapRefDesToPartNum();
             }
         }
 
@@ -971,7 +997,7 @@ namespace RApID_Project_WPF
             bool bCanSubmit = true;
             string sWarning = "Submission Criteria not met.\n";
 
-            #region Unit Issue 1
+#region Unit Issue 1
             if (!string.IsNullOrEmpty(txtMultiPartNum.Text))
             {
                 string _sPRPD = csCrossClassInteraction.GetPartReplacedPartDescription(txtMultiPartNum.Text);
@@ -994,9 +1020,9 @@ namespace RApID_Project_WPF
                 dgMultipleParts.Items.Add(mpr);
                 txtMultiRefDes.Text = string.Empty;
             }
-            #endregion
+#endregion
 
-            #region Unit Issue 2
+#region Unit Issue 2
             if (!string.IsNullOrEmpty(txtMultiPartNum_2.Text))
             {
                 string _sPRPD = csCrossClassInteraction.GetPartReplacedPartDescription(txtMultiPartNum_2.Text);
@@ -1019,9 +1045,9 @@ namespace RApID_Project_WPF
                 dgMultipleParts_2.Items.Add(mpr);
                 txtMultiRefDes_2.Text = string.Empty;
             }
-            #endregion
+#endregion
 
-            #region Unit Issue 3
+#region Unit Issue 3
             if (!string.IsNullOrEmpty(txtMultiPartNum_3.Text))
             {
                 string _sPRPD = csCrossClassInteraction.GetPartReplacedPartDescription(txtMultiPartNum_3.Text);
@@ -1043,7 +1069,7 @@ namespace RApID_Project_WPF
                 dgMultipleParts_3.Items.Add(mpr);
                 txtMultiRefDes_3.Text = string.Empty;
             }
-            #endregion
+#endregion
 
             if (!bCanSubmit)
             {
@@ -1155,7 +1181,7 @@ namespace RApID_Project_WPF
                 cmd.Parameters.AddWithValue("@fromArea", csCrossClassInteraction.EmptyIfNull(cbFromArea.Text));
                 cmd.Parameters.AddWithValue("@scrap", cbxScrap.IsChecked);
 
-                #region Unit Issues
+#region Unit Issues
                 UnitIssueModel lUI = getUnitIssueString(0);
                 cmd.Parameters.AddWithValue("@reportedIssue", lUI.ReportedIssue);
                 cmd.Parameters.AddWithValue("@testResult", csCrossClassInteraction.EmptyIfNull(lUI.TestResult));
@@ -1165,7 +1191,7 @@ namespace RApID_Project_WPF
                 cmd.Parameters.AddWithValue("@problem", csCrossClassInteraction.EmptyIfNull(lUI.Problem));
                 cmd.Parameters.AddWithValue("@refDesignator", csCrossClassInteraction.EmptyIfNull(lUI.MultiPartsReplaced[0].RefDesignator));
                 cmd.Parameters.AddWithValue("@partsReplaced", csCrossClassInteraction.EmptyIfNull(lUI.MultiPartsReplaced[0].PartReplaced));
-                #endregion
+#endregion
 
                 cmd.Parameters.AddWithValue("@additionalComments", new TextRange(rtbAdditionalComments.Document.ContentStart, rtbAdditionalComments.Document.ContentEnd).Text.ToString());
 
@@ -1473,9 +1499,9 @@ namespace RApID_Project_WPF
                 cbReportedIssue_3.Text = cb.Text;
         }
 
-        #region Events
+#region Events
 
-        #region Button Click
+#region Button Click
         private void btnLookupPartName_Click(object sender, RoutedEventArgs e)
         {
             sVar.LogHandler.CreateLogAction((Button)sender, csLogging.LogState.CLICK);
@@ -1542,45 +1568,8 @@ namespace RApID_Project_WPF
                     else
                     {
                         sVar.LogHandler.CreateLogAction((Button)sender, csLogging.LogState.CLICK);
-
-                        /*if (BOMFileActive && (!refDesList.Contains(txtMultiRefDes_2.Text)
-                        || partNumList.Where(refdes => refdes.Equals(txtMultiRefDes_2.Text)).Count() > 0))
-                        {
-                            brdRefDes_2.BorderBrush = Brushes.Red;
-                            brdRefDes_2.BorderThickness = new Thickness(1.0);
-                            MessageBox.Show("Invalid Ref Designator", $"{txtMultiRefDes_2.Text} is not a valid designator!", MessageBoxButton.OK, MessageBoxImage.Warning);
-                            return;
-                        }
-                        else
-                        {
-                            brdRefDes_2.BorderBrush = null;
-                            brdRefDes_2.BorderThickness = new Thickness(0.0);
-                        }
-
-                        if (BOMFileActive && !refDesList.Contains(txtMultiRefDes_2.Text))
-                        {
-                            string sWarning = string.Format($"The Reference Designator entered ( {txtMultiRefDes_2.Text} ) does not exist.\n" +
-                                "Please verify the Part Number and try again.");
-                            sVar.LogHandler.CreateLogAction(sWarning, csLogging.LogState.WARNING);
-                            MessageBox.Show(sWarning, "Part Replaced Reference Designator Issue", MessageBoxButton.OK, MessageBoxImage.Warning);
-                            txtMultiRefDes_2.Focus();
-                            txtMultiRefDes_2.SelectAll();
-                            return;
-                        }
-
-                        string _sPRPD = csCrossClassInteraction.GetPartReplacedPartDescription(txtMultiPartNum_2.Text);
-
-                        if (BOMFileActive && string.IsNullOrEmpty(_sPRPD) && !string.IsNullOrEmpty(txtMultiPartNum_2.Text))
-                        {
-                            string sWarning = string.Format("The Part Replaced entered ( {0} ) does not exist. Please verify the Part Number and try again.", txtMultiPartNum_2.Text);
-                            sVar.LogHandler.CreateLogAction(sWarning, csLogging.LogState.WARNING);
-                            MessageBox.Show(sWarning, "Part Replaced Description Issue", MessageBoxButton.OK, MessageBoxImage.Warning);
-                            txtMultiRefDes_2.Focus();
-                            txtMultiRefDes_2.SelectAll();
-                        }
-                        else*/
                         
-                        MultiplePartsReplaced mpr = new MultiplePartsReplaced { RefDesignator = txtMultiRefDes_2.Text.TrimEnd(), PartReplaced = txtMultiPartNum_2.Text.TrimEnd(),
+                        MultiplePartsReplaced mpr = new MultiplePartsReplaced { RefDesignator = txtMultiRefDes_2.Text.TrimEnd().ToUpper(), PartReplaced = txtMultiPartNum_2.Text.TrimEnd().ToUpper(),
                             PartsReplacedPartDescription = csCrossClassInteraction.GetPartReplacedPartDescription(txtMultiPartNum_2.Text.TrimEnd()) };
                         if (string.IsNullOrEmpty(mpr.PartReplaced) && !string.IsNullOrEmpty(mpr.RefDesignator))
                             sVar.LogHandler.CreateLogAction(string.Format("Adding Ref Designator '{0}' to dgMultipleParts. Parts Replaced is empty.", mpr.RefDesignator), csLogging.LogState.NOTE);
@@ -1599,45 +1588,8 @@ namespace RApID_Project_WPF
                     else
                     {
                         sVar.LogHandler.CreateLogAction((Button)sender, csLogging.LogState.CLICK);
-
-                        /*if (BOMFileActive && (!refDesList.Contains(txtMultiRefDes_3.Text)
-                        || partNumList.Where(mpr => mpr.Equals(txtMultiRefDes_3.Text)).Count() > 0))
-                        {
-                            brdRefDes_3.BorderBrush = Brushes.Red;
-                            brdRefDes_3.BorderThickness = new Thickness(1.0);
-                            MessageBox.Show("Invalid Ref Designator", $"{txtMultiRefDes_3.Text} is not a valid designator!", MessageBoxButton.OK, MessageBoxImage.Warning);
-                            return;
-                        }
-                        else
-                        {
-                            brdRefDes_3.BorderBrush = null;
-                            brdRefDes_3.BorderThickness = new Thickness(0.0);
-                        }
-
-                        if (BOMFileActive && !refDesList.Contains(txtMultiRefDes_3.Text))
-                        {
-                            string sWarning = string.Format($"The Reference Designator entered ( {txtMultiRefDes_3.Text} ) does not exist.\n" +
-                                "Please verify the Part Number and try again.");
-                            sVar.LogHandler.CreateLogAction(sWarning, csLogging.LogState.WARNING);
-                            MessageBox.Show(sWarning, "Part Replaced Reference Designator Issue", MessageBoxButton.OK, MessageBoxImage.Warning);
-                            txtMultiRefDes_3.Focus();
-                            txtMultiRefDes_3.SelectAll();
-                            return;
-                        }
-
-                        string _sPRPD = csCrossClassInteraction.GetPartReplacedPartDescription(txtMultiPartNum_3.Text);
-
-                        if (BOMFileActive && string.IsNullOrEmpty(_sPRPD) && !string.IsNullOrEmpty(txtMultiPartNum_3.Text))
-                        {
-                            string sWarning = string.Format("The Part Replaced entered ( {0} ) does not exist. Please verify the Part Number and try again.", txtMultiPartNum_3.Text);
-                            sVar.LogHandler.CreateLogAction(sWarning, csLogging.LogState.WARNING);
-                            MessageBox.Show(sWarning, "Part Replaced Description Issue", MessageBoxButton.OK, MessageBoxImage.Warning);
-                            txtMultiRefDes_3.Focus();
-                            txtMultiRefDes_3.SelectAll();
-                        }
-                        else*/
                         
-                            MultiplePartsReplaced mpr = new MultiplePartsReplaced { RefDesignator = txtMultiRefDes_3.Text.TrimEnd(), PartReplaced = txtMultiPartNum_3.Text.TrimEnd(),
+                            MultiplePartsReplaced mpr = new MultiplePartsReplaced { RefDesignator = txtMultiRefDes_3.Text.TrimEnd().ToUpper(), PartReplaced = txtMultiPartNum_3.Text.TrimEnd().ToUpper(),
                                 PartsReplacedPartDescription = csCrossClassInteraction.GetPartReplacedPartDescription(txtMultiPartNum_3.Text.TrimEnd()) };
                             if (string.IsNullOrEmpty(mpr.PartReplaced) && !string.IsNullOrEmpty(mpr.RefDesignator))
                                 sVar.LogHandler.CreateLogAction(string.Format("Adding Ref Designator '{0}' to dgMultipleParts. Parts Replaced is empty.", mpr.RefDesignator), csLogging.LogState.NOTE);
@@ -1657,45 +1609,8 @@ namespace RApID_Project_WPF
                 else
                 {
                     sVar.LogHandler.CreateLogAction((Button)sender, csLogging.LogState.CLICK);
-
-                    /*if (BOMFileActive && (!refDesList.Contains(txtMultiRefDes.Text)
-                        || partNumList.Where(mpr => mpr.Equals(txtMultiRefDes.Text)).Count() > 0))
-                    {
-                        brdRefDes.BorderBrush = Brushes.Red;
-                        brdRefDes.BorderThickness = new Thickness(1.0);
-                        MessageBox.Show("Invalid Ref Designator", $"{txtMultiRefDes.Text} is not a valid designator!", MessageBoxButton.OK, MessageBoxImage.Warning);
-                        return;
-                    }
-                    else
-                    {
-                        brdRefDes.BorderBrush = null;
-                        brdRefDes.BorderThickness = new Thickness(0.0);
-                    }
-
-                    if (BOMFileActive & !refDesList.Contains(txtMultiRefDes.Text))
-                    {
-                        string sWarning = string.Format($"The Reference Designator entered ( {txtMultiRefDes.Text} ) does not exist.\n" +
-                            "Please verify the Part Number and try again.");
-                        sVar.LogHandler.CreateLogAction(sWarning, csLogging.LogState.WARNING);
-                        MessageBox.Show(sWarning, "Part Replaced Reference Designator Issue", MessageBoxButton.OK, MessageBoxImage.Warning);
-                        txtMultiRefDes.Focus();
-                        txtMultiRefDes.SelectAll();
-                        return;
-                    }
-
-                    string _sPRPD = csCrossClassInteraction.GetPartReplacedPartDescription(txtMultiPartNum.Text);
-
-                    if (BOMFileActive & string.IsNullOrEmpty(_sPRPD) && !string.IsNullOrEmpty(txtMultiPartNum.Text))
-                    {
-                        string sWarning = string.Format("The Part Replaced entered ( {0} ) does not exist. Please verify the Part Number and try again.", txtMultiPartNum.Text);
-                        sVar.LogHandler.CreateLogAction(sWarning, csLogging.LogState.WARNING);
-                        MessageBox.Show(sWarning, "Part Replaced Description Issue", MessageBoxButton.OK, MessageBoxImage.Warning);
-                        txtMultiRefDes.Focus();
-                        txtMultiRefDes.SelectAll();
-                    }
-                    else*/
                     
-                        MultiplePartsReplaced mpr = new MultiplePartsReplaced { RefDesignator = txtMultiRefDes.Text.TrimEnd(), PartReplaced = txtMultiPartNum.Text.TrimEnd(),
+                        MultiplePartsReplaced mpr = new MultiplePartsReplaced { RefDesignator = txtMultiRefDes.Text.TrimEnd().ToUpper(), PartReplaced = txtMultiPartNum.Text.TrimEnd().ToUpper(),
                             PartsReplacedPartDescription = csCrossClassInteraction.GetPartReplacedPartDescription(txtMultiPartNum.Text.TrimEnd()) };
                         if (string.IsNullOrEmpty(mpr.PartReplaced) && !string.IsNullOrEmpty(mpr.RefDesignator))
                             sVar.LogHandler.CreateLogAction(string.Format("Adding Ref Designator '{0}' to dgMultipleParts. Parts Replaced is empty.", mpr.RefDesignator), csLogging.LogState.NOTE);
@@ -1730,7 +1645,7 @@ namespace RApID_Project_WPF
                 checkToDisableUITabs();
             }
         }
-        #endregion
+#endregion
 
         private void dgBeginEdit(object sender, DataGridBeginningEditEventArgs e)
             => e.Cancel = true;
@@ -1890,12 +1805,21 @@ namespace RApID_Project_WPF
             catch { }
         }
 
-        private void txtMultiRefKeyUp(object sender, KeyEventArgs e)
+        private void txtMultiRefKeyUp(object sender, KeyEventArgs e) {/*?*/}
+
+        private void dataGrid_KeyUp(object sender, KeyEventArgs e)
         {
-            
+            DataGrid grid = ((DataGrid)sender);
+
+            if (e.Key == Key.Delete && grid.SelectedItem != null)
+            {
+                DataGridRow row = (DataGridRow)dgBOMList.ItemContainerGenerator.ContainerFromItem(grid.SelectedItem);
+                if (row != null) { row.Foreground = Brushes.Black; row.Background = Brushes.White; }
+                grid.Items.Remove(grid.SelectedItem);
+            }
         }
 
-        #region Log Actions
+#region Log Actions
         private void rtbGotFocus(object sender, RoutedEventArgs e)
         {
             sVar.LogHandler.CreateLogAction((RichTextBox)sender, csLogging.LogState.ENTER);
@@ -2016,12 +1940,12 @@ namespace RApID_Project_WPF
                 }
             }
         }
-        #endregion
+#endregion
 
 
-        #endregion
+#endregion
 
-        private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+        private void Window_Closing(object sender, CancelEventArgs e)
         {
             if (sp != null && sp.IsOpen)
                 sp.Close();
@@ -2053,6 +1977,72 @@ namespace RApID_Project_WPF
             {
                 txtMultiPartNum.Text = (BOMList[txtMultiRefDes.SelectedIndex] as MultiplePartsReplaced).PartReplaced;
             }
+        }
+
+        private void dgBOMList_MouseDoubleClick(object sender, MouseButtonEventArgs e)
+        {
+            DataGrid targetGrid = (DataGrid)(tcUnitIssues.SelectedContent as Grid).FindName($"dgMultipleParts{(tcUnitIssues.SelectedIndex > 0 ? $"_{tcUnitIssues.SelectedIndex + 1}" : "")}");
+            MultiplePartsReplaced item = (MultiplePartsReplaced)dgBOMList.SelectedItem;
+
+            if (!targetGrid.Items.Contains(item))
+            {
+                DataGridRow row = (DataGridRow)dgBOMList.ItemContainerGenerator.ContainerFromIndex(dgBOMList.SelectedIndex);
+                if (row != null && !targetGrid.Items.Contains(item))
+                {
+
+                    targetGrid.Items.Add(item);
+                    row.Foreground = Brushes.White; row.Background = Brushes.DarkGreen;
+                }
+            }
+        }
+
+        private Grid PrevGrid = null;
+        private void tcUnitIssues_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            try
+            {
+                DataGrid targetGrid = (DataGrid)(tcUnitIssues.SelectedContent as Grid).FindName($"dgMultipleParts{(tcUnitIssues.SelectedIndex > 0 ? $"_{tcUnitIssues.SelectedIndex + 1}" : "")}");
+                var pgridIndex = int.Parse(PrevGrid.Name.Last().ToString());
+                DataGrid prevGrid = (DataGrid)PrevGrid.FindName($"dgMultipleParts{(pgridIndex > 0 ? $"_{pgridIndex + 1}" : "")}");
+                if (prevGrid != null)
+                {
+                    foreach (MultiplePartsReplaced mpr in prevGrid.Items)
+                    {
+                        if (BOMList.Contains(mpr))
+                        {
+                            DataGridRow row = (DataGridRow)dgBOMList.ItemContainerGenerator.ContainerFromItem(mpr);
+                            if (row != null) { row.Foreground = Brushes.Black; row.Background = Brushes.White; }
+                        }
+                    }
+                }
+
+                foreach (MultiplePartsReplaced mpr in targetGrid.Items)
+                {
+                    if (BOMList.Contains(mpr))
+                    {
+                        DataGridRow row = (DataGridRow)dgBOMList.ItemContainerGenerator.ContainerFromItem(mpr);
+                        if (row != null) { row.Foreground = Brushes.White; row.Background = Brushes.DarkGreen; }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+            finally
+            {
+                PrevGrid = tcUnitIssues.SelectedContent as Grid ?? null;
+            }
+        }
+
+        private void ExpBOMInfo_Expanded(object sender, RoutedEventArgs e)
+        {
+            expBOMInfo.Margin = new Thickness(605, 345, 10, 6);
+        }
+
+        private void ExpBOMInfo_Collapsed(object sender, RoutedEventArgs e)
+        {
+            expBOMInfo.Margin = new Thickness(605, 345, 10, 265);
         }
 
         private void btnTech_Click(object sender, RoutedEventArgs e)

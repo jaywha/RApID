@@ -20,6 +20,7 @@ using System.Data.OleDb;
 using System.Data.SqlClient;
 using System.ComponentModel;
 using System.Collections.ObjectModel;
+using System.Runtime.CompilerServices;
 
 namespace RApID_Project_WPF
 {
@@ -46,9 +47,10 @@ namespace RApID_Project_WPF
 
         public frmMultipleItems() => InitializeComponent();
 
-        public frmMultipleItems(MultipleItemType itemType){
+        public frmMultipleItems(MultipleItemType itemType, [CallerMemberName] string callerMemberName = ""){
             InitializeComponent();
             ItemType = itemType;
+            Console.WriteLine($"Select Multiple {ItemType.ToString()} - Initiated by {callerMemberName}");
         }
 
         public frmMultipleItems(string OrderNum) {
@@ -185,10 +187,12 @@ namespace RApID_Project_WPF
                         if (!item.FilePath.Contains(frmBoardFileManager.ELEC_ROOT_DIR))
                             item.FilePath = frmBoardFileManager.ELEC_ROOT_DIR + item.FilePath;
                         sVars.SelectedBOMFile = item;
+                        DialogResult = true;
                         break;
                     default:
                     case MultipleItemType.RP:
                         sVars.SelectedRPNumber = (DGVMULTIPLERP)dgItemInfo.SelectedItem;
+                        DialogResult = true;
                         break;
                 }
                 this.Close();

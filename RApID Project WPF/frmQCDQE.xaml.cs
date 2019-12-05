@@ -827,7 +827,7 @@ namespace RApID_Project_WPF
                                 throw new InvalidOperationException("Couldn't find data for this barcode!");
                             else
                             {
-                                (string filename, string notes, bool found) result = await mapper.FindFileAsync(".xls");
+                                (string filename, bool found) result = await mapper.FindFileAsync(".xls");
                                 //TODO: Make User Control for BOM Matcher (2 cmbx: Ref Des. -> Part Number)
 
                                 csCrossClassInteraction.MapperSuccessMessage(result.filename, mapper.PartNumber);

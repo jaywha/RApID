@@ -367,6 +367,24 @@
                                     <ComboBox Name="cbTechAction_3" Margin="10,135,0,0" DropDownClosed="cbDDClosed" Style="{StaticResource ComboBoxBaseStyle}" Width="225"/>
                                 </Grid>
                             </GroupBox>
+
+                            <Expander x:Name="expBOMInfo" ExpandDirection="Down" Background="SlateGray" Panel.ZIndex="10" Margin="605,345,10,265" Expanded="ExpBOMInfo_Expanded" Collapsed="ExpBOMInfo_Collapsed">
+                                <Expander.Header>
+                                    <StackPanel Orientation="Horizontal">
+                                        <TextBlock RenderTransformOrigin="0.5,0.5"><Run Text="Current BOM Info" Foreground="WhiteSmoke"/></TextBlock>
+                                        <Separator Width="5" Margin="5,0,5,0" Visibility="{Binding ElementName=wndMain, Path=BOMFileActive, Converter={StaticResource BoolToVisConv}}"/>
+                                        <Label Content="{Binding BOMRecordsDone, ElementName=wndMain}" Visibility="{Binding ElementName=wndMain, Path=BOMFileActive, Converter={StaticResource BoolToVisConv}}"/>
+                                        <Label Content="{Binding BOMRecordsTotal, ElementName=wndMain}" Visibility="{Binding ElementName=wndMain, Path=BOMFileActive, Converter={StaticResource BoolToVisConv}}"/>
+                                    </StackPanel>
+                                </Expander.Header>
+                                <Grid x:Name="grdBOMInfo" Background="SlateGray">
+                                    <StackPanel Orientation="Vertical" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Height="{Binding ActualHeight, ElementName=grdBOMInfo}">
+                                        <DataGrid x:Name="dgBOMList" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
+                              Height="{Binding ActualHeight, ElementName=grdBOMInfo}" Width="{Binding ActualWidth, ElementName=grdBOMInfo}" 
+                              IsReadOnly="True" MouseDoubleClick="dgBOMList_MouseDoubleClick" ScrollViewer.VerticalScrollBarVisibility="Auto"/>
+                                    </StackPanel>
+                                </Grid>
+                            </Expander>
                         </Grid>
                     </TabItem>
 

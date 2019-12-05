@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Data.SqlClient;
+using System.IO;
 using System.IO.Ports;
 using System.Linq;
 using System.Runtime.CompilerServices;
@@ -19,6 +20,7 @@ using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Threading;
+using SNM = SNMapperLib.csSerialNumberMapper;
 
 namespace RApID_Project_WPF
 {
@@ -1385,13 +1387,60 @@ namespace RApID_Project_WPF
                         }
                         else
                         {
-                            (string filename, string notes, bool found) = await mapper.FindFileAsync(".xls");
-                            if (filename.Contains(",")) {
-                                frmMultipleItems fmi = new frmMultipleItems(MultipleItemType.BOMFiles) {
+                            bool techTableSuccess = false;
+                            string bompath = string.Empty;
+
+                            string filename = string.Empty;
+                            string notes = string.Empty;
+                            bool found = false;
+
+                            if (!mapper.GetData(txtBarcode.Text))
+                            {
+                                (techTableSuccess, bompath, _, notes) = mapper.CheckAliasTable(); // Check Alias Table for Part Number
+
+                                if (techTableSuccess)
+                                {
+                                    found = File.Exists(Path.Combine(SNM.SchemaPath, bompath)) || File.Exists(Path.Combine(SNM.SchemaPath, bompath.Split(',')[0]));
+                                    filename = Path.Combine(SNM.SchemaPath, bompath);
+                                }
+                                else
+                                {
+                                    MessageBox.Show("Couldn't find the barcode's entry in the database.\nPlease enter information manually.",
+                                            "Soft Error - Database Lookup", MessageBoxButton.OK, MessageBoxImage.Warning);
+                                    new frmBoardFileManager(txtPartNumber.Text).ShowDialog();
+                                }
+                            }
+                            else
+                            {
+                                (filename, found) = await mapper.FindFileAsync(".xls");
+                            }
+
+                            if (!found)
+                            {
+                                MessageBox.Show("We got some database info, but we still need help finindg the BOM.",
+                                    "Soft Error - BOM Not Found", MessageBoxButton.OK, MessageBoxImage.Information);
+                                frmBoardFileManager techForm = new frmBoardFileManager(mapper.PartNumber);
+                                techForm.ShowDialog();
+
+                                if (!techForm.WasEntryFound)
+                                {
+                                    MessageBox.Show("No BOM Loaded!", "Warning: BOM Missing!",
+                                        MessageBoxButton.OK, MessageBoxImage.Warning);
+                                    return;
+                                }
+                                else
+                                {
+                                    filename = techForm.BOMFileName;
+                                }
+                            }
+                            else if (filename.Contains(",") && !string.IsNullOrWhiteSpace(notes))
+                            {
+                                frmMultipleItems fmi = new frmMultipleItems(MultipleItemType.BOMFiles)
+                                {
                                     BOMFiles = filename.Split(',').ToList(),
                                     Notes = notes.Split('|')[0].Split(',').ToList()
                                 };
-                                fmi.ShowDialog();
+                                if (fmi.ShowDialog() == false) return;
                                 filename = sVar.SelectedBOMFile.FilePath;
                             }
 

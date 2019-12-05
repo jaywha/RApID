@@ -682,6 +682,7 @@
             this.Name = "frmBoardFileManager";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "PCB File Manager";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.frmBoardFileManager_FormClosing);
             this.Load += new System.EventHandler(this.frmBoardAliases_Load);
             this.PreviewKeyDown += new System.Windows.Forms.PreviewKeyDownEventHandler(this.frmBoardAliases_PreviewKeyDown);
             this.cxmnuAssemblyLinksMenu.ResumeLayout(false);
