@@ -1,10 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Net.Mail;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Diagnostics;
+using System.Net;
 
 namespace RApID_Project_WPF
 {
@@ -43,12 +46,18 @@ namespace RApID_Project_WPF
                 _emailMessage.Subject = string.IsNullOrWhiteSpace(subject) ?
                     $"RApID Exception - {Environment.MachineName} under {Environment.UserName}"
                 : subject;
-                
-                _emailMessage.Body = string.IsNullOrWhiteSpace(body) ? 
-                    "<h1>Exception Details</h1>" +
-                    $"<h2>{exception?.GetType()}</h2><hr>" +
-                    $"Message: <i><p>{exception?.Message}</p></i><br>" +
-                    $"StackTrace: <b><pre><code>{exception?.StackTrace}</code></pre></b>"
+
+#if DEBUG
+                var initialPath = Path.GetDirectoryName(Process.GetCurrentProcess().MainModule.FileName);
+#else
+                var initialPath = @"\\joi\eu\Public\EE Process Test\Software\RApID Project WPF\Main";
+#endif
+
+                _emailMessage.Body = string.IsNullOrWhiteSpace(body) ?
+                    File.ReadAllText($@"{initialPath}\Resources\ExceptionEmailTemplate.html")
+                    .Replace("[ExceptionType]",WebUtility.HtmlEncode(exception?.GetType().ToString()))
+                    .Replace("[ExceptionMessage]",WebUtility.HtmlEncode(exception?.Message.ToString()))
+                    .Replace("[ExceptionStackTrace]",WebUtility.HtmlEncode(exception?.StackTrace.ToString()))
                 : body;
 
                 #region Get Smtp thing

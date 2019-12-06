@@ -50,7 +50,7 @@ namespace RApID_Project_WPF
             AppDomain.CurrentDomain.UnhandledException += new UnhandledExceptionEventHandler(
                 delegate (object sender, UnhandledExceptionEventArgs args) {
                     Exception e = ((Exception)args.ExceptionObject);
-                    var out_msg = $"[UEHandler]: {e.Message}\n" +
+                    var out_msg = $"[UnhandledExceptionHandler]: {e.Message}\n" +
                         $"(Stack Trace)\n{new string('-', 20)}\n\n{e.StackTrace}\n\n{new string('-', 20)}\n" +
                         $"Will runtime terminate now? -> \'{(args.IsTerminating ? "Yes" : "No")}\'";
 
@@ -74,7 +74,7 @@ namespace RApID_Project_WPF
                 delegate (object sender, System.Runtime.ExceptionServices.FirstChanceExceptionEventArgs args)
                 {
                     Exception e = args.Exception;
-                    var out_msg = $"[UEHandler]: {e.Message}\n" +
+                    var out_msg = $"[FirstChanceHandler]: {e.Message}\n" +
                         $"(Stack Trace)\n{new string('-', 20)}\n\n{e.StackTrace}\n";
 
                     Console.WriteLine(out_msg);
@@ -82,7 +82,7 @@ namespace RApID_Project_WPF
                     {
                         var err_msg = $"[FirstChanceException] Task ID: {tce.Task.Id} | CanBeCanceled = {tce.CancellationToken.CanBeCanceled}\n\tSource -> {tce.Source}";
                         #if !DEBUG
-                            csExceptionLogger.csExceptionLogger.Write("Unhandled_Exception", e);
+                            csExceptionLogger.csExceptionLogger.Write("FirstChance_Exception", e);
                         #endif
                         Console.WriteLine(err_msg);
                     }

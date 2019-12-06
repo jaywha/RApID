@@ -49,6 +49,9 @@ namespace RApID_Project_WPF
 
         public frmMultipleItems(MultipleItemType itemType, [CallerMemberName] string callerMemberName = ""){
             InitializeComponent();
+            Focus();
+            Activate();
+            BringIntoView();            
             ItemType = itemType;
             Console.WriteLine($"Select Multiple {ItemType.ToString()} - Initiated by {callerMemberName}");
         }

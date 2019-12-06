@@ -22,6 +22,7 @@ using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Documents;
 using System.Windows.Threading;
+using SNM = SNMapperLib.csSerialNumberMapper;
 
 namespace RApID_Project_WPF
 {
@@ -207,6 +208,80 @@ namespace RApID_Project_WPF
                 result.Add(label.Link);
             }
             return result;
+        }
+
+        /// <summary>
+        /// Will find BOM or offer selection using single shared method between <see cref="frmProduction"/> and <see cref="frmRepair"/>.
+        /// </summary>
+        /// <param name="mapper">The <see cref="SNM.Instance"/></param>
+        /// <param name="txtSN"><see cref="TextBox"/> control for Serial Number value.</param>
+        /// <param name="txtPN"><see cref="TextBox"/> control for Part Number value.</param>
+        /// <returns>A BOM filepath</returns>
+        public static string TechFormProcess(this SNM mapper, TextBox txtSN, TextBox txtPN, [CallerFilePath] string callingFile = "") {
+            callingFile = callingFile.Replace(".xaml.cs",string.Empty).Replace("frm",string.Empty);
+
+            bool techTableSuccess = false;
+            string bompath = string.Empty;
+
+            string filename = string.Empty;
+            string notes = string.Empty;
+            bool found = false;
+
+            mapper.GetData(txtSN.Text);
+            (techTableSuccess, bompath, _, notes) = mapper.CheckAliasTable(); // Check Alias Table for Part Number
+            #if DEBUG
+                Console.WriteLine(
+                    $"CheckAliasTable {{\n" +
+                        $"\t\"success\" : {techTableSuccess}\n" +
+                        $"\t\"BOM Path\" : {bompath}\n" +
+                        $"\t\"Notes\" : {notes}\n" +
+                    $"}}\n");
+            #endif
+
+            if (techTableSuccess)
+            {
+                found = File.Exists(Path.Combine(SNM.SchemaPath, bompath)) || File.Exists(Path.Combine(SNM.SchemaPath, bompath.Split(',')[0]));
+                filename = Path.Combine(SNM.SchemaPath, bompath);
+                #if DEBUG
+                    Console.WriteLine(
+                    $"FullResult {{\n" +
+                        $"\t\"found\" : {found}\n" +
+                        $"\t\"filename\" : {filename}\n" +
+                        $"\t\"Notes\" : {notes}\n" +
+                    $"}}\n");
+                #endif
+            }
+            else
+            {
+                MessageBox.Show("Couldn't find the barcode's entry in the database.\nPlease enter information manually.",
+                        "Soft Error - Database Lookup", MessageBoxButton.OK, MessageBoxImage.Warning);
+                var techForm = new frmBoardFileManager(txtPN.Text);
+                techForm.ShowDialog();
+                if (!techForm.WasEntryFound)
+                {
+                    MessageBox.Show("No BOM Loaded!", "Warning: BOM Missing!",
+                        MessageBoxButton.OK, MessageBoxImage.Warning);
+                    return string.Empty;
+                }
+                else
+                {
+                    filename = techForm.BOMFileName;
+                }
+            }
+
+            if (filename.Contains(",") && !string.IsNullOrWhiteSpace(notes))
+            {
+                frmMultipleItems fmi = new frmMultipleItems(MultipleItemType.BOMFiles)
+                {
+                    BOMFiles = filename.Split(',').ToList(),
+                    Notes = notes.Split('|')[0].Split(',').ToList()
+                };
+                if (fmi.ShowDialog() == false) return string.Empty;
+                filename = sVar.SelectedBOMFile.FilePath;
+            }
+
+            Console.WriteLine($"[{callingFile}] Using filepath ==> {filename}");
+            return filename;
         }
 
         public static void MapperSuccessMessage(string filename, string PN = "")

@@ -509,6 +509,9 @@
     <WCFMetadata Include="Service References\" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Resources\ExceptionEmailTemplate.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Resource Include="__fire___256_La5_icon.ico" />
     <Resource Include="Resources\wtech.png" />
     <None Include="Resources\Board.png" />

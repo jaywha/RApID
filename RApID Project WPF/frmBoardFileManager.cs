@@ -655,7 +655,7 @@ namespace RApID_Project_WPF
                 #endif
             } else {
                 var minute_time = DateTime.Now.Subtract(LastHelp).TotalMinutes;
-                MessageBox.Show($"Help message was sent {(minute_time > 1 ? $"{(int) minute_time} minutes" : "about a minute")} ago.\nPlease wait 5 minutes before next request.",
+                MessageBox.Show($"Help message was sent {(minute_time >= 2 ? $"{(int) minute_time} minutes" : "about a minute")} ago.\nPlease wait 5 minutes before next request.",
                     "Please Don't Spam Help",MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
         }

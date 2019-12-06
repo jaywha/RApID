@@ -213,15 +213,6 @@ namespace RApID_Project_WPF
             }
         }
 
-        private void pcbaalias_click(object sender, RoutedEventArgs e)
-        {
-            frmBoardFileManager frm = new frmBoardFileManager();
-            frm.ShowDialog();
-        }
-
-        private void TxtRegex_LostFocus(object sender, RoutedEventArgs e)
-        {
-            
-        }
+        private void btnEmail_Click(object sender, RoutedEventArgs e) => Mailman.SendEmail("", "", new WhiningException("Testing Email - <yay>"));
     }
 }

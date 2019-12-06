@@ -743,65 +743,7 @@ namespace RApID_Project_WPF
                     {
                         Dispatcher.BeginInvoke(new Action(async () => // perform dispatched UI actions
                         {
-                            bool techTableSuccess = false;
-                            string bompath = string.Empty;
-
-                            string filename = string.Empty;
-                            string notes = string.Empty;
-                            bool found = false;
-
-                            mapper.GetData(txtSerialNumber.Text);
-                            (techTableSuccess, bompath, _, notes) = mapper.CheckAliasTable(); // Check Alias Table for Part Number
-#if DEBUG
-                            Console.WriteLine(
-                                $"CheckAliasTable {{\n" +
-                                    $"\t\"success\" : {techTableSuccess}\n" +
-                                    $"\t\"BOM Path\" : {bompath}\n" +
-                                    $"\t\"Notes\" : {notes}\n" +
-                                $"}}\n");
-#endif
-
-                            if (techTableSuccess)
-                            {
-                                found = File.Exists(Path.Combine(SNM.SchemaPath, bompath)) || File.Exists(Path.Combine(SNM.SchemaPath, bompath.Split(',')[0]));
-                                filename = Path.Combine(SNM.SchemaPath, bompath);
-#if DEBUG
-                                Console.WriteLine(
-                                $"FullResult {{\n" +
-                                    $"\t\"found\" : {found}\n" +
-                                    $"\t\"filename\" : {filename}\n" +
-                                    $"\t\"Notes\" : {notes}\n" +
-                                $"}}\n");
-#endif
-                            } else {
-                                MessageBox.Show("Couldn't find the barcode's entry in the database.\nPlease enter information manually.",
-                                        "Soft Error - Database Lookup", MessageBoxButton.OK, MessageBoxImage.Warning);
-                                var techForm = new frmBoardFileManager(txtPartNumber.Text);
-                                techForm.ShowDialog();
-                                if (!techForm.WasEntryFound)
-                                {
-                                    MessageBox.Show("No BOM Loaded!", "Warning: BOM Missing!",
-                                        MessageBoxButton.OK, MessageBoxImage.Warning);
-                                    return;
-                                }
-                                else
-                                {
-                                    filename = techForm.BOMFileName;
-                                }
-                            }
-
-                            if (filename.Contains(",") && !string.IsNullOrWhiteSpace(notes))
-                            {
-                                frmMultipleItems fmi = new frmMultipleItems(MultipleItemType.BOMFiles)
-                                {
-                                    BOMFiles = filename.Split(',').ToList(),
-                                    Notes = notes.Split('|')[0].Split(',').ToList()
-                                };
-                                if (fmi.ShowDialog() == false) return;
-                                filename = sVar.SelectedBOMFile.FilePath;
-                            }
-
-                            Console.WriteLine($"Using filepath ==> {filename}");
+                            var filename = mapper.TechFormProcess(txtSerialNumber, txtPartNumber);
 
                             var refSource = new ObservableCollection<string>();
                             var partSource = new ObservableCollection<string>();
