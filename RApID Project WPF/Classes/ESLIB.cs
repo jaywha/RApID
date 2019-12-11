@@ -3,19 +3,16 @@
  * Created By: Eric Stabile
  */
 
+using RApID_Project_WPF;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.IO.Ports;
-using System.IO;
-using System.Xml.Serialization;
-using System.Data.Sql;
 using System.Data.SqlClient;
-using RApID_Project_WPF;
+using System.IO;
+using System.IO.Ports;
+using System.Text;
 using System.Threading;
 using System.Windows.Forms;
+using System.Xml.Serialization;
 
 namespace EricStabileLibrary
 {
@@ -51,7 +48,7 @@ namespace EricStabileLibrary
         public static List<Parity> GetParityList()
         {
             List<Parity> lParity = new List<Parity>();
-            foreach(Parity p in Enum.GetValues(typeof(Parity)))
+            foreach (Parity p in Enum.GetValues(typeof(Parity)))
             {
                 lParity.Add(p);
             }
@@ -64,7 +61,7 @@ namespace EricStabileLibrary
         public static List<StopBits> GetStopBits()
         {
             List<StopBits> lStopBits = new List<StopBits>();
-            foreach(StopBits sb in Enum.GetValues(typeof(StopBits)))
+            foreach (StopBits sb in Enum.GetValues(typeof(StopBits)))
             {
                 lStopBits.Add(sb);
             }
@@ -77,6 +74,9 @@ namespace EricStabileLibrary
     /// </summary>
     public static class Extensions
     {
+        /// <summary>List of current developers</summary> 
+        public static List<string> Devs = new List<string>() { "jwhaley", "dglanton", "charding", "bdill", "jshirley" };
+
         /// <summary>
         /// Aggregates all of the <paramref name="elements"/> using their <see cref="string.ToString"/>
         /// with an appended <see cref="Environment.NewLine"/>
@@ -99,18 +99,18 @@ namespace EricStabileLibrary
         /// <param name="prefix">[Optional] string prefix for each element </param>
         /// <param name="suffix">[Optional] string suffix for each element </param>
         /// <returns>A single string of each element</returns>
-        public static string ToStrings<T>(this IList<T> elements, 
+        public static string ToStrings<T>(this IList<T> elements,
             string prefix = "",
             string suffix = "")
         {
             StringBuilder builder = new StringBuilder();
             if (elements == null || elements.Count == 0) return string.Empty;
-            foreach(T element in elements)
+            foreach (T element in elements)
             {
-                builder.Append(prefix  + element.ToString() + suffix);
+                builder.Append(prefix + element.ToString() + suffix);
             }
             string result = builder.ToString();
-            return result.Remove(result.Length-suffix.Length);
+            return result.Remove(result.Length - suffix.Length);
         }
 
         /// <summary>
@@ -130,9 +130,10 @@ namespace EricStabileLibrary
         /// <typeparam name="T">{Generic Type Parameter}</typeparam>
         /// <param name="list">The calling list about to be converted.</param>
         /// <returns>The <see cref="AutoCompleteStringCollection"/> containing <paramref name="list"/>'s elements</returns>
-        public static AutoCompleteStringCollection AsAutoCompleteStringCollection<T>(this IList<T> list) {
+        public static AutoCompleteStringCollection AsAutoCompleteStringCollection<T>(this IList<T> list)
+        {
             AutoCompleteStringCollection result = new AutoCompleteStringCollection();
-            foreach(T element in list)
+            foreach (T element in list)
             {
                 result.Add(element.ToString());
             }
@@ -147,7 +148,7 @@ namespace EricStabileLibrary
         /// <param name="element">Given element to check for.</param>
         public static void EnsureElement<T>(this IList<T> list, T element)
         {
-            if(!list.Contains(element)) list.Add(element);
+            if (!list.Contains(element)) list.Add(element);
         }
 
         /// <summary>
@@ -268,7 +269,7 @@ namespace EricStabileLibrary
             string[] splitters = { "{", "}" };
             string[] sSplit = sConnList.Split(splitters, StringSplitOptions.RemoveEmptyEntries);
 
-            foreach(string s in sSplit)
+            foreach (string s in sSplit)
             {
                 sNewConnList += s + "}{";
             }
@@ -290,7 +291,7 @@ namespace EricStabileLibrary
             string[] splitters = { "{", "}" };
             string[] sSplit = sConnList.Split(splitters, StringSplitOptions.RemoveEmptyEntries);
 
-            foreach(string s in sSplit)
+            foreach (string s in sSplit)
             {
                 if (s != sConnToRemove)
                     sNewConnList += s + "}{";
@@ -362,7 +363,7 @@ namespace EricStabileLibrary
                     }
 
                     /* [3.] Get newest LogID after instering log entry (Auto Increment ID)*/
-                    using(SqlCommand cmd  = new SqlCommand("SELECT ID FROM TechLogs ORDER BY ID DESC", conn))
+                    using (SqlCommand cmd = new SqlCommand("SELECT ID FROM TechLogs ORDER BY ID DESC", conn))
                     {
                         using (SqlDataReader reader = cmd.ExecuteReader())
                             if (reader.Read())
@@ -394,12 +395,12 @@ namespace EricStabileLibrary
                     }
 
                 }
-                
+
                 #endregion
 
                 return true;
             }
-            catch (Exception ex)
+            catch (Exception)
             {
 #if DEBUG
                 System.Windows.MessageBox.Show("Error writing log to file.\n\nError Message: " + ex.Message);
@@ -469,8 +470,8 @@ namespace EricStabileLibrary
         /// </summary>
         public void CheckDirectory(string _tech)
         {
-            if(!Directory.Exists(LogLocation + _tech) && iTempCounter < 3) 
-            { 
+            if (!Directory.Exists(LogLocation + _tech) && iTempCounter < 3)
+            {
                 Directory.CreateDirectory(LogLocation + _tech);
                 CheckDirectory(_tech);
                 iTempCounter++;
@@ -483,14 +484,14 @@ namespace EricStabileLibrary
         #region Adds a specific log action to the log
         public void CreateLogAction(string sLAction, LogState ls)
         {
-            lLogActions.Add(new csLogAction {EventType = ls, LogNote = sLAction, EventTiming = DateTime.Now });
+            lLogActions.Add(new csLogAction { EventType = ls, LogNote = sLAction, EventTiming = DateTime.Now });
         }
 
         public void CreateLogAction(System.Windows.Controls.TextBox _tb, LogState ls)
         {
             lLogActions.Add(new csLogAction { ControlType = "Textbox", ControlName = _tb.Name, ControlContent = _tb.Text.ToString(), EventType = ls, EventTiming = DateTime.Now });
         }
-        
+
         public void CreateLogAction(System.Windows.Controls.RichTextBox _rtb, LogState ls)
         {
             lLogActions.Add(new csLogAction { ControlType = "RichTextBox", ControlName = _rtb.Name, ControlContent = new System.Windows.Documents.TextRange(_rtb.Document.ContentStart, _rtb.Document.ContentEnd).Text.TrimEnd().ToString(), EventType = ls, EventTiming = DateTime.Now });
@@ -563,7 +564,7 @@ namespace EricStabileLibrary
     {
         public static void DisplayLog(System.Windows.Controls.RichTextBox _rtb, csLogging.LogState _ls, csLog _log, bool bClearRTB)
         {
-            if(bClearRTB)
+            if (bClearRTB)
                 _rtb.Document.Blocks.Clear();
 
             string sLogData = $"{_log.Tech} began this entry at {_log.LogCreationTime.ToString("MM/dd/yyyy hh:mm:ss tt")}.\n";
@@ -618,7 +619,7 @@ namespace EricStabileLibrary
         }
     }
 
-    public class MultipleRPVM: RApID_Project_WPF.VMB.ViewModelBase
+    public class MultipleRPVM : RApID_Project_WPF.VMB.ViewModelBase
     {
         private string _rpNumber;
         public string VMRPNumber
@@ -626,7 +627,7 @@ namespace EricStabileLibrary
             get { return _rpNumber; }
             set
             {
-                if(_rpNumber != value)
+                if (_rpNumber != value)
                 {
                     _rpNumber = value;
                     NotifyPropertyChanged(() => VMRPNumber);
@@ -639,7 +640,7 @@ namespace EricStabileLibrary
             get { return _customerNumber; }
             set
             {
-                if(_customerNumber != value)
+                if (_customerNumber != value)
                 {
                     _customerNumber = value;
                     NotifyPropertyChanged(() => _customerNumber);
@@ -652,7 +653,7 @@ namespace EricStabileLibrary
             get { return _customerName; }
             set
             {
-                if(_customerName != value)
+                if (_customerName != value)
                 {
                     _customerName = value;
                     NotifyPropertyChanged(() => _customerName);
@@ -671,7 +672,7 @@ namespace EricStabileLibrary
         public void InitSplash1(string sLoadText)
         {
             try
-            {                
+            {
                 thread_Splash = new Thread(new ThreadStart(
                     delegate ()
                     {
@@ -690,7 +691,7 @@ namespace EricStabileLibrary
 
                 Thread.Sleep(1000);
             }
-            catch(ThreadAbortException tce)
+            catch (ThreadAbortException tce)
             {
                 Console.WriteLine("Thread - caught ThreadAbortException - resetting.");
                 Console.WriteLine("Exception message: {0}", tce.Message);

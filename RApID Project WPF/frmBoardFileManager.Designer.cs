@@ -38,6 +38,7 @@
             this.changeTagToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
             this.deleteSchematicLinkToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.uploadBOMDataToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.cxmnuDatabaseMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.refreshToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.imgSchematics = new System.Windows.Forms.ImageList(this.components);
@@ -130,9 +131,10 @@
             this.changeFilePathToolStripMenuItem,
             this.changeTagToolStripMenuItem,
             this.toolStripSeparator2,
-            this.deleteSchematicLinkToolStripMenuItem});
+            this.deleteSchematicLinkToolStripMenuItem,
+            this.uploadBOMDataToolStripMenuItem});
             this.cxmnuAssemblyLinksMenu.Name = "cxmnuLinkMenu";
-            this.cxmnuAssemblyLinksMenu.Size = new System.Drawing.Size(200, 76);
+            this.cxmnuAssemblyLinksMenu.Size = new System.Drawing.Size(200, 120);
             this.cxmnuAssemblyLinksMenu.Opening += new System.ComponentModel.CancelEventHandler(this.cxmnuAssemblyLinksMenu_Opening);
             // 
             // changeFilePathToolStripMenuItem
@@ -160,6 +162,13 @@
             this.deleteSchematicLinkToolStripMenuItem.Size = new System.Drawing.Size(199, 22);
             this.deleteSchematicLinkToolStripMenuItem.Text = "Delete Schematic Link...";
             this.deleteSchematicLinkToolStripMenuItem.Click += new System.EventHandler(this.deleteSchematicLinkToolStripMenuItem_Click);
+            // 
+            // uploadBOMDataToolStripMenuItem
+            // 
+            this.uploadBOMDataToolStripMenuItem.Name = "uploadBOMDataToolStripMenuItem";
+            this.uploadBOMDataToolStripMenuItem.Size = new System.Drawing.Size(199, 22);
+            this.uploadBOMDataToolStripMenuItem.Text = "Upload BOM Data";
+            this.uploadBOMDataToolStripMenuItem.Click += new System.EventHandler(this.uploadBOMDataToolStripMenuItem_Click);
             // 
             // cxmnuDatabaseMenu
             // 
@@ -792,5 +801,6 @@
         private System.Windows.Forms.ToolStripMenuItem mnuiAddNewSchemaitcLink;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator2;
         private System.Windows.Forms.Button btnRemoteHelp;
+        private System.Windows.Forms.ToolStripMenuItem uploadBOMDataToolStripMenuItem;
     }
 }

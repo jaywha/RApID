@@ -1,4 +1,5 @@
 ﻿using EricStabileLibrary;
+using ExcelDataReader;
 using RApID_Project_WPF.CustomControls;
 using RApID_Project_WPF.PCBAliasDataSetTableAdapters;
 using System;
@@ -7,6 +8,7 @@ using System.ComponentModel;
 using System.Data.SqlClient;
 using System.Diagnostics;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Windows.Forms;
@@ -312,6 +314,98 @@ namespace RApID_Project_WPF
             ResetStatus();
         }
 
+        private readonly string DBUpload_Log = $@"P:\EE Process Test\Logs\RApID\_BOMUploads\RApID_BOMUploadLog_{DateTime.Now:MM-dd-yyyy}.txt";
+        private void uploadBOMDataToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Directory.CreateDirectory(DBUpload_Log.Split('\\').Take(DBUpload_Log.Split('\\').Count() - 1).Aggregate((c, n) => c + "\\" + n));
+            if (!File.Exists(DBUpload_Log)) File.Create(DBUpload_Log);
+            AssemblyLinkLabel assemblyLink = (flowBOMFiles.Controls[BOMFileIndex] as AssemblyLinkLabel);
+
+            // Will update the current Board's data for this reference designator.
+            (string msg, bool success) UpdateBOMItemInDB(string refDes, string partNum)
+            {
+                var result = (Message: "", Success: false);
+
+                using (SqlConnection conn = new SqlConnection(csObjectHolder.csObjectHolder.ObjectHolderInstance().RepairConnectionString))
+                using (SqlCommand cmd = new SqlCommand("MERGE [Repair].[dbo].[BoMInfo] AS TARGET " +
+                                                       "USING (SELECT @BoardNumber as BoardNumber, @RefDes AS RefDes, @Revision AS REV) AS SOURCE " +
+                                                       "ON (TARGET.BoardNumber = SOURCE.BoardNumber " +
+                                                       "    AND TARGET.Rev = SOURCE.REV " +
+                                                       "    AND TARGET.ReferenceDesignator = SOURCE.RefDes) " +
+                                                       "WHEN MATCHED THEN " +
+                                                       "    UPDATE SET " +
+                                                       "    PartNumber = @PartNum, " +
+                                                       "    Rev = @Revision, " +
+                                                       "    ECOChanges = @ECOChanges " +
+                                                       "WHEN NOT MATCHED THEN " +
+                                                       "    INSERT (BoardNumber, ReferenceDesignator, PartNumber, Rev, ECOChanges) " +
+                                                       "    VALUES (@BoardNumber, @RefDes, @PartNum, @Revision, @ECOChanges) " +
+                                                       ";"
+                                                       , conn))
+                {
+                    try
+                    {
+                        conn.Open();
+                        cmd.Parameters.AddRange(new SqlParameter[] {
+                            new SqlParameter("BoardNumber",System.Data.SqlDbType.VarChar, 100),
+                            new SqlParameter("RefDes",System.Data.SqlDbType.VarChar, 100),
+                            new SqlParameter("PartNum",System.Data.SqlDbType.VarChar, 200),
+                            new SqlParameter("Revision",System.Data.SqlDbType.VarChar, 50),
+                            new SqlParameter("ECOChanges",System.Data.SqlDbType.VarChar, 500)
+                        });
+
+                        cmd.Parameters["BoardNumber"].Value = txtPartNumber.Text;
+                        cmd.Parameters["RefDes"].Value = refDes;
+                        cmd.Parameters["PartNum"].Value = partNum;
+                        cmd.Parameters["Revision"].Value = string.IsNullOrWhiteSpace(assemblyLink.Tag.ToString()) ? DBNull.Value : assemblyLink.Tag;
+                        cmd.Parameters["ECOChanges"].Value = DBNull.Value; //TODO: Track ECOChanges from Word Docs and such
+
+                        int rowsAffected = cmd.ExecuteNonQuery();
+
+                        if (rowsAffected == 1) result.Success = true;
+                        else result.Message = "Track what error occured";
+                        conn.Close();
+                    }
+                    catch (Exception ex) { MessageBox.Show(ex.Message); }
+                }
+
+                return result;
+            }
+
+            #region Read from XL
+            using (IExcelDataReader reader = ExcelReaderFactory.CreateReader(File.OpenRead(ELEC_ROOT_DIR + assemblyLink.Link)))
+            {
+                var pushMax = progbarStatus.Maximum;
+                progbarStatus.Maximum = reader.RowCount;
+                progbarStatus.Value = 0;
+                statusStrip1.Visible = true;
+                lblStatus.Text = $"Pushing {assemblyLink.Link.Split('\\').Last()} data to DB...";
+                File.AppendAllText(DBUpload_Log, $"Start {Environment.MachineName}\\{Environment.UserName} Record @ {DateTime.Now:hh:mm:ss tt} {{\n");
+
+                while (reader.NextResult() && reader.Name != null && !reader.Name.Equals("JUKI"))
+                { /*spin until JUKI sheet*/ }
+
+                while (reader.Read() && !string.IsNullOrEmpty(reader.GetValue(0)?.ToString())
+                                     && !string.IsNullOrEmpty(reader.GetValue(4)?.ToString()))
+                {
+                    var rd = reader.GetValue(0).ToString();
+                    var pn = reader.GetValue(4).ToString();
+
+                    var result = UpdateBOMItemInDB(rd, pn);
+                    if (!result.success)
+                        File.AppendAllText(DBUpload_Log, $"\n\tError updating reference designator: {rd}\n\t\tMessage: {result.msg}\n");
+
+                    progbarStatus.Value++;
+                }
+
+                File.AppendAllText(DBUpload_Log, $"}} End Record @ {DateTime.Now:hh:mm:ss tt}\n\n");
+
+                lblStatus.Text = "";
+                progbarStatus.Maximum = pushMax; // pop
+            }
+            #endregion
+        }
+
         private void deleteSchematicLinkToolStripMenuItem_Click(object sender, EventArgs e)
         {
 
@@ -463,7 +557,7 @@ namespace RApID_Project_WPF
                             {
                                 var displayText = @string.Substring(@string.LastIndexOf('\\') + 1) ?? "not set";
                                 var ext = @string.Split('.').LastOrDefault() ?? "other";
-                                Image img = imgSchematics.Images[new List<string>() { "xls", "xlsx" }.Contains(ext) ? "xls" : "other"];
+                                Image img = imgSchematics.Images[new List<string>() { "xls", "xlsx", "xlsm" }.Contains(ext) ? "xls" : "other"];
 
                                 AssemblyLinkLabel link = new AssemblyLinkLabel(link: @string, displayText: displayText, img: img,
                                     name: ext.Contains("xls") ? "BOM File" : "Other File",
@@ -628,7 +722,8 @@ namespace RApID_Project_WPF
 
         private void cxmnuAssemblyLinksMenu_Opening(object sender, CancelEventArgs e)
         {
-            cxmnuAssemblyLinksMenu.Items[3].Text = bBOM ? "Delete BOM File..." : "Delete Schematic Link...";
+            deleteSchematicLinkToolStripMenuItem.Text = bBOM ? "Delete BOM File..." : "Delete Schematic Link...";
+            uploadBOMDataToolStripMenuItem.Visible = bBOM && Extensions.Devs.Contains(Environment.UserName);
         }
 
         private void cxmnuBOMFlowMenu_Opening(object sender, CancelEventArgs e)
@@ -647,22 +742,24 @@ namespace RApID_Project_WPF
             if (DateTime.Now > LastHelp.AddMinutes(5))
             {
                 LastHelp = DateTime.Now;
-                #if !DEBUG
+#if !DEBUG
                 new FNS.FrmFirebaseContactForm().ShowDialog();
-                #else
+#else
                 FNS.Classes.FirebasePushService.SendPushNotification("fGaGwvh6EDE:APA91bG0mr3kNHuMItXz_C8DxZbBQFIgC7ADOOXLNEluAkwO9l-7Md-xYLWsiyy_4jiKyiGbwojjPhneL2Wf-AlpzJ5_IPhiQqwddaff11_Y5zTDtJ3WeO5h3kcBJ07sfj5xzKiJwOAE",
                     $"Remote Assitance for {Environment.UserName}", $"RApID on {Environment.MachineName}", "https://drive.google.com/open?id=1Xpt7g2DoBImjtan3DQdzYwHQ_CkUV125");
-                #endif
-            } else {
+#endif
+            }
+            else
+            {
                 var minute_time = DateTime.Now.Subtract(LastHelp).TotalMinutes;
-                MessageBox.Show($"Help message was sent {(minute_time >= 2 ? $"{(int) minute_time} minutes" : "about a minute")} ago.\nPlease wait 5 minutes before next request.",
-                    "Please Don't Spam Help",MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show($"Help message was sent {(minute_time >= 2 ? $"{(int)minute_time} minutes" : "about a minute")} ago.\nPlease wait 5 minutes before next request.",
+                    "Please Don't Spam Help", MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
         }
 
         private void frmBoardFileManager_FormClosing(object sender, FormClosingEventArgs e)
         {
-            //TODO: WasEntryFound?
+            WasEntryFound = string.IsNullOrWhiteSpace(BOMFileName);
         }
     }
 
@@ -686,14 +783,14 @@ namespace RApID_Project_WPF
     /// </summary>
     public class DesignFileSet : INotifyPropertyChanged
     {
-#region PropertyChanged Implementation
+        #region PropertyChanged Implementation
         public event PropertyChangedEventHandler PropertyChanged;
         private void OnPropertyChanged([CallerMemberName] string propName = "") => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propName));
-#endregion
+        #endregion
 
         readonly string CallerMemberName;
 
-#region Properties
+        #region Properties
         private string _partNumber = string.Empty;
         public string PartNumber
         {
@@ -771,7 +868,7 @@ namespace RApID_Project_WPF
                 OnPropertyChanged();
             }
         }
-#endregion
+        #endregion
 
         public DesignFileSet([CallerMemberName] string callerName = "")
         {
