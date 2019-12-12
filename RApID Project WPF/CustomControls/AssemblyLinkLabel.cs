@@ -97,7 +97,7 @@ namespace RApID_Project_WPF.CustomControls
 
             try
             {
-                Console.WriteLine(ToString() + "\n\t|--> Link Activated!\n");
+                Console.WriteLine(LogActivation() + "\n\t|--> Link Activated!\n");
                 Process.Start(frmBoardFileManager.ELEC_ROOT_DIR + Link);
             }
             catch (ArgumentException ae) {
@@ -126,9 +126,15 @@ namespace RApID_Project_WPF.CustomControls
         }
 
         /// <summary>
+        /// Logging formatted string
+        /// </summary>
+        /// <returns></returns>
+        public string LogActivation() => $"[AssemblyLinkItem({Name})]: {Text} => {Link}";
+
+        /// <summary>
         /// Custom ToString format for custom <see cref="ListViewItem"/>
         /// </summary>
         /// <returns></returns>
-        public override string ToString() => $"[AssemblyLinkItem({Name})]: {Text} => {Link}";
+        public override string ToString() => $"{Text}|{Tag}";
     }
 }

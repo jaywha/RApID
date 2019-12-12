@@ -4,6 +4,7 @@ using RApID_Project_WPF.CustomControls;
 using RApID_Project_WPF.PCBAliasDataSetTableAdapters;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Data.SqlClient;
 using System.Diagnostics;
@@ -31,6 +32,7 @@ namespace RApID_Project_WPF
     /// </summary>
     public partial class frmBoardFileManager : Form
     {
+        #region Variables
         public bool WasEntryFound = false;
         public string BOMFileName = "";
 
@@ -66,7 +68,10 @@ namespace RApID_Project_WPF
                 CurrentDesignFileIndex = MasterList.IndexOf(value);
             }
         }
-        List<DesignFileSet> MasterList = new List<DesignFileSet>();
+
+        /// <summary> Tracks the major form data of all interactions. </summary>
+        /// TODO: Use as cache
+        ObservableCollection<DesignFileSet> MasterList { get; set; } = new ObservableCollection<DesignFileSet>();
         int CurrentDesignFileIndex = 0;
         int SchematicFileIndex = 0; // tracks index of Schematic File Link to handle during modifications
         int BOMFileIndex = 0; // tracks index of BOM File Link to handle during modifications
@@ -76,6 +81,7 @@ namespace RApID_Project_WPF
         bool bNewSchematic;
         bool bNewBOM;
         bool DirectDialog = false;
+        #endregion
 
         /// <summary>
         /// Default Ctor
@@ -87,7 +93,7 @@ namespace RApID_Project_WPF
             InitializeComponent();
             tbDatabaseView.Hide();
 
-            if (!string.IsNullOrWhiteSpace(partNumber)) txtPartNumber.Text = partNumber;
+            if (!string.IsNullOrWhiteSpace(partNumber)) txtFullAssemblyNumber.Text = partNumber;
             DirectDialog = directDialog;
         }
 
@@ -120,9 +126,9 @@ namespace RApID_Project_WPF
 
             new TechAliasTableAdapter().Fill(pCBAliasDataSet.TechAlias);
 
-            txtPartNumber.Focus();
+            txtFullAssemblyNumber.Focus();
 
-            if (!string.IsNullOrWhiteSpace(txtPartNumber.Text))
+            if (!string.IsNullOrWhiteSpace(txtFullAssemblyNumber.Text))
             {
                 HandleTextBoxEntry(new KeyEventArgs(Keys.Enter));
             }
@@ -130,7 +136,7 @@ namespace RApID_Project_WPF
 
         private void HandleTextBoxEntry(KeyEventArgs e)
         {
-            errorProvider.SetError(txtPartNumber, string.Empty);
+            errorProvider.SetError(txtFullAssemblyNumber, string.Empty);
             errorProvider.SetError(btnSearch, string.Empty);
 
             if (e.KeyCode == Keys.Enter)
@@ -139,10 +145,6 @@ namespace RApID_Project_WPF
                 GetPartNumberDetailsAndAliases();
             }
         }
-
-        private void btnSearch_Click(object sender, EventArgs e) => HandleTextBoxEntry(new KeyEventArgs(Keys.Enter));
-        private void btnReset_Click(object sender, EventArgs e) => ResetAllData(resetPN: true);
-        private void txtPartNumber_KeyDown(object sender, KeyEventArgs e) => HandleTextBoxEntry(e);
 
         private void ResetStatus()
         {
@@ -163,10 +165,180 @@ namespace RApID_Project_WPF
 #endif
         }
 
-        private void tcDataViewer_SelectedIndexChanged(object sender, EventArgs e)
-            => new TechAliasTableAdapter().Fill(pCBAliasDataSet.TechAlias);
+        private void frmBoardFileManager_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            WasEntryFound = string.IsNullOrWhiteSpace(BOMFileName);
+        }
 
-        #region Context Menu
+        private void GetPartNumberDetailsAndAliases()
+        {
+            var validPartNumber = false;
+
+            using (SqlConnection conn = new SqlConnection(csObjectHolder.csObjectHolder.ObjectHolderInstance().HummingBirdConnectionString))
+            {
+                conn.Open();
+                using (SqlCommand cmd = new SqlCommand("SELECT PartName, CommodityClass FROM [HummingBird].[dbo].[ItemMaster] " +
+                    "WHERE [PartNumber] = @Pnum AND ([StockingType] <> 'O' AND [StockingType] <> 'U')", conn))
+                {
+                    cmd.Parameters.AddWithValue("@Pnum", txtFullAssemblyNumber.Text);
+
+                    SqlDataReader reader = cmd.ExecuteReader();
+                    validPartNumber = reader.HasRows;
+                    if (validPartNumber && reader.Read())
+                    {
+                        _selectedModel.PartName = reader[0].ToString();
+                        _selectedModel.CommodityClass = reader[1].ToString();
+                    }
+                }
+            }
+
+            if (!validPartNumber)
+            {
+                errorProvider.SetError(txtFullAssemblyNumber, "Part Number not found in ItemMaster table!");
+                return;
+            }
+
+            bool dataFound = false;
+            using (SqlConnection conn = new SqlConnection(csObjectHolder.csObjectHolder.ObjectHolderInstance().RepairConnectionString))
+            {
+                conn.Open();
+                using (SqlCommand cmd = new SqlCommand("SELECT PartNumber, BOMPath, SchematicPaths, BOMTags, SchematicTags FROM [Repair].[dbo].[TechAlias] " +
+                    "WHERE [PartNumber] = @Pnum", conn))
+                {
+                    cmd.Parameters.AddWithValue("@Pnum", txtFullAssemblyNumber.Text);
+
+                    SqlDataReader reader = cmd.ExecuteReader();
+
+                    dataFound = reader.Read();
+                    if (dataFound)
+                    {
+                        DesignFileSet model = new DesignFileSet()
+                        {
+                            PartNumber = reader[0]?.ToString(),
+                            PartName = _selectedModel.PartName,
+                            CommodityClass = _selectedModel.CommodityClass,
+                            BOMTags = reader[3].ToString().Split(',').ToList(),
+                            SchematicTags = reader[4].ToString().Split(',').ToList(),
+                        };
+
+                        if (!string.IsNullOrWhiteSpace(reader[1].ToString().Trim()))
+                        {
+                            var counter = 0;
+                            foreach (var @string in reader[1].ToString().Split(','))
+                            {
+                                var displayText = @string.Substring(@string.LastIndexOf('\\') + 1) ?? "not set";
+                                var ext = @string.Split('.').LastOrDefault() ?? "other";
+                                Image img = imgSchematics.Images[new List<string>() { "xls", "xlsx", "xlsm" }.Contains(ext) ? "xls" : "other"];
+
+                                AssemblyLinkLabel link = new AssemblyLinkLabel(link: @string, displayText: displayText, img: img,
+                                    name: ext.Contains("xls") ? "BOM File" : "Other File",
+                                    handler: lnkBOMFile_MouseDown);
+
+                                if (model.BOMTags != null && model.BOMTags.Count > counter)
+                                {
+                                    link.Tag = model.BOMTags[counter];
+                                    infoProvider.SetError(link, model.BOMTags[counter++]);
+                                }
+
+                                lstbxActiveBOMFiles.Items.Add(displayText);
+                                model.BOMFiles.Add(link);
+                                flowBOMFiles.Controls.Add(link);
+                            }
+                        }
+
+                        if (!string.IsNullOrWhiteSpace(reader[2].ToString().Trim()))
+                        {
+                            var counter = 0;
+                            foreach (var @string in reader[2].ToString().Split(','))
+                            {
+                                var displayText = @string.Substring(@string.LastIndexOf('\\') + 1) ?? "not set";
+                                var ext = @string.Split('.').LastOrDefault() ?? "other";
+                                Image img = imgSchematics.Images[new List<string>() { "pdf", "asc" }.Contains(ext) ? ext : "other"];
+
+                                AssemblyLinkLabel link = new AssemblyLinkLabel(link: @string, displayText: displayText, img: img,
+                                    name: ext.Equals("pdf") ? "Assembly File" : "Other File",
+                                    handler: lnkSchematicFile_MouseDown);
+
+                                if (model.SchematicTags != null && model.SchematicTags.Count > counter)
+                                {
+                                    link.Tag = model.SchematicTags[counter];
+                                    infoProvider.SetError(link, model.SchematicTags[counter++]);
+                                }
+
+                                model.SchematicLinks.Add(link);
+                                flowSchematicLinks.Controls.Add(link);
+                            }
+                        }
+
+                        //Console.WriteLine(model.ToString());
+                        SelectedModel = model;
+                    }
+                    else
+                    {
+                        if (MasterList.Count == 0)
+                        {
+                            DialogResult answer = MessageBox.Show("No current data exists for this part number.\n" +
+                                "Would you like to create a new entry for it?\n" +
+                                "Pressing [No] will reset the form.",
+                                "Prompt to Create New Database Entry",
+                                MessageBoxButtons.YesNoCancel,
+                                MessageBoxIcon.Question);
+                            if (answer == DialogResult.Yes)
+                                AddNewDatabaseRow(txtFullAssemblyNumber.Text);
+                            else if (answer == DialogResult.No)
+                                ResetAllData(resetFAN: true);
+                            return;
+                        }
+                    }
+                }
+            }
+            if (!dataFound)
+            {
+                errorProvider.SetError(btnSearch, "New Part Number!\nPlease associate a BOM File from the L: drive.");
+                return;
+            }
+        }
+
+        private void AddNewDatabaseRow(string partNumber)
+        {
+            using (SqlConnection conn = new SqlConnection(csObjectHolder.csObjectHolder.ObjectHolderInstance().RepairConnectionString))
+            {
+                conn.Open();
+                using (SqlCommand cmd = new SqlCommand("INSERT INTO TechAlias (PartNumber, BOMPath, SchematicPaths) " +
+                    "VALUES (@Pnum, @BomPath, @SchPaths)", conn))
+                {
+                    cmd.Parameters.AddWithValue("@Pnum", partNumber);
+                    cmd.Parameters.AddWithValue("@BomPath", DBNull.Value);
+                    cmd.Parameters.AddWithValue("@SchPaths", DBNull.Value);
+                    var rowsAffected = cmd.ExecuteNonQuery();
+                }
+            }
+
+            HandleTextBoxEntry(new KeyEventArgs(Keys.Enter));
+        }
+
+        /// <summary>
+        /// Will reset all entered data.
+        /// </summary>
+        /// <param name="resetFAN">Reset the FAN?</param>
+        private void ResetAllData(bool resetFAN = false)
+        {
+            if (resetFAN) txtFullAssemblyNumber.Clear();
+            lblPartName.Text = "Part Name: <NAME>";
+            lblCommodityClass.Text = "Commodity Class: <CLASS>";
+            _selectedModel.BOMFiles.Clear();
+            _selectedModel.SchematicLinks.Clear();
+            flowBOMFiles.Controls.Clear();
+            flowSchematicLinks.Controls.Clear();
+            MasterList.Clear();
+        }
+
+        #region Main View
+        private void btnSearch_Click(object sender, EventArgs e) => HandleTextBoxEntry(new KeyEventArgs(Keys.Enter));
+        private void btnReset_Click(object sender, EventArgs e) => ResetAllData(resetFAN: true);
+        private void txtFullAssemblyNumber_KeyDown(object sender, KeyEventArgs e) => HandleTextBoxEntry(e);
+
+        #region Assembly Context Menu
 
         private void ChangeTag_Click(object sender, EventArgs e)
         {
@@ -218,7 +390,7 @@ namespace RApID_Project_WPF
 
         private void changeFilePathToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (string.IsNullOrWhiteSpace(txtPartNumber.Text)) return;
+            if (string.IsNullOrWhiteSpace(txtFullAssemblyNumber.Text)) return;
 
             OpenFileDialog ofd = new OpenFileDialog()
             {
@@ -314,6 +486,21 @@ namespace RApID_Project_WPF
             ResetStatus();
         }
 
+        private AssemblyLinkLabel previouslyMarkedActive;
+        private void markAsActiveToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            var control = (flowBOMFiles.Controls[BOMFileIndex] as AssemblyLinkLabel);
+            BOMFileName = control.Link;
+            control.ForeColor = Color.Lime;
+
+            if (previouslyMarkedActive != null)
+            {
+                previouslyMarkedActive.ForeColor = (previouslyMarkedActive.Container as FlowLayoutPanel).ForeColor;
+            }
+
+            previouslyMarkedActive = control;
+        }
+
         private readonly string DBUpload_Log = $@"P:\EE Process Test\Logs\RApID\_BOMUploads\RApID_BOMUploadLog_{DateTime.Now:MM-dd-yyyy}.txt";
         private void uploadBOMDataToolStripMenuItem_Click(object sender, EventArgs e)
         {
@@ -326,8 +513,7 @@ namespace RApID_Project_WPF
             {
                 var result = (Message: "", Success: false);
 
-                using (SqlConnection conn = new SqlConnection(csObjectHolder.csObjectHolder.ObjectHolderInstance().RepairConnectionString))
-                using (SqlCommand cmd = new SqlCommand("MERGE [Repair].[dbo].[BoMInfo] AS TARGET " +
+                var mergeQuery = "MERGE [Repair].[dbo].[BoMInfo] AS TARGET " +
                                                        "USING (SELECT @BoardNumber as BoardNumber, @RefDes AS RefDes, @Revision AS REV) AS SOURCE " +
                                                        "ON (TARGET.BoardNumber = SOURCE.BoardNumber " +
                                                        "    AND TARGET.Rev = SOURCE.REV " +
@@ -336,12 +522,44 @@ namespace RApID_Project_WPF
                                                        "    UPDATE SET " +
                                                        "    PartNumber = @PartNum, " +
                                                        "    Rev = @Revision, " +
-                                                       "    ECOChanges = @ECOChanges " +
+                                                       "    ECO = @ECONum " +
                                                        "WHEN NOT MATCHED THEN " +
-                                                       "    INSERT (BoardNumber, ReferenceDesignator, PartNumber, Rev, ECOChanges) " +
-                                                       "    VALUES (@BoardNumber, @RefDes, @PartNum, @Revision, @ECOChanges) " +
-                                                       ";"
-                                                       , conn))
+                                                       "    INSERT (BoardNumber, ReferenceDesignator, PartNumber, Rev, ECO) " +
+                                                       "    VALUES (@BoardNumber, @RefDes, @PartNum, @Revision, @ECONum) " +
+                                                       ";";
+                var deleteQuery = "DELETE FROM [Repair].[dbo].[BoMInfo] WHERE [BoardNumber] = @BoardNumber AND [Rev] = @Revision";// AND [ECO] <IS> @ECONum";
+
+                using (SqlConnection conn = new SqlConnection(csObjectHolder.csObjectHolder.ObjectHolderInstance().RepairConnectionString))
+                using (SqlCommand cmd = new SqlCommand(deleteQuery, conn))
+                {
+                    try
+                    {
+                        conn.Open();
+                        cmd.Parameters.AddRange(new SqlParameter[] {
+                            new SqlParameter("BoardNumber",System.Data.SqlDbType.VarChar, 100),
+                            new SqlParameter("Revision",System.Data.SqlDbType.VarChar, 50)
+                            //new SqlParameter("ECONum",System.Data.SqlDbType.VarChar, 500)
+                        });
+
+                        cmd.Parameters["BoardNumber"].Value = txtFullAssemblyNumber.Text;
+                        cmd.Parameters["Revision"].Value = string.IsNullOrWhiteSpace(assemblyLink.Tag.ToString()) ? DBNull.Value : assemblyLink.Tag;
+
+                        //TODO: Track ECO from Word Docs and such
+                        /*
+                        if () {
+                            deleteQuery = deleteQuery.Replace("<IS>", "=");
+                        }
+
+                        cmd.Parameters["ECONum"].Value = DBNull.Value;*/
+
+                        int rowsAffected = cmd.ExecuteNonQuery();
+                        conn.Close();
+                    }
+                    catch (Exception ex) { MessageBox.Show("Inside of Delete Query:\n"+ex.Message); }
+                }
+
+                using (SqlConnection conn = new SqlConnection(csObjectHolder.csObjectHolder.ObjectHolderInstance().RepairConnectionString))
+                using (SqlCommand cmd = new SqlCommand(mergeQuery, conn))
                 {
                     try
                     {
@@ -351,14 +569,14 @@ namespace RApID_Project_WPF
                             new SqlParameter("RefDes",System.Data.SqlDbType.VarChar, 100),
                             new SqlParameter("PartNum",System.Data.SqlDbType.VarChar, 200),
                             new SqlParameter("Revision",System.Data.SqlDbType.VarChar, 50),
-                            new SqlParameter("ECOChanges",System.Data.SqlDbType.VarChar, 500)
+                            new SqlParameter("ECONum",System.Data.SqlDbType.VarChar, 500)
                         });
 
-                        cmd.Parameters["BoardNumber"].Value = txtPartNumber.Text;
+                        cmd.Parameters["BoardNumber"].Value = txtFullAssemblyNumber.Text;
                         cmd.Parameters["RefDes"].Value = refDes;
                         cmd.Parameters["PartNum"].Value = partNum;
                         cmd.Parameters["Revision"].Value = string.IsNullOrWhiteSpace(assemblyLink.Tag.ToString()) ? DBNull.Value : assemblyLink.Tag;
-                        cmd.Parameters["ECOChanges"].Value = DBNull.Value; //TODO: Track ECOChanges from Word Docs and such
+                        cmd.Parameters["ECONum"].Value = DBNull.Value; //TODO: Track ECO from Word Docs and such
 
                         int rowsAffected = cmd.ExecuteNonQuery();
 
@@ -430,7 +648,7 @@ namespace RApID_Project_WPF
                         else
                             cmd.Parameters.AddWithValue("@SchPath", schematicPaths.Substring(0, schematicPaths.Length - 1));
 
-                        cmd.Parameters.AddWithValue("@Pnum", txtPartNumber.Text);
+                        cmd.Parameters.AddWithValue("@Pnum", txtFullAssemblyNumber.Text);
 
                         int rowsAffected = cmd.ExecuteNonQuery();
                     }
@@ -457,7 +675,7 @@ namespace RApID_Project_WPF
                         else
                             cmd.Parameters.AddWithValue("@BOMPaths", bomFiles.Substring(0, bomFiles.Length - 1));
 
-                        cmd.Parameters.AddWithValue("@Pnum", txtPartNumber.Text);
+                        cmd.Parameters.AddWithValue("@Pnum", txtFullAssemblyNumber.Text);
 
                         int rowsAffected = cmd.ExecuteNonQuery();
                     }
@@ -483,168 +701,6 @@ namespace RApID_Project_WPF
             changeFilePathToolStripMenuItem_Click(sender, e);
         }
 
-        /// <summary>
-        /// Will reset all entered data.
-        /// </summary>
-        /// <param name="resetPN">Reset the PN?</param>
-        private void ResetAllData(bool resetPN = false)
-        {
-            if (resetPN) txtPartNumber.Clear();
-            lblPartName.Text = "Part Name: <NAME>";
-            lblCommodityClass.Text = "Commodity Class: <CLASS>";
-            _selectedModel.BOMFiles.Clear();
-            _selectedModel.SchematicLinks.Clear();
-            flowBOMFiles.Controls.Clear();
-            flowSchematicLinks.Controls.Clear();
-            MasterList.Clear();
-        }
-
-        private void GetPartNumberDetailsAndAliases()
-        {
-            var validPartNumber = false;
-
-            using (SqlConnection conn = new SqlConnection(csObjectHolder.csObjectHolder.ObjectHolderInstance().HummingBirdConnectionString))
-            {
-                conn.Open();
-                using (SqlCommand cmd = new SqlCommand("SELECT PartName, CommodityClass FROM [HummingBird].[dbo].[ItemMaster] " +
-                    "WHERE [PartNumber] = @Pnum AND ([StockingType] <> 'O' AND [StockingType] <> 'U')", conn))
-                {
-                    cmd.Parameters.AddWithValue("@Pnum", txtPartNumber.Text);
-
-                    SqlDataReader reader = cmd.ExecuteReader();
-                    validPartNumber = reader.HasRows;
-                    if (validPartNumber && reader.Read())
-                    {
-                        _selectedModel.PartName = reader[0].ToString();
-                        _selectedModel.CommodityClass = reader[1].ToString();
-                    }
-                }
-            }
-
-            if (!validPartNumber)
-            {
-                errorProvider.SetError(txtPartNumber, "Part Number not found in ItemMaster table!");
-                return;
-            }
-
-            bool dataFound = false;
-            using (SqlConnection conn = new SqlConnection(csObjectHolder.csObjectHolder.ObjectHolderInstance().RepairConnectionString))
-            {
-                conn.Open();
-                using (SqlCommand cmd = new SqlCommand("SELECT PartNumber, BOMPath, SchematicPaths, BOMTags, SchematicTags FROM [Repair].[dbo].[TechAlias] " +
-                    "WHERE [PartNumber] = @Pnum", conn))
-                {
-                    cmd.Parameters.AddWithValue("@Pnum", txtPartNumber.Text);
-
-                    SqlDataReader reader = cmd.ExecuteReader();
-
-                    dataFound = reader.Read();
-                    if (dataFound)
-                    {
-                        DesignFileSet model = new DesignFileSet()
-                        {
-                            PartNumber = reader[0]?.ToString(),
-                            PartName = _selectedModel.PartName,
-                            CommodityClass = _selectedModel.CommodityClass,
-                            BOMTags = reader[3].ToString().Split(',').ToList(),
-                            SchematicTags = reader[4].ToString().Split(',').ToList(),
-                        };
-
-                        if (!string.IsNullOrWhiteSpace(reader[1].ToString().Trim()))
-                        {
-                            var counter = 0;
-                            foreach (var @string in reader[1].ToString().Split(','))
-                            {
-                                var displayText = @string.Substring(@string.LastIndexOf('\\') + 1) ?? "not set";
-                                var ext = @string.Split('.').LastOrDefault() ?? "other";
-                                Image img = imgSchematics.Images[new List<string>() { "xls", "xlsx", "xlsm" }.Contains(ext) ? "xls" : "other"];
-
-                                AssemblyLinkLabel link = new AssemblyLinkLabel(link: @string, displayText: displayText, img: img,
-                                    name: ext.Contains("xls") ? "BOM File" : "Other File",
-                                    handler: lnkBOMFile_MouseDown);
-
-                                if (model.BOMTags != null && model.BOMTags.Count > counter)
-                                {
-                                    link.Tag = model.BOMTags[counter];
-                                    infoProvider.SetError(link, model.BOMTags[counter++]);
-                                }
-
-                                model.BOMFiles.Add(link);
-                                flowBOMFiles.Controls.Add(link);
-                            }
-                        }
-
-                        if (!string.IsNullOrWhiteSpace(reader[2].ToString().Trim()))
-                        {
-                            var counter = 0;
-                            foreach (var @string in reader[2].ToString().Split(','))
-                            {
-                                var displayText = @string.Substring(@string.LastIndexOf('\\') + 1) ?? "not set";
-                                var ext = @string.Split('.').LastOrDefault() ?? "other";
-                                Image img = imgSchematics.Images[new List<string>() { "pdf", "asc" }.Contains(ext) ? ext : "other"];
-
-                                AssemblyLinkLabel link = new AssemblyLinkLabel(link: @string, displayText: displayText, img: img,
-                                    name: ext.Equals("pdf") ? "Assembly File" : "Other File",
-                                    handler: lnkSchematicFile_MouseDown);
-
-                                if (model.SchematicTags != null && model.SchematicTags.Count > counter)
-                                {
-                                    link.Tag = model.SchematicTags[counter];
-                                    infoProvider.SetError(link, model.SchematicTags[counter++]);
-                                }
-
-                                model.SchematicLinks.Add(link);
-                                flowSchematicLinks.Controls.Add(link);
-                            }
-                        }
-
-                        //Console.WriteLine(model.ToString());
-                        SelectedModel = model;
-                    }
-                    else
-                    {
-                        if (MasterList.Count == 0)
-                        {
-                            DialogResult answer = MessageBox.Show("No current data exists for this part number.\n" +
-                                "Would you like to create a new entry for it?\n" +
-                                "Pressing [No] will reset the form.",
-                                "Prompt to Create New Database Entry",
-                                MessageBoxButtons.YesNoCancel,
-                                MessageBoxIcon.Question);
-                            if (answer == DialogResult.Yes)
-                                AddNewDatabaseRow(txtPartNumber.Text);
-                            else if (answer == DialogResult.No)
-                                ResetAllData(resetPN: true);
-                            return;
-                        }
-                    }
-                }
-            }
-            if (!dataFound)
-            {
-                errorProvider.SetError(btnSearch, "New Part Number!\nPlease associate a BOM File from the L: drive.");
-                return;
-            }
-        }
-
-        private void AddNewDatabaseRow(string partNumber)
-        {
-            using (SqlConnection conn = new SqlConnection(csObjectHolder.csObjectHolder.ObjectHolderInstance().RepairConnectionString))
-            {
-                conn.Open();
-                using (SqlCommand cmd = new SqlCommand("INSERT INTO TechAlias (PartNumber, BOMPath, SchematicPaths) " +
-                    "VALUES (@Pnum, @BomPath, @SchPaths)", conn))
-                {
-                    cmd.Parameters.AddWithValue("@Pnum", partNumber);
-                    cmd.Parameters.AddWithValue("@BomPath", DBNull.Value);
-                    cmd.Parameters.AddWithValue("@SchPaths", DBNull.Value);
-                    var rowsAffected = cmd.ExecuteNonQuery();
-                }
-            }
-
-            HandleTextBoxEntry(new KeyEventArgs(Keys.Enter));
-        }
-
         private void deletePartNumberToolStripMenuItem_Click(object sender, EventArgs e)
         {
             using (SqlConnection conn = new SqlConnection(csObjectHolder.csObjectHolder.ObjectHolderInstance().RepairConnectionString))
@@ -652,7 +708,7 @@ namespace RApID_Project_WPF
                 conn.Open();
                 using (SqlCommand cmd = new SqlCommand("DELETE FROM TechAlias WHERE PartNumber = @Pnum", conn))
                 {
-                    cmd.Parameters.AddWithValue("@Pnum", txtPartNumber.Text);
+                    cmd.Parameters.AddWithValue("@Pnum", txtFullAssemblyNumber.Text);
                     var rowsAffected = cmd.ExecuteNonQuery();
                 }
             }
@@ -663,6 +719,49 @@ namespace RApID_Project_WPF
             flowSchematicLinks.Controls.Clear();
         }
         #endregion
+
+        private void lblFullAssemblyNumberLabel_DoubleClick(object sender, EventArgs e) => Process.Start(ELEC_ROOT_DIR);
+
+        private void cxmnuAssemblyLinksMenu_Opening(object sender, CancelEventArgs e)
+        {
+            deleteSchematicLinkToolStripMenuItem.Text = bBOM ? "Delete BOM File..." : "Delete Schematic Link...";
+            uploadBOMDataToolStripMenuItem.Visible = bBOM && Extensions.Devs.Contains(Environment.UserName);
+            markAsActiveToolStripMenuItem.Visible = bBOM;
+
+            tssMarkAsActive.Visible = bBOM;
+            tssUploadBOMData.Visible = bBOM;
+        }
+
+        private void cxmnuBOMFlowMenu_Opening(object sender, CancelEventArgs e)
+        {
+            if (cxmnuAssemblyLinksMenu.Visible) e.Cancel = true;
+        }
+
+        private void cxmnuSchematicFlowMenu_Opening(object sender, CancelEventArgs e)
+        {
+            if (cxmnuAssemblyLinksMenu.Visible) e.Cancel = true;
+        }
+
+        private DateTime LastHelp = DateTime.Now.AddMinutes(-5);
+        private void btnRemoteHelp_Click(object sender, EventArgs e)
+        {
+            if (DateTime.Now > LastHelp.AddMinutes(5))
+            {
+                LastHelp = DateTime.Now;
+#if !DEBUG
+                new FNS.FrmFirebaseContactForm().ShowDialog();
+#else
+                FNS.Classes.FirebasePushService.SendPushNotification("fGaGwvh6EDE:APA91bG0mr3kNHuMItXz_C8DxZbBQFIgC7ADOOXLNEluAkwO9l-7Md-xYLWsiyy_4jiKyiGbwojjPhneL2Wf-AlpzJ5_IPhiQqwddaff11_Y5zTDtJ3WeO5h3kcBJ07sfj5xzKiJwOAE",
+                    $"Remote Assitance for {Environment.UserName}", $"RApID on {Environment.MachineName}", "https://drive.google.com/open?id=1Xpt7g2DoBImjtan3DQdzYwHQ_CkUV125");
+#endif
+            }
+            else
+            {
+                var minute_time = DateTime.Now.Subtract(LastHelp).TotalMinutes;
+                MessageBox.Show($"Help message was sent {(minute_time >= 2 ? $"{(int)minute_time} minutes" : "about a minute")} ago.\nPlease wait 5 minutes before next request.",
+                    "Please Don't Spam Help", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            }
+        }
 
         #region Link Label
         private void lnkBOMFile_MouseDown(object sender, MouseEventArgs e)
@@ -704,63 +803,66 @@ namespace RApID_Project_WPF
         }
         #endregion
 
+        #endregion
+
+        #region Database Tab
+        private void tcDataViewer_SelectedIndexChanged(object sender, EventArgs e)
+            => new TechAliasTableAdapter().Fill(pCBAliasDataSet.TechAlias);
+
         private void refreshToolStripMenuItem_Click(object sender, EventArgs e)
         {
             new TechAliasTableAdapter().Fill(pCBAliasDataSet.TechAlias);
         }
 
-        private void lblPartNumberLabel_DoubleClick(object sender, EventArgs e) => Process.Start(ELEC_ROOT_DIR);
-
         private void dgvDatabaseTable_CellDoubleClick(object sender, DataGridViewCellEventArgs e)
         {
             if (dgvDatabaseTable.Rows.Count < 1 || e.RowIndex < 0 || e.ColumnIndex < 0) return;
 
-            txtPartNumber.Text = dgvDatabaseTable.Rows[e.RowIndex].Cells[0].Value.ToString();
+            txtFullAssemblyNumber.Text = dgvDatabaseTable.Rows[e.RowIndex].Cells[0].Value.ToString();
             tcDataViewer.SelectedIndex = 0;
             HandleTextBoxEntry(new KeyEventArgs(Keys.Enter));
         }
+        #endregion
 
-        private void cxmnuAssemblyLinksMenu_Opening(object sender, CancelEventArgs e)
-        {
-            deleteSchematicLinkToolStripMenuItem.Text = bBOM ? "Delete BOM File..." : "Delete Schematic Link...";
-            uploadBOMDataToolStripMenuItem.Visible = bBOM && Extensions.Devs.Contains(Environment.UserName);
-        }
+        #region Inspect Tab
 
-        private void cxmnuBOMFlowMenu_Opening(object sender, CancelEventArgs e)
-        {
-            if (cxmnuAssemblyLinksMenu.Visible) e.Cancel = true;
-        }
+        private void lstbxActiveBOMFiles_SelectedIndexChanged(object sender, EventArgs e) {
+            var currentValue = lstbxActiveBOMFiles.SelectedValue.ToString();
+            var selectQuery = "SELECT * FROM [Repair].[dbo].[BoMInfo] WHERE [BoardNumber] = @BoardNumber AND Rev = @Revision";
 
-        private void cxmnuSchematicFlowMenu_Opening(object sender, CancelEventArgs e)
-        {
-            if (cxmnuAssemblyLinksMenu.Visible) e.Cancel = true;
-        }
-
-        private DateTime LastHelp = DateTime.Now.AddMinutes(-5);
-        private void btnRemoteHelp_Click(object sender, EventArgs e)
-        {
-            if (DateTime.Now > LastHelp.AddMinutes(5))
+            using (SqlConnection conn = new SqlConnection(csObjectHolder.csObjectHolder.ObjectHolderInstance().RepairConnectionString))
+            using (SqlCommand cmd = new SqlCommand(selectQuery, conn))
             {
-                LastHelp = DateTime.Now;
-#if !DEBUG
-                new FNS.FrmFirebaseContactForm().ShowDialog();
-#else
-                FNS.Classes.FirebasePushService.SendPushNotification("fGaGwvh6EDE:APA91bG0mr3kNHuMItXz_C8DxZbBQFIgC7ADOOXLNEluAkwO9l-7Md-xYLWsiyy_4jiKyiGbwojjPhneL2Wf-AlpzJ5_IPhiQqwddaff11_Y5zTDtJ3WeO5h3kcBJ07sfj5xzKiJwOAE",
-                    $"Remote Assitance for {Environment.UserName}", $"RApID on {Environment.MachineName}", "https://drive.google.com/open?id=1Xpt7g2DoBImjtan3DQdzYwHQ_CkUV125");
-#endif
-            }
-            else
-            {
-                var minute_time = DateTime.Now.Subtract(LastHelp).TotalMinutes;
-                MessageBox.Show($"Help message was sent {(minute_time >= 2 ? $"{(int)minute_time} minutes" : "about a minute")} ago.\nPlease wait 5 minutes before next request.",
-                    "Please Don't Spam Help", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                try
+                {
+                    conn.Open();
+                    cmd.Parameters.AddRange(new SqlParameter[] {
+                            new SqlParameter("BoardNumber",System.Data.SqlDbType.VarChar, 100),
+                            new SqlParameter("Revision",System.Data.SqlDbType.VarChar, 50)
+                            //new SqlParameter("ECONum",System.Data.SqlDbType.VarChar, 500)
+                        });
+
+                    cmd.Parameters["BoardNumber"].Value = txtFullAssemblyNumber.Text;
+                    cmd.Parameters["Revision"].Value = currentValue.Split('|').Last();
+                    //cmd.Parameters["ECONum"].Value = ???;
+
+                    using (SqlDataReader reader = cmd.ExecuteReader()) {
+                        while (reader.Read()) {
+                            var rd = reader["ReferenceDesignator"].ToString();
+                            var pn = reader["PartNumber"].ToString();
+
+                            dsetBOMInfo.Tables[0].Rows.Add(txtFullAssemblyNumber.Text, rd, pn);
+                        }
+                    }
+                    conn.Close();
+                }
+                catch (Exception ex) { MessageBox.Show(ex.Message); }
             }
         }
 
-        private void frmBoardFileManager_FormClosing(object sender, FormClosingEventArgs e)
-        {
-            WasEntryFound = string.IsNullOrWhiteSpace(BOMFileName);
-        }
+        #endregion
+
+        
     }
 
     /// <summary>

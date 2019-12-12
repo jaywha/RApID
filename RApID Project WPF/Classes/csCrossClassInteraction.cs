@@ -218,7 +218,7 @@ namespace RApID_Project_WPF
         /// <param name="txtPN"><see cref="TextBox"/> control for Part Number value.</param>
         /// <returns>A BOM filepath</returns>
         public static string TechFormProcess(this SNM mapper, TextBox txtSN, TextBox txtPN, [CallerFilePath] string callingFile = "") {
-            callingFile = callingFile.Replace(".xaml.cs",string.Empty).Replace("frm",string.Empty);
+            callingFile = callingFile.Replace(".xaml.cs",string.Empty).Replace("frm",string.Empty).Split('\\').Last();
 
             bool techTableSuccess = false;
             string bompath = string.Empty;
@@ -277,7 +277,7 @@ namespace RApID_Project_WPF
                     Notes = notes.Split('|')[0].Split(',').ToList()
                 };
                 if (fmi.ShowDialog() == false) return string.Empty;
-                filename = sVar.SelectedBOMFile.FilePath;
+                sVar.SelectedBOMFile.FilePath = filename;
             }
 
             Console.WriteLine($"[{callingFile}] Using filepath ==> {filename}");
