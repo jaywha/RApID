@@ -19,10 +19,19 @@ namespace RApID_Project_WPF.CustomControls
     /// </summary>
     public partial class AssemblyLinkLabel : LinkLabel
     {
+        private MouseEventHandler _changeLink;
         /// <summary>
         /// Exposes the change link event to other classes
         /// </summary>
-        public event MouseEventHandler ChangeLink;
+        public event MouseEventHandler ChangeLink {
+            add {
+                if (_changeLink == null || !_changeLink.GetInvocationList().Contains(value))
+                    _changeLink += value;
+            }
+            remove {
+                _changeLink -= value;
+            }
+        }
 
         /// <summary> URL or File Path </summary>
         [Description("URL or File Path")]
@@ -88,9 +97,9 @@ namespace RApID_Project_WPF.CustomControls
             if (e.Button == MouseButtons.Left)
             {
                 Activate();
-            } else if(ChangeLink != null)
+            } else if(_changeLink != null)
             {
-                ChangeLink?.Invoke(sender, e);
+                _changeLink?.Invoke(sender, e);
             }
         }
 

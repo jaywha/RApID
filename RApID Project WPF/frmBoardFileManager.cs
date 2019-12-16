@@ -763,19 +763,6 @@ namespace RApID_Project_WPF
         }
 
         #region Link Label
-
-        public bool ClickIsInBounds(Control c)
-        {
-            var p = PointToScreen(c.Location);
-            if (MousePosition.X >= p.X && MousePosition.X <= p.X + c.Width) {
-                if (MousePosition.Y >= p.Y && MousePosition.Y <= p.Y + c.Height)
-                    return true;
-            }
-
-            return false;
-        }
-
-
         private void lnkBOMFile_MouseDown(object sender, MouseEventArgs e)
         {
             if (e.Button == MouseButtons.Right)
@@ -786,9 +773,11 @@ namespace RApID_Project_WPF
                 BOMFileIndex = -1;
                 foreach (Control c in flowBOMFiles.Controls)
                 {
-                    if(ClickIsInBounds(c))
+                    if (this.ClickIsInBounds(c, e.Location))
+                    {
+                        Console.WriteLine($"Inside of bounds at control index ({BOMFileIndex}): {(c as AssemblyLinkLabel).Link}");
                         break;
-                    else BOMFileIndex++;
+                    } else BOMFileIndex++;
                 }
                 cxmnuAssemblyLinksMenu.Show(MousePosition.X, MousePosition.Y);
             }
@@ -804,8 +793,7 @@ namespace RApID_Project_WPF
                 SchematicFileIndex = -1;
                 foreach (Control c in flowSchematicLinks.Controls)
                 {
-                    if(ClickIsInBounds(c))
-                        break;
+                    if(this.ClickIsInBounds(c, e.Location)) break;
                     else SchematicFileIndex++;
                 }
                 cxmnuAssemblyLinksMenu.Show(MousePosition.X, MousePosition.Y);

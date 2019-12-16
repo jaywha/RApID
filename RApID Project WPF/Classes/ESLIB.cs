@@ -7,6 +7,7 @@ using RApID_Project_WPF;
 using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
+using System.Drawing;
 using System.IO;
 using System.IO.Ports;
 using System.Text;
@@ -76,6 +77,15 @@ namespace EricStabileLibrary
     {
         /// <summary>List of current developers</summary> 
         public static List<string> Devs = new List<string>() { "jwhaley", "dglanton", "charding", "bdill", "jshirley" };
+
+        /// <summary>
+        /// Will determine if the <paramref name="clickLocation"/> is within the calling form's child control area.
+        /// </summary>
+        /// <param name="f">The callling <see cref="Form"/></param>
+        /// <param name="c">The target child <see cref="Control"/></param>
+        /// <param name="clickLocation">The <see cref="Point"/> of click hit</param>
+        /// <returns>True if click is within the child control's area</returns>
+        public static bool ClickIsInBounds(this Form f, Control c, Point clickLocation) => c.ClientRectangle.Contains(f.PointToScreen(clickLocation));
 
         /// <summary>
         /// Aggregates all of the <paramref name="elements"/> using their <see cref="string.ToString"/>
