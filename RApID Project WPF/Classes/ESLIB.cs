@@ -400,7 +400,7 @@ namespace EricStabileLibrary
 
                 return true;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
 #if DEBUG
                 System.Windows.MessageBox.Show("Error writing log to file.\n\nError Message: " + ex.Message);

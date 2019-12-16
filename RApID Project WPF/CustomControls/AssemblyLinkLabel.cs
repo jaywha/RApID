@@ -28,6 +28,10 @@ namespace RApID_Project_WPF.CustomControls
         [Description("URL or File Path")]
         public new string Link { get; set; }
 
+        /// <summary> Tracks the board to be returned after adding a new board number. </summary>
+        [Description("Tracks the board to be returned after adding a new board number. Also used to add boards to the Interaction tab's board list.")]
+        public bool IsMarkedActive { get; set; }
+
         #region Constructors
         /// <summary>
         /// Designer ctor
@@ -136,5 +140,17 @@ namespace RApID_Project_WPF.CustomControls
         /// </summary>
         /// <returns></returns>
         public override string ToString() => $"{Text}|{Tag}";
+
+        /// <summary>
+        /// Custom paint method to allow for unique visual variations.
+        /// </summary>
+        /// <param name="e"><see cref="PaintEventArgs"/> instance</param>
+        protected override void OnPaint(PaintEventArgs e)
+        {
+            base.OnPaint(e);
+            Point upperLeftCorner = new Point(ClientRectangle.Location.X + 100, ClientRectangle.Location.Y + 25);
+            Rectangle targetRect = new Rectangle(upperLeftCorner,new Size(40,40));
+            if (IsMarkedActive) e.Graphics.DrawImage(Properties.Resources.Board, targetRect);
+        }
     }
 }

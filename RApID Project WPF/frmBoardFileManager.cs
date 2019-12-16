@@ -491,14 +491,13 @@ namespace RApID_Project_WPF
         {
             var control = (flowBOMFiles.Controls[BOMFileIndex] as AssemblyLinkLabel);
             BOMFileName = control.Link;
-            control.ForeColor = Color.Lime;
+            control.IsMarkedActive = true;
 
             if (previouslyMarkedActive != null)
-            {
-                previouslyMarkedActive.ForeColor = (previouslyMarkedActive.Container as FlowLayoutPanel).ForeColor;
-            }
+                previouslyMarkedActive.IsMarkedActive = false;
 
             previouslyMarkedActive = control;
+            control.Invalidate();
         }
 
         private readonly string DBUpload_Log = $@"P:\EE Process Test\Logs\RApID\_BOMUploads\RApID_BOMUploadLog_{DateTime.Now:MM-dd-yyyy}.txt";
@@ -555,7 +554,7 @@ namespace RApID_Project_WPF
                         int rowsAffected = cmd.ExecuteNonQuery();
                         conn.Close();
                     }
-                    catch (Exception ex) { MessageBox.Show("Inside of Delete Query:\n"+ex.Message); }
+                    catch (Exception ex) { MessageBox.Show("Inside of Delete Query:\n" + ex.Message); }
                 }
 
                 using (SqlConnection conn = new SqlConnection(csObjectHolder.csObjectHolder.ObjectHolderInstance().RepairConnectionString))
@@ -764,6 +763,19 @@ namespace RApID_Project_WPF
         }
 
         #region Link Label
+
+        public bool ClickIsInBounds(Control c)
+        {
+            var p = PointToScreen(c.Location);
+            if (MousePosition.X >= p.X && MousePosition.X <= p.X + c.Width) {
+                if (MousePosition.Y >= p.Y && MousePosition.Y <= p.Y + c.Height)
+                    return true;
+            }
+
+            return false;
+        }
+
+
         private void lnkBOMFile_MouseDown(object sender, MouseEventArgs e)
         {
             if (e.Button == MouseButtons.Right)
@@ -774,8 +786,7 @@ namespace RApID_Project_WPF
                 BOMFileIndex = -1;
                 foreach (Control c in flowBOMFiles.Controls)
                 {
-                    System.Drawing.Point screenPoint = PointToScreen(c.Location);
-                    if (screenPoint.X == MousePosition.X && screenPoint.Y == MousePosition.Y)
+                    if(ClickIsInBounds(c))
                         break;
                     else BOMFileIndex++;
                 }
@@ -793,8 +804,7 @@ namespace RApID_Project_WPF
                 SchematicFileIndex = -1;
                 foreach (Control c in flowSchematicLinks.Controls)
                 {
-                    System.Drawing.Point screenPoint = PointToScreen(c.Location);
-                    if (screenPoint.X == MousePosition.X && screenPoint.Y == MousePosition.Y)
+                    if(ClickIsInBounds(c))
                         break;
                     else SchematicFileIndex++;
                 }
@@ -826,8 +836,10 @@ namespace RApID_Project_WPF
 
         #region Inspect Tab
 
-        private void lstbxActiveBOMFiles_SelectedIndexChanged(object sender, EventArgs e) {
-            var currentValue = lstbxActiveBOMFiles.SelectedValue.ToString();
+        private void lstbxActiveBOMFiles_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            var currentValue = lstbxActiveBOMFiles.SelectedValue?.ToString() ?? "";
+            if (string.IsNullOrWhiteSpace(currentValue)) return;
             var selectQuery = "SELECT * FROM [Repair].[dbo].[BoMInfo] WHERE [BoardNumber] = @BoardNumber AND Rev = @Revision";
 
             using (SqlConnection conn = new SqlConnection(csObjectHolder.csObjectHolder.ObjectHolderInstance().RepairConnectionString))
@@ -846,8 +858,10 @@ namespace RApID_Project_WPF
                     cmd.Parameters["Revision"].Value = currentValue.Split('|').Last();
                     //cmd.Parameters["ECONum"].Value = ???;
 
-                    using (SqlDataReader reader = cmd.ExecuteReader()) {
-                        while (reader.Read()) {
+                    using (SqlDataReader reader = cmd.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
                             var rd = reader["ReferenceDesignator"].ToString();
                             var pn = reader["PartNumber"].ToString();
 
@@ -862,7 +876,7 @@ namespace RApID_Project_WPF
 
         #endregion
 
-        
+
     }
 
     /// <summary>
