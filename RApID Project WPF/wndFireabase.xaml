@@ -1,0 +1,53 @@
+﻿<Window x:Class="RApID_Project_WPF.wndFireabase"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:RApID_Project_WPF"
+        mc:Ignorable="d"
+        Title="Wingbeat Firestore" Height="450" Width="900" Icon="__fire___256_La5_icon.ico"
+        x:Name="grdMain">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="10*"/>
+            <RowDefinition Height="90*"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="30*"/>
+            <ColumnDefinition Width="30*"/>
+            <ColumnDefinition Width="30*"/>
+        </Grid.ColumnDefinitions>
+        <Grid.Background>
+            <RadialGradientBrush>
+                <GradientStop Color="#FF401204" Offset="1"/>
+                <GradientStop Color="#FFE6651B"/>
+                <GradientStop Color="#FF912809" Offset="0.476"/>
+                <GradientStop Color="#FF461204" Offset="0.86"/>
+            </RadialGradientBrush>
+        </Grid.Background>
+        <Menu Grid.ColumnSpan="3" Grid.Row="0" HorizontalAlignment="Stretch" VerticalAlignment="Top">
+            <MenuItem Header="File" HorizontalAlignment="Center" VerticalAlignment="Top">
+                <MenuItem Header="New">
+                    <MenuItem x:Name="mnuiNewCollection" Header="Collection" Click="MnuiNewCollection_Click"/>
+                    <MenuItem x:Name="mnuiNewDocument" Header="Document" Click="MnuiNewDocument_Click"/>
+                    <MenuItem x:Name="mnuiNewField" Header="Field" Click="MnuiNewField_Click"/>
+                </MenuItem>
+                <Separator/>
+                <MenuItem x:Name="mnuiExit" Header="Exit" />
+            </MenuItem>
+            <MenuItem Header="Connection" HorizontalAlignment="Center" VerticalAlignment="Top"/>
+        </Menu>
+        <GridSplitter HorizontalAlignment="Stretch" VerticalAlignment="Bottom" Height="5px" Background="#FFFF3A00" Grid.ColumnSpan="3" Grid.Row="0"/>
+        
+        <!--#region Data Grids -->
+        <Label x:Name="lblCollections" VerticalAlignment="Top" Grid.Column="0" Grid.Row="1"  FontSize="20" Foreground="Orange">Collections</Label>
+        <DataGrid x:Name="dgCollections" Height="420" VerticalAlignment="Bottom" HorizontalAlignment="Stretch" Grid.Column="0" Grid.Row="1"  Margin="0,30,0,0"/>
+        <GridSplitter x:Name="grdColSplit1" HorizontalAlignment="Right" VerticalAlignment="Stretch" Width="5px" Background="#FFFF3A00" Grid.Column="0" Grid.Row="1"/>
+        <Label x:Name="lblDocuments" VerticalAlignment="Top" Grid.Column="1" Grid.Row="1"  FontSize="20" Foreground="Orange">Documents</Label>
+        <DataGrid x:Name="dgDocuments" Height="420" VerticalAlignment="Bottom" HorizontalAlignment="Stretch" Grid.Column="1" Grid.Row="1"  Margin="0,30,0,0"/>
+        <GridSplitter x:Name="grdColSplit2" HorizontalAlignment="Right" VerticalAlignment="Stretch" Width="5px" Background="#FFFF3A00" Grid.Column="1" Grid.Row="1"/>
+        <Label x:Name="lblFields" VerticalAlignment="Top" Grid.Column="2" Grid.Row="1"  FontSize="20" Foreground="Orange">Fields</Label>
+        <DataGrid x:Name="dgFields" Height="420" VerticalAlignment="Bottom" HorizontalAlignment="Stretch" Grid.Column="2" Grid.Row="1"  Margin="0,30,0,0"/>
+        <!--#endregion-->
+    </Grid>
+</Window>

@@ -164,6 +164,10 @@ namespace RApID_Project_WPF
                         frmBoardFileManager alias = new frmBoardFileManager(directDialog: true) { StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen };
                         alias.Show();
                         break;
+                    case nameof(btnFirebaseWindow):
+                        wndFireabase fireabase = new wndFireabase();
+                        fireabase.Show();
+                        break;
                 }
             }
             catch (Exception ex)
