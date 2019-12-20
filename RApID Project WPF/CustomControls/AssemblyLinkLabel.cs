@@ -41,6 +41,9 @@ namespace RApID_Project_WPF.CustomControls
         [Description("Tracks the board to be returned after adding a new board number. Also used to add boards to the Interaction tab's board list.")]
         public bool IsMarkedActive { get; set; }
 
+        public string ECO { get => lblECO.Text; set => lblECO.Text = value; }
+        public string REV { get => lblREV.Text; set => lblREV.Text = value; }
+        
         #region Constructors
         /// <summary>
         /// Designer ctor
@@ -48,15 +51,21 @@ namespace RApID_Project_WPF.CustomControls
         public AssemblyLinkLabel() : this(Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory), "Desktop") {}
 
         /// <summary>
-        /// Default ctor
+        /// Default constructor - many optional args for flexibility.
         /// </summary>
         /// <param name="link">[Optional] Sets this <see cref="Link"/></param>
         /// <param name="displayText">[Optional] Sets this <see cref="LinkLabel.Text"/></param>
         /// <param name="img">[Optional] The image icon for this file extension.</param>
         /// <param name="name">[Optional] The name of this control. </param>
+        /// <param name="handler">[Optional] Callback handler for whenever a mouse click occurs without Left Mouse Button</param>
+        /// <param name="rev">[Optional] Relates this link to a speicified BoM revision.</param>
+        /// <param name="eco">[Optional] Describes a link to a file that's based on an outstanding Engineering Change Order.</param>
         public AssemblyLinkLabel(string link = "", string displayText = "", Image img = null,
-            string name = "", MouseEventHandler handler = null)
+            string name = "", MouseEventHandler handler = null,
+            string rev = "", string eco = "")
         {
+            InitializeComponent();
+
             if (!string.IsNullOrWhiteSpace(link))
             {
                 Link = link;
@@ -72,7 +81,15 @@ namespace RApID_Project_WPF.CustomControls
                 Name = name;
             }
 
-            if(img != null) Image = img;
+            if (!string.IsNullOrWhiteSpace(rev)) {
+                REV = rev;
+            }
+
+            if (!string.IsNullOrWhiteSpace(eco)) {
+                ECO = eco;
+            }
+
+            Image = img ?? null;
             
             Enabled = true;
             ForeColor = Color.Cyan;

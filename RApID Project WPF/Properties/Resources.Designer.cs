@@ -63,6 +63,16 @@ namespace RApID_Project_WPF.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap aoi_recipe_mover {
+            get {
+                object obj = ResourceManager.GetObject("aoi_recipe_mover", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap Board {
             get {
                 object obj = ResourceManager.GetObject("Board", resourceCulture);

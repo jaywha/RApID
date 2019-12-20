@@ -38,6 +38,8 @@
             this.tssMarkAsActive = new System.Windows.Forms.ToolStripSeparator();
             this.changeFilePathToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.changeTagToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.changeREVToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.changeECOToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
             this.deleteSchematicLinkToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.tssUploadBOMData = new System.Windows.Forms.ToolStripSeparator();
@@ -84,6 +86,8 @@
             this.tbInspectionView = new System.Windows.Forms.TabPage();
             this.tblpnlBOMInspection = new System.Windows.Forms.TableLayoutPanel();
             this.lstbxActiveBOMFiles = new System.Windows.Forms.ListBox();
+            this.cxmnuInspectionMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.pullBoMFromDBToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.dgvComponents = new System.Windows.Forms.DataGridView();
             this.FullAssemblyNumber = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.ReferenceDesignator = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -137,6 +141,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.pCBAliasDataSet)).BeginInit();
             this.tbInspectionView.SuspendLayout();
             this.tblpnlBOMInspection.SuspendLayout();
+            this.cxmnuInspectionMenu.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgvComponents)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dsetBOMInfo)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.BOM)).BeginInit();
@@ -152,12 +157,14 @@
             this.tssMarkAsActive,
             this.changeFilePathToolStripMenuItem,
             this.changeTagToolStripMenuItem,
+            this.changeREVToolStripMenuItem,
+            this.changeECOToolStripMenuItem,
             this.toolStripSeparator2,
             this.deleteSchematicLinkToolStripMenuItem,
             this.tssUploadBOMData,
             this.uploadBOMDataToolStripMenuItem});
             this.cxmnuAssemblyLinksMenu.Name = "cxmnuLinkMenu";
-            this.cxmnuAssemblyLinksMenu.Size = new System.Drawing.Size(200, 132);
+            this.cxmnuAssemblyLinksMenu.Size = new System.Drawing.Size(200, 176);
             this.cxmnuAssemblyLinksMenu.Opening += new System.ComponentModel.CancelEventHandler(this.cxmnuAssemblyLinksMenu_Opening);
             // 
             // markAsActiveToolStripMenuItem
@@ -185,6 +192,20 @@
             this.changeTagToolStripMenuItem.Size = new System.Drawing.Size(199, 22);
             this.changeTagToolStripMenuItem.Text = "Change Tag...";
             this.changeTagToolStripMenuItem.Click += new System.EventHandler(this.ChangeTag_Click);
+            // 
+            // changeREVToolStripMenuItem
+            // 
+            this.changeREVToolStripMenuItem.Name = "changeREVToolStripMenuItem";
+            this.changeREVToolStripMenuItem.Size = new System.Drawing.Size(199, 22);
+            this.changeREVToolStripMenuItem.Text = "Change REV...";
+            this.changeREVToolStripMenuItem.Click += new System.EventHandler(this.changeREVToolStripMenuItem_Click);
+            // 
+            // changeECOToolStripMenuItem
+            // 
+            this.changeECOToolStripMenuItem.Name = "changeECOToolStripMenuItem";
+            this.changeECOToolStripMenuItem.Size = new System.Drawing.Size(199, 22);
+            this.changeECOToolStripMenuItem.Text = "Change ECO...";
+            this.changeECOToolStripMenuItem.Click += new System.EventHandler(this.changeECOToolStripMenuItem_Click);
             // 
             // toolStripSeparator2
             // 
@@ -707,6 +728,7 @@
             // lstbxActiveBOMFiles
             // 
             this.lstbxActiveBOMFiles.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(14)))), ((int)(((byte)(14)))), ((int)(((byte)(14)))));
+            this.lstbxActiveBOMFiles.ContextMenuStrip = this.cxmnuInspectionMenu;
             this.lstbxActiveBOMFiles.Dock = System.Windows.Forms.DockStyle.Fill;
             this.lstbxActiveBOMFiles.ForeColor = System.Drawing.Color.Goldenrod;
             this.lstbxActiveBOMFiles.FormattingEnabled = true;
@@ -714,7 +736,21 @@
             this.lstbxActiveBOMFiles.Name = "lstbxActiveBOMFiles";
             this.lstbxActiveBOMFiles.Size = new System.Drawing.Size(232, 385);
             this.lstbxActiveBOMFiles.TabIndex = 0;
-            this.lstbxActiveBOMFiles.SelectedIndexChanged += new System.EventHandler(this.lstbxActiveBOMFiles_SelectedIndexChanged);
+            // 
+            // cxmnuInspectionMenu
+            // 
+            this.cxmnuInspectionMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.pullBoMFromDBToolStripMenuItem});
+            this.cxmnuInspectionMenu.Name = "cxmnuInspectionMenu";
+            this.cxmnuInspectionMenu.Size = new System.Drawing.Size(181, 48);
+            // 
+            // pullBoMFromDBToolStripMenuItem
+            // 
+            this.pullBoMFromDBToolStripMenuItem.Image = global::RApID_Project_WPF.Properties.Resources.aoi_recipe_mover;
+            this.pullBoMFromDBToolStripMenuItem.Name = "pullBoMFromDBToolStripMenuItem";
+            this.pullBoMFromDBToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.pullBoMFromDBToolStripMenuItem.Text = "Pull BoM from DB";
+            this.pullBoMFromDBToolStripMenuItem.Click += new System.EventHandler(this.pullBoMFromDBToolStripMenuItem_Click);
             // 
             // dgvComponents
             // 
@@ -875,6 +911,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.pCBAliasDataSet)).EndInit();
             this.tbInspectionView.ResumeLayout(false);
             this.tblpnlBOMInspection.ResumeLayout(false);
+            this.cxmnuInspectionMenu.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.dgvComponents)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.dsetBOMInfo)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.BOM)).EndInit();
@@ -962,5 +999,9 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn FullAssemblyNumber;
         private System.Windows.Forms.DataGridViewTextBoxColumn ReferenceDesignator;
         private System.Windows.Forms.DataGridViewTextBoxColumn PartNumber;
+        private System.Windows.Forms.ContextMenuStrip cxmnuInspectionMenu;
+        private System.Windows.Forms.ToolStripMenuItem pullBoMFromDBToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem changeREVToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem changeECOToolStripMenuItem;
     }
 }
