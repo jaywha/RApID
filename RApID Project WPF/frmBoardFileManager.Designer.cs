@@ -83,20 +83,6 @@
             this.SchematicTags = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.techAliasBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.pCBAliasDataSet = new RApID_Project_WPF.PCBAliasDataSet();
-            this.tbInspectionView = new System.Windows.Forms.TabPage();
-            this.tblpnlBOMInspection = new System.Windows.Forms.TableLayoutPanel();
-            this.lstbxActiveBOMFiles = new System.Windows.Forms.ListBox();
-            this.cxmnuInspectionMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
-            this.pullBoMFromDBToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.dgvComponents = new System.Windows.Forms.DataGridView();
-            this.FullAssemblyNumber = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.ReferenceDesignator = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.PartNumber = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.dsetBOMInfo = new System.Data.DataSet();
-            this.BOM = new System.Data.DataTable();
-            this.dcolFAN = new System.Data.DataColumn();
-            this.dcolRefDes = new System.Data.DataColumn();
-            this.dcolPN = new System.Data.DataColumn();
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
             this.progbarStatus = new System.Windows.Forms.ToolStripProgressBar();
             this.lblStatus = new System.Windows.Forms.ToolStripStatusLabel();
@@ -139,12 +125,6 @@
             ((System.ComponentModel.ISupportInitialize)(this.dgvDatabaseTable)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.techAliasBindingSource)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pCBAliasDataSet)).BeginInit();
-            this.tbInspectionView.SuspendLayout();
-            this.tblpnlBOMInspection.SuspendLayout();
-            this.cxmnuInspectionMenu.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.dgvComponents)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.dsetBOMInfo)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.BOM)).BeginInit();
             this.statusStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.errorProvider)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.infoProvider)).BeginInit();
@@ -315,7 +295,6 @@
             // 
             this.tcDataViewer.Controls.Add(this.tbMainView);
             this.tcDataViewer.Controls.Add(this.tbDatabaseView);
-            this.tcDataViewer.Controls.Add(this.tbInspectionView);
             this.tcDataViewer.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tcDataViewer.Location = new System.Drawing.Point(0, 0);
             this.tcDataViewer.Name = "tcDataViewer";
@@ -697,120 +676,6 @@
             this.pCBAliasDataSet.DataSetName = "PCBAliasDataSet";
             this.pCBAliasDataSet.SchemaSerializationMode = System.Data.SchemaSerializationMode.IncludeSchema;
             // 
-            // tbInspectionView
-            // 
-            this.tbInspectionView.Controls.Add(this.tblpnlBOMInspection);
-            this.tbInspectionView.Location = new System.Drawing.Point(4, 22);
-            this.tbInspectionView.Name = "tbInspectionView";
-            this.tbInspectionView.Padding = new System.Windows.Forms.Padding(3);
-            this.tbInspectionView.Size = new System.Drawing.Size(792, 471);
-            this.tbInspectionView.TabIndex = 2;
-            this.tbInspectionView.Text = "Inspection View";
-            this.tbInspectionView.UseVisualStyleBackColor = true;
-            // 
-            // tblpnlBOMInspection
-            // 
-            this.tblpnlBOMInspection.BackColor = System.Drawing.Color.Black;
-            this.tblpnlBOMInspection.ColumnCount = 2;
-            this.tblpnlBOMInspection.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 30.2799F));
-            this.tblpnlBOMInspection.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 69.7201F));
-            this.tblpnlBOMInspection.Controls.Add(this.lstbxActiveBOMFiles, 0, 0);
-            this.tblpnlBOMInspection.Controls.Add(this.dgvComponents, 1, 0);
-            this.tblpnlBOMInspection.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tblpnlBOMInspection.Location = new System.Drawing.Point(3, 3);
-            this.tblpnlBOMInspection.Name = "tblpnlBOMInspection";
-            this.tblpnlBOMInspection.RowCount = 2;
-            this.tblpnlBOMInspection.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 84.30108F));
-            this.tblpnlBOMInspection.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 15.69893F));
-            this.tblpnlBOMInspection.Size = new System.Drawing.Size(786, 465);
-            this.tblpnlBOMInspection.TabIndex = 0;
-            // 
-            // lstbxActiveBOMFiles
-            // 
-            this.lstbxActiveBOMFiles.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(14)))), ((int)(((byte)(14)))), ((int)(((byte)(14)))));
-            this.lstbxActiveBOMFiles.ContextMenuStrip = this.cxmnuInspectionMenu;
-            this.lstbxActiveBOMFiles.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.lstbxActiveBOMFiles.ForeColor = System.Drawing.Color.Goldenrod;
-            this.lstbxActiveBOMFiles.FormattingEnabled = true;
-            this.lstbxActiveBOMFiles.Location = new System.Drawing.Point(3, 3);
-            this.lstbxActiveBOMFiles.Name = "lstbxActiveBOMFiles";
-            this.lstbxActiveBOMFiles.Size = new System.Drawing.Size(232, 385);
-            this.lstbxActiveBOMFiles.TabIndex = 0;
-            // 
-            // cxmnuInspectionMenu
-            // 
-            this.cxmnuInspectionMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.pullBoMFromDBToolStripMenuItem});
-            this.cxmnuInspectionMenu.Name = "cxmnuInspectionMenu";
-            this.cxmnuInspectionMenu.Size = new System.Drawing.Size(181, 48);
-            // 
-            // pullBoMFromDBToolStripMenuItem
-            // 
-            this.pullBoMFromDBToolStripMenuItem.Image = global::RApID_Project_WPF.Properties.Resources.aoi_recipe_mover;
-            this.pullBoMFromDBToolStripMenuItem.Name = "pullBoMFromDBToolStripMenuItem";
-            this.pullBoMFromDBToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
-            this.pullBoMFromDBToolStripMenuItem.Text = "Pull BoM from DB";
-            this.pullBoMFromDBToolStripMenuItem.Click += new System.EventHandler(this.pullBoMFromDBToolStripMenuItem_Click);
-            // 
-            // dgvComponents
-            // 
-            this.dgvComponents.AllowUserToAddRows = false;
-            this.dgvComponents.AllowUserToDeleteRows = false;
-            this.dgvComponents.AutoGenerateColumns = false;
-            this.dgvComponents.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dgvComponents.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
-            this.FullAssemblyNumber,
-            this.ReferenceDesignator,
-            this.PartNumber});
-            this.dgvComponents.DataSource = this.dsetBOMInfo;
-            this.dgvComponents.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.dgvComponents.Location = new System.Drawing.Point(241, 3);
-            this.dgvComponents.Name = "dgvComponents";
-            this.dgvComponents.Size = new System.Drawing.Size(542, 385);
-            this.dgvComponents.TabIndex = 1;
-            // 
-            // FullAssemblyNumber
-            // 
-            this.FullAssemblyNumber.HeaderText = "FullAssemblyNumber";
-            this.FullAssemblyNumber.Name = "FullAssemblyNumber";
-            this.FullAssemblyNumber.Width = 140;
-            // 
-            // ReferenceDesignator
-            // 
-            this.ReferenceDesignator.HeaderText = "RefDes";
-            this.ReferenceDesignator.Name = "ReferenceDesignator";
-            // 
-            // PartNumber
-            // 
-            this.PartNumber.HeaderText = "PartNumber";
-            this.PartNumber.Name = "PartNumber";
-            // 
-            // dsetBOMInfo
-            // 
-            this.dsetBOMInfo.DataSetName = "BOMInfo";
-            this.dsetBOMInfo.Tables.AddRange(new System.Data.DataTable[] {
-            this.BOM});
-            // 
-            // BOM
-            // 
-            this.BOM.Columns.AddRange(new System.Data.DataColumn[] {
-            this.dcolFAN,
-            this.dcolRefDes,
-            this.dcolPN});
-            this.BOM.TableName = "BOM";
-            // 
-            // dcolFAN
-            // 
-            this.dcolFAN.ColumnName = "FullAssemblyNumber";
-            // 
-            // dcolRefDes
-            // 
-            this.dcolRefDes.ColumnName = "ReferenceDesignator";
-            // 
-            // dcolPN
-            // 
-            this.dcolPN.ColumnName = "PartNumber";
-            // 
             // statusStrip1
             // 
             this.statusStrip1.BackColor = System.Drawing.Color.Black;
@@ -909,12 +774,6 @@
             ((System.ComponentModel.ISupportInitialize)(this.dgvDatabaseTable)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.techAliasBindingSource)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pCBAliasDataSet)).EndInit();
-            this.tbInspectionView.ResumeLayout(false);
-            this.tblpnlBOMInspection.ResumeLayout(false);
-            this.cxmnuInspectionMenu.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.dgvComponents)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.dsetBOMInfo)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.BOM)).EndInit();
             this.statusStrip1.ResumeLayout(false);
             this.statusStrip1.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.errorProvider)).EndInit();
@@ -987,20 +846,6 @@
         private System.Windows.Forms.ToolStripMenuItem markAsActiveToolStripMenuItem;
         private System.Windows.Forms.ToolStripSeparator tssMarkAsActive;
         private System.Windows.Forms.ToolStripSeparator tssUploadBOMData;
-        private System.Windows.Forms.TabPage tbInspectionView;
-        private System.Windows.Forms.TableLayoutPanel tblpnlBOMInspection;
-        private System.Windows.Forms.ListBox lstbxActiveBOMFiles;
-        private System.Windows.Forms.DataGridView dgvComponents;
-        private System.Data.DataSet dsetBOMInfo;
-        private System.Data.DataTable BOM;
-        private System.Data.DataColumn dcolFAN;
-        private System.Data.DataColumn dcolRefDes;
-        private System.Data.DataColumn dcolPN;
-        private System.Windows.Forms.DataGridViewTextBoxColumn FullAssemblyNumber;
-        private System.Windows.Forms.DataGridViewTextBoxColumn ReferenceDesignator;
-        private System.Windows.Forms.DataGridViewTextBoxColumn PartNumber;
-        private System.Windows.Forms.ContextMenuStrip cxmnuInspectionMenu;
-        private System.Windows.Forms.ToolStripMenuItem pullBoMFromDBToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem changeREVToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem changeECOToolStripMenuItem;
     }

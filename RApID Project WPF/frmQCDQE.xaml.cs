@@ -830,7 +830,7 @@ namespace RApID_Project_WPF
                                 (string filename, bool found) result = await mapper.FindFileAsync(".xls");
                                 //TODO: Make User Control for BOM Matcher (2 cmbx: Ref Des. -> Part Number)
 
-                                csCrossClassInteraction.MapperSuccessMessage(result.filename, mapper.PartNumber);
+                                if(!mapper.NoFilesFound) csCrossClassInteraction.MapperSuccessMessage(result.filename, mapper.PartNumber);
                             }
                         });
                     }));

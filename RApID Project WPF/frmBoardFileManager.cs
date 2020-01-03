@@ -41,8 +41,6 @@ namespace RApID_Project_WPF
         const string EMPTY_FILE_PATH = "BOMPath";
         static bool FirstTimeToday = true;
 
-        private BindingSource BoardComponentSource = new BindingSource();
-
         /// <summary>
         /// Manage Tooltips
         /// </summary>
@@ -72,6 +70,8 @@ namespace RApID_Project_WPF
             }
         }
 
+        private AssemblyLinkLabel previouslyMarkedActive;
+
         /// <summary> Tracks the major form data of all interactions. </summary>
         ObservableCollection<DesignFileSet> MasterList { get; set; } = new ObservableCollection<DesignFileSet>();
         int CurrentDesignFileIndex = 0;
@@ -97,10 +97,6 @@ namespace RApID_Project_WPF
 
             if (!string.IsNullOrWhiteSpace(partNumber)) txtFullAssemblyNumber.Text = partNumber;
             DirectDialog = directDialog;
-
-            BoardComponentSource.ResetBindings(false);
-            BoardComponentSource.DataSource = dsetBOMInfo.Tables[0];
-            dgvComponents.DataSource = BoardComponentSource;
         }
 
         private void frmBoardAliases_Load(object sender, EventArgs e)
@@ -255,7 +251,6 @@ namespace RApID_Project_WPF
                                     infoProvider.SetError(link, model.BOMTags[counter]);
                                 }
 
-                                lstbxActiveBOMFiles.Items.Add(displayText);
                                 model.BOMFiles.Add(link);
                                 flowBOMFiles.Controls.Add(link);
 
@@ -577,7 +572,6 @@ namespace RApID_Project_WPF
             ResetStatus();
         }
 
-        private AssemblyLinkLabel previouslyMarkedActive;
         private void markAsActiveToolStripMenuItem_Click(object sender, EventArgs e)
         {
             var control = (flowBOMFiles.Controls[BOMFileIndex] as AssemblyLinkLabel);
@@ -944,51 +938,6 @@ namespace RApID_Project_WPF
             tcDataViewer.SelectedIndex = 0;
             HandleTextBoxEntry(new KeyEventArgs(Keys.Enter));
         }
-        #endregion
-
-        #region Inspect Tab
-
-        private void pullBoMFromDBToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            dsetBOMInfo.Tables[0].Rows.Clear();
-
-            var currentValue = lstbxActiveBOMFiles.SelectedValue?.ToString() ?? "";
-            if (string.IsNullOrWhiteSpace(currentValue)) return;
-            var selectQuery = "SELECT * FROM [Repair].[dbo].[BoMInfo] WHERE [BoardNumber] = @BoardNumber AND Rev = @Revision";
-
-            using (SqlConnection conn = new SqlConnection(csObjectHolder.csObjectHolder.ObjectHolderInstance().RepairConnectionString))
-            using (SqlCommand cmd = new SqlCommand(selectQuery, conn))
-            {
-                try
-                {
-                    conn.Open();
-                    cmd.Parameters.AddRange(new SqlParameter[] {
-                            new SqlParameter("BoardNumber",System.Data.SqlDbType.VarChar, 100),
-                            new SqlParameter("Revision",System.Data.SqlDbType.VarChar, 50),
-                            new SqlParameter("ECONum",System.Data.SqlDbType.VarChar, 500)
-                        });
-
-                    cmd.Parameters["BoardNumber"].Value = txtFullAssemblyNumber.Text;
-                    cmd.Parameters["Revision"].Value = _selectedModel.REV;
-                    cmd.Parameters["ECONum"].Value = _selectedModel.ECO;
-
-                    using (SqlDataReader reader = cmd.ExecuteReader())
-                    {
-                        while (reader.Read())
-                        {
-                            var rd = reader["ReferenceDesignator"].ToString();
-                            var pn = reader["PartNumber"].ToString();
-
-                            dsetBOMInfo.Tables[0].Rows.Add(txtFullAssemblyNumber.Text, rd, pn);
-                        }
-                    }
-                    conn.Close();
-                }
-                catch (Exception ex) { MessageBox.Show(ex.Message); }
-            }
-        }
-
-
         #endregion
     }
 

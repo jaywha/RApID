@@ -253,20 +253,15 @@ namespace RApID_Project_WPF
             }
             else
             {
-                MessageBox.Show("Couldn't find the barcode's entry in the database.\nPlease enter information manually.",
-                        "Soft Error - Database Lookup", MessageBoxButton.OK, MessageBoxImage.Warning);
-                var techForm = new frmBoardFileManager(txtPN.Text);
-                techForm.ShowDialog();
-                if (!techForm.WasEntryFound)
-                {
-                    MessageBox.Show("No BOM Loaded!", "Warning: BOM Missing!",
-                        MessageBoxButton.OK, MessageBoxImage.Warning);
-                    return string.Empty;
-                }
-                else
-                {
-                    filename = techForm.BOMFileName;
-                }
+                Mailman.SendEmail("RApID - Missing BOM",
+                    "<p>We're missing the BOM for the following unit info.</p>" +
+                    "<hr/>"+
+                    $"\tSerial Number: {txtSN.Text}" +
+                    $"\tProduction Query Part Number: {txtPN.Text}" +
+                    $"\tSNMapper Part Number: {mapper.PartNumber}" +
+                    $"\tSNMapper Component Number: {mapper.ComponentNumber}" +
+                    "<hr/>"
+                    );
             }
 
             if (filename.Contains(",") && !string.IsNullOrWhiteSpace(notes))
@@ -280,7 +275,7 @@ namespace RApID_Project_WPF
                 sVar.SelectedBOMFile.FilePath = filename;
             }
 
-            Console.WriteLine($"[{callingFile}] Using filepath ==> {filename}");
+            //Console.WriteLine($"[{callingFile}] Using filepath ==> {filename}");
             return filename;
         }
 
@@ -332,6 +327,13 @@ namespace RApID_Project_WPF
                     if (progData != null) progData.Dispatcher.Invoke(() => progData.Visibility = Visibility.Visible);
                     if (string.IsNullOrEmpty(filePath))
                     {
+                        void Notify_TrayBalloonTipClicked(object sender, RoutedEventArgs e)
+                        {
+                            MainWindow.Notify.TrayBalloonTipClicked -= Notify_TrayBalloonTipClicked;
+                            FNS.Classes.FirebasePushService.SendPushNotification(Mailman.FireTokens.Jay, "Refer to email for more info.", "RApID - BOM Missing", "true");
+                        }
+
+                        MainWindow.Notify.TrayBalloonTipClicked += Notify_TrayBalloonTipClicked;
                         MainWindow.Notify.ShowBalloonTip("Couldn't find BOM File",
                             "The BOM file path was empty! Parts won't be automatically suggested or listed.\nPlease alert Dex or Jay.",
                             Hardcodet.Wpf.TaskbarNotification.BalloonIcon.Warning);

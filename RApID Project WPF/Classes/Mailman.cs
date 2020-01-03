@@ -16,6 +16,16 @@ namespace RApID_Project_WPF
         private static csSQL.csSQLClass sqlClass = new csSQL.csSQLClass();
         private static readonly List<Exception> ReportedExceptions = new List<Exception>();
 
+        /// <summary>
+        /// Static class to contain Firebase Token Strings for push notifications
+        /// </summary>
+        public static class FireTokens
+        {
+            /// <summary> Software Engineer part of the Test Engineering team </summary>
+            public static string Jay { get; set; } 
+                = "fGaGwvh6EDE:APA91bG0mr3kNHuMItXz_C8DxZbBQFIgC7ADOOXLNEluAkwO9l-7Md-xYLWsiyy_4jiKyiGbwojjPhneL2Wf-AlpzJ5_IPhiQqwddaff11_Y5zTDtJ3WeO5h3kcBJ07sfj5xzKiJwOAE";
+        }
+
         public static bool SendEmail(string subject = "", string body = "", Exception exception = null)
         {
             if (ReportedExceptions.Contains(exception)) return true;
@@ -55,9 +65,9 @@ namespace RApID_Project_WPF
 
                 _emailMessage.Body = string.IsNullOrWhiteSpace(body) ?
                     File.ReadAllText($@"{initialPath}\Resources\ExceptionEmailTemplate.html")
-                    .Replace("[ExceptionType]",WebUtility.HtmlEncode(exception?.GetType().ToString()))
-                    .Replace("[ExceptionMessage]",WebUtility.HtmlEncode(exception?.Message.ToString()))
-                    .Replace("[ExceptionStackTrace]",WebUtility.HtmlEncode(exception?.StackTrace.ToString()))
+                    .Replace("[ExceptionType]",WebUtility.HtmlEncode(exception?.GetType().ToString() ?? ""))
+                    .Replace("[ExceptionMessage]",WebUtility.HtmlEncode(exception?.Message.ToString() ?? ""))
+                    .Replace("[ExceptionStackTrace]",WebUtility.HtmlEncode(exception?.StackTrace.ToString() ?? ""))
                 : body;
 
                 #region Get Smtp thing

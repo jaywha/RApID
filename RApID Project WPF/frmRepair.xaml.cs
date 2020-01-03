@@ -1392,7 +1392,7 @@ namespace RApID_Project_WPF
                             csCrossClassInteraction.ExcelDispatcher = Dispatcher.CurrentDispatcher;
                             csCrossClassInteraction.DoExcelOperations(filename, progMapper, OrigRefSource, OrigPartSource);
 
-                            csCrossClassInteraction.MapperSuccessMessage(filename, mapper.PartNumber);
+                            if(!mapper.NoFilesFound) csCrossClassInteraction.MapperSuccessMessage(filename, mapper.PartNumber);
 
                             BOMFileActive = true;
 

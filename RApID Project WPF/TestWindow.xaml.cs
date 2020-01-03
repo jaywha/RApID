@@ -173,7 +173,7 @@ namespace RApID_Project_WPF
                                 (string filename, bool found) result = await mapper.FindFileAsync(".xls");
                                 csCrossClassInteraction.DoExcelOperations(result.filename, progMapper, RefDes, PartNum);
 
-                                csCrossClassInteraction.MapperSuccessMessage(result.filename, mapper.PartNumber);
+                                if(!mapper.NoFilesFound) csCrossClassInteraction.MapperSuccessMessage(result.filename, mapper.PartNumber);
 
                                 BOMFileActive = true;
                             }

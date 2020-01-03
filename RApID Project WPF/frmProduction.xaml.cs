@@ -741,7 +741,7 @@ namespace RApID_Project_WPF
                 {
                     await Task.Factory.StartNew(new Action(() => // in new task
                     {
-                        Dispatcher.BeginInvoke(new Action(async () => // perform dispatched UI actions
+                        Dispatcher.BeginInvoke(new Action(() => // perform dispatched UI actions
                         {
                             var filename = mapper.TechFormProcess(txtSerialNumber, txtPartNumber);
 
@@ -749,7 +749,7 @@ namespace RApID_Project_WPF
                             var partSource = new ObservableCollection<string>();
 
                             csCrossClassInteraction.DoExcelOperations(filename, progMapper, dgBOMList, expBOMInfo, refSource, partSource);
-                            csCrossClassInteraction.MapperSuccessMessage(filename, mapper.PartNumber);
+                            if(!mapper.NoFilesFound) csCrossClassInteraction.MapperSuccessMessage(filename, mapper.PartNumber);
 
                             txtMultiRefDes.ItemsSource = refSource;
                             txtMultiRefDes_2.ItemsSource = refSource;

@@ -117,7 +117,7 @@ namespace RApID_Project_WPF
             }
 
             await Task.Factory.StartNew(new Action(() => {
-                Notify.ShowBalloonTip(msgTitle, msgWelcome, BalloonIcon.Info);
+                Notify.ShowBalloonTip(msgTitle, msgWelcome, Properties.Resources.RApID, true);
                 /*var uName = UserPrincipal.Current.DisplayName.Trim().Split(',');
                 FullName = uName[1].Trim() + " " + uName[0].Trim();
                 Notify.ShowBalloonTip(msgTitle + $", {FullName}!", msgWelcome, BalloonIcon.Info);*/

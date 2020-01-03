@@ -124,9 +124,6 @@
     <Reference Include="FNS, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\JOME.HOPE.FNS.1.0.0-beta\lib\net461\FNS.dll</HintPath>
     </Reference>
-    <Reference Include="frmMessageBox">
-      <HintPath>P:\Jay Whaley\_Folders\References\frmMessageBox.dll</HintPath>
-    </Reference>
     <Reference Include="GetNetLib">
       <HintPath>P:\Jay Whaley\_Folders\References\GetNetLib.dll</HintPath>
     </Reference>
@@ -177,6 +174,9 @@
     </Reference>
     <Reference Include="Hardcodet.Wpf.TaskbarNotification, Version=1.0.5.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Hardcodet.NotifyIcon.Wpf.1.0.8\lib\net451\Hardcodet.Wpf.TaskbarNotification.dll</HintPath>
+    </Reference>
+    <Reference Include="LinkedItemsLib, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\JOME.HOPE.LinkedItemsLib.1.0.1\lib\net461\LinkedItemsLib.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.VisualBasic" />
     <Reference Include="Microsoft.Win32.Primitives, Version=4.0.2.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
@@ -295,9 +295,6 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Compile Include="..\..\Linked Items\csSQL\csSQL\csSQLClass.cs">
-      <Link>csSQLClass.cs</Link>
-    </Compile>
     <Compile Include="Classes\BOMInfoModel.cs" />
     <Compile Include="Classes\csClassHelper.cs" />
     <Compile Include="Classes\csCrossClassInteraction.cs" />
@@ -583,7 +580,6 @@
     <None Include="FodyWeavers.xml" />
     <Resource Include="Resources\14-149858_big-image-green-plus-icon-png.jpg" />
     <Resource Include="Resources\tech.png" />
-    <Content Include="Resources\BarcodeLib.dll" />
     <Resource Include="Resources\settingsIcon.png" />
   </ItemGroup>
   <ItemGroup>
