@@ -281,6 +281,8 @@ namespace RApID_Project_WPF
 
         public static void MapperSuccessMessage(string filename, string PN = "")
         {
+            if (string.IsNullOrEmpty(filename)) return;
+
             void OpenDirectory(object sender, RoutedEventArgs e)
                                 => System.Diagnostics.Process.Start(filename.Substring(0, filename.LastIndexOf('\\')));
 
