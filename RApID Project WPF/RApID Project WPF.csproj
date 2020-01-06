@@ -176,7 +176,7 @@
       <HintPath>..\packages\Hardcodet.NotifyIcon.Wpf.1.0.8\lib\net451\Hardcodet.Wpf.TaskbarNotification.dll</HintPath>
     </Reference>
     <Reference Include="LinkedItemsLib, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\JOME.HOPE.LinkedItemsLib.1.0.1\lib\net461\LinkedItemsLib.dll</HintPath>
+      <HintPath>..\packages\JOME.HOPE.LinkedItemsLib.1.0.3\lib\net461\LinkedItemsLib.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.VisualBasic" />
     <Reference Include="Microsoft.Win32.Primitives, Version=4.0.2.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">

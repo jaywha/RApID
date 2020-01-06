@@ -18,7 +18,7 @@ namespace RApID_Project_WPF
         public double CurrentVersion
         {
             get; private set;
-        } = 1.4;
+        } = 1.5;
         public DispatcherTimer tVersionChecker;
 
         private void tVersionChecker_Tick(object sender, EventArgs e)

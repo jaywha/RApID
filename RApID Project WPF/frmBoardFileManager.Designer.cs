@@ -89,6 +89,8 @@
             this.errorProvider = new System.Windows.Forms.ErrorProvider(this.components);
             this.infoProvider = new System.Windows.Forms.ErrorProvider(this.components);
             this.techAliasTableAdapter = new RApID_Project_WPF.PCBAliasDataSetTableAdapters.TechAliasTableAdapter();
+            this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
+            this.openFileLocationToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.cxmnuAssemblyLinksMenu.SuspendLayout();
             this.cxmnuDatabaseMenu.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.spltpnlMain)).BeginInit();
@@ -133,6 +135,8 @@
             // cxmnuAssemblyLinksMenu
             // 
             this.cxmnuAssemblyLinksMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.openFileLocationToolStripMenuItem,
+            this.toolStripSeparator1,
             this.markAsActiveToolStripMenuItem,
             this.tssMarkAsActive,
             this.changeFilePathToolStripMenuItem,
@@ -144,7 +148,7 @@
             this.tssUploadBOMData,
             this.uploadBOMDataToolStripMenuItem});
             this.cxmnuAssemblyLinksMenu.Name = "cxmnuLinkMenu";
-            this.cxmnuAssemblyLinksMenu.Size = new System.Drawing.Size(200, 176);
+            this.cxmnuAssemblyLinksMenu.Size = new System.Drawing.Size(200, 226);
             this.cxmnuAssemblyLinksMenu.Opening += new System.ComponentModel.CancelEventHandler(this.cxmnuAssemblyLinksMenu_Opening);
             // 
             // markAsActiveToolStripMenuItem
@@ -152,6 +156,7 @@
             this.markAsActiveToolStripMenuItem.Name = "markAsActiveToolStripMenuItem";
             this.markAsActiveToolStripMenuItem.Size = new System.Drawing.Size(199, 22);
             this.markAsActiveToolStripMenuItem.Text = "Mark As Active";
+            this.markAsActiveToolStripMenuItem.ToolTipText = "Marks BOM to be stored in global variables.";
             this.markAsActiveToolStripMenuItem.Click += new System.EventHandler(this.markAsActiveToolStripMenuItem_Click);
             // 
             // tssMarkAsActive
@@ -164,6 +169,7 @@
             this.changeFilePathToolStripMenuItem.Name = "changeFilePathToolStripMenuItem";
             this.changeFilePathToolStripMenuItem.Size = new System.Drawing.Size(199, 22);
             this.changeFilePathToolStripMenuItem.Text = "Change File Path...";
+            this.changeFilePathToolStripMenuItem.ToolTipText = "Selects new file using a file browser";
             this.changeFilePathToolStripMenuItem.Click += new System.EventHandler(this.changeFilePathToolStripMenuItem_Click);
             // 
             // changeTagToolStripMenuItem
@@ -171,6 +177,7 @@
             this.changeTagToolStripMenuItem.Name = "changeTagToolStripMenuItem";
             this.changeTagToolStripMenuItem.Size = new System.Drawing.Size(199, 22);
             this.changeTagToolStripMenuItem.Text = "Change Tag...";
+            this.changeTagToolStripMenuItem.ToolTipText = "Edits the tooltip notes";
             this.changeTagToolStripMenuItem.Click += new System.EventHandler(this.ChangeTag_Click);
             // 
             // changeREVToolStripMenuItem
@@ -178,6 +185,7 @@
             this.changeREVToolStripMenuItem.Name = "changeREVToolStripMenuItem";
             this.changeREVToolStripMenuItem.Size = new System.Drawing.Size(199, 22);
             this.changeREVToolStripMenuItem.Text = "Change REV...";
+            this.changeREVToolStripMenuItem.ToolTipText = "Edits the associated REV string";
             this.changeREVToolStripMenuItem.Click += new System.EventHandler(this.changeREVToolStripMenuItem_Click);
             // 
             // changeECOToolStripMenuItem
@@ -185,6 +193,7 @@
             this.changeECOToolStripMenuItem.Name = "changeECOToolStripMenuItem";
             this.changeECOToolStripMenuItem.Size = new System.Drawing.Size(199, 22);
             this.changeECOToolStripMenuItem.Text = "Change ECO...";
+            this.changeECOToolStripMenuItem.ToolTipText = "Edits the associated ECO string";
             this.changeECOToolStripMenuItem.Click += new System.EventHandler(this.changeECOToolStripMenuItem_Click);
             // 
             // toolStripSeparator2
@@ -197,6 +206,7 @@
             this.deleteSchematicLinkToolStripMenuItem.Name = "deleteSchematicLinkToolStripMenuItem";
             this.deleteSchematicLinkToolStripMenuItem.Size = new System.Drawing.Size(199, 22);
             this.deleteSchematicLinkToolStripMenuItem.Text = "Delete Schematic Link...";
+            this.deleteSchematicLinkToolStripMenuItem.ToolTipText = "Deletes the selected file from the database.";
             this.deleteSchematicLinkToolStripMenuItem.Click += new System.EventHandler(this.deleteSchematicLinkToolStripMenuItem_Click);
             // 
             // tssUploadBOMData
@@ -209,6 +219,7 @@
             this.uploadBOMDataToolStripMenuItem.Name = "uploadBOMDataToolStripMenuItem";
             this.uploadBOMDataToolStripMenuItem.Size = new System.Drawing.Size(199, 22);
             this.uploadBOMDataToolStripMenuItem.Text = "Upload BOM Data";
+            this.uploadBOMDataToolStripMenuItem.ToolTipText = "Upserts the BOM Juki sheet data to BoMInfo table.";
             this.uploadBOMDataToolStripMenuItem.Click += new System.EventHandler(this.uploadBOMDataToolStripMenuItem_Click);
             // 
             // cxmnuDatabaseMenu
@@ -721,6 +732,18 @@
             // 
             this.techAliasTableAdapter.ClearBeforeFill = true;
             // 
+            // toolStripSeparator1
+            // 
+            this.toolStripSeparator1.Name = "toolStripSeparator1";
+            this.toolStripSeparator1.Size = new System.Drawing.Size(196, 6);
+            // 
+            // openFileLocationToolStripMenuItem
+            // 
+            this.openFileLocationToolStripMenuItem.Name = "openFileLocationToolStripMenuItem";
+            this.openFileLocationToolStripMenuItem.Size = new System.Drawing.Size(199, 22);
+            this.openFileLocationToolStripMenuItem.Text = "Open File Location";
+            this.openFileLocationToolStripMenuItem.Click += new System.EventHandler(this.openFileLocationToolStripMenuItem_Click);
+            // 
             // frmBoardFileManager
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -848,5 +871,7 @@
         private System.Windows.Forms.ToolStripSeparator tssUploadBOMData;
         private System.Windows.Forms.ToolStripMenuItem changeREVToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem changeECOToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem openFileLocationToolStripMenuItem;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
     }
 }

@@ -41,19 +41,6 @@ namespace RApID_Project_WPF
         const string EMPTY_FILE_PATH = "BOMPath";
         static bool FirstTimeToday = true;
 
-        /// <summary>
-        /// Manage Tooltips
-        /// </summary>
-        ToolTip SetterTip = new ToolTip()
-        {
-            AutoPopDelay = 5000,
-            InitialDelay = 1000,
-            ReshowDelay = 500,
-            ShowAlways = true,
-            UseAnimation = true,
-            ToolTipIcon = ToolTipIcon.Info
-        };
-
         private DesignFileSet _selectedModel = new DesignFileSet();
         public DesignFileSet SelectedModel
         {
@@ -248,7 +235,7 @@ namespace RApID_Project_WPF
                                 if (model.BOMTags != null && model.BOMTags.Count > counter)
                                 {
                                     link.Tag = model.BOMTags[counter];
-                                    infoProvider.SetError(link, model.BOMTags[counter]);
+                                    infoProvider.SetError(link, model.BOMTags[counter]+$"\nREV: {model.REV}\nECO: {model.ECO}");
                                 }
 
                                 model.BOMFiles.Add(link);
@@ -278,7 +265,7 @@ namespace RApID_Project_WPF
                                 if (model.SchematicTags != null && model.SchematicTags.Count > counter)
                                 {
                                     link.Tag = model.SchematicTags[counter];
-                                    infoProvider.SetError(link, model.SchematicTags[counter]);
+                                    infoProvider.SetError(link, model.SchematicTags[counter] + $"\nREV: {model.REV}\nECO: {model.ECO}");
                                 }
 
                                 model.SchematicLinks.Add(link);
@@ -363,7 +350,7 @@ namespace RApID_Project_WPF
 
             if (dialogResult == DialogResult.OK)
             {
-                infoProvider.SetError(control, request.Input);
+                infoProvider.SetError(control, request.Input + $"\nREV: {_selectedModel.REV}\nECO: {_selectedModel.ECO}");
 
                 using (SqlConnection conn = new SqlConnection(csObjectHolder.csObjectHolder.ObjectHolderInstance().RepairConnectionString))
                 {
@@ -411,7 +398,7 @@ namespace RApID_Project_WPF
 
             if (dialogResult == DialogResult.OK)
             {
-                infoProvider.SetError(control, request.Input);
+                infoProvider.SetError(control, request.Input + $"\nREV: {_selectedModel.REV}\nECO: {_selectedModel.ECO}");
 
                 using (SqlConnection conn = new SqlConnection(csObjectHolder.csObjectHolder.ObjectHolderInstance().RepairConnectionString))
                 using (SqlCommand cmd = new SqlCommand(
@@ -570,6 +557,18 @@ namespace RApID_Project_WPF
             bSchematic = false;
             bBOM = false;
             ResetStatus();
+        }
+
+        private void openFileLocationToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            var control = (bBOM ? flowBOMFiles.Controls[BOMFileIndex] : flowSchematicLinks.Controls[SchematicFileIndex]) as AssemblyLinkLabel;
+            try
+            {
+                Process.Start(Path.Combine(ELEC_ROOT_DIR, control.Link.Substring(0, control.Link.LastIndexOf('\\') + 1)));
+            } catch(FileNotFoundException fnfe)
+            {
+                csExceptionLogger.csExceptionLogger.Write("EV_openFileLocation", fnfe);
+            }
         }
 
         private void markAsActiveToolStripMenuItem_Click(object sender, EventArgs e)
