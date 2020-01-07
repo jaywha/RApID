@@ -34,6 +34,8 @@
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
             this.cxmnuAssemblyLinksMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.openFileLocationToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.markAsActiveToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.tssMarkAsActive = new System.Windows.Forms.ToolStripSeparator();
             this.changeFilePathToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -89,8 +91,7 @@
             this.errorProvider = new System.Windows.Forms.ErrorProvider(this.components);
             this.infoProvider = new System.Windows.Forms.ErrorProvider(this.components);
             this.techAliasTableAdapter = new RApID_Project_WPF.PCBAliasDataSetTableAdapters.TechAliasTableAdapter();
-            this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
-            this.openFileLocationToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.bckgrndProcessDBOps = new System.ComponentModel.BackgroundWorker();
             this.cxmnuAssemblyLinksMenu.SuspendLayout();
             this.cxmnuDatabaseMenu.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.spltpnlMain)).BeginInit();
@@ -148,8 +149,20 @@
             this.tssUploadBOMData,
             this.uploadBOMDataToolStripMenuItem});
             this.cxmnuAssemblyLinksMenu.Name = "cxmnuLinkMenu";
-            this.cxmnuAssemblyLinksMenu.Size = new System.Drawing.Size(200, 226);
+            this.cxmnuAssemblyLinksMenu.Size = new System.Drawing.Size(200, 204);
             this.cxmnuAssemblyLinksMenu.Opening += new System.ComponentModel.CancelEventHandler(this.cxmnuAssemblyLinksMenu_Opening);
+            // 
+            // openFileLocationToolStripMenuItem
+            // 
+            this.openFileLocationToolStripMenuItem.Name = "openFileLocationToolStripMenuItem";
+            this.openFileLocationToolStripMenuItem.Size = new System.Drawing.Size(199, 22);
+            this.openFileLocationToolStripMenuItem.Text = "Open File Location";
+            this.openFileLocationToolStripMenuItem.Click += new System.EventHandler(this.openFileLocationToolStripMenuItem_Click);
+            // 
+            // toolStripSeparator1
+            // 
+            this.toolStripSeparator1.Name = "toolStripSeparator1";
+            this.toolStripSeparator1.Size = new System.Drawing.Size(196, 6);
             // 
             // markAsActiveToolStripMenuItem
             // 
@@ -732,17 +745,9 @@
             // 
             this.techAliasTableAdapter.ClearBeforeFill = true;
             // 
-            // toolStripSeparator1
+            // bckgrndProcessDBOps
             // 
-            this.toolStripSeparator1.Name = "toolStripSeparator1";
-            this.toolStripSeparator1.Size = new System.Drawing.Size(196, 6);
-            // 
-            // openFileLocationToolStripMenuItem
-            // 
-            this.openFileLocationToolStripMenuItem.Name = "openFileLocationToolStripMenuItem";
-            this.openFileLocationToolStripMenuItem.Size = new System.Drawing.Size(199, 22);
-            this.openFileLocationToolStripMenuItem.Text = "Open File Location";
-            this.openFileLocationToolStripMenuItem.Click += new System.EventHandler(this.openFileLocationToolStripMenuItem_Click);
+            this.bckgrndProcessDBOps.WorkerReportsProgress = true;
             // 
             // frmBoardFileManager
             // 
@@ -873,5 +878,6 @@
         private System.Windows.Forms.ToolStripMenuItem changeECOToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem openFileLocationToolStripMenuItem;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
+        private System.ComponentModel.BackgroundWorker bckgrndProcessDBOps;
     }
 }

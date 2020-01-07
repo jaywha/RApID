@@ -26,19 +26,29 @@ namespace RApID_Project_WPF
                 = "fGaGwvh6EDE:APA91bG0mr3kNHuMItXz_C8DxZbBQFIgC7ADOOXLNEluAkwO9l-7Md-xYLWsiyy_4jiKyiGbwojjPhneL2Wf-AlpzJ5_IPhiQqwddaff11_Y5zTDtJ3WeO5h3kcBJ07sfj5xzKiJwOAE";
         }
 
+        public static void AssignEmailRecipients(ref MailMessage _emailMessage)
+        {
+            //TODO: Pull from a DB mailing list?
+            StringBuilder recipientList = new StringBuilder();
+            recipientList.Append("jwhaley@johnsonoutdoors.com");
+            recipientList.Append("dglanton@johnsonoutdoors.com");
+            recipientList.Append("jshirley@johnsonoutdoors.com");
+            recipientList.Append("bdill@johnsonoutdoors.com");
+            recipientList.Append("charding@johnsonoutdoors.com");
+
+            _emailMessage.To.Add(recipientList.ToString());
+        }
+
         public static bool SendEmail(string subject = "", string body = "", Exception exception = null)
         {
-            if (ReportedExceptions.Contains(exception)) return true;
-            else ReportedExceptions.Add(exception);
+            ReportedExceptions.Add(exception);
 
             string sUserName = Environment.UserName;
             try
             {
                 MailMessage _emailMessage = new MailMessage();
 
-                #region assign email recipients
-                    _emailMessage.To.Add("jwhaley@johnsonoutdoors.com");
-                #endregion
+                AssignEmailRecipients(ref _emailMessage);
 
                 #region assign who email is from
                 string emailQuery = "SELECT EmailAddress FROM UserLogin WHERE [Username] = '" + sUserName + "'";

@@ -255,11 +255,13 @@ namespace RApID_Project_WPF
             {
                 Mailman.SendEmail("RApID - Missing BOM",
                     "<p>We're missing the BOM for the following unit info.</p>" +
-                    "<hr/>"+
-                    $"\tSerial Number: {txtSN.Text}" +
-                    $"\tProduction Query Part Number: {txtPN.Text}" +
-                    $"\tSNMapper Part Number: {mapper.PartNumber}" +
-                    $"\tSNMapper Component Number: {mapper.ComponentNumber}" +
+                    "<hr/>" +
+                    "<ul>"+
+                    $"<li>Serial Number: {txtSN.Text}</li>" +
+                    $"<li>Production Query Part Number: {txtPN.Text}</li>" +
+                    $"<li>SNMapper Part Number: {mapper.PartNumber}</li>" +
+                    $"<li>SNMapper Component Number: {mapper.ComponentNumber}</li>" +
+                    "</ul>" +
                     "<hr/>"
                     );
             }

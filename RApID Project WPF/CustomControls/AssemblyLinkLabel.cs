@@ -128,7 +128,7 @@ namespace RApID_Project_WPF.CustomControls
             try
             {
                 Console.WriteLine(LogActivation() + "\n\t|--> Link Activated!\n");
-                Process.Start(frmBoardFileManager.ELEC_ROOT_DIR + Link);
+                Process.Start(frmBoardFileManager.ELECROOTDIR + Link);
             }
             catch (ArgumentException ae) {
                 csExceptionLogger.csExceptionLogger.Write($"Link_Activate", ae);

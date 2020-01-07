@@ -187,8 +187,8 @@ namespace RApID_Project_WPF
                 {
                     case MultipleItemType.BOMFiles:
                         MULTIPLEBOM item = (MULTIPLEBOM)dgItemInfo.SelectedItem;
-                        if (!item.FilePath.Contains(frmBoardFileManager.ELEC_ROOT_DIR))
-                            item.FilePath = frmBoardFileManager.ELEC_ROOT_DIR + item.FilePath;
+                        if (!item.FilePath.Contains(frmBoardFileManager.ELECROOTDIR))
+                            item.FilePath = frmBoardFileManager.ELECROOTDIR + item.FilePath;
                         sVars.SelectedBOMFile = item;
                         DialogResult = true;
                         break;
