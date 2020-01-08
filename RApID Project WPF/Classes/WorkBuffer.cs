@@ -29,11 +29,14 @@ namespace RApID_Project_WPF.Classes
         public T Next() {
             if (Jobs.Count > 1)
             {
-                var @return = Jobs[1];
+                var job = Jobs[1];
                 Jobs.RemoveAt(0);
-                return @return;
+                return job;
             }
-            else return default;
+            else
+            {
+                return default;
+            }
         }
     }
 }
