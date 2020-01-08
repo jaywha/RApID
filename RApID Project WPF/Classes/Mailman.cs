@@ -30,11 +30,11 @@ namespace RApID_Project_WPF
         {
             //TODO: Pull from a DB mailing list?
             StringBuilder recipientList = new StringBuilder();
-            recipientList.Append("jwhaley@johnsonoutdoors.com");
-            recipientList.Append("dglanton@johnsonoutdoors.com");
-            recipientList.Append("jshirley@johnsonoutdoors.com");
-            recipientList.Append("bdill@johnsonoutdoors.com");
-            recipientList.Append("charding@johnsonoutdoors.com");
+            recipientList.Append("jay.whaley@johnsonoutdoors.com,");
+            recipientList.Append("dexter.glanton@johnsonoutdoors.com,");
+            recipientList.Append("julie.shirley@johnsonoutdoors.com,");
+            recipientList.Append("blayde.dill@johnsonoutdoors.com,");
+            recipientList.Append("charles.harding@johnsonoutdoors.com");
 
             _emailMessage.To.Add(recipientList.ToString());
         }
@@ -44,8 +44,8 @@ namespace RApID_Project_WPF
             ReportedExceptions.Add(exception);
 
             string sUserName = Environment.UserName;
-            try
-            {
+            //try
+            //{
                 MailMessage _emailMessage = new MailMessage();
 
                 AssignEmailRecipients(ref _emailMessage);
@@ -114,14 +114,14 @@ namespace RApID_Project_WPF
                         throw new Exception(sExMessage);
                 }
                 #endregion
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show("Couldn't send error email...\nPlease contact Jay Whaley or Dexter Glanton.", 
-                    "Critical Failure", MessageBoxButton.OK, MessageBoxImage.Error);
-                csExceptionLogger.csExceptionLogger.Write("Mailman_Error", ex);
-                return false;
-            }
+            //}
+            //catch (Exception ex)
+            //{
+            //    MessageBox.Show("Couldn't send error email...\nPlease contact Jay Whaley or Dexter Glanton.", 
+            //        "Critical Failure", MessageBoxButton.OK, MessageBoxImage.Error);
+            //    csExceptionLogger.csExceptionLogger.Write("Mailman_Error", ex);
+            //    return false;
+            //}
             return true;
         }
     }

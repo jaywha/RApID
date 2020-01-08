@@ -264,6 +264,7 @@ namespace RApID_Project_WPF
                     "</ul>" +
                     "<hr/>"
                     );
+                return "";
             }
 
             if (filename.Contains(",") && !string.IsNullOrWhiteSpace(notes))
