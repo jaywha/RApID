@@ -46,6 +46,7 @@ namespace RApID_Project_WPF
 
     public static class csCrossClassInteraction
     {
+        private static TaskScheduler CrossClassScheduler = TaskScheduler.Current;
         private static StaticVars sVar = StaticVars.StaticVarsInstance();
         private static csObjectHolder.csObjectHolder holder = csObjectHolder.csObjectHolder.ObjectHolderInstance();
         private const string bomlogfiledir = @"P:\EE Process Test\Logs\RApID\_BOMReadings\";
@@ -325,10 +326,11 @@ namespace RApID_Project_WPF
             try
             {
                 Directory.CreateDirectory(bomlogfiledir);
-                File.Create(Path.Combine(bomlogfiledir, bomlogfile));
+                var tempPtr = File.Create(Path.Combine(bomlogfiledir, bomlogfile));
 
-                await Task.Factory.StartNew(new Action(async () =>
-                {
+                CancellationToken token = new CancellationToken();
+
+                await Task.Factory.StartNew(new Action(async () => {
                     if (progData != null) progData.Dispatcher.Invoke(() => progData.Visibility = Visibility.Visible);
                     if (string.IsNullOrEmpty(filePath))
                     {
@@ -345,51 +347,62 @@ namespace RApID_Project_WPF
                         return;
                     }
 
-                    using (FileStream stream = File.Open(filePath, FileMode.Open, FileAccess.Read))
-                    {
-                        using (IExcelDataReader reader = ExcelReaderFactory.CreateReader(stream))
-                        {
-                            while (reader.NextResult() && reader.Name != null && !reader.Name.Equals("JUKI"))
-                            { /*spin until JUKI sheet*/ }
 
-                            progData.Dispatcher.Invoke(() =>
+                    using (SqlConnection conn = new SqlConnection(csObjectHolder.csObjectHolder.ObjectHolderInstance().RepairConnectionString))
+                    {
+                        using (SqlCommand cmd = new SqlCommand("SELECT [ReferenceDesignator],[PartNumber] FROM [Repair].[dbo].[BoMInfo] WHERE [BoardNumber] = @FAN", conn))
+                        {
+                            try
                             {
-                                frmProduction._bomRecordsTotal = reader.RowCount;
-                                progData.Maximum = reader.RowCount;
-                            });
-                            while (reader.Read() && !string.IsNullOrEmpty(reader.GetValue(0)?.ToString())
-                                                && !string.IsNullOrEmpty(reader.GetValue(4)?.ToString()))
-                            {
-                                var rd = reader.GetValue(0).ToString();
-                                var pn = reader.GetValue(4).ToString();
-                                if (collections != null && collections.Length > 0)
-                                {
-                                    if (ExcelDispatcher != null)
+                                conn.Open();
+                                cmd.Parameters.AddWithValue("@FAN", filePath);
+                                using (SqlDataReader reader = cmd.ExecuteReader()) {
+                                    progData.Dispatcher.Invoke(() =>
                                     {
-                                        ExcelDispatcher.Invoke(() => collections[0]?.Add(rd));
-                                        ExcelDispatcher.Invoke(() => collections[1]?.Add(pn));
+                                        frmProduction._bomRecordsTotal = reader.RecordsAffected;
+                                        progData.Maximum = reader.RecordsAffected;
+                                    });
+
+                                    while (reader.Read())
+                                    {
+                                        var rd = reader[0].ToString();
+                                        var pn = reader[1].ToString();
+                                        if (collections != null && collections.Length > 0)
+                                        {
+                                            if (ExcelDispatcher != null)
+                                            {
+                                                ExcelDispatcher.Invoke(() => collections[0]?.Add(rd));
+                                                ExcelDispatcher.Invoke(() => collections[1]?.Add(pn));
+                                            }
+                                        }
+
+                                        if (bomlist != null)
+                                            await bomlist.Dispatcher.BeginInvoke(new Action(() =>
+                                            {
+                                                frmProduction._bomRecordsDone++;
+                                                bomlist.Items.Add(new MultiplePartsReplaced(rd, pn, GetPartReplacedPartDescription(pn)));
+                                                if (frmProduction._bomRecordsDone == frmProduction._bomRecordsTotal)
+                                                    frmProduction._bomRecordsDone = 0;
+                                            }), DispatcherPriority.Background);
+
+                                        progData.Dispatcher.Invoke(() =>
+                                        {
+                                            progData.Value++;
+                                        });
                                     }
                                 }
-
-                                if (bomlist != null)
-                                    await bomlist.Dispatcher.BeginInvoke(new Action(() =>
-                                    {
-                                        frmProduction._bomRecordsDone++;
-                                        bomlist.Items.Add(new MultiplePartsReplaced(rd, pn, GetPartReplacedPartDescription(pn)));
-                                        if (frmProduction._bomRecordsDone == frmProduction._bomRecordsTotal)
-                                            frmProduction._bomRecordsDone = 0;
-                                    }), DispatcherPriority.Background);
-
-                                progData.Dispatcher.Invoke(() => {
-                                    progData.Value++;
-                                });
+                            } catch (Exception ex) { 
+                                Console.WriteLine($"\n[ERROR] ==> Message:{ex.Message}\n\tStack Trace: {ex.StackTrace}\n"); 
                             }
                         }
                     }
-                })).ContinueWith((antecedent) => {
+                }), token, TaskCreationOptions.LongRunning, CrossClassScheduler)
+                .ContinueWith((antecedent) => {
                     GC.Collect();
                     if (progData != null) progData.Dispatcher.Invoke(() => progData.Visibility = Visibility.Hidden);
-                });
+                }, token, TaskContinuationOptions.NotOnCanceled, CrossClassScheduler).ConfigureAwait(true);
+
+                tempPtr.Dispose();
             }
             catch (IOException ioe)
             {

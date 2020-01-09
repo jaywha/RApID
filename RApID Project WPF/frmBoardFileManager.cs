@@ -19,6 +19,9 @@ using Excel = Microsoft.Office.Interop.Excel;
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using RApID_Project_WPF.Classes;
+using System.Threading;
+using UIAction = System.Action;
+using UIFunc = System.Func<object>;
 
 namespace RApID_Project_WPF
 {
@@ -42,11 +45,12 @@ namespace RApID_Project_WPF
         public bool WasEntryFound { get; set; } = false;
         public string BOMFileName { get; set; } = "";
 
+        private readonly string DBUpload_Log = $@"P:\EE Process Test\Logs\RApID\_BOMUploads\RApID_BOMUploadLog_{DateTime.Now:MM-dd-yyyy}.txt";
         public const string ELECROOTDIR = @"L:\EngDocumentation\Design\Electrical\";
         const string EMPTY_FILE_PATH = "BOMPath";
-        static bool FirstTimeToday = true;
+        static bool IsFirstTimeToday = true;
+        static bool IsUploading = false;
 
-        private readonly WorkBuffer<Tuple<AssemblyLinkLabel, object, object>> BackgroundWorkerBuffer = null;
         private DesignFileSet _selectedModel = new DesignFileSet();
         public DesignFileSet SelectedModel
         {
@@ -92,17 +96,13 @@ namespace RApID_Project_WPF
             if (!string.IsNullOrWhiteSpace(partNumber)) txtFullAssemblyNumber.Text = partNumber;
             DirectDialog = directDialog;
 
-            bckgrndProcessDBOps.DoWork += BckgrndProcessDBOps_DoWork;
-            bckgrndProcessDBOps.RunWorkerCompleted += BckgrndProcessDBOps_RunWorkerCompleted;
-            BackgroundWorkerBuffer = new WorkBuffer<Tuple<AssemblyLinkLabel, object, object>>(bckgrndProcessDBOps);
-
             txtFullAssemblyNumber.Focus();
         }
 
         private void frmBoardAliases_Load(object sender, EventArgs e)
         {
             this.techAliasTableAdapter.Fill(this.pCBAliasDataSet.TechAlias);
-            if (!DirectDialog && FirstTimeToday)
+            if (!DirectDialog && IsFirstTimeToday)
             {
                 DialogResult ans = MessageBox.Show("Please use this form to enter in the correct information to locate the files related to this repair item.",
                     "Locate BOM & Schematic Files", MessageBoxButtons.YesNo, MessageBoxIcon.Information);
@@ -122,7 +122,7 @@ namespace RApID_Project_WPF
                     }
                 }
 
-                FirstTimeToday = false;
+                IsFirstTimeToday = false;
             }
 
             new TechAliasTableAdapter().Fill(pCBAliasDataSet.TechAlias);
@@ -132,102 +132,6 @@ namespace RApID_Project_WPF
             if (!string.IsNullOrWhiteSpace(txtFullAssemblyNumber.Text))
             {
                 HandleTextBoxEntry(new KeyEventArgs(Keys.Enter));
-            }
-        }
-
-        private void BckgrndProcessDBOps_DoWork(object sender, DoWorkEventArgs e)
-        {
-            if (e.Argument == null) {
-                Console.WriteLine("(NULL,ARGS)");
-                return;
-            }
-
-            Tuple<AssemblyLinkLabel, object, object> args = (Tuple<AssemblyLinkLabel, object, object>)e.Argument;
-            var assemblyLink = args.Item1;
-            var refDes = args.Item2.ToString();
-            var partNum = args.Item3.ToString();
-            Console.WriteLine($"({refDes}, {partNum})");
-            var result = (Message: "", Success: false);
-
-            #region Insert OR Update data in DB Table
-
-            var mergeQuery = "MERGE [Repair].[dbo].[BoMInfo] AS TARGET " +
-                                                   "USING (SELECT @BoardNumber as BoardNumber, @RefDes AS RefDes, @Revision AS REV) AS SOURCE " +
-                                                   "ON (TARGET.BoardNumber = SOURCE.BoardNumber " +
-                                                   "    AND TARGET.Rev = SOURCE.REV " +
-                                                   "    AND TARGET.ReferenceDesignator = SOURCE.RefDes) " +
-                                                   "WHEN MATCHED THEN " +
-                                                   "    UPDATE SET " +
-                                                   "    PartNumber = @PartNum, " +
-                                                   "    Rev = @Revision, " +
-                                                   "    ECO = @ECONum " +
-                                                   "WHEN NOT MATCHED THEN " +
-                                                   "    INSERT (BoardNumber, ReferenceDesignator, PartNumber, Rev, ECO) " +
-                                                   "    VALUES (@BoardNumber, @RefDes, @PartNum, @Revision, @ECONum) " +
-                                                   ";";
-
-            using (SqlConnection conn = new SqlConnection(csObjectHolder.csObjectHolder.ObjectHolderInstance().RepairConnectionString))
-            using (SqlCommand cmd = new SqlCommand(mergeQuery, conn))
-            {
-                try
-                {
-                    conn.Open();
-                    cmd.Parameters.AddRange(new SqlParameter[] {
-                            new SqlParameter("BoardNumber",System.Data.SqlDbType.VarChar, 100),
-                            new SqlParameter("RefDes",System.Data.SqlDbType.VarChar, 100),
-                            new SqlParameter("PartNum",System.Data.SqlDbType.VarChar, 200),
-                            new SqlParameter("Revision",System.Data.SqlDbType.VarChar, 50),
-                            new SqlParameter("ECONum",System.Data.SqlDbType.VarChar, 500)
-                        });
-
-                    cmd.Parameters["BoardNumber"].Value = txtFullAssemblyNumber.Text;
-                    cmd.Parameters["RefDes"].Value = refDes;
-                    cmd.Parameters["PartNum"].Value = partNum;
-
-                    if (assemblyLink.REV != null && !string.IsNullOrWhiteSpace(assemblyLink.REV))
-                        cmd.Parameters["Revision"].Value = assemblyLink.REV;
-                    else
-                        cmd.Parameters["Revision"].Value = DBNull.Value;
-
-
-                    if (assemblyLink.ECO != null && !string.IsNullOrWhiteSpace(assemblyLink.ECO))
-                        cmd.Parameters["ECONum"].Value = assemblyLink.ECO;
-                    else
-                        cmd.Parameters["ECONum"].Value = DBNull.Value;
-
-                    int rowsAffected = cmd.ExecuteNonQuery();
-
-                    if (rowsAffected == 1) result.Success = true;
-                    else result.Message = "Track what error occured";
-                    conn.Close();
-                }
-                catch (Exception ex) { MessageBox.Show(ex.Message); Console.WriteLine(ex.Message); }
-            }
-
-            #endregion
-
-            if (!result.Success) File.AppendAllText(DBUpload_Log, $"\n\tError updating reference designator: {refDes}\n\t\tMessage: {result.Message}\n");
-        }
-
-        private void BckgrndProcessDBOps_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
-        {
-            if (!BackgroundWorkerBuffer.IsEmpty)
-            {
-                var nextJob = BackgroundWorkerBuffer.Next();
-                if (nextJob != null)
-                {
-                    bckgrndProcessDBOps.RunWorkerAsync(nextJob);
-                    progbarStatus.Value++;
-                }
-                else
-                {
-                    spltpnlActualForm.Panel2Collapsed = true;
-                    lblStatus.Text = "";
-                }
-            }
-            else {
-                spltpnlActualForm.Panel2Collapsed = true;
-                lblStatus.Text = "";
             }
         }
 
@@ -582,91 +486,100 @@ namespace RApID_Project_WPF
         {
             if (string.IsNullOrWhiteSpace(txtFullAssemblyNumber.Text)) return;
 
-            OpenFileDialog ofd = new OpenFileDialog()
+            using (OpenFileDialog ofd = new OpenFileDialog()
             {
-                InitialDirectory = bBOM ? ELECROOTDIR + (flowBOMFiles.Controls[BOMFileIndex] as AssemblyLinkLabel).Link.Split('\\').TakeWhile(token => !token.Contains(".")).Aggregate((c, n) => c + "\\" + n)
-                : bSchematic ? ELECROOTDIR + (flowSchematicLinks.Controls[SchematicFileIndex] as AssemblyLinkLabel).Link.Split('\\').TakeWhile(token => !token.Contains(".")).Aggregate((c, n) => c + "\\" + n)
-                : ELECROOTDIR,
                 CheckFileExists = true,
                 CheckPathExists = true,
                 Title = $"Please choose the new {(bBOM ? "BOM" : "Schematic")} file path...",
                 AutoUpgradeEnabled = true,
                 Multiselect = false
-            };
+            }) {
 
-            Console.WriteLine($"Current Init Directory {{\n\t{ofd.InitialDirectory}\n}}");
+                ofd.InitialDirectory = bNewBOM || bNewSchematic ? ELECROOTDIR
+                    : bBOM ? ELECROOTDIR + (flowBOMFiles.Controls[BOMFileIndex] as AssemblyLinkLabel).Link.Split('\\').TakeWhile(token => !token.Contains(".")).Aggregate((c, n) => c + "\\" + n)
+                    : bSchematic ? ELECROOTDIR + (flowSchematicLinks.Controls[SchematicFileIndex] as AssemblyLinkLabel).Link.Split('\\').TakeWhile(token => !token.Contains(".")).Aggregate((c, n) => c + "\\" + n)
+                    : ELECROOTDIR;
 
-            spltpnlActualForm.Panel2Collapsed = false;
-            progbarStatus.Value = 0;
-            lblStatus.Text = "Changing " + (bBOM ? "BOM file path" : "Schematic link path") + "...";
+                Console.WriteLine($"Current Init Directory {{\n\t{ofd.InitialDirectory}\n}}");
 
-            if (ofd.ShowDialog() != DialogResult.OK ||
-                string.IsNullOrWhiteSpace(ofd.FileName)) return;
+                spltpnlActualForm.Panel2Collapsed = false;
+                progbarStatus.Maximum = 3;
+                progbarStatus.Value = 0;
+                lblStatus.Text = "Changing " + (bBOM ? "BOM file path" : "Schematic link path") + "...";
 
-            if (bBOM)
-            {
-                var ext = ofd.SafeFileName.Split('.').Last();
-                Image img = imgSchematics.Images[(new List<string>() { "xls", "xlsx", "xlsm" }.Contains(ext) ? "xls" : "other")];
-                if (bNewBOM)
+                if (ofd.ShowDialog() != DialogResult.OK ||
+                    string.IsNullOrWhiteSpace(ofd.FileName))
                 {
-                    AssemblyLinkLabel link = new AssemblyLinkLabel(ofd.FileName.Replace(ELECROOTDIR, ""), ofd.SafeFileName, img, handler: lnkBOMFile_MouseDown);
-                    _selectedModel.BOMFiles.Add(link);
-                    flowBOMFiles.Controls.Add(link);
-                    bNewBOM = false;
+                    spltpnlActualForm.Panel2Collapsed = true;
+                    lblStatus.Text = "";
+                    return;
                 }
-                else
-                {
-                    AssemblyLinkLabel newAssemblyLink = new AssemblyLinkLabel(ofd.FileName.Replace(ELECROOTDIR, ""), ofd.SafeFileName, img, handler: lnkBOMFile_MouseDown);
-                    _selectedModel.BOMFiles.RemoveAt(BOMFileIndex);
-                    _selectedModel.BOMFiles.Insert(BOMFileIndex, newAssemblyLink);
-                    flowBOMFiles.Controls.RemoveAt(BOMFileIndex);
-                    flowBOMFiles.Controls.Add(newAssemblyLink);
-                }
-            }
-            else if (bSchematic)
-            {
-                var ext = ofd.SafeFileName.Split('.').Last();
-                Image img = imgSchematics.Images[(new List<string>() { "pdf", "asc" }.Contains(ext) ? ext : "other")];
-                if (bNewSchematic)
-                {
-                    AssemblyLinkLabel link = new AssemblyLinkLabel(ofd.FileName.Replace(ELECROOTDIR, ""), ofd.SafeFileName, img, handler: lnkSchematicFile_MouseDown);
-                    _selectedModel.SchematicLinks.Add(link);
-                    flowSchematicLinks.Controls.Add(link);
-                    bNewSchematic = false;
-                }
-                else
-                {
-                    AssemblyLinkLabel newAssemblyLink = new AssemblyLinkLabel(ofd.FileName.Replace(ELECROOTDIR, ""), ofd.SafeFileName, img, handler: lnkSchematicFile_MouseDown);
-                    _selectedModel.SchematicLinks.RemoveAt(SchematicFileIndex);
-                    _selectedModel.SchematicLinks.Insert(SchematicFileIndex, newAssemblyLink);
-                    flowSchematicLinks.Controls.RemoveAt(SchematicFileIndex);
-                    flowSchematicLinks.Controls.Add(newAssemblyLink);
-                }
-            }
 
-            lblStatus.Text = "Changing database entry...";
-            progbarStatus.PerformStep();
-
-            using (SqlConnection conn = new SqlConnection(csObjectHolder.csObjectHolder.ObjectHolderInstance().RepairConnectionString))
-            {
-                conn.Open();
-                using (SqlCommand cmd = new SqlCommand("UPDATE [Repair].[dbo].[TechAlias] SET " +
-                    "BOMPath = @BomPath, SchematicPaths = @SchPath " +
-                    "WHERE [PartNumber] = @Pnum", conn))
+                if (bBOM)
                 {
-                    cmd.Parameters.AddWithValue("@Pnum", _selectedModel.PartNumber);
-                    cmd.Parameters.AddWithValue("@BomPath", _selectedModel.BOMFiles.GetLinks().ToStrings(suffix: ","));
-                    cmd.Parameters.AddWithValue("@SchPath", _selectedModel.SchematicLinks.GetLinks().ToStrings(suffix: ","));
-                    progbarStatus.PerformStep();
-                    if (cmd.ExecuteNonQuery() > 0)
+                    var ext = ofd.SafeFileName.Split('.').Last();
+                    Image img = imgSchematics.Images[(new List<string>() { "xls", "xlsx", "xlsm" }.Contains(ext) ? "xls" : "other")];
+                    if (bNewBOM)
                     {
-                        lblStatus.Text = "Change successfull!";
-                        progbarStatus.PerformStep();
+                        AssemblyLinkLabel link = new AssemblyLinkLabel(ofd.FileName.Replace(ELECROOTDIR, ""), ofd.SafeFileName, img, handler: lnkBOMFile_MouseDown);
+                        _selectedModel.BOMFiles.Add(link);
+                        flowBOMFiles.Controls.Add(link);
+                        bNewBOM = false;
                     }
                     else
                     {
-                        lblStatus.Text = "DB_FAILURE --> Couldn't update database!";
-                        progbarStatus.ForeColor = Color.Red;
+                        AssemblyLinkLabel newAssemblyLink = new AssemblyLinkLabel(ofd.FileName.Replace(ELECROOTDIR, ""), ofd.SafeFileName, img, handler: lnkBOMFile_MouseDown);
+                        _selectedModel.BOMFiles.RemoveAt(BOMFileIndex);
+                        _selectedModel.BOMFiles.Insert(BOMFileIndex, newAssemblyLink);
+                        flowBOMFiles.Controls.RemoveAt(BOMFileIndex);
+                        flowBOMFiles.Controls.Add(newAssemblyLink);
+                    }
+                }
+                else if (bSchematic)
+                {
+                    var ext = ofd.SafeFileName.Split('.').Last();
+                    Image img = imgSchematics.Images[(new List<string>() { "pdf", "asc" }.Contains(ext) ? ext : "other")];
+                    if (bNewSchematic)
+                    {
+                        AssemblyLinkLabel link = new AssemblyLinkLabel(ofd.FileName.Replace(ELECROOTDIR, ""), ofd.SafeFileName, img, handler: lnkSchematicFile_MouseDown);
+                        _selectedModel.SchematicLinks.Add(link);
+                        flowSchematicLinks.Controls.Add(link);
+                        bNewSchematic = false;
+                    }
+                    else
+                    {
+                        AssemblyLinkLabel newAssemblyLink = new AssemblyLinkLabel(ofd.FileName.Replace(ELECROOTDIR, ""), ofd.SafeFileName, img, handler: lnkSchematicFile_MouseDown);
+                        _selectedModel.SchematicLinks.RemoveAt(SchematicFileIndex);
+                        _selectedModel.SchematicLinks.Insert(SchematicFileIndex, newAssemblyLink);
+                        flowSchematicLinks.Controls.RemoveAt(SchematicFileIndex);
+                        flowSchematicLinks.Controls.Add(newAssemblyLink);
+                    }
+                }
+
+                lblStatus.Text = "Changing database entry...";
+                progbarStatus.PerformStep();
+
+                using (SqlConnection conn = new SqlConnection(csObjectHolder.csObjectHolder.ObjectHolderInstance().RepairConnectionString))
+                {
+                    conn.Open();
+                    using (SqlCommand cmd = new SqlCommand("UPDATE [Repair].[dbo].[TechAlias] SET " +
+                        "BOMPath = @BomPath, SchematicPaths = @SchPath " +
+                        "WHERE [PartNumber] = @Pnum", conn))
+                    {
+                        cmd.Parameters.AddWithValue("@Pnum", _selectedModel.PartNumber);
+                        cmd.Parameters.AddWithValue("@BomPath", _selectedModel.BOMFiles.GetLinks().ToStrings(suffix: ","));
+                        cmd.Parameters.AddWithValue("@SchPath", _selectedModel.SchematicLinks.GetLinks().ToStrings(suffix: ","));
+                        progbarStatus.PerformStep();
+                        if (cmd.ExecuteNonQuery() > 0)
+                        {
+                            lblStatus.Text = "Change successfull!";
+                            progbarStatus.PerformStep();
+                        }
+                        else
+                        {
+                            lblStatus.Text = "DB_FAILURE --> Couldn't update database!";
+                            progbarStatus.ForeColor = Color.Red;
+                        }
                     }
                 }
             }
@@ -818,46 +731,171 @@ namespace RApID_Project_WPF
             flowSchematicLinks.Controls.Clear();
         }
 
-        private readonly string DBUpload_Log = $@"P:\EE Process Test\Logs\RApID\_BOMUploads\RApID_BOMUploadLog_{DateTime.Now:MM-dd-yyyy}.txt";
-        private void uploadBOMDataToolStripMenuItem_Click(object sender, EventArgs e)
+        #region BackGround Process DBOps
+        private void BckgrndProcessDBOps_DoWork(object sender, DoWorkEventArgs e)
         {
-            lblWarning.Text = "Uploading to Database!";
-            this.Update();
-            AssemblyLinkLabel assemblyLink = (flowBOMFiles.Controls[BOMFileIndex] as AssemblyLinkLabel);
-            var targetFile = ELECROOTDIR + assemblyLink.Link;
-            var localFile = Environment.GetFolderPath(Environment.SpecialFolder.Desktop) + $"\\{DateTime.Now.Ticks}" + assemblyLink.Link.Split('\\').Last();
-            statUploadInfo.Visible = true;
+            if (e.Argument == null)
+            {
+                Console.WriteLine("[BackgrounProcessDBOps]::DoWork -> Null AssemblyLinkLabel Passed");
+                return;
+            }
 
-            foreach (var p in Process.GetProcessesByName("EXCEL")) p.Kill();
+            AssemblyLinkLabel BoMFile = (AssemblyLinkLabel) e.Argument;
 
+            var targetFile = ELECROOTDIR + BoMFile.Link;
+            var localFile = Environment.GetFolderPath(Environment.SpecialFolder.Desktop) + $"\\{DateTime.Now.Ticks}" + BoMFile.Link.Split('\\').Last();
             Excel.Application excel = null;
             Workbooks allBooks = null;
             Workbook macroBook = null;
             Sheets allSheets = null;
             Worksheet jukiSheet = null;
+
+            #region Insert OR Update data in DB Table
+
+            var mergeQuery = "MERGE [Repair].[dbo].[BoMInfo] AS TARGET " +
+                                                   "USING (SELECT @BoardNumber as BoardNumber, @RefDes AS RefDes, @Revision AS REV) AS SOURCE " +
+                                                   "ON (TARGET.BoardNumber = SOURCE.BoardNumber " +
+                                                   "    AND TARGET.Rev = SOURCE.REV " +
+                                                   "    AND TARGET.ReferenceDesignator = SOURCE.RefDes) " +
+                                                   "WHEN MATCHED THEN " +
+                                                   "    UPDATE SET " +
+                                                   "    PartNumber = @PartNum, " +
+                                                   "    Rev = @Revision, " +
+                                                   "    ECO = @ECONum " +
+                                                   "WHEN NOT MATCHED THEN " +
+                                                   "    INSERT (BoardNumber, ReferenceDesignator, PartNumber, Rev, ECO) " +
+                                                   "    VALUES (@BoardNumber, @RefDes, @PartNum, @Revision, @ECONum) " +
+                                                   ";";
+
+            using (SqlConnection conn = new SqlConnection(csObjectHolder.csObjectHolder.ObjectHolderInstance().RepairConnectionString))
+            using (SqlCommand cmd = new SqlCommand(mergeQuery, conn))
+            {
+                try
+                {
+                    conn.Open();
+
+                    #region Create XL Sheet Local Copy
+                    if (File.Exists(targetFile))
+                        File.Copy(targetFile, localFile, true);
+                    #endregion
+
+                    excel = new Excel.Application();
+                    allBooks = excel.Workbooks;
+                    macroBook = allBooks.Open(localFile);
+                    allSheets = macroBook.Sheets;
+                    jukiSheet = (Worksheet)allSheets["JUKI"];
+
+                    Invoke(new UIAction(() => lblStatus.Text = $"Pushing {BoMFile.Link.Split('\\').Last()} data to DB..."));
+
+                    cmd.Parameters.AddRange(new SqlParameter[] {
+                            new SqlParameter("BoardNumber",System.Data.SqlDbType.VarChar, 100),
+                            new SqlParameter("RefDes",System.Data.SqlDbType.VarChar, 100),
+                            new SqlParameter("PartNum",System.Data.SqlDbType.VarChar, 200),
+                            new SqlParameter("Revision",System.Data.SqlDbType.VarChar, 50),
+                            new SqlParameter("ECONum",System.Data.SqlDbType.VarChar, 500)
+                        });
+
+                    cmd.Parameters["BoardNumber"].Value = Invoke(new UIFunc(() => txtFullAssemblyNumber.Text));
+
+                    if (BoMFile.REV != null && !string.IsNullOrWhiteSpace(BoMFile.REV))
+                        cmd.Parameters["Revision"].Value = BoMFile.REV;
+                    else
+                        cmd.Parameters["Revision"].Value = DBNull.Value;
+
+
+                    if (BoMFile.ECO != null && !string.IsNullOrWhiteSpace(BoMFile.ECO))
+                        cmd.Parameters["ECONum"].Value = BoMFile.ECO;
+                    else
+                        cmd.Parameters["ECONum"].Value = DBNull.Value;
+
+                    var usedRows = jukiSheet.UsedRange.Rows.Count;
+
+                    Invoke(new UIAction(() => progbarStatus.Maximum = usedRows));
+
+                    for (int row = 1; row < usedRows; row++)
+                    {
+                        Range refDes = ((Range)jukiSheet.Cells[row, 1]);
+                        Range partNum = ((Range)jukiSheet.Cells[row, 5]);
+
+                        var rd = refDes.Value2 == null ? "" : refDes.Value2.ToString();
+                        var pn = partNum.Value2 == null ? "" : partNum.Value2.ToString();
+
+                        if (!string.IsNullOrEmpty(rd) && !string.IsNullOrEmpty(pn))
+                        {
+                            cmd.Parameters["RefDes"].Value = rd;
+                            cmd.Parameters["PartNum"].Value = pn;
+                            var rowsAffected = -100;
+                            try {
+                                rowsAffected = cmd.ExecuteNonQuery();
+                            } catch (SqlException sqlex) {
+                                if (rowsAffected == 0) File.AppendAllText(DBUpload_Log, $"\n\tError updating reference designator: {rd}\n\t\tMessage: {sqlex.Message}\n");
+                            }
+                        }
+
+                        bckgrndProcessDBOps.ReportProgress(row);
+
+                        if (row + 1 >= usedRows)
+                        {
+                            Marshal.FinalReleaseComObject(refDes);
+                            Marshal.FinalReleaseComObject(partNum);
+                        }
+                    }
+
+                    conn.Close();
+                }
+                catch (Exception ex) { MessageBox.Show(ex.Message); Console.WriteLine(ex.Message); }
+                finally
+                {
+                    // Cleanup
+                    GC.Collect();
+                    GC.WaitForPendingFinalizers();
+
+                    if (jukiSheet != null) Marshal.FinalReleaseComObject(jukiSheet);
+                    if (allSheets != null) Marshal.FinalReleaseComObject(allSheets);
+                    if (macroBook != null)
+                    {
+                        macroBook.Close(false, Type.Missing, Type.Missing);
+                        Marshal.FinalReleaseComObject(macroBook);
+                    }
+                    if (allBooks != null) Marshal.FinalReleaseComObject(allBooks);
+
+                    if (excel != null)
+                    {
+                        excel.Quit();
+                        Marshal.FinalReleaseComObject(excel);
+                    }
+
+                    File.Delete(localFile);
+                    File.AppendAllText(DBUpload_Log, $"}} End Record @ {DateTime.Now:hh:mm:ss tt}\n\n");
+
+                    Invoke(new UIAction(() => {
+                        Update();
+                        BringToFront();
+                        spltpnlActualForm.Panel2Collapsed = true;
+                        lblStatus.Text = "";
+                    }));
+                }
+            }
+
+            #endregion
+        }
+
+        private void bckgrndProcessDBOps_ProgressChanged(object sender, ProgressChangedEventArgs e) =>
+            Invoke(new UIAction(() => {
+                progbarStatus.Value = e.ProgressPercentage;
+            }));
+        #endregion
+
+        private void uploadBOMDataToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            AssemblyLinkLabel assemblyLink = (flowBOMFiles.Controls[BOMFileIndex] as AssemblyLinkLabel);
+            spltpnlActualForm.Panel2Collapsed = false;
+
+            foreach (var p in Process.GetProcessesByName("EXCEL")) p.Kill();
             File.AppendAllText(DBUpload_Log, $"Start {Environment.MachineName}\\{Environment.UserName} Record @ {DateTime.Now:hh:mm:ss tt} {{\n");
 
             try
             {
-                #region Create XL Sheet Local Copy
-                if (File.Exists(targetFile))
-                    File.Copy(targetFile, localFile, true);
-                #endregion
-
-                #region Read from XL
-
-                #region Excel Interop Calls (Macro-Enabled Sheets
-                excel = new Excel.Application();
-                allBooks = excel.Workbooks;
-                macroBook = allBooks.Open(localFile);
-                allSheets = macroBook.Sheets;
-                jukiSheet = (Worksheet)allSheets["JUKI"];
-
-                progbarStatus.Maximum = jukiSheet.UsedRange.Rows.Count;
-                progbarStatus.Value = 0;
-                spltpnlActualForm.Panel2Collapsed = false;
-                lblStatus.Text = $"Pushing {assemblyLink.Link.Split('\\').Last()} data to DB...";
-
                 #region Delete Old Entries
                 var deleteQuery = "DELETE FROM [Repair].[dbo].[BoMInfo] WHERE [BoardNumber] = @BoardNumber AND [Rev] = @Revision";// AND [ECO] <IS> @ECONum";
 
@@ -896,63 +934,12 @@ namespace RApID_Project_WPF
                 }
                 #endregion
 
-                #region Add New Entires
-                for (int row = 1; row < jukiSheet.UsedRange.Rows.Count; row++)
-                {
-                    Range refDes = ((Range)jukiSheet.Cells[row, 1]);
-                    Range partNum = ((Range)jukiSheet.Cells[row, 5]);
-
-                    var rd = refDes.Value2 == null ? "" : refDes.Value2.ToString();
-                    var pn = partNum.Value2 == null ? "" : partNum.Value2.ToString();
-                    
-                    BackgroundWorkerBuffer.Add(new Tuple<AssemblyLinkLabel, object, object>(assemblyLink, rd, pn));
-
-                    if (row + 1 >= jukiSheet.UsedRange.Rows.Count)
-                    {
-                        Marshal.FinalReleaseComObject(refDes);
-                        Marshal.FinalReleaseComObject(partNum);
-                    }
-                }
-
-                bckgrndProcessDBOps.RunWorkerAsync(BackgroundWorkerBuffer[0]);
-                #endregion
-
-                #endregion
-
-
-                #endregion
+                bckgrndProcessDBOps.RunWorkerAsync(assemblyLink);
             }
             catch (Exception ex)
             {
                 Console.WriteLine($"\nError Message => {ex.Message}|\nStack Trace {{\n{ex.StackTrace}\n}}\n");
                 csExceptionLogger.csExceptionLogger.Write("EV_uploadBOMData", ex);
-            }
-            finally
-            {
-                // Cleanup
-                GC.Collect();
-                GC.WaitForPendingFinalizers();
-
-                if (jukiSheet != null) Marshal.FinalReleaseComObject(jukiSheet);
-                if (allSheets != null) Marshal.FinalReleaseComObject(allSheets);
-                if (macroBook != null)
-                {
-                    macroBook.Close(false, Type.Missing, Type.Missing);
-                    Marshal.FinalReleaseComObject(macroBook);
-                }
-                if (allBooks != null) Marshal.FinalReleaseComObject(allBooks);
-
-                if (excel != null)
-                {
-                    excel.Quit();
-                    Marshal.FinalReleaseComObject(excel);
-                }
-
-                File.Delete(localFile);
-                File.AppendAllText(DBUpload_Log, $"}} End Record @ {DateTime.Now:hh:mm:ss tt}\n\n");
-                lblWarning.Text = "Database Changes Are Immediately LIVE";
-                this.Update();
-                this.BringToFront();
             }
         }
         #endregion
@@ -962,7 +949,7 @@ namespace RApID_Project_WPF
         private void cxmnuAssemblyLinksMenu_Opening(object sender, CancelEventArgs e)
         {
             deleteSchematicLinkToolStripMenuItem.Text = bBOM ? "Delete BOM File..." : "Delete Schematic Link...";
-            uploadBOMDataToolStripMenuItem.Visible = bBOM && Extensions.Devs.Contains(Environment.UserName);
+            uploadBOMDataToolStripMenuItem.Visible = bBOM; // && Extensions.Devs.Contains(Environment.UserName);
             markAsActiveToolStripMenuItem.Visible = bBOM;
 
             tssMarkAsActive.Visible = bBOM;

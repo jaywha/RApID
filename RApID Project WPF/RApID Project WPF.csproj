@@ -299,7 +299,6 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Classes\WorkBuffer.cs" />
     <Compile Include="wndFireabase.xaml.cs">
       <DependentUpon>wndFireabase.xaml</DependentUpon>
     </Compile>

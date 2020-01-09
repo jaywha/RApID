@@ -748,7 +748,7 @@ namespace RApID_Project_WPF
                             var refSource = new ObservableCollection<string>();
                             var partSource = new ObservableCollection<string>();
 
-                            csCrossClassInteraction.DoExcelOperations(filename, progMapper, dgBOMList, expBOMInfo, refSource, partSource);
+                            csCrossClassInteraction.DoExcelOperations(txtPartNumber.Text, progMapper, dgBOMList, expBOMInfo, refSource, partSource);
                             if(!mapper.NoFilesFound) csCrossClassInteraction.MapperSuccessMessage(filename, mapper.PartNumber);
 
                             txtMultiRefDes.ItemsSource = refSource;

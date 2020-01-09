@@ -715,10 +715,10 @@
             // progbarStatus
             // 
             this.progbarStatus.ForeColor = System.Drawing.Color.Green;
-            this.progbarStatus.Maximum = 3;
+            this.progbarStatus.Maximum = 10000;
             this.progbarStatus.Name = "progbarStatus";
             this.progbarStatus.Size = new System.Drawing.Size(200, 40);
-            this.progbarStatus.Step = 1;
+            this.progbarStatus.Step = 3333;
             this.progbarStatus.Style = System.Windows.Forms.ProgressBarStyle.Continuous;
             // 
             // lblStatus
@@ -726,7 +726,7 @@
             this.lblStatus.BackColor = System.Drawing.Color.Transparent;
             this.lblStatus.ForeColor = System.Drawing.Color.Goldenrod;
             this.lblStatus.Name = "lblStatus";
-            this.lblStatus.Size = new System.Drawing.Size(59, 41);
+            this.lblStatus.Size = new System.Drawing.Size(59, 15);
             this.lblStatus.Text = "Loading...";
             // 
             // errorProvider
@@ -748,6 +748,8 @@
             // bckgrndProcessDBOps
             // 
             this.bckgrndProcessDBOps.WorkerReportsProgress = true;
+            this.bckgrndProcessDBOps.DoWork += new System.ComponentModel.DoWorkEventHandler(this.BckgrndProcessDBOps_DoWork);
+            this.bckgrndProcessDBOps.ProgressChanged += new System.ComponentModel.ProgressChangedEventHandler(this.bckgrndProcessDBOps_ProgressChanged);
             // 
             // frmBoardFileManager
             // 
