@@ -31,7 +31,7 @@ namespace RApID_Project_WPF
             //TODO: Pull from a DB mailing list?
             StringBuilder recipientList = new StringBuilder();
             recipientList.Append("jay.whaley@johnsonoutdoors.com,");
-            recipientList.Append("dexter.glanton@johnsonoutdoors.com,");
+            recipientList.Append("dexter.glanton@johnsonoutdoors.com");
             /*recipientList.Append("julie.shirley@johnsonoutdoors.com,");
             recipientList.Append("blayde.dill@johnsonoutdoors.com,");
             recipientList.Append("charles.harding@johnsonoutdoors.com");*/
