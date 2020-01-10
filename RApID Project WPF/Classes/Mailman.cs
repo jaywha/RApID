@@ -32,9 +32,9 @@ namespace RApID_Project_WPF
             StringBuilder recipientList = new StringBuilder();
             recipientList.Append("jay.whaley@johnsonoutdoors.com,");
             recipientList.Append("dexter.glanton@johnsonoutdoors.com,");
-            recipientList.Append("julie.shirley@johnsonoutdoors.com,");
+            /*recipientList.Append("julie.shirley@johnsonoutdoors.com,");
             recipientList.Append("blayde.dill@johnsonoutdoors.com,");
-            recipientList.Append("charles.harding@johnsonoutdoors.com");
+            recipientList.Append("charles.harding@johnsonoutdoors.com");*/
 
             _emailMessage.To.Add(recipientList.ToString());
         }

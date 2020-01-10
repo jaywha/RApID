@@ -178,8 +178,7 @@ namespace RApID_Project_WPF
             using (SqlConnection conn = new SqlConnection(csObjectHolder.csObjectHolder.ObjectHolderInstance().HummingBirdConnectionString))
             {
                 conn.Open();
-                using (SqlCommand cmd = new SqlCommand("SELECT PartName, CommodityClass FROM [HummingBird].[dbo].[ItemMaster] " +
-                    "WHERE [PartNumber] = @Pnum AND ([StockingType] <> 'O' AND [StockingType] <> 'U')", conn))
+                using (SqlCommand cmd = new SqlCommand("SELECT PartName, CommodityClass FROM [HummingBird].[dbo].[ItemMaster] WHERE [PartNumber] = @Pnum", conn))
                 {
                     cmd.Parameters.AddWithValue("@Pnum", txtFullAssemblyNumber.Text);
 
@@ -200,7 +199,6 @@ namespace RApID_Project_WPF
             }
 
             bool dataFound = false;
-            bool firstPass = true;
             using (SqlConnection conn = new SqlConnection(csObjectHolder.csObjectHolder.ObjectHolderInstance().RepairConnectionString))
             {
                 conn.Open();
@@ -212,11 +210,24 @@ namespace RApID_Project_WPF
 
                     SqlDataReader reader = cmd.ExecuteReader();
 
+                    if (!reader.HasRows || reader.RecordsAffected == 0)
+                    {
+                        DialogResult answer = MessageBox.Show("No current data exists for this part number.\n" +
+                                    "Would you like to create a new entry for it?\n" +
+                                    "Pressing [No] will reset the form.",
+                                    "Prompt to Create New Database Entry",
+                                    MessageBoxButtons.YesNoCancel,
+                                    MessageBoxIcon.Question);
+                        if (answer == DialogResult.Yes)
+                            AddNewDatabaseRow(txtFullAssemblyNumber.Text);
+                        else if (answer == DialogResult.No)
+                            ResetAllData(resetFAN: true);
+                        return;
+                    }
+
                     dataFound = reader.Read();
                     while (dataFound)
                     {
-                        firstPass = false; // got at least one row! stops the "missing BoM" pop-up
-
                         DesignFileSet model = new DesignFileSet()
                         {
                             PartNumber = reader[0]?.ToString(),
@@ -291,23 +302,6 @@ namespace RApID_Project_WPF
                         SelectedModel = model;
 
                         dataFound = reader.Read();
-                    }
-                    if (firstPass && !dataFound)
-                    {
-                        if (MasterList.Count == 0)
-                        {
-                            DialogResult answer = MessageBox.Show("No current data exists for this part number.\n" +
-                                "Would you like to create a new entry for it?\n" +
-                                "Pressing [No] will reset the form.",
-                                "Prompt to Create New Database Entry",
-                                MessageBoxButtons.YesNoCancel,
-                                MessageBoxIcon.Question);
-                            if (answer == DialogResult.Yes)
-                                AddNewDatabaseRow(txtFullAssemblyNumber.Text);
-                            else if (answer == DialogResult.No)
-                                ResetAllData(resetFAN: true);
-                            return;
-                        }
                     }
                 }
             }
