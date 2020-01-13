@@ -5,6 +5,7 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Runtime.Serialization;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -24,6 +25,8 @@ namespace RApID_Project_WPF
     /// </summary>
     public partial class wndFireabase : Window
     {
+        private TaskScheduler scheduler = TaskScheduler.Current;
+
         public wndFireabase()
         {
             InitializeComponent();
@@ -32,6 +35,8 @@ namespace RApID_Project_WPF
 
         private async void InitializeConnection()
         {
+            CancellationToken token = new CancellationToken();
+
             await Task.Factory.StartNew(async () => {
                 FirestoreDb db = FirestoreDb.Create("wingbeat-888ed");
                 dgCollections.ItemsSource = (List<CollectionReference>) db.ListRootCollectionsAsync();
@@ -46,7 +51,7 @@ namespace RApID_Project_WPF
                     var dictionaryIndex = 0;
 
                     Query query = collection.WhereLessThan("Version", 1.3);
-                    QuerySnapshot querySnapshot = await query.GetSnapshotAsync();
+                    QuerySnapshot querySnapshot = await query.GetSnapshotAsync().ConfigureAwait(true);
                     foreach (DocumentSnapshot queryResult in querySnapshot.Documents)
                     {
                         string deviceID = queryResult.GetValue<string>("DeviceID");
@@ -59,7 +64,7 @@ namespace RApID_Project_WPF
 
                     dgFields.ItemsSource = fields[0];
                 }
-            });
+            }, token, TaskCreationOptions.LongRunning, scheduler).ConfigureAwait(false);
         }
 
         #region Menu Item Click Events

@@ -252,7 +252,7 @@ namespace RApID_Project_WPF
                     $"}}\n");
                 #endif
             }
-            else
+            else if (!string.IsNullOrWhiteSpace(txtSN.Text))
             {
                 Mailman.SendEmail("RApID - Missing BOM",
                     "<p>We're missing the BOM for the following unit info.</p>" +
@@ -266,7 +266,7 @@ namespace RApID_Project_WPF
                     "<hr/>"
                     );
                 return "";
-            }
+            } else return "";
 
             if (filename.Contains(",") && !string.IsNullOrWhiteSpace(notes))
             {

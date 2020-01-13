@@ -85,13 +85,15 @@
         <Button x:Name="btnRepair" Content="Repair" HorizontalAlignment="Right" Margin="0,90,10,0" VerticalAlignment="Top" Width="200" Height="100" Style="{StaticResource MainMenuButton}" Click="btnClicks" FontFamily="Arial" ToolTip="Customer Service - Board &amp; Accessory Repair"/>
         <Button x:Name="btnQCDQE" Content="QC/DQE" HorizontalAlignment="Left" Margin="10,195,0,0" VerticalAlignment="Top" Width="200" Height="100" Style="{StaticResource MainMenuButton}" Click="btnClicks" FontFamily="Arial" ToolTip="Design Qualfication Eng. - ERAP &amp; Pilot Repair"/>
         <Button x:Name="btnReportViewer" Content="Report Viewer" HorizontalAlignment="Right" Margin="0,195,10,0" VerticalAlignment="Top" Width="200" Height="100" Style="{StaticResource MainMenuButton}" Click="btnClicks" FontFamily="Arial" ToolTip="MSSQL Reports"/>
-        <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="10,300,10,0">
-            <Button x:Name="btnFirebaseWindow" Width="35" Height="35" VerticalAlignment="Center" Click="btnClicks" ToolTip="PCB Alias Form" Visibility="Collapsed">
+        <StackPanel Orientation="Horizontal" HorizontalAlignment="Stretch" VerticalAlignment="Top" Margin="10,315,10,0">
+            <Separator Visibility="Hidden" Width="10" />
+            <Button x:Name="btnFirebaseWindow" Width="35" Height="35" VerticalAlignment="Center" Click="btnClicks" ToolTip="PCB Alias Form" HorizontalAlignment="Left"
+                    Visibility="Hidden">
                 <StackPanel>
                     <Image Source="__fire___256_La5_icon.ico" />
                 </StackPanel>
             </Button>
-            <Separator Visibility="Collapsed" Width="10" />
+            <Separator Visibility="Hidden" Width="240" />
             <Button x:Name="btnTechFilesForm" Width="35" Height="35" VerticalAlignment="Center" Click="btnClicks" ToolTip="PCB Alias Form">
                 <StackPanel>
                     <Image Source="Resources/tech.png" />
