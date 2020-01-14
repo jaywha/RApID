@@ -84,7 +84,7 @@
         <Button x:Name="btnRework" Content="Production" HorizontalAlignment="Left" Margin="10,90,0,0" VerticalAlignment="Top" Width="200" Height="100" Style="{StaticResource MainMenuButton}" Click="btnClicks" FontFamily="Arial" ToolTip="Board Rework - Electrical Techs."/>
         <Button x:Name="btnRepair" Content="Repair" HorizontalAlignment="Right" Margin="0,90,10,0" VerticalAlignment="Top" Width="200" Height="100" Style="{StaticResource MainMenuButton}" Click="btnClicks" FontFamily="Arial" ToolTip="Customer Service - Board &amp; Accessory Repair"/>
         <Button x:Name="btnQCDQE" Content="QC/DQE" HorizontalAlignment="Left" Margin="10,195,0,0" VerticalAlignment="Top" Width="200" Height="100" Style="{StaticResource MainMenuButton}" Click="btnClicks" FontFamily="Arial" ToolTip="Design Qualfication Eng. - ERAP &amp; Pilot Repair"/>
-        <Button x:Name="btnReportViewer" Content="Report Viewer" HorizontalAlignment="Right" Margin="0,195,10,0" VerticalAlignment="Top" Width="200" Height="100" Style="{StaticResource MainMenuButton}" Click="btnClicks" FontFamily="Arial" ToolTip="MSSQL Reports"/>
+        <Button x:Name="btnReportViewer" Content="Report View" HorizontalAlignment="Right" Margin="0,195,10,0" VerticalAlignment="Top" Width="200" Height="100" Style="{StaticResource MainMenuButton}" Click="btnClicks" FontFamily="Arial" ToolTip="MSSQL Reports"/>
         <StackPanel Orientation="Horizontal" HorizontalAlignment="Stretch" VerticalAlignment="Top" Margin="10,315,10,0">
             <Separator Visibility="Hidden" Width="10" />
             <Button x:Name="btnFirebaseWindow" Width="35" Height="35" VerticalAlignment="Center" Click="btnClicks" ToolTip="PCB Alias Form" HorizontalAlignment="Left"

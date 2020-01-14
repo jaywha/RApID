@@ -252,19 +252,24 @@ namespace RApID_Project_WPF
                     $"}}\n");
                 #endif
             }
-            else if (!string.IsNullOrWhiteSpace(txtSN.Text))
+            else if (!string.IsNullOrWhiteSpace(txtSN.Text.Trim()))
             {
-                Mailman.SendEmail("RApID - Missing BOM",
-                    "<p>We're missing the BOM for the following unit info.</p>" +
-                    "<hr/>" +
-                    "<ul>"+
-                    $"<li>Serial Number: {txtSN.Text}</li>" +
-                    $"<li>Production Query Part Number: {txtPN.Text}</li>" +
-                    $"<li>SNMapper Part Number: {mapper.PartNumber}</li>" +
-                    $"<li>SNMapper Component Number: {mapper.ComponentNumber}</li>" +
-                    "</ul>" +
-                    "<hr/>"
-                    );
+                if (txtSN.Text.Trim().Split(' ').Length == 1) {
+                    MainWindow.Notify.ShowBalloonTip("Too Many Serial Numbers!",
+                        "Please only enter one Serial Number to search", Hardcodet.Wpf.TaskbarNotification.BalloonIcon.Error);
+                } else {
+                    Mailman.SendEmail("RApID - Missing BOM",
+                        "<p>We're missing the BOM for the following unit info.</p>" +
+                        "<hr/>" +
+                        "<ul>" +
+                        $"<li>Serial Number: {txtSN.Text.Trim()}</li>" +
+                        $"<li>Production Query Part Number: {txtPN?.Text ?? ""}</li>" +
+                        $"<li>SNMapper Part Number: {mapper.PartNumber}</li>" +
+                        $"<li>SNMapper Component Number: {mapper.ComponentNumber}</li>" +
+                        "</ul>" +
+                        "<hr/>"
+                        );
+                }
                 return "";
             } else return "";
 
