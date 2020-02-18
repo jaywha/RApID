@@ -1369,6 +1369,8 @@ namespace RApID_Project_WPF
             }
         }
 
+        private static readonly CancellationTokenSource MapperTokenSource = new CancellationTokenSource();
+        
         /// <summary> Makes calls to <see cref="csSerialNumberMapper"/> methods. </summary>
         private async void MapRefDesToPartNum()
         {
@@ -1389,17 +1391,23 @@ namespace RApID_Project_WPF
                         {
                             var filename = mapper.TechFormProcess(txtBarcode, txtPartNumber);
 
-                            csCrossClassInteraction.ExcelDispatcher = Dispatcher.CurrentDispatcher;
                             csCrossClassInteraction.DoExcelOperations(filename, progMapper, OrigRefSource, OrigPartSource);
 
                             if(!mapper.NoFilesFound) csCrossClassInteraction.MapperSuccessMessage(filename, mapper.PartNumber);
 
-                            BOMFileActive = true;
+                            txtRefDes.ItemsSource = OrigRefSource;
+                            txtRefDes_2.ItemsSource = OrigRefSource;
+                            txtRefDes_3.ItemsSource = OrigRefSource;
 
+                            txtPartReplaced.ItemsSource = OrigPartSource;
+                            txtPartReplaced_2.ItemsSource = OrigPartSource;
+                            txtPartReplaced_3.ItemsSource = OrigPartSource;
+
+                            BOMFileActive = true;
                             CheckForManual();
                         }
-                    }), DispatcherPriority.Background);
-                    }));
+                    }), DispatcherPriority.ApplicationIdle);
+                    }), MapperTokenSource.Token, TaskCreationOptions.LongRunning, TaskScheduler.Current).ConfigureAwait(true);
                 }
             }
             catch (InvalidOperationException ioe)

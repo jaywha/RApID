@@ -324,6 +324,7 @@ namespace RApID_Project_WPF
         /// <param name="filePath">Path to the Excel file - normally the BoM file.</param>
         /// <param name="progData">Any related progress bar to semi-report operation progress.</param>
         /// <param name="bomlist">The datagrid to fill with the results, if any.</param>
+        /// <param name="expander">The production Excel expander</param>
         /// <param name="collections">The two collections to fill - refdes & partnum.</param>
         public static async void DoExcelOperations(string filePath, ProgressBar progData = null, DataGrid bomlist = null, 
             Expander expander = null, params ObservableCollection<string>[] collections)

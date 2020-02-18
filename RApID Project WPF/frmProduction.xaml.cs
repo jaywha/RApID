@@ -12,6 +12,7 @@ using System.IO.Ports;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text.RegularExpressions;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -733,6 +734,7 @@ namespace RApID_Project_WPF
 
         #endregion
 
+        private static readonly CancellationTokenSource MapperTokenSource = new CancellationTokenSource();
         private async void MapRefDesToPartNum()
         {
             try
@@ -762,7 +764,7 @@ namespace RApID_Project_WPF
                             BOMFileActive = true;
                             CheckForManual();
                         }), DispatcherPriority.ApplicationIdle);
-                    }));
+                    }), MapperTokenSource.Token, TaskCreationOptions.LongRunning, TaskScheduler.Current).ConfigureAwait(true);
                 }
             }
             catch (InvalidOperationException ioe)
