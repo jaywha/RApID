@@ -76,7 +76,7 @@ namespace EricStabileLibrary
     public static class Extensions
     {
         /// <summary>List of current developers</summary> 
-        public static List<string> Devs = new List<string>() { "jwhaley", "dglanton", "charding", "bdill", "jshirley" };
+        public static readonly List<string> Devs = new List<string>() { "jwhaley", "dglanton", "bdill", "jshirley" };
 
         /// <summary>
         /// Will determine if the <paramref name="clickLocation"/> is within the calling form's child control area.
@@ -129,6 +129,8 @@ namespace EricStabileLibrary
         /// <param name="cmbx"></param>
         public static void PrepForManualInput(this System.Windows.Controls.ComboBox cmbx)
         {
+            if (cmbx == null) return;
+
             cmbx.IsReadOnly = false;
             cmbx.IsEnabled = true;
             cmbx.IsEditable = true;
@@ -142,6 +144,8 @@ namespace EricStabileLibrary
         /// <returns>The <see cref="AutoCompleteStringCollection"/> containing <paramref name="list"/>'s elements</returns>
         public static AutoCompleteStringCollection AsAutoCompleteStringCollection<T>(this IList<T> list)
         {
+            if (list == null) return null;
+
             AutoCompleteStringCollection result = new AutoCompleteStringCollection();
             foreach (T element in list)
             {
@@ -158,6 +162,7 @@ namespace EricStabileLibrary
         /// <param name="element">Given element to check for.</param>
         public static void EnsureElement<T>(this IList<T> list, T element)
         {
+            if (list == null) return;
             if (!list.Contains(element)) list.Add(element);
         }
 

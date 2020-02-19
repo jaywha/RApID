@@ -77,11 +77,9 @@ namespace RApID_Project_WPF
 
         private void CheckForManual()
         {
-#if DEBUG
             txtPartReplaced.PrepForManualInput();
             txtPartReplaced_2.PrepForManualInput();
             txtPartReplaced_3.PrepForManualInput();
-#endif
         }
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
@@ -346,12 +344,13 @@ namespace RApID_Project_WPF
             {
                 try
                 {
-                    sp = new SerialPort() {
+                    sp = new SerialPort()
+                    {
                         PortName = RDM.ReadFromReg<string>(RDM.DefaultKey, RDM.COMPort),
-                        BaudRate = RDM.ReadFromReg<int>(RDM.DefaultKey, RDM. BaudRate),
-                        Parity = (Parity) Enum.Parse(typeof(Parity), RDM.ReadFromReg<string>(RDM.DefaultKey, RDM.Parity)),
-                        DataBits = RDM.ReadFromReg<int>(RDM.DefaultKey,RDM.DataBits),
-                        StopBits = (StopBits) Enum.Parse(typeof(StopBits), RDM.ReadFromReg<string>(RDM.DefaultKey,RDM.StopBits))
+                        BaudRate = RDM.ReadFromReg<int>(RDM.DefaultKey, RDM.BaudRate),
+                        Parity = (Parity)Enum.Parse(typeof(Parity), RDM.ReadFromReg<string>(RDM.DefaultKey, RDM.Parity)),
+                        DataBits = RDM.ReadFromReg<int>(RDM.DefaultKey, RDM.DataBits),
+                        StopBits = (StopBits)Enum.Parse(typeof(StopBits), RDM.ReadFromReg<string>(RDM.DefaultKey, RDM.StopBits))
                     };
                     sp.DataReceived += new SerialDataReceivedEventHandler(spDataReceived);
                     if (sp != null)
@@ -1370,42 +1369,42 @@ namespace RApID_Project_WPF
         }
 
         private static readonly CancellationTokenSource MapperTokenSource = new CancellationTokenSource();
-        
+
         /// <summary> Makes calls to <see cref="csSerialNumberMapper"/> methods. </summary>
         private async void MapRefDesToPartNum()
         {
             try
             {
-                using (csSerialNumberMapper mapper = csSerialNumberMapper.Instance)
+                using (SNM mapper = SNM.Instance)
                 {
                     await Task.Factory.StartNew(new Action(() =>
                     {
-                        tabcUnitIssues.Dispatcher.BeginInvoke(new Action(async () => // perform actions on dispatched thread
-                    {
-                        if (!mapper.GetData(txtBarcode.Text))
+                        tabcUnitIssues.Dispatcher.BeginInvoke(new Action(() => // perform actions on dispatched thread
                         {
-                            MessageBox.Show("Couldn't find the barcode's entry in the database.\nPlease enter information manually.", "Soft Error - BOM Lookup"
-                                , MessageBoxButton.OK, MessageBoxImage.Warning);
-                        }
-                        else
-                        {
-                            var filename = mapper.TechFormProcess(txtBarcode, txtPartNumber);
+                            if (!mapper.GetData(txtBarcode.Text))
+                            {
+                                MessageBox.Show("Couldn't find the barcode's entry in the database.\nPlease enter information manually.", "Soft Error - BOM Lookup"
+                                    , MessageBoxButton.OK, MessageBoxImage.Warning);
+                            }
+                            else
+                            {
+                                var filename = mapper.TechFormProcess(txtBarcode, txtPartNumber);
 
-                            csCrossClassInteraction.DoExcelOperations(filename, progMapper, OrigRefSource, OrigPartSource);
+                                csCrossClassInteraction.DoExcelOperations(filename, progMapper, OrigRefSource, OrigPartSource);
 
-                            if(!mapper.NoFilesFound) csCrossClassInteraction.MapperSuccessMessage(filename, mapper.PartNumber);
+                                if (!mapper.NoFilesFound) csCrossClassInteraction.MapperSuccessMessage(filename, mapper.PartNumber);
 
-                            txtRefDes.ItemsSource = OrigRefSource;
-                            txtRefDes_2.ItemsSource = OrigRefSource;
-                            txtRefDes_3.ItemsSource = OrigRefSource;
+                                txtRefDes.ItemsSource = OrigRefSource;
+                                txtRefDes_2.ItemsSource = OrigRefSource;
+                                txtRefDes_3.ItemsSource = OrigRefSource;
 
-                            txtPartReplaced.ItemsSource = OrigPartSource;
-                            txtPartReplaced_2.ItemsSource = OrigPartSource;
-                            txtPartReplaced_3.ItemsSource = OrigPartSource;
+                                txtPartReplaced.ItemsSource = OrigPartSource;
+                                txtPartReplaced_2.ItemsSource = OrigPartSource;
+                                txtPartReplaced_3.ItemsSource = OrigPartSource;
 
-                            BOMFileActive = true;
-                            CheckForManual();
-                        }
+                                BOMFileActive = true;
+                                CheckForManual();
+                            }
                     }), DispatcherPriority.ApplicationIdle);
                     }), MapperTokenSource.Token, TaskCreationOptions.LongRunning, TaskScheduler.Current).ConfigureAwait(true);
                 }
@@ -1928,10 +1927,10 @@ namespace RApID_Project_WPF
                     {
                         sVar.LogHandler.CreateLogAction((Button)sender, csLogging.LogState.CLICK);
 
-                        if (BOMFileActive && (!txtRefDes_2.Items.Contains(txtRefDes_2.Text)
+                        /*if (BOMFileActive && (!txtRefDes_2.Items.Contains(txtRefDes_2.Text)
                             || dgMultipleParts_2.Items
                         .OfType<MultiplePartsReplaced>()
-                        .Where(mpr => mpr.RefDesignator.Equals(txtRefDes_2.Text)).Count() > 0))
+                        .Where(mpr => mpr.RefDesignator.Equals(txtRefDes_2.Text)).Any()))
                         {
                             brdRefDes_2.BorderBrush = Brushes.Red;
                             brdRefDes_2.BorderThickness = new Thickness(1.0);
@@ -1942,7 +1941,7 @@ namespace RApID_Project_WPF
                         {
                             brdRefDes_2.BorderBrush = null;
                             brdRefDes_2.BorderThickness = new Thickness(0.0);
-                        }
+                        }*/
 
                         string _sPRPD = csCrossClassInteraction.GetPartReplacedPartDescription(txtPartReplaced_2.Text);
 
@@ -1950,7 +1949,7 @@ namespace RApID_Project_WPF
                         {
                             string sWarning = $"The Part Replaced entered ( {txtPartReplaced_2.Text} ) does not exist. Please verify the Part Number and try again.";
                             sVar.LogHandler.CreateLogAction(sWarning, csLogging.LogState.WARNING);
-                            MessageBox.Show(sWarning, "Part Replaced Description Issue", MessageBoxButton.OK, MessageBoxImage.Warning);
+                            //MessageBox.Show(sWarning, "Part Replaced Description Issue", MessageBoxButton.OK, MessageBoxImage.Warning);
                             txtPartReplaced_2.Focus();
                             txtPartReplaced_2.SelectAll();
                         }
@@ -1975,10 +1974,10 @@ namespace RApID_Project_WPF
                     {
                         sVar.LogHandler.CreateLogAction((Button)sender, csLogging.LogState.CLICK);
 
-                        if (BOMFileActive && (!txtRefDes_3.Items.Contains(txtRefDes_3.Text)
+                        /*if (BOMFileActive && (!txtRefDes_3.Items.Contains(txtRefDes_3.Text)
                             || dgMultipleParts_3.Items
                         .OfType<MultiplePartsReplaced>()
-                        .Where(mpr => mpr.RefDesignator.Equals(txtRefDes_3.Text)).Count() > 0))
+                        .Where(mpr => mpr.RefDesignator.Equals(txtRefDes_3.Text)).Any()))
                         {
                             brdRefDes_3.BorderBrush = Brushes.Red;
                             brdRefDes_3.BorderThickness = new Thickness(1.0);
@@ -1989,7 +1988,7 @@ namespace RApID_Project_WPF
                         {
                             brdRefDes_3.BorderBrush = null;
                             brdRefDes_3.BorderThickness = new Thickness(0.0);
-                        }
+                        }*/
 
                         string _sPRPD = csCrossClassInteraction.GetPartReplacedPartDescription(txtPartReplaced_3.Text);
 
@@ -2023,10 +2022,10 @@ namespace RApID_Project_WPF
                 {
                     sVar.LogHandler.CreateLogAction((Button)sender, csLogging.LogState.CLICK);
 
-                    if (BOMFileActive && (!txtRefDes.Items.Contains(txtRefDes.Text)
+                    /*if (BOMFileActive && (!txtRefDes.Items.Contains(txtRefDes.Text)
                         || dgMultipleParts.Items
                         .OfType<MultiplePartsReplaced>()
-                        .Where(mpr => mpr.RefDesignator.Equals(txtRefDes.Text)).Count() > 0))
+                        .Where(mpr => mpr.RefDesignator.Equals(txtRefDes.Text)).Any()))
                     {
                         brdRefDes.BorderBrush = Brushes.Red;
                         brdRefDes.BorderThickness = new Thickness(1.0);
@@ -2037,13 +2036,13 @@ namespace RApID_Project_WPF
                     {
                         brdRefDes.BorderBrush = null;
                         brdRefDes.BorderThickness = new Thickness(0.0);
-                    }
+                    }*/
 
                     string _sPRPD = csCrossClassInteraction.GetPartReplacedPartDescription(txtPartReplaced.Text);
 
                     if (string.IsNullOrEmpty(_sPRPD) && !string.IsNullOrEmpty(txtPartReplaced.Text))
                     {
-                        string sWarning = string.Format("The Part Replaced entered ( {0} ) does not exist. Please verify the Part Number and try again.", txtPartReplaced.Text);
+                        string sWarning = $"The Part Replaced entered ( {txtPartReplaced.Text} ) does not exist. Please verify the Part Number and try again.";
                         sVar.LogHandler.CreateLogAction(sWarning, csLogging.LogState.WARNING);
                         MessageBox.Show(sWarning, "Part Replaced Description Issue", MessageBoxButton.OK, MessageBoxImage.Warning);
                         txtPartReplaced.Focus();
@@ -2462,7 +2461,7 @@ namespace RApID_Project_WPF
 
         private void TabControl_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            if((tbMain.SelectedItem as TabItem).Header.Equals("EOL Test"))
+            if ((tbMain.SelectedItem as TabItem).Header.Equals("EOL Test"))
             {
                 //TODO: ucEOLTab.Dispatcher.Invoke(() => ucEOLTab.TriggerDropDowns());
             }
