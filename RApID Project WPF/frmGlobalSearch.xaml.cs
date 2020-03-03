@@ -200,8 +200,22 @@ namespace RApID_Project_WPF
 
         private void OpenRepair(object sender, RoutedEventArgs e)
         {
-            MainWindow.Notify.ShowBalloonTip("Work in Progress...", "This feature will come in a future update.",
-                Hardcodet.Wpf.TaskbarNotification.BalloonIcon.Info);
+            //Get the clicked MenuItem
+            MenuItem menuItem = (MenuItem)sender;
+
+            //Get the ContextMenu to which the menuItem belongs
+            ContextMenu contextMenu = (ContextMenu)menuItem.Parent;
+
+            //Find the placementTarget
+            DataGrid item = (DataGrid)contextMenu.PlacementTarget;
+
+            //Get the underlying item, that you cast to your object that is bound
+            //to the DataGrid (and has subject and state as property)
+            Record recordToOpen = (Record)item.SelectedCells[0].Item;
+
+            //Open form with Record as PRI
+            frmRepairPRI frm = new frmRepairPRI(recordToOpen);
+            frm.Show();
         }
 
         private void OpenDQE(object sender, RoutedEventArgs e)
