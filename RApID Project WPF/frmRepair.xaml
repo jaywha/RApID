@@ -485,7 +485,7 @@
                     </StackPanel>
                 </Label>
                 <ProgressBar x:Name="progMapper" Height="20" VerticalAlignment="Center" HorizontalAlignment="Right" Width="100" IsIndeterminate="True" Visibility="Collapsed"/>
-                
+
                 <x:Code>
                     <![CDATA[
                         private void LabelDoubleClick(object sender, System.Windows.RoutedEventArgs args) {
@@ -494,6 +494,7 @@
                     ]]>
                 </x:Code>
             </ToolBar>
+            <CheckBox x:Name="ckbxSNUnavailable" Content="Serial Number Unvailable" HorizontalAlignment="Left" Margin="374,10,0,0" VerticalAlignment="Top" Width="249" Height="55" FontSize="18" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
         </Grid>
     </Viewbox>
 </Window>

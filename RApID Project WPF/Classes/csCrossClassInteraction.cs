@@ -15,6 +15,7 @@ using System.IO;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
@@ -218,8 +219,7 @@ namespace RApID_Project_WPF
         /// <param name="txtSN"><see cref="TextBox"/> control for Serial Number value.</param>
         /// <param name="txtPN"><see cref="TextBox"/> control for Part Number value.</param>
         /// <returns>A BOM filepath</returns>
-        public static string TechFormProcess(this SNM mapper, TextBox txtSN, TextBox txtPN, [CallerFilePath] string callingFile = "") {
-            callingFile = callingFile.Replace(".xaml.cs",string.Empty).Replace("frm",string.Empty).Split('\\').Last();
+        public static string TechFormProcess(this SNM mapper, TextBox txtSN, TextBox txtPN) {
 
             bool techTableSuccess = false;
             string bompath = string.Empty;
@@ -228,7 +228,8 @@ namespace RApID_Project_WPF
             string notes = string.Empty;
             bool found = false;
 
-            mapper.GetData(txtSN.Text);
+            if(mapper.NoFilesFound)
+                mapper.GetData(txtSN.Text);
             (techTableSuccess, bompath, _, notes) = mapper.CheckAliasTable(); // Check Alias Table for Part Number
             #if DEBUG
                 Console.WriteLine(
@@ -254,9 +255,10 @@ namespace RApID_Project_WPF
             }
             else if (!string.IsNullOrWhiteSpace(txtSN.Text.Trim()))
             {
-                if (txtSN.Text.Trim().Split(' ').Length == 1) {
-                    MainWindow.Notify.ShowBalloonTip("Too Many Serial Numbers!",
-                        "Please only enter one Serial Number to search", Hardcodet.Wpf.TaskbarNotification.BalloonIcon.Error);
+                Regex regex = new Regex("^[0-9]{12}$");
+                if (txtSN.Text.Trim().Split(' ').Length > 1 && regex.IsMatch(txtSN.Text.Trim())) {
+                    MainWindow.Notify.ShowBalloonTip("Serial Number Bad Format!",
+                        "Please enter a simgle 12-digit serial number!", Hardcodet.Wpf.TaskbarNotification.BalloonIcon.Error);
                 } else {
                     Mailman.SendEmail("RApID - Missing BOM",
                         "<p>We're missing the BOM for the following unit info.</p>" +

@@ -1,5 +1,6 @@
 ﻿using EricStabileLibrary;
 using RApID_Project_WPF.Classes;
+using RetestVerifierAppWPF.Classes;
 using SNMapperLib;
 using System;
 using System.Collections;
@@ -893,63 +894,64 @@ namespace RApID_Project_WPF
             {
                 bool bSubmit = true;
 
+                if (ckbxSNUnavailable.IsChecked.Value && string.IsNullOrEmpty(txtBarcode.Text) && !sUserDepartmentNumber.Equals(sDQE_DeptNum))
+                {
+                    bSubmit = false;
+                    sErrMsg += "- Serial Number is empty\n";
+                }
+
                 if (string.IsNullOrEmpty(txtOrderNumber.Text) && !sUserDepartmentNumber.Equals(sDQE_DeptNum))
                 {
                     bSubmit = false;
-                    sErrMsg += "-Order Number\n";
+                    sErrMsg += "- Order Number\n";
                 }
 
                 if (string.IsNullOrEmpty(cbTechAction1.Text) && !sUserDepartmentNumber.Equals(sDQE_DeptNum))
                 {
                     bSubmit = false;
-                    sErrMsg += "-At least 1 Technician Action\n";
+                    sErrMsg += "- At least 1 Technician Action\n";
                 }
 
                 if (string.IsNullOrEmpty(txtCustomerNumber.Text) && !sUserDepartmentNumber.Equals(sDQE_DeptNum))
                 {
                     bSubmit = false;
-                    sErrMsg += "-Customer Information\n";
+                    sErrMsg += "- Customer Information\n";
                 }
 
                 if (string.IsNullOrEmpty(cbTOF.Text))
                 {
                     bSubmit = false;
-                    sErrMsg += "-Type of Failure\n";
+                    sErrMsg += "- Type of Failure\n";
                 }
 
                 if (string.IsNullOrEmpty(txtPartName.Text))
                 {
                     bSubmit = false;
-                    sErrMsg += "-Part Name\n";
+                    sErrMsg += "- Part Name\n";
                 }
 
                 if (string.IsNullOrEmpty(txtPartNumber.Text))
                 {
                     bSubmit = false;
-                    sErrMsg += "-Part Number\n";
+                    sErrMsg += "- Part Number\n";
                 }
 
                 if (string.IsNullOrEmpty(txtCommSubClass.Text))
                 {
                     bSubmit = false;
-                    sErrMsg += "-Commodity Sub-Class\n";
+                    sErrMsg += "- Commodity Sub-Class\n";
                 }
 
                 if (string.IsNullOrEmpty(cbTOR.Text))
                 {
                     bSubmit = false;
-                    sErrMsg += "-Type of Return\n";
+                    sErrMsg += "- Type of Return\n";
                 }
 
 
                 bool bUnitIssueFound = false;
-                if (string.IsNullOrEmpty(cbReportedIssue.Text))
-                {
-                    bSubmit = false;
-                    sErrMsg += "-Reported Issue\n";
-                }
-                else bUnitIssueFound = true;
-
+                if (!string.IsNullOrEmpty(cbReportedIssue.Text))
+                    bUnitIssueFound = true;
                 if (!string.IsNullOrEmpty(cbTestResult.Text))
                     bUnitIssueFound = true;
                 if (!string.IsNullOrEmpty(cbTestResultAbort.Text))
@@ -961,7 +963,7 @@ namespace RApID_Project_WPF
 
                 if (!bUnitIssueFound)
                 {
-                    sErrMsg += "-At least one unit issue";
+                    sErrMsg += "- At least one full unit issue";
                     bSubmit = false;
                 }
 
@@ -983,10 +985,10 @@ namespace RApID_Project_WPF
 
             string insertQuery = @"INSERT INTO TechnicianSubmission (Technician, DateReceived, PartName, PartNumber, CommoditySubClass, Quantity, SoftwareVersion, Scrap, TypeOfReturn, " +
                                   "TypeOfFailure, HoursOnUnit, ReportedIssue, TestResult, TestResultAbort, Cause, Replacement, PartsReplaced, RefDesignator, AdditionalComments, CustomerNumber, SerialNumber, DateSubmitted, " +
-                                  "SubmissionStatus, SaveID, RP, TechAct1, TechAct2, TechAct3, OrderNumber, LineNumber, ProblemCode1, ProblemCode2, RepairCode, TechComments, Series) " +
+                                  "SubmissionStatus, SaveID, RP, TechAct1, TechAct2, TechAct3, OrderNumber, LineNumber, ProblemCode1, ProblemCode2, RepairCode, TechComments, Series, SerialNumberUnavailable) " +
                                   "VALUES (@Technician, @DateReceived, @PartName, @PartNumber, @CommoditySubClass, @Quantity, @SoftwareVersion, @Scrap, @TypeOfReturn, " +
                                   "@TypeOfFailure, @HoursOnUnit, @ReportedIssue, @TestResult, @TestResultAbort, @Cause, @Replacement, @PartsReplaced, @RefDesignator, @AdditionalComments, @CustomerNumber, " +
-                                  "@SerialNumber, @DateSubmitted, @SubmissionStatus, @SaveID, @RP, @TechAct1, @TechAct2, @TechAct3, @OrderNumber, @LineNumber, @pc1, @pc2, @rc, @tc, @series)";
+                                  "@SerialNumber, @DateSubmitted, @SubmissionStatus, @SaveID, @RP, @TechAct1, @TechAct2, @TechAct3, @OrderNumber, @LineNumber, @pc1, @pc2, @rc, @tc, @series, @snUnavailable)";
 
             SqlConnection conn = new SqlConnection(holder.RepairConnectionString);
             SqlCommand cmd = new SqlCommand(insertQuery, conn);
@@ -1071,6 +1073,7 @@ namespace RApID_Project_WPF
                 else cmd.Parameters.AddWithValue("@series", txtSeries.Text.ToString());
 
                 cmd.Parameters.AddWithValue("@logid", DateTime.Now.Ticks);
+                cmd.Parameters.AddWithValue("@snUnavailable", ckbxSNUnavailable.IsChecked.Value);
 
                 cmd.ExecuteNonQuery();
                 conn.Close();
@@ -1405,8 +1408,9 @@ namespace RApID_Project_WPF
                                 BOMFileActive = true;
                                 CheckForManual();
                             }
-                    }), DispatcherPriority.ApplicationIdle);
-                    }), MapperTokenSource.Token, TaskCreationOptions.LongRunning, TaskScheduler.Current).ConfigureAwait(true);
+                        }), DispatcherPriority.Background);
+                    }), MapperTokenSource.Token, TaskCreationOptions.LongRunning, TaskScheduler.Current)
+                    .ConfigureAwait(true);
                 }
             }
             catch (InvalidOperationException ioe)
@@ -1818,8 +1822,10 @@ namespace RApID_Project_WPF
             else return false;
         }
 
+        private CancellationTokenSource CTS = new CancellationTokenSource();
+
         #region Button Clicks
-        private void btnComplete_Click(object sender, RoutedEventArgs e)
+        private async void btnComplete_Click(object sender, RoutedEventArgs e)
         {
             sVar.LogHandler.CreateLogAction((Button)sender, csLogging.LogState.CLICK);
 
@@ -1827,14 +1833,55 @@ namespace RApID_Project_WPF
             {
                 ArrayList submitStatus = canSubmit();
 
+
                 if ((bool)submitStatus[0])
                 {
-                    sVar.LogHandler.CreateLogAction("The submission criteria has been met. Attempting to submit...", csLogging.LogState.NOTE);
-                    if (submitData(SubmissionStatus.COMPLETE, -1, getCRStatus(submitStatus[1].ToString())))
+                    if (cbTOR.SelectedValue.Equals("International"))
                     {
-                        sVar.LogHandler.writeLogToFile();
-                        MessageBox.Show("Submission Successful!", "Success", MessageBoxButton.OK, MessageBoxImage.Information);
-                        resetForm(true);
+                        var batch = new BatchWindow();
+                        batch.Boards.Add(txtBarcode.Text);
+                        sp.DataReceived -= spDataReceived;
+                        batch.MainBarcodeScanner = sp;
+                        sp.DataReceived += spDataReceived;
+                        if (batch.ShowDialog() == true)
+                        {
+                            sVar.LogHandler.CreateLogAction($"The submission criteria has been met. Attempting to submit batch of size {batch.Boards.Count} boards...", csLogging.LogState.NOTE);
+                            progMapper.Value = 0;
+                            progMapper.Maximum = batch.Boards.Count;
+                            progMapper.Visibility = Visibility.Visible;
+
+                            /*await Task.Factory.StartNew(() =>
+                            {*/
+                            foreach (BoardModel board in batch.Boards)
+                            {
+                                //wndMain.Dispatcher.BeginInvoke(DispatcherPriority.Background, new Action(() => {
+                                txtBarcode.Text = board;
+                                submitData(SubmissionStatus.COMPLETE, -1, getCRStatus(submitStatus[1].ToString()));
+                                progMapper.Value += 1;
+                                Dispatcher.Invoke(DispatcherPriority.Render, new Action(() => { }));
+                                //}));
+                            }
+                            /*}, CTS.Token, TaskCreationOptions.LongRunning, TaskScheduler.Current)
+                            .ContinueWith( prev => { */
+                                sVar.LogHandler.writeLogToFile();
+                                wndMain.Dispatcher.Invoke(()=>resetForm(true));
+                            /*}, TaskScheduler.Current)
+                            .ConfigureAwait(true);*/
+                        }
+                        else
+                        {
+                            return;
+                        }
+                    }
+                    else
+                    {
+                        sVar.LogHandler.CreateLogAction("The submission criteria has been met. Attempting to submit...", csLogging.LogState.NOTE);
+                        if (submitData(SubmissionStatus.COMPLETE, -1, getCRStatus(submitStatus[1].ToString())))
+                        {
+                            sVar.LogHandler.writeLogToFile();
+                            MessageBox.Show("Submission Successful!", "Success", MessageBoxButton.OK, MessageBoxImage.Information);
+                            resetForm(true);
+                        }
                     }
                 }
                 else

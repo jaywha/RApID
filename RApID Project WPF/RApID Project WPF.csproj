@@ -299,6 +299,10 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="BatchWindow.xaml.cs">
+      <DependentUpon>BatchWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Classes\BoardModel.cs" />
     <Compile Include="wndFireabase.xaml.cs">
       <DependentUpon>wndFireabase.xaml</DependentUpon>
     </Compile>
@@ -420,6 +424,10 @@
     </Compile>
     <Compile Include="Classes\ViewModelBase.cs" />
     <Compile Include="VMB\ViewModelBase.cs" />
+    <Page Include="BatchWindow.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="frmFullCustomerInformation.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -578,6 +586,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\aoi_recipe_mover.png" />
+    <Resource Include="Board.png" />
     <Content Include="Resources\ExceptionEmailTemplate.html">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>

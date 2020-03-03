@@ -1,0 +1,54 @@
+﻿<Window x:Class="RApID_Project_WPF.BatchWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:RApID_Project_WPF"
+        mc:Ignorable="d"
+        x:Name="wndBatch"
+        Foreground="Goldenrod"
+        Closing="WndBatch_Closing"
+        Title="BatchWindow" Height="450" Width="800">
+    <Window.Resources>
+        <Style x:Key="FocusVisual">
+            <Setter Property="Control.Template">
+                <Setter.Value>
+                    <ControlTemplate>
+                        <Rectangle Margin="2" SnapsToDevicePixels="true" Stroke="{DynamicResource {x:Static SystemColors.ControlTextBrushKey}}" StrokeThickness="1" StrokeDashArray="1 2"/>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+        <SolidColorBrush x:Key="Button.Static.Background" Color="#FFDDDDDD"/>
+        <SolidColorBrush x:Key="Button.Static.Border" Color="#FF707070"/>
+        <SolidColorBrush x:Key="Button.MouseOver.Background" Color="#FFBEE6FD"/>
+        <SolidColorBrush x:Key="Button.MouseOver.Border" Color="#FF3C7FB1"/>
+        <SolidColorBrush x:Key="Button.Pressed.Background" Color="#FFC4E5F6"/>
+        <SolidColorBrush x:Key="Button.Pressed.Border" Color="#FF2C628B"/>
+        <SolidColorBrush x:Key="Button.Disabled.Background" Color="#FFF4F4F4"/>
+        <SolidColorBrush x:Key="Button.Disabled.Border" Color="#FFADB2B5"/>
+        <SolidColorBrush x:Key="Button.Disabled.Foreground" Color="#FF838383"/>
+    </Window.Resources>
+    <Grid  Background="Black">
+        <ListView HorizontalAlignment="Left"  ItemsSource="{Binding ElementName=wndBatch,Path=Boards,Mode=OneWay}" Background="Transparent" Height="361" Margin="10,10,0,0" VerticalAlignment="Top" Width="772">
+            <ListView.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <WrapPanel Orientation="Horizontal">
+                        
+                    </WrapPanel>
+                </ItemsPanelTemplate>
+            </ListView.ItemsPanel>
+            <ListView.ItemTemplate>
+                <DataTemplate>
+                    <DockPanel Width="150">
+                        <Image Source="Board.png" Width="100" Height="100" HorizontalAlignment="Center" DockPanel.Dock="Top"/>
+                        <Label DockPanel.Dock="Bottom" HorizontalAlignment="Center" Foreground="Goldenrod" Content="{Binding SerialNumber}"/>
+                    </DockPanel>
+                </DataTemplate>
+            </ListView.ItemTemplate>
+        </ListView>
+        <Button Content="Cancel" x:Name="btnCancel" HorizontalAlignment="Left" Margin="10,376,0,0" VerticalAlignment="Top" Width="94" Height="33" Click="BtnCancel_Click"/>
+        <Button Content="Submit" x:Name="btnSubmit" HorizontalAlignment="Left" Margin="685,376,0,0" VerticalAlignment="Top" Width="97" Height="33" Click="BtnSubmit_Click"/>
+
+    </Grid>
+</Window>

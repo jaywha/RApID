@@ -1,9 +1,11 @@
-﻿using RApID_Project_WPF.UserControls;
+﻿using RApID_Project_WPF.Classes;
+using RApID_Project_WPF.UserControls;
 using SNMapperLib;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.IO.Ports;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
@@ -213,6 +215,24 @@ namespace RApID_Project_WPF
             }
         }
 
-        private void btnEmail_Click(object sender, RoutedEventArgs e) => Mailman.SendEmail("", "", new WhiningException("Testing Email - <yay>"));
+        private void btnEmail_Click(object sender, RoutedEventArgs e)
+        {
+            var batch = new BatchWindow();
+            batch.Boards.Add("6545646545");
+            batch.MainBarcodeScanner = new SerialPort()
+            {
+                PortName = RDM.ReadFromReg<string>(RDM.DefaultKey, RDM.COMPort),
+                BaudRate = RDM.ReadFromReg<int>(RDM.DefaultKey, RDM.BaudRate),
+                Parity = (Parity)Enum.Parse(typeof(Parity), RDM.ReadFromReg<string>(RDM.DefaultKey, RDM.Parity)),
+                DataBits = RDM.ReadFromReg<int>(RDM.DefaultKey, RDM.DataBits),
+                StopBits = (StopBits)Enum.Parse(typeof(StopBits), RDM.ReadFromReg<string>(RDM.DefaultKey, RDM.StopBits))
+            };
+            if (batch.ShowDialog() == true) { 
+                foreach(var board in batch.Boards)
+                {
+                    Console.WriteLine("Batched Board --> " + board);
+                }
+            }
+        }
     }
 }
