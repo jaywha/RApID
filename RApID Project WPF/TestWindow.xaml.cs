@@ -219,6 +219,9 @@ namespace RApID_Project_WPF
         {
             var batch = new BatchWindow();
             batch.Boards.Add("6545646545");
+            batch.Boards.Add("4641561804");
+            batch.Boards.Add("4897489165");
+            batch.Boards.Add("9645615454");
             batch.MainBarcodeScanner = new SerialPort()
             {
                 PortName = RDM.ReadFromReg<string>(RDM.DefaultKey, RDM.COMPort),

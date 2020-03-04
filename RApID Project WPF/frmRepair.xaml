@@ -494,7 +494,8 @@
                     ]]>
                 </x:Code>
             </ToolBar>
-            <CheckBox x:Name="ckbxSNUnavailable" Content="Serial Number Unvailable" HorizontalAlignment="Left" Margin="374,10,0,0" VerticalAlignment="Top" Width="249" Height="55" FontSize="18" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
+            <CheckBox x:Name="ckbxSNUnavailable" Content="Serial Number Unvailable" HorizontalAlignment="Left" Margin="374,44,0,0" VerticalAlignment="Top" Width="249" Height="26" FontSize="18" HorizontalContentAlignment="Left" VerticalContentAlignment="Center"/>
+            <CheckBox x:Name="ckbxBatchSubmission" Content="Batch Submission" HorizontalAlignment="Left" Margin="374,1,0,0" VerticalAlignment="Top" Width="249" Height="26" FontSize="18" HorizontalContentAlignment="Left" VerticalContentAlignment="Center"/>
         </Grid>
     </Viewbox>
 </Window>

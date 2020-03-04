@@ -636,7 +636,8 @@ namespace RApID_Project_WPF
                         if (reader.Read() && reader.HasRows)
                         {
                             bool isXducer = reader.IsDBNull(0) ? false : reader.GetBoolean(0);
-                            string sProdQueryResults = reader.IsDBNull(1) ? "" : reader.GetString(1); conn.Close();
+                            string sProdQueryResults = reader.IsDBNull(1) ? "" : reader.GetString(1); 
+                            conn.Close();
 
                             CheckForXDucer(ref sProdQueryResults, isXducer); if (bStop) return;
 
@@ -657,10 +658,10 @@ namespace RApID_Project_WPF
         /// Ensures a part number was found for Xducers
         /// </summary>
         /// <param name="sProdQueryResults">empty string but variable reference</param>
-        /// <param name="isXudcer"></param>
-        public void CheckForXDucer(ref string sProdQueryResults, bool isXudcer)
+        /// <param name="isXducer"></param>
+        public void CheckForXDucer(ref string sProdQueryResults, bool isXducer)
         {
-            if (isXudcer)
+            if (isXducer)
             {
                 #region Xducer Path
                 string query2 = "SELECT PartNumber FROM tblXducerTestResults WHERE SerialNumber = '" + txtBarcode.Text + "';";
@@ -894,7 +895,7 @@ namespace RApID_Project_WPF
             {
                 bool bSubmit = true;
 
-                if (ckbxSNUnavailable.IsChecked.Value && string.IsNullOrEmpty(txtBarcode.Text) && !sUserDepartmentNumber.Equals(sDQE_DeptNum))
+                if (!ckbxSNUnavailable.IsChecked.Value && string.IsNullOrEmpty(txtBarcode.Text) && !sUserDepartmentNumber.Equals(sDQE_DeptNum))
                 {
                     bSubmit = false;
                     sErrMsg += "- Serial Number is empty\n";
@@ -1836,13 +1837,12 @@ namespace RApID_Project_WPF
 
                 if ((bool)submitStatus[0])
                 {
-                    if (cbTOR.SelectedValue.Equals("International"))
+                    if (ckbxBatchSubmission.IsChecked ?? false)
                     {
                         var batch = new BatchWindow();
                         batch.Boards.Add(txtBarcode.Text);
                         sp.DataReceived -= spDataReceived;
                         batch.MainBarcodeScanner = sp;
-                        sp.DataReceived += spDataReceived;
                         if (batch.ShowDialog() == true)
                         {
                             sVar.LogHandler.CreateLogAction($"The submission criteria has been met. Attempting to submit batch of size {batch.Boards.Count} boards...", csLogging.LogState.NOTE);
@@ -1850,28 +1850,20 @@ namespace RApID_Project_WPF
                             progMapper.Maximum = batch.Boards.Count;
                             progMapper.Visibility = Visibility.Visible;
 
-                            /*await Task.Factory.StartNew(() =>
-                            {*/
-                            foreach (BoardModel board in batch.Boards)
+                            foreach (var board in batch.Boards)
                             {
-                                //wndMain.Dispatcher.BeginInvoke(DispatcherPriority.Background, new Action(() => {
                                 txtBarcode.Text = board;
                                 submitData(SubmissionStatus.COMPLETE, -1, getCRStatus(submitStatus[1].ToString()));
                                 progMapper.Value += 1;
-                                Dispatcher.Invoke(DispatcherPriority.Render, new Action(() => { }));
-                                //}));
+                                Dispatcher.CurrentDispatcher.Invoke(DispatcherPriority.Render, new Action(() => { }));
                             }
-                            /*}, CTS.Token, TaskCreationOptions.LongRunning, TaskScheduler.Current)
-                            .ContinueWith( prev => { */
-                                sVar.LogHandler.writeLogToFile();
-                                wndMain.Dispatcher.Invoke(()=>resetForm(true));
-                            /*}, TaskScheduler.Current)
-                            .ConfigureAwait(true);*/
+
+                            sVar.LogHandler.writeLogToFile();
+                            resetForm(true);
                         }
-                        else
-                        {
-                            return;
-                        }
+                        
+                        sp.DataReceived += spDataReceived;
+                        return;
                     }
                     else
                     {
@@ -2444,18 +2436,18 @@ namespace RApID_Project_WPF
 
             if (((Control)sender).Name.ToString().Equals("cbTOR"))
             {
-                if (cbTOR.Text.Equals("Credit Return"))
+                if (cbTOR.Text.Equals("Credit Return") || cbTOR.Text.Equals("International"))
                 {
                     lblQTY.Visibility = txtQTY.Visibility = Visibility.Visible;
                     cbxNPF.Visibility = Visibility.Visible;
                     cbxNPF.IsEnabled = false;
-                    sVar.LogHandler.CreateLogAction("Credit Return was selected. txtQTY and cbxNPF are now visible. cbxNPF is set to disabled.", csLogging.LogState.NOTE);
+                    sVar.LogHandler.CreateLogAction("Credit Return or International was selected. txtQTY and cbxNPF are now visible. cbxNPF is set to disabled.", csLogging.LogState.NOTE);
                 }
                 else
                 {
                     lblQTY.Visibility = txtQTY.Visibility = Visibility.Hidden;
                     cbxNPF.Visibility = Visibility.Hidden;
-                    sVar.LogHandler.CreateLogAction("Credit Return was selected. txtQTY and cbxNPF are now hidden.", csLogging.LogState.NOTE);
+                    sVar.LogHandler.CreateLogAction("Credit Return or International was unselected. txtQTY and cbxNPF are now hidden.", csLogging.LogState.NOTE);
                 }
             }
         }

@@ -176,8 +176,6 @@ namespace RApID_Project_WPF
         }
 
         #region Data Grid Context Menu Item Clicks
-        //TODO: Add Context Menu - Open Appropriate Form using Serial Number from current row.
-        // https://stackoverflow.com/a/16824343/7476183 - Need some adaptation, but should be what we need.
         private void OpenProduction(object sender, RoutedEventArgs e)
         {
             //Get the clicked MenuItem
@@ -218,6 +216,9 @@ namespace RApID_Project_WPF
             frm.Show();
         }
 
+        //TODO: Just need to do DQE now ???
+        // Add Context Menu - Open Appropriate Form using Serial Number from current row.
+        // https://stackoverflow.com/a/16824343/7476183 - Need some adaptation, but should be what we need.
         private void OpenDQE(object sender, RoutedEventArgs e)
         {
             MainWindow.Notify.ShowBalloonTip("Work in Progress...", "This feature will come in a future update.",
