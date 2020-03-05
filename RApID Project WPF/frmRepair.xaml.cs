@@ -591,7 +591,6 @@ namespace RApID_Project_WPF
         private void beginSerialNumberSearch()
         {
             resetForm(false);
-            vSleep(500);
 
             sVar.LogHandler.LogCreation = DateTime.Now;
             if (!string.IsNullOrEmpty(txtBarcode.Text))
@@ -721,13 +720,6 @@ namespace RApID_Project_WPF
 
         private void QueryTechReport()
         {
-            //NOTE: Old Database
-            //string query = "SELECT Date_Time, Technician FROM tblManufacturingTechReport WHERE SerialNumber = '" + txtBarcode.Text + "';";
-            //sVar.LogHandler.CreateLogAction("Querying the Tech Report for previous tech information PRIOR to the release of RApID.", csLogging.LogState.NOTE);
-            //sVar.LogHandler.CreateLogAction("SQL QUERY: " + query, csLogging.LogState.SQLQUERY);
-            //csCrossClassInteraction.dgTechReport(query, true, dgPrevRepairInfo, txtBarcode.Text);
-
-            //NOTE: New Database
             string query = "SELECT DateSubmitted, Technician, ID FROM TechnicianSubmission WHERE SerialNumber = '" + txtBarcode.Text + "';";
             sVar.LogHandler.CreateLogAction("Querying the Tech Report for previous tech information from the TechnicianSubmission table.", csLogging.LogState.NOTE);
             sVar.LogHandler.CreateLogAction("SQL QUERY: " + query, csLogging.LogState.SQLQUERY);
@@ -1394,6 +1386,8 @@ namespace RApID_Project_WPF
                             {
                                 var filename = mapper.TechFormProcess(txtBarcode, txtPartNumber);
 
+                                if (!File.Exists(filename)) return;
+
                                 csCrossClassInteraction.DoExcelOperations(filename, progMapper, OrigRefSource, OrigPartSource);
 
                                 if (!mapper.NoFilesFound) csCrossClassInteraction.MapperSuccessMessage(filename, mapper.PartNumber);
@@ -1416,6 +1410,7 @@ namespace RApID_Project_WPF
             }
             catch (InvalidOperationException ioe)
             {
+                csExceptionLogger.csExceptionLogger.DefaultLogLocation = "";
                 csExceptionLogger.csExceptionLogger.Write("BadBarcode-MapRefDesToPartNum", ioe);
                 return;
             }
@@ -1841,8 +1836,11 @@ namespace RApID_Project_WPF
                     {
                         var batch = new BatchWindow();
                         batch.Boards.Add(txtBarcode.Text);
-                        sp.DataReceived -= spDataReceived;
-                        batch.MainBarcodeScanner = sp;
+                        if (sp != null)
+                        {
+                            sp.DataReceived -= spDataReceived;
+                            batch.MainBarcodeScanner = sp;
+                        }
                         if (batch.ShowDialog() == true)
                         {
                             sVar.LogHandler.CreateLogAction($"The submission criteria has been met. Attempting to submit batch of size {batch.Boards.Count} boards...", csLogging.LogState.NOTE);
@@ -1862,7 +1860,7 @@ namespace RApID_Project_WPF
                             resetForm(true);
                         }
                         
-                        sp.DataReceived += spDataReceived;
+                        if(sp != null) sp.DataReceived += spDataReceived;
                         return;
                     }
                     else

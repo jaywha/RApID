@@ -24,9 +24,15 @@ namespace RApID_Project_WPF
                 Directory.CreateDirectory(csExceptionLogger.csExceptionLogger.DefaultLogLocation);
             }
 
-            App application = new App();
-            application.InitializeComponent();
-            application.Run();
+            try
+            {
+                App application = new App();
+                application.InitializeComponent();
+                application.Run();
+            } catch (Exception e) {
+                Mailman.SendEmail(subject: "", body: "", exception: e);
+                throw;
+            }
         }
     }
 }

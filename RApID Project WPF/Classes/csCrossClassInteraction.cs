@@ -333,8 +333,8 @@ namespace RApID_Project_WPF
         {
             try
             {
-                Directory.CreateDirectory(bomlogfiledir);
-                var tempPtr = File.Create(Path.Combine(bomlogfiledir, bomlogfile));
+                //Directory.CreateDirectory(bomlogfiledir);
+                //var tempPtr = File.Create(Path.Combine(bomlogfiledir, bomlogfile));
 
                 CancellationToken token = new CancellationToken();
 
@@ -345,7 +345,7 @@ namespace RApID_Project_WPF
                         void Notify_TrayBalloonTipClicked(object sender, RoutedEventArgs e)
                         {
                             MainWindow.Notify.TrayBalloonTipClicked -= Notify_TrayBalloonTipClicked;
-                            FNS.Classes.FirebasePushService.SendPushNotification(Mailman.FireTokens.Jay, "Refer to email for more info.", "RApID - BOM Missing", "true");
+                            // FNS.Classes.FirebasePushService.SendPushNotification(Mailman.FireTokens.Jay, "Refer to email for more info.", "RApID - BOM Missing", "true");
                         }
 
                         MainWindow.Notify.TrayBalloonTipClicked += Notify_TrayBalloonTipClicked;
@@ -410,7 +410,7 @@ namespace RApID_Project_WPF
                     if (progData != null) progData.Dispatcher.Invoke(() => progData.Visibility = Visibility.Hidden);
                 }, token, TaskContinuationOptions.NotOnCanceled, CrossClassScheduler).ConfigureAwait(true);
 
-                tempPtr.Dispose();
+                //tempPtr.Dispose();
             }
             catch (IOException ioe)
             {

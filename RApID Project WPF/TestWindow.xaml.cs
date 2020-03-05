@@ -217,24 +217,11 @@ namespace RApID_Project_WPF
 
         private void btnEmail_Click(object sender, RoutedEventArgs e)
         {
-            var batch = new BatchWindow();
-            batch.Boards.Add("6545646545");
-            batch.Boards.Add("4641561804");
-            batch.Boards.Add("4897489165");
-            batch.Boards.Add("9645615454");
-            batch.MainBarcodeScanner = new SerialPort()
+            using (var form = new FNS.FrmFirebaseContactForm())
             {
-                PortName = RDM.ReadFromReg<string>(RDM.DefaultKey, RDM.COMPort),
-                BaudRate = RDM.ReadFromReg<int>(RDM.DefaultKey, RDM.BaudRate),
-                Parity = (Parity)Enum.Parse(typeof(Parity), RDM.ReadFromReg<string>(RDM.DefaultKey, RDM.Parity)),
-                DataBits = RDM.ReadFromReg<int>(RDM.DefaultKey, RDM.DataBits),
-                StopBits = (StopBits)Enum.Parse(typeof(StopBits), RDM.ReadFromReg<string>(RDM.DefaultKey, RDM.StopBits))
-            };
-            if (batch.ShowDialog() == true) { 
-                foreach(var board in batch.Boards)
-                {
-                    Console.WriteLine("Batched Board --> " + board);
-                }
+                form.ShowDialog();
+
+                FNS.Classes.FirebasePushService.SendPushNotification(form.ChosenFirebaseContactToken, "I see you", "China Message", "true");
             }
         }
     }

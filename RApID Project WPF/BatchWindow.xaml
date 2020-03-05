@@ -35,16 +35,16 @@
         </ContextMenu>
     </Window.Resources>
     <Grid Background="Black" Margin="5" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
-            <Grid.RowDefinitions>
-                <RowDefinition Height="80*"/>
-                <RowDefinition Height="20*"/>
-            </Grid.RowDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="80*"/>
+            <RowDefinition Height="20*"/>
+        </Grid.RowDefinitions>
         <ListView x:Name="lvBoards" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Grid.Row="0" ItemsSource="{Binding ElementName=wndBatch,Path=Boards,Mode=OneWay}" 
                   Background="Transparent" FontSize="14" >
             <ListView.ItemsPanel>
                 <ItemsPanelTemplate>
                     <WrapPanel Orientation="Horizontal">
-                        
+
                     </WrapPanel>
                 </ItemsPanelTemplate>
             </ListView.ItemsPanel>
@@ -59,5 +59,6 @@
         </ListView>
         <Button Content="Cancel" x:Name="btnCancel" Grid.Row="1" HorizontalAlignment="Left" VerticalAlignment="Center" Click="BtnCancel_Click" Width="100" Height="40" Margin="20,0,0,0" FontSize="20"/>
         <Button Content="Submit" x:Name="btnSubmit" Grid.Row="1" HorizontalAlignment="Right" VerticalAlignment="Center" Click="BtnSubmit_Click" Width="100" Height="40" Margin="0,0,20,0" FontSize="20"/>
-        </Grid>
+        <TextBox HorizontalAlignment="Left" Height="23" Margin="219,26,0,0" Grid.Row="1" TextWrapping="Wrap" Text="TextBox" VerticalAlignment="Top" Width="117"/>
+    </Grid>
 </Window>
