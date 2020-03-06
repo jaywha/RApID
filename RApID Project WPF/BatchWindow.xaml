@@ -59,6 +59,7 @@
         </ListView>
         <Button Content="Cancel" x:Name="btnCancel" Grid.Row="1" HorizontalAlignment="Left" VerticalAlignment="Center" Click="BtnCancel_Click" Width="100" Height="40" Margin="20,0,0,0" FontSize="20"/>
         <Button Content="Submit" x:Name="btnSubmit" Grid.Row="1" HorizontalAlignment="Right" VerticalAlignment="Center" Click="BtnSubmit_Click" Width="100" Height="40" Margin="0,0,20,0" FontSize="20"/>
-        <TextBox HorizontalAlignment="Left" Height="23" Margin="219,26,0,0" Grid.Row="1" TextWrapping="Wrap" Text="TextBox" VerticalAlignment="Top" Width="117"/>
+        <TextBox x:Name="txtBuffer" Background="DimGray" Foreground="Orange" HorizontalAlignment="Left" Height="40" Margin="125,26,0,0" Grid.Row="1" TextWrapping="Wrap" VerticalAlignment="Top" Width="357"
+                 VerticalContentAlignment="Center" HorizontalContentAlignment="Center" FontSize="24px" Visibility="Hidden"/>
     </Grid>
 </Window>

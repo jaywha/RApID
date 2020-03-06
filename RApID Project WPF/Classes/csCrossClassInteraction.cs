@@ -221,6 +221,8 @@ namespace RApID_Project_WPF
         /// <returns>A BOM filepath</returns>
         public static string TechFormProcess(this SNM mapper, TextBox txtSN, TextBox txtPN) {
 
+            if (mapper == null || txtSN == null) return "";
+
             bool techTableSuccess = false;
             string bompath = string.Empty;
 
@@ -228,8 +230,8 @@ namespace RApID_Project_WPF
             string notes = string.Empty;
             bool found = false;
 
-            if(mapper.NoFilesFound)
-                mapper.GetData(txtSN.Text);
+            mapper.GetData(txtSN.Text);
+
             (techTableSuccess, bompath, _, notes) = mapper.CheckAliasTable(); // Check Alias Table for Part Number
             #if DEBUG
                 Console.WriteLine(
@@ -256,34 +258,38 @@ namespace RApID_Project_WPF
             else if (!string.IsNullOrWhiteSpace(txtSN.Text.Trim()))
             {
                 Regex regex = new Regex("^[0-9]{12}$");
-                if (txtSN.Text.Trim().Split(' ').Length > 1 && regex.IsMatch(txtSN.Text.Trim())) {
+                if (txtSN.Text.Trim().Split(' ').Length > 1 || !regex.IsMatch(txtSN.Text.Trim())) {
                     MainWindow.Notify.ShowBalloonTip("Serial Number Bad Format!",
-                        "Please enter a simgle 12-digit serial number!", Hardcodet.Wpf.TaskbarNotification.BalloonIcon.Error);
-                } else {
-                    Mailman.SendEmail("RApID - Missing BOM",
-                        "<p>We're missing the BOM for the following unit info.</p>" +
-                        "<hr/>" +
-                        "<ul>" +
-                        $"<li>Serial Number: {txtSN.Text.Trim()}</li>" +
-                        $"<li>Production Query Part Number: {txtPN?.Text ?? ""}</li>" +
-                        $"<li>SNMapper Part Number: {mapper.PartNumber}</li>" +
-                        $"<li>SNMapper Component Number: {mapper.ComponentNumber}</li>" +
-                        "</ul>" +
-                        "<hr/>"
-                        );
-                }
+                        $"Please enter just one single 12-digit serial number!", 
+                        Hardcodet.Wpf.TaskbarNotification.BalloonIcon.Error);
+                } 
                 return "";
-            } else return "";
-
-            if (filename.Contains(",") && !string.IsNullOrWhiteSpace(notes))
+            } else if (filename.Contains(",") && !string.IsNullOrWhiteSpace(notes))
             {
                 frmMultipleItems fmi = new frmMultipleItems(MultipleItemType.BOMFiles)
                 {
                     BOMFiles = filename.Split(',').ToList(),
                     Notes = notes.Split('|')[0].Split(',').ToList()
                 };
-                if (fmi.ShowDialog() == false) return string.Empty;
+                if (fmi.ShowDialog() == false) return "";
                 sVar.SelectedBOMFile.FilePath = filename;
+
+                if (string.IsNullOrWhiteSpace(filename) || !File.Exists(sVar.SelectedBOMFile.FilePath))
+                {
+                    Mailman.SendEmail("RApID - Missing BOM",
+                            "<p>We're missing the BOM for the following unit info.</p>" +
+                            "<hr/>" +
+                            "<ul>" +
+                            $"<li>Serial Number: {txtSN.Text.Trim()}</li>" +
+                            $"<li>Production Query Part Number: {txtPN?.Text ?? ""}</li>" +
+                            $"<li>SNMapper Part Number: {mapper.PartNumber}</li>" +
+                            $"<li>SNMapper Component Number: {mapper.ComponentNumber}</li>" +
+                            "</ul>" +
+                            "<hr/>"
+                            );
+                }
+
+                return filename;
             }
 
             //Console.WriteLine($"[{callingFile}] Using filepath ==> {filename}");
@@ -305,7 +311,7 @@ namespace RApID_Project_WPF
                     MainWindow.Notify.TrayBalloonTipClicked -= OpenDirectory;
                 };
                 MainWindow.Notify.ShowBalloonTip($"BOM Parts Pulled{(string.IsNullOrWhiteSpace(PN) ? "" : $" for [{PN}]")}",
-                $"The file is stored here: {filename}", Hardcodet.Wpf.TaskbarNotification.BalloonIcon.Info);
+                $"Click here to open the file location for: {filename.Split('\\').Last()} ", Hardcodet.Wpf.TaskbarNotification.BalloonIcon.Info);
             });
         }
 

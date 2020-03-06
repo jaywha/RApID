@@ -45,6 +45,10 @@ namespace RApID_Project_WPF
         public BatchWindow()
         {
             InitializeComponent();
+            if(MainBarcodeScanner == null || string.IsNullOrEmpty(MainBarcodeScanner.PortName))
+            {
+                txtBuffer.Visibility = Visibility.Visible;
+            }
         }
 
         private void BarcodeSerial_DataReceived(object sender, SerialDataReceivedEventArgs e)
