@@ -739,6 +739,8 @@ namespace RApID_Project_WPF
         {
             try
             {
+                dgBOMList.Items.Clear();
+
                 using (SNM mapper = SNM.Instance)
                 {
                     await Task.Factory.StartNew(new Action(() => // in new task

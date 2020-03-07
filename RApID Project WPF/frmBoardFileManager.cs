@@ -867,6 +867,7 @@ namespace RApID_Project_WPF
                         BringToFront();
                         spltpnlActualForm.Panel2Collapsed = true;
                         lblStatus.Text = "";
+                        progbarStatus.Value = 0;
                     }));
                 }
             }
@@ -882,53 +883,82 @@ namespace RApID_Project_WPF
 
         private void uploadBOMDataToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            bool PreviousDataFound = false;
             AssemblyLinkLabel assemblyLink = (flowBOMFiles.Controls[BOMFileIndex] as AssemblyLinkLabel);
             spltpnlActualForm.Panel2Collapsed = false;
 
             foreach (var p in Process.GetProcessesByName("EXCEL")) p.Kill();
             File.AppendAllText(DBUpload_Log, $"Start {Environment.MachineName}\\{Environment.UserName} Record @ {DateTime.Now:hh:mm:ss tt} {{\n");
+            
+            MessageBox.Show("Starting upload of BOM data!");
 
             try
             {
-                #region Delete Old Entries
-                var deleteQuery = "DELETE FROM [Repair].[dbo].[BoMInfo] WHERE [BoardNumber] = @BoardNumber AND [Rev] = @Revision";// AND [ECO] <IS> @ECONum";
+                var selectQuery = "SELECT TOP(1) * FROM [Repair].[dbo].[BoMInfo] WHERE [BoardNumber] = @BoardNumber AND " +
+                    $"[Rev] {(!string.IsNullOrEmpty(assemblyLink.REV) ? "= @Revision" : "IS NULL")}";// AND ECO = @ECO
 
                 using (SqlConnection conn = new SqlConnection(csObjectHolder.csObjectHolder.ObjectHolderInstance().RepairConnectionString))
-                using (SqlCommand cmd = new SqlCommand(deleteQuery, conn))
                 {
-                    try
+                    using (SqlCommand cmd = new SqlCommand(selectQuery, conn))
                     {
-                        conn.Open();
-                        cmd.Parameters.AddRange(new SqlParameter[] {
-                            new SqlParameter("BoardNumber",System.Data.SqlDbType.VarChar, 100),
-                            new SqlParameter("Revision",System.Data.SqlDbType.VarChar, 50),
-                            new SqlParameter("ECONum",System.Data.SqlDbType.VarChar, 500)
-                        });
+                        cmd.Parameters.AddWithValue("@BoardNumber", txtFullAssemblyNumber?.Text ?? "");
+                        cmd.Parameters.AddWithValue("@Revision", assemblyLink?.REV ?? "");
 
-                        cmd.Parameters["BoardNumber"].Value = txtFullAssemblyNumber.Text;
-
-                        if (assemblyLink.REV != null && !string.IsNullOrWhiteSpace(assemblyLink.REV))
-                            cmd.Parameters["Revision"].Value = assemblyLink.REV;
-                        else
-                            cmd.Parameters["Revision"].Value = DBNull.Value;
-
-                        if (assemblyLink.ECO != null && !string.IsNullOrEmpty(assemblyLink.ECO))
+                        try
                         {
-                            deleteQuery = deleteQuery.Replace("<IS>", "=");
-                            cmd.Parameters["ECONum"].Value = assemblyLink.ECO;
+                            conn.Open();
+                            using (SqlDataReader reader = cmd.ExecuteReader())
+                            {
+                                if(reader.Read())
+                                {
+                                    PreviousDataFound = true;
+                                }
+                            }
+                            conn.Close();
                         }
-                        else
-                            cmd.Parameters["ECONum"].Value = DBNull.Value;
-
-
-                        int rowsAffected = cmd.ExecuteNonQuery();
-                        conn.Close();
+                        catch (Exception ex) { MessageBox.Show(ex.Message); }
                     }
-                    catch (Exception ex) { MessageBox.Show("Inside of Delete Query:\n" + ex.Message); Console.WriteLine(ex.Message); }
                 }
-                #endregion
 
-                bckgrndProcessDBOps.RunWorkerAsync(assemblyLink);
+                DialogResult replaceData = DialogResult.No;
+                if(PreviousDataFound)
+                {
+                    replaceData = MessageBox.Show($"We found data for {assemblyLink.Text} with REV {assemblyLink.REV} on the database!\n" +
+                        "Would you like to replace this data?",
+                        "BOM Info - Found Previous Data in Database!",MessageBoxButtons.YesNo, MessageBoxIcon.Information);
+                }
+
+                if (replaceData == DialogResult.Yes)
+                {
+                    #region Delete Old Entries
+                    var deleteQuery = "DELETE FROM [Repair].[dbo].[BoMInfo] WHERE [BoardNumber] = @BoardNumber AND " +
+                        $"[Rev] {(!string.IsNullOrEmpty(assemblyLink.REV) ? "= @Revision" : "IS NULL")}";// AND [ECO] = @ECONum";
+
+                    using (SqlConnection conn = new SqlConnection(csObjectHolder.csObjectHolder.ObjectHolderInstance().RepairConnectionString))
+                    using (SqlCommand cmd = new SqlCommand(deleteQuery, conn))
+                    {
+                        try
+                        {
+                            conn.Open();
+
+                            cmd.Parameters.AddWithValue("@BoardNumber", txtFullAssemblyNumber?.Text ?? "");
+                            cmd.Parameters.AddWithValue("@Revision", assemblyLink?.REV ?? "");
+                            cmd.Parameters.AddWithValue("@ECONum", assemblyLink?.ECO ?? "");
+
+                            int rowsAffected = cmd.ExecuteNonQuery();
+                            conn.Close();
+                        }
+                        catch (Exception ex) { MessageBox.Show("Inside of Delete Query:\n" + ex.Message); Console.WriteLine(ex.Message); }
+                    }
+
+                    #endregion
+
+                    bckgrndProcessDBOps.RunWorkerAsync(assemblyLink);
+                } else
+                {
+                    spltpnlActualForm.Panel2Collapsed = true;
+                    lblStatus.Text = "";
+                }
             }
             catch (Exception ex)
             {
