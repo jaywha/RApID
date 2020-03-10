@@ -75,7 +75,7 @@ namespace RApID_Project_WPF
         }
 
         private ObservableCollection<MultiplePartsReplaced> BOMList = new ObservableCollection<MultiplePartsReplaced>();
-
+        private static readonly CancellationTokenSource MapperTokenSource = new CancellationTokenSource();
 
         #endregion
 
@@ -386,8 +386,6 @@ namespace RApID_Project_WPF
             cbxScrap.IsChecked = false;
             dgPrevRepairInfo.Items.Clear();
             rtbAdditionalComments.Document.Blocks.Clear();
-            BOMList.Clear();
-            BOMList.Clear();
 
             ucEOLTab.lblEOL.Content = "End of Line";
             ucEOLTab.lblPOST.Content = "Post Burn-In";            
@@ -734,26 +732,26 @@ namespace RApID_Project_WPF
 
         #endregion
 
-        private static readonly CancellationTokenSource MapperTokenSource = new CancellationTokenSource();
         private async void MapRefDesToPartNum()
         {
             try
             {
                 dgBOMList.Items.Clear();
 
-                using (SNM mapper = SNM.Instance)
+
+                await Task.Factory.StartNew(new Action(() => // in new task
                 {
-                    await Task.Factory.StartNew(new Action(() => // in new task
+                    using (SNM mapper = SNM.Instance)
                     {
-                        Dispatcher.BeginInvoke(new Action(() => // perform dispatched UI actions
+                        Dispatcher.BeginInvoke(new Action(async () => // perform dispatched UI actions
                         {
-                            var filename = mapper.TechFormProcess(txtSerialNumber, txtPartNumber);
+                            var filename = await mapper.TechFormProcessAsync(txtSerialNumber, txtPartNumber).ConfigureAwait(true);
 
                             var refSource = new ObservableCollection<string>();
                             var partSource = new ObservableCollection<string>();
 
                             csCrossClassInteraction.DoExcelOperations(txtPartNumber.Text, progMapper, dgBOMList, expBOMInfo, refSource, partSource);
-                            if(!mapper.NoFilesFound) csCrossClassInteraction.MapperSuccessMessage(filename, mapper.PartNumber);
+                            if (!mapper.NoFilesFound) csCrossClassInteraction.MapperSuccessMessage(filename, mapper.PartNumber);
 
                             txtMultiRefDes.ItemsSource = refSource;
                             txtMultiRefDes_2.ItemsSource = refSource;
@@ -766,8 +764,8 @@ namespace RApID_Project_WPF
                             BOMFileActive = true;
                             CheckForManual();
                         }), DispatcherPriority.ApplicationIdle);
-                    }), MapperTokenSource.Token, TaskCreationOptions.LongRunning, TaskScheduler.Current).ConfigureAwait(true);
-                }
+                    }
+                }), MapperTokenSource.Token, TaskCreationOptions.LongRunning, TaskScheduler.Current).ConfigureAwait(true);
             }
             catch (InvalidOperationException ioe)
             {

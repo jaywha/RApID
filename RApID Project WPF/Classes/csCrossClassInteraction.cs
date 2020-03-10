@@ -52,6 +52,7 @@ namespace RApID_Project_WPF
         private static csObjectHolder.csObjectHolder holder = csObjectHolder.csObjectHolder.ObjectHolderInstance();
         private const string bomlogfiledir = @"P:\EE Process Test\Logs\RApID\_BOMReadings\";
         private static readonly string bomlogfile = $"{DateTime.Now:y\\MMMM\\dd}-BOMLog.txt";
+        private static readonly CancellationTokenSource CheckAliasCancellationTokenSource = new CancellationTokenSource();
 
         public static int GetLine([CallerLineNumber] int lineNumber = 0) => lineNumber;
 
@@ -212,6 +213,9 @@ namespace RApID_Project_WPF
             return result;
         }
 
+        public static string TechFormProcess(this SNM mapper, TextBox txtSN, TextBox txtPN)
+            => TechFormProcessAsync(mapper, txtSN, txtPN).Result;
+
         /// <summary>
         /// Will find BOM or offer selection using single shared method between <see cref="frmProduction"/> and <see cref="frmRepair"/>.
         /// </summary>
@@ -219,7 +223,7 @@ namespace RApID_Project_WPF
         /// <param name="txtSN"><see cref="TextBox"/> control for Serial Number value.</param>
         /// <param name="txtPN"><see cref="TextBox"/> control for Part Number value.</param>
         /// <returns>A BOM filepath</returns>
-        public static string TechFormProcess(this SNM mapper, TextBox txtSN, TextBox txtPN) {
+        public static async Task<string> TechFormProcessAsync(this SNM mapper, TextBox txtSN, TextBox txtPN) {
 
             if (mapper == null || txtSN == null) return "";
 
@@ -232,15 +236,19 @@ namespace RApID_Project_WPF
 
             mapper.GetData(txtSN.Text);
 
-            (techTableSuccess, bompath, _, notes) = mapper.CheckAliasTable(); // Check Alias Table for Part Number
-            #if DEBUG
+            await Task.Factory.StartNew(() =>
+            {
+                (techTableSuccess, bompath, _, notes) = mapper.CheckAliasTable(); // Check Alias Table for Part Number
+#if DEBUG
                 Console.WriteLine(
                     $"CheckAliasTable {{\n" +
                         $"\t\"success\" : {techTableSuccess}\n" +
                         $"\t\"BOM Path\" : {bompath}\n" +
                         $"\t\"Notes\" : {notes}\n" +
                     $"}}\n");
-            #endif
+#endif
+            }, CheckAliasCancellationTokenSource.Token, TaskCreationOptions.LongRunning, TaskScheduler.Current)
+                .ConfigureAwait(true);
 
             if (techTableSuccess)
             {
@@ -274,7 +282,7 @@ namespace RApID_Project_WPF
                 if (fmi.ShowDialog() == false) return "";
                 sVar.SelectedBOMFile.FilePath = filename;
 
-                if (string.IsNullOrWhiteSpace(filename) || !File.Exists(sVar.SelectedBOMFile.FilePath))
+                if (string.IsNullOrWhiteSpace(filename) || !File.Exists(filename))
                 {
                     Mailman.SendEmail("RApID - Missing BOM",
                             "<p>We're missing the BOM for the following unit info.</p>" +
@@ -292,7 +300,6 @@ namespace RApID_Project_WPF
                 return filename;
             }
 
-            //Console.WriteLine($"[{callingFile}] Using filepath ==> {filename}");
             return filename;
         }
 
