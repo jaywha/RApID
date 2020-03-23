@@ -175,6 +175,11 @@ namespace RApID_Project_WPF
             ToggleFiltersEnabled(true);
         }
 
+        private void btnExcelExport_Click(object sender, RoutedEventArgs e)
+        {
+            //TODO: Add basic Excel Export for internal quick reports
+        }
+
         #region Data Grid Context Menu Item Clicks
         private void OpenProduction(object sender, RoutedEventArgs e)
         {

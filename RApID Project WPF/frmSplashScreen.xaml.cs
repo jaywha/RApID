@@ -21,6 +21,8 @@ namespace RApID_Project_WPF
     {
         EricStabileLibrary.SplashScreenVM ssvm = new EricStabileLibrary.SplashScreenVM();
 
+        //TODO: Figure out Task Was Cancelled Errors --> Pretty sure it's due to SplashScreen calls
+
         public frmSplashScreen()
         {
             InitializeComponent();

@@ -25,6 +25,9 @@ using SNM = SNMapperLib.csSerialNumberMapper;
 
 namespace RApID_Project_WPF
 {
+    //TODO: Random crashes in Repair => TryCatch & Breakpoint Step Debugging
+
+
     /// <summary>
     /// Interaction logic for Repair.xaml
     /// </summary>

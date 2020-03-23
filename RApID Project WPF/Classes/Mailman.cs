@@ -11,6 +11,7 @@ using System.Net;
 
 namespace RApID_Project_WPF
 {
+    //TODO: Ensure mailman only sends mail when appropriate conditions are met
     public static class Mailman
     {
         private static csSQL.csSQLClass sqlClass = new csSQL.csSQLClass();

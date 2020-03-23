@@ -883,6 +883,8 @@ namespace RApID_Project_WPF
 
         private void uploadBOMDataToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            //TODO: Automatically Upload BOM Data when adding Excel BoM files
+            //TODO: Manual uploads still needed (?) -> then ensure starting upload actually starts upload
             bool PreviousDataFound = false;
             AssemblyLinkLabel assemblyLink = (flowBOMFiles.Controls[BOMFileIndex] as AssemblyLinkLabel);
             spltpnlActualForm.Panel2Collapsed = false;
