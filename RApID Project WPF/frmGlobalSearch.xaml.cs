@@ -1,10 +1,12 @@
 ﻿using System;
+using System.IO;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Input;
+using Excel = Microsoft.Office.Interop.Excel;
 
 namespace RApID_Project_WPF
 {
@@ -177,7 +179,29 @@ namespace RApID_Project_WPF
 
         private void btnExcelExport_Click(object sender, RoutedEventArgs e)
         {
-            //TODO: Add basic Excel Export for internal quick reports
+            Excel.Application applicationXL = new Excel.Application();
+            try
+            {
+                string DESKTOP = Environment.GetFolderPath(Environment.SpecialFolder.Desktop).ToString();               
+                string WORKING_FILE = DESKTOP + @"\RApID Reports\" + DateTime.Now.Year + @"\TechnicianSubmission-Report--" + DateTime.Now.ToString("MM-dd-yy") + ".xlsm";
+                if (!Directory.Exists(DESKTOP + @"\RApID Reports\" + DateTime.Now.Year)) Directory.CreateDirectory(DESKTOP + @"\PO Manager Reports\" + DateTime.Now.Year);
+                File.Copy(@"\\joi\EU\Collaboration\EEPT\RApID\Templates\TechnicianSubmissionReportTemplate.xlsm", WORKING_FILE, true);
+
+                Excel.Workbook workbookMain = applicationXL.Workbooks.Open(WORKING_FILE);
+                Excel.Worksheet worksheetMain = (Excel.Worksheet)workbookMain.Sheets[1];
+                int lastBlankRow = worksheetMain.Cells.SpecialCells(Excel.XlCellType.xlCellTypeBlanks).Row + 1;
+                int indexer = 1; // Excel 1-indexed
+
+                int loopIndex = 0; // Track if this is the last row to get the line items for, if at all.
+
+                foreach(Record record in _records)
+                {
+                    //TODO: Get record data into Excel file.
+                }
+            } catch (Exception ex) {
+                csExceptionLogger.csExceptionLogger.Write("GlobalSearch-MakeExcelSheet", ex);
+                MessageBox.Show("There was an error. Attempting to close any open Excel instances...\nPlease try again afterwards.\n" + ex.Message, "Background Task Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
 
         #region Data Grid Context Menu Item Clicks

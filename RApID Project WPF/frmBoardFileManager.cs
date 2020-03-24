@@ -578,6 +578,8 @@ namespace RApID_Project_WPF
                 }
             }
 
+            if (bBOM) uploadBOMData(); // auto push BOM data to database
+
             bSchematic = false;
             bBOM = false;
             ResetStatus();
@@ -882,8 +884,10 @@ namespace RApID_Project_WPF
         #endregion
 
         private void uploadBOMDataToolStripMenuItem_Click(object sender, EventArgs e)
+            => uploadBOMData();
+
+        private void uploadBOMData()
         {
-            //TODO: Automatically Upload BOM Data when adding Excel BoM files
             //TODO: Manual uploads still needed (?) -> then ensure starting upload actually starts upload
             bool PreviousDataFound = false;
             AssemblyLinkLabel assemblyLink = (flowBOMFiles.Controls[BOMFileIndex] as AssemblyLinkLabel);
@@ -891,7 +895,7 @@ namespace RApID_Project_WPF
 
             foreach (var p in Process.GetProcessesByName("EXCEL")) p.Kill();
             File.AppendAllText(DBUpload_Log, $"Start {Environment.MachineName}\\{Environment.UserName} Record @ {DateTime.Now:hh:mm:ss tt} {{\n");
-            
+
             MessageBox.Show("Starting upload of BOM data!");
 
             try
@@ -911,7 +915,7 @@ namespace RApID_Project_WPF
                             conn.Open();
                             using (SqlDataReader reader = cmd.ExecuteReader())
                             {
-                                if(reader.Read())
+                                if (reader.Read())
                                 {
                                     PreviousDataFound = true;
                                 }
@@ -923,11 +927,11 @@ namespace RApID_Project_WPF
                 }
 
                 DialogResult replaceData = DialogResult.No;
-                if(PreviousDataFound)
+                if (PreviousDataFound)
                 {
                     replaceData = MessageBox.Show($"We found data for {assemblyLink.Text} with REV {assemblyLink.REV} on the database!\n" +
                         "Would you like to replace this data?",
-                        "BOM Info - Found Previous Data in Database!",MessageBoxButtons.YesNo, MessageBoxIcon.Information);
+                        "BOM Info - Found Previous Data in Database!", MessageBoxButtons.YesNo, MessageBoxIcon.Information);
                 }
 
                 if (replaceData == DialogResult.Yes)
@@ -956,7 +960,8 @@ namespace RApID_Project_WPF
                     #endregion
 
                     bckgrndProcessDBOps.RunWorkerAsync(assemblyLink);
-                } else
+                }
+                else
                 {
                     spltpnlActualForm.Panel2Collapsed = true;
                     lblStatus.Text = "";

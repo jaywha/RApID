@@ -104,15 +104,14 @@
     <AutoGenerateBindingRedirects>false</AutoGenerateBindingRedirects>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="BarcodeLib, Version=1.0.0.2, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>P:\EE Process Test\Software\BarcodeLib\BarcodeLib.dll</HintPath>
+    <Reference Include="BarcodeLib">
+      <HintPath>..\..\..\..\Downloads\BarcodeLib.dll</HintPath>
     </Reference>
     <Reference Include="Costura, Version=3.3.3.0, Culture=neutral, PublicKeyToken=9919ef960d84173d, processorArchitecture=MSIL">
       <HintPath>..\packages\Costura.Fody.3.3.3\lib\net40\Costura.dll</HintPath>
     </Reference>
-    <Reference Include="csExceptionLogger">
-      <HintPath>P:\Jay Whaley\_Folders\References\csExceptionLogger.dll</HintPath>
+    <Reference Include="csExceptionLogger, Version=1.0.1.27609, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\csExceptionLogger.1.0.1-CI-20200320-152022\lib\net451\csExceptionLogger.dll</HintPath>
     </Reference>
     <Reference Include="ExcelDataReader, Version=3.6.0.0, Culture=neutral, PublicKeyToken=93517dbe6a4012fa, processorArchitecture=MSIL">
       <HintPath>..\packages\ExcelDataReader.3.6.0\lib\net45\ExcelDataReader.dll</HintPath>

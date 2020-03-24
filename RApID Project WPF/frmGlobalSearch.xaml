@@ -72,7 +72,7 @@
                         </LinearGradientBrush>
                     </Button.Background>
                 </Button>
-                <Separator Width="{Binding Path=Width,ElementName=stkPnlButtons}" Visibility="Collapsed"/>
+                <Separator Visibility="{Binding ElementName=btnApplyFilters, Path=Visibility}" Width="{Binding Path=Width,ElementName=stkPnlButtons}"/>
                 <Button x:Name="btnApplyFilters" Content="Apply Filters ✓" HorizontalAlignment="Center" VerticalAlignment="Center" Width="174" Height="60" FontFamily="Plantagenet Cherokee" FontSize="16" Click="ApplyFilters"
                         ToolTip="Find rows in current data." Visibility="Collapsed">
                     <Button.Background>
@@ -84,7 +84,7 @@
                         </LinearGradientBrush>
                     </Button.Background>
                 </Button>
-                <Separator Width="{Binding Path=Width,ElementName=stkPnlButtons}"/>
+                <Separator Visibility="{Binding ElementName=btnClearFilters, Path=Visibility}" Width="{Binding Path=Width,ElementName=stkPnlButtons}"/>
                 <Button x:Name="btnClearFilters" Content="Clear Filters ✘" HorizontalAlignment="Center" VerticalAlignment="Bottom" Width="174" Height="60" FontFamily="Plantagenet Cherokee" FontSize="16" Click="btnClearFilters_Click"
                         ToolTip="Clear all filters from current data." Visibility="Collapsed">
                     <Button.Background>
@@ -93,6 +93,15 @@
                             <GradientStop Color="#FFD4BFBF" Offset="0.37"/>
                             <GradientStop Color="#FFBB8D8D" Offset="0.683"/>
                             <GradientStop Color="#FF722C2C" Offset="1"/>
+                        </LinearGradientBrush>
+                    </Button.Background>
+                </Button>
+                <Separator Visibility="Visible" Width="{Binding Path=Width,ElementName=stkPnlButtons}"/>
+                <Button x:Name="btnExcelExport" Content="Export Excel 📜" HorizontalAlignment="Center" VerticalAlignment="Bottom" Width="174" Height="60" FontFamily="Plantagenet Cherokee" FontSize="16" Click="btnExcelExport_Click" ToolTip="Exports the current results table to an Excel document.">
+                    <Button.Background>
+                        <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                            <GradientStop Color="#FF8DDB95" Offset="0"/>
+                            <GradientStop Color="#FF187122" Offset="1"/>
                         </LinearGradientBrush>
                     </Button.Background>
                 </Button>
