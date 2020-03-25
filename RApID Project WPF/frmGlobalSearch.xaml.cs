@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.IO;
 using System.Text.RegularExpressions;
 using System.Threading;
@@ -182,25 +183,44 @@ namespace RApID_Project_WPF
             Excel.Application applicationXL = new Excel.Application();
             try
             {
-                string DESKTOP = Environment.GetFolderPath(Environment.SpecialFolder.Desktop).ToString();               
-                string WORKING_FILE = DESKTOP + @"\RApID Reports\" + DateTime.Now.Year + @"\TechnicianSubmission-Report--" + DateTime.Now.ToString("MM-dd-yy") + ".xlsm";
-                if (!Directory.Exists(DESKTOP + @"\RApID Reports\" + DateTime.Now.Year)) Directory.CreateDirectory(DESKTOP + @"\PO Manager Reports\" + DateTime.Now.Year);
-                File.Copy(@"\\joi\EU\Collaboration\EEPT\RApID\Templates\TechnicianSubmissionReportTemplate.xlsm", WORKING_FILE, true);
+                string DESKTOP = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);               
+                string WORKING_FILE = DESKTOP + @"\RApID Reports\" + DateTime.Now.Year + @"\TechnicianSubmission-Report--" + DateTime.Now.ToString("MM-dd-yy") + ".xlsx";
+
+                if (!Directory.Exists(DESKTOP + @"\RApID Reports\" + DateTime.Now.Year))
+                    Directory.CreateDirectory(DESKTOP + @"\RApID Reports\" + DateTime.Now.Year);
+
+                File.Copy(@"\\joi\eu\Public\EE Process Test\Software\RApID Project WPF\Templates\TechnicianSubmissionReportTemplate.xlsx", WORKING_FILE, true);
 
                 Excel.Workbook workbookMain = applicationXL.Workbooks.Open(WORKING_FILE);
                 Excel.Worksheet worksheetMain = (Excel.Worksheet)workbookMain.Sheets[1];
                 int lastBlankRow = worksheetMain.Cells.SpecialCells(Excel.XlCellType.xlCellTypeBlanks).Row + 1;
                 int indexer = 1; // Excel 1-indexed
 
-                int loopIndex = 0; // Track if this is the last row to get the line items for, if at all.
-
                 foreach(Record record in _records)
                 {
-                    //TODO: Get record data into Excel file.
+                    foreach(var param in record.GetType().GetProperties())
+                    {
+                        worksheetMain.Cells[lastBlankRow, indexer++].Value = param.GetValue(record, null);
+                    }
+                    lastBlankRow++;
+                    indexer = 1;
                 }
+
+                worksheetMain.Columns["A:AU"].AutoFit();
+
+                workbookMain.Save();
+                workbookMain.Close();
+                workbookMain = null;
+
+                MessageBox.Show("We've completed creating the Excel report.\n" +
+                                "It's located on your Dekstop in the PO Manager Reports folder.",
+                                "Completed Excel Export Action", MessageBoxButton.OK, MessageBoxImage.Information);
+
+                Process.Start(WORKING_FILE);
+
             } catch (Exception ex) {
                 csExceptionLogger.csExceptionLogger.Write("GlobalSearch-MakeExcelSheet", ex);
-                MessageBox.Show("There was an error. Attempting to close any open Excel instances...\nPlease try again afterwards.\n" + ex.Message, "Background Task Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("There was an error. Attempting to close any open Excel instances...\nPlease try again afterwards.\n" + ex.Message, "Background Task Error", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
 

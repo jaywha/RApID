@@ -84,7 +84,8 @@ namespace RApID_Project_WPF
                 UIThread.BeginInvoke(new Action(() => ToggleFilterControls.Invoke(true)));
 
                 Console.WriteLine("[INFO]: Number of rows in data grid (" + numRecs + ").");
-            }, cancelation);
+            }, cancelation, TaskCreationOptions.LongRunning, TaskScheduler.Current)
+            .ConfigureAwait(true);
         }
     }
 
@@ -597,8 +598,14 @@ namespace RApID_Project_WPF
             => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propName));
         #endregion
 
+        /// <summary>
+        /// Helps with reading data in from the SQL Table
+        /// </summary>
+        /// <param name="vals">The <see cref="SqlDataReader"/> that I'm pulling from</param>
         public static implicit operator Record(object[] vals)
         {
+            if (vals == null) throw new ArgumentNullException("Implicit Operator Error: values array (vals) passed was null.");
+
             int vindex = 0;
 
             Record newRecord = new Record();
@@ -698,6 +705,11 @@ namespace RApID_Project_WPF
 
             return newRecord;
         }
+
+        /// <summary>
+        /// Helps with modelling data for going from <see cref="DataGrid"/> item to <see cref="PreviousRepairInformation"/>
+        /// </summary>
+        /// <param name="r"></param>
         public static implicit operator PreviousRepairInformation(Record r) =>
         new PreviousRepairInformation
         {
