@@ -10,6 +10,7 @@ using System.Security.Permissions;
 using System.Windows.Controls.Primitives;
 using System.Collections.Generic;
 using System.Windows.Media.Animation;
+using System.Threading;
 
 namespace RApID_Project_WPF
 {
@@ -20,6 +21,7 @@ namespace RApID_Project_WPF
     {
         csObjectHolder.csObjectHolder holder = csObjectHolder.csObjectHolder.ObjectHolderInstance();
         StaticVars sVars = StaticVars.StaticVarsInstance();
+        CancellationTokenSource RApIDCancelSource = new CancellationTokenSource();
 
         public static TaskbarIcon Notify;
         public static MainWindow GlobalInstance;
@@ -121,7 +123,8 @@ namespace RApID_Project_WPF
                 /*var uName = UserPrincipal.Current.DisplayName.Trim().Split(',');
                 FullName = uName[1].Trim() + " " + uName[0].Trim();
                 Notify.ShowBalloonTip(msgTitle + $", {FullName}!", msgWelcome, BalloonIcon.Info);*/
-            }));
+            }), RApIDCancelSource.Token, TaskCreationOptions.LongRunning, TaskScheduler.Current)
+            .ConfigureAwait(true);
         }
 
         private void btnClicks(object sender, RoutedEventArgs e)
@@ -190,7 +193,12 @@ namespace RApID_Project_WPF
         {
             try
             {
-                //csSplashScreenHelper.StopTokenSource.Cancel();
+                RApIDCancelSource.Cancel();
+                sVars.disposeStaticVars();
+                csCrossClassInteraction.CheckAliasCancellationTokenSource.Cancel();
+                csCrossClassInteraction.GlobalTokenSource.Cancel();
+                csSplashScreenHelper.SplashScreen = null;
+
                 if (this != null)
                 {
                     Dispatcher.InvokeShutdown();
@@ -198,29 +206,16 @@ namespace RApID_Project_WPF
 
                 Notify = null;
                 notifyRapid.Dispose(); // Ensure GC collects notify icon
+
+                GC.Collect();
+                GC.Collect();
             }
             catch (Exception ex)
-            when (ex is System.Security.SecurityException || ex is System.Threading.ThreadStateException
+            when ( ex is System.Security.SecurityException 
+                || ex is System.Threading.ThreadStateException
                 || ex is System.Threading.ThreadAbortException)
             {
                 csExceptionLogger.csExceptionLogger.Write("MainWindow_ThreadedClosingIssues", ex);
-            }
-        }
-
-        private void wndMain_Closed(object sender, EventArgs e)
-        {
-            try
-            {
-                /*Wide net to catch rouge threads...*/
-                Notify = null;
-            }
-            catch (TaskCanceledException tce)
-            {
-                Console.WriteLine($"[wndMain_Closed] Task ID: {tce.Task.Id} | CanBeCanceled = {tce.CancellationToken.CanBeCanceled}\n\tSource -> {tce.Source}");
-            }
-            finally
-            {
-                Environment.Exit(0);
             }
         }
 

@@ -52,7 +52,8 @@ namespace RApID_Project_WPF
         private static csObjectHolder.csObjectHolder holder = csObjectHolder.csObjectHolder.ObjectHolderInstance();
         private const string bomlogfiledir = @"P:\EE Process Test\Logs\RApID\_BOMReadings\";
         private static readonly string bomlogfile = $"{DateTime.Now:y\\MMMM\\dd}-BOMLog.txt";
-        private static readonly CancellationTokenSource CheckAliasCancellationTokenSource = new CancellationTokenSource();
+        public static readonly CancellationTokenSource CheckAliasCancellationTokenSource = new CancellationTokenSource();
+        public static readonly CancellationTokenSource GlobalTokenSource = new CancellationTokenSource();
 
         public static int GetLine([CallerLineNumber] int lineNumber = 0) => lineNumber;
 
@@ -349,8 +350,6 @@ namespace RApID_Project_WPF
                 //Directory.CreateDirectory(bomlogfiledir);
                 //var tempPtr = File.Create(Path.Combine(bomlogfiledir, bomlogfile));
 
-                CancellationToken token = new CancellationToken();
-
                 await Task.Factory.StartNew(new Action(async () => {
                     if (progData != null) progData.Dispatcher.Invoke(() => progData.Visibility = Visibility.Visible);
                     if (string.IsNullOrEmpty(filePath))
@@ -417,11 +416,13 @@ namespace RApID_Project_WPF
                             }
                         }
                     }
-                }), token, TaskCreationOptions.LongRunning, CrossClassScheduler)
+                }),
+                GlobalTokenSource.Token, TaskCreationOptions.LongRunning, CrossClassScheduler)
                 .ContinueWith((antecedent) => {
                     GC.Collect();
                     if (progData != null) progData.Dispatcher.Invoke(() => progData.Visibility = Visibility.Hidden);
-                }, token, TaskContinuationOptions.NotOnCanceled, CrossClassScheduler).ConfigureAwait(true);
+                }, GlobalTokenSource.Token, TaskContinuationOptions.NotOnCanceled, CrossClassScheduler)
+                .ConfigureAwait(true);
 
                 //tempPtr.Dispose();
             }

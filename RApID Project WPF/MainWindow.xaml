@@ -6,7 +6,7 @@
     xmlns:sys="clr-namespace:System;assembly=mscorlib"
         xmlns:System="clr-namespace:System;assembly=mscorlib" x:Class="RApID_Project_WPF.MainWindow"
         x:Name="wndMain"
-        Title="RApID" Width="450" Height="385" WindowStartupLocation="CenterScreen" ResizeMode="CanMinimize" Loaded="Window_Loaded" Closing="Window_Closing" Closed="wndMain_Closed"
+        Title="RApID" Width="450" Height="385" WindowStartupLocation="CenterScreen" ResizeMode="CanMinimize" Loaded="Window_Loaded" Closing="Window_Closing"
     Left="500">
     <Window.Resources>
         <Style x:Key="MainMenuButton" TargetType="{x:Type Button}">

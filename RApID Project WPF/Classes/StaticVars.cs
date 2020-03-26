@@ -51,5 +51,10 @@ namespace RApID_Project_WPF
         public MULTIPLEBOM SelectedBOMFile { get; set; }
             = new MULTIPLEBOM { Filename = "BOMFile", Notes = "Nope!" };
 
+        internal void disposeStaticVars()
+        {
+            LogHandler = null;
+            VersionControl = null;
+        }
     }
 }

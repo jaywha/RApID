@@ -111,7 +111,6 @@ namespace RApID_Project_WPF
             Show();
         }
 
-
         #region Initialization
         private void buildDGViews()
         {
@@ -494,8 +493,6 @@ namespace RApID_Project_WPF
             }
         }
         #endregion
-
-
 
         /// <summary>
         /// Check to see if a Unit Issue tab meets the criteria to be disabled.
@@ -1376,38 +1373,44 @@ namespace RApID_Project_WPF
             {
                 using (SNM mapper = SNM.Instance)
                 {
-                    await Task.Factory.StartNew(new Action(() =>
-                    {
-                        tabcUnitIssues.Dispatcher.BeginInvoke(new Action(async () => // perform actions on dispatched thread
-                        {
-                            if (!mapper.GetData(txtBarcode.Text))
+                    await Task.Factory.StartNew(
+                        new Action(() => {
+                            tabcUnitIssues.Dispatcher.BeginInvoke(new Action(async () => // perform actions on dispatched thread
                             {
-                                MessageBox.Show("Couldn't find the barcode's entry in the database.\nPlease enter information manually.", "Soft Error - BOM Lookup"
-                                    , MessageBoxButton.OK, MessageBoxImage.Warning);
-                            }
-                            else
-                            {
-                                var filename = await mapper.TechFormProcessAsync(txtBarcode, txtPartNumber).ConfigureAwait(true);
+                                if (!mapper.GetData(txtBarcode.Text))
+                                {
+                                    MessageBox.Show("Couldn't find the barcode's entry in the database.\nPlease enter information manually.",
+                                        "Soft Error - BOM Lookup"
+                                        , MessageBoxButton.OK
+                                        , MessageBoxImage.Warning);
+                                }
+                                else
+                                {
+                                    var filename = await mapper.TechFormProcessAsync(txtBarcode, txtPartNumber).ConfigureAwait(true);
 
-                                if (!File.Exists(filename)) return;
+                                    if (!File.Exists(filename)) return;
 
-                                csCrossClassInteraction.DoExcelOperations(filename, progMapper, OrigRefSource, OrigPartSource);
+                                    csCrossClassInteraction.DoExcelOperations(filename, progMapper, OrigRefSource, OrigPartSource);
 
-                                if (!mapper.NoFilesFound) csCrossClassInteraction.MapperSuccessMessage(filename, mapper.PartNumber);
+                                    if (!mapper.NoFilesFound)
+                                        csCrossClassInteraction.MapperSuccessMessage(filename, mapper.PartNumber);
 
-                                txtRefDes.ItemsSource = OrigRefSource;
-                                txtRefDes_2.ItemsSource = OrigRefSource;
-                                txtRefDes_3.ItemsSource = OrigRefSource;
+                                    txtRefDes.ItemsSource = OrigRefSource;
+                                    txtRefDes_2.ItemsSource = OrigRefSource;
+                                    txtRefDes_3.ItemsSource = OrigRefSource;
 
-                                txtPartReplaced.ItemsSource = OrigPartSource;
-                                txtPartReplaced_2.ItemsSource = OrigPartSource;
-                                txtPartReplaced_3.ItemsSource = OrigPartSource;
+                                    txtPartReplaced.ItemsSource = OrigPartSource;
+                                    txtPartReplaced_2.ItemsSource = OrigPartSource;
+                                    txtPartReplaced_3.ItemsSource = OrigPartSource;
 
-                                BOMFileActive = true;
-                                CheckForManual();
-                            }
+                                    BOMFileActive = true;
+                                    CheckForManual();
+                                }
                         }), DispatcherPriority.Background);
-                    }), MapperTokenSource.Token, TaskCreationOptions.LongRunning, TaskScheduler.Current)
+                    }),
+                    MapperTokenSource.Token, 
+                    TaskCreationOptions.LongRunning, 
+                    TaskScheduler.Current)
                     .ConfigureAwait(true);
                 }
             }

@@ -39,9 +39,8 @@ namespace RApID_Project_WPF
 
                 if (!SplashScreen.Dispatcher.CheckAccess())
                 {
-                    SplashScreen.Dispatcher.BeginInvoke(DispatcherPriority.Background, new Action(delegate ()
+                    SplashScreen.Dispatcher.Invoke(DispatcherPriority.Background, new Action(delegate ()
                     {
-                        Thread.Sleep(TIMEOUT);
                         try
                         {
                             SplashScreen.Hide();
@@ -74,7 +73,7 @@ namespace RApID_Project_WPF
 
                 if (!SplashScreen.Dispatcher.CheckAccess())
                 {
-                    SplashScreen.Dispatcher.BeginInvoke(DispatcherPriority.Background, new Action(delegate ()
+                    SplashScreen.Dispatcher.Invoke(DispatcherPriority.Background, new Action(delegate ()
                     {
                         ((SplashScreenVM)SplashScreen.DataContext).SplashText = text;
                     }));
@@ -104,9 +103,8 @@ namespace RApID_Project_WPF
 
                 if (!SplashScreen.Dispatcher.CheckAccess())
                 {
-                    SplashScreen.Dispatcher.BeginInvoke(DispatcherPriority.Background, new Action(delegate ()
+                    SplashScreen.Dispatcher.Invoke(DispatcherPriority.Background, new Action(delegate ()
                     {
-                        Thread.Sleep(TIMEOUT);
                         try
                         {
                             SplashScreen.Close();
