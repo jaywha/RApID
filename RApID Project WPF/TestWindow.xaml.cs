@@ -1,4 +1,5 @@
-﻿using RApID_Project_WPF.Classes;
+﻿using EricStabileLibrary;
+using RApID_Project_WPF.Classes;
 using RApID_Project_WPF.UserControls;
 using SNMapperLib;
 using System;
@@ -223,6 +224,20 @@ namespace RApID_Project_WPF
 
                 FNS.Classes.FirebasePushService.SendPushNotification(form.ChosenFirebaseContactToken, "I see you", "China Message", "true");
             }
+        }
+
+        private InitSplash initS = new InitSplash();
+        private void wndTestWindow_Loaded(object sender, RoutedEventArgs e)
+        {
+            Hide();
+            initS.InitSplash1("Initializing Form...");
+            csSplashScreenHelper.ShowText("Loading Test...");
+
+            GC.Collect();
+            csSplashScreenHelper.ShowText("Done!");
+            csSplashScreenHelper.Hide();
+            this.Activate();
+            Show();
         }
     }
 }

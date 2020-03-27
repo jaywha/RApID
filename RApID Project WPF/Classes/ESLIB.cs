@@ -614,26 +614,6 @@ namespace EricStabileLibrary
         }
     }
 
-    /// <summary>
-    /// ViewModel for the SplashScreen
-    /// </summary>
-    public class SplashScreenVM : RApID_Project_WPF.VMB.ViewModelBase
-    {
-        private string _splashText = "Loading...";
-        public string SplashText
-        {
-            get { return _splashText; }
-            set
-            {
-                if (_splashText != value)
-                {
-                    _splashText = value;
-                    NotifyPropertyChanged(() => SplashText);
-                }
-            }
-        }
-    }
-
     public class MultipleRPVM : RApID_Project_WPF.VMB.ViewModelBase
     {
         private string _rpNumber;

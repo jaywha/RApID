@@ -2469,6 +2469,7 @@ namespace RApID_Project_WPF
 
             sVar.resetStaticVars();
             csSplashScreenHelper.Close();
+            MapperTokenSource.Cancel();
             MainWindow.GlobalInstance.MakeFocus();
         }
 

@@ -9,7 +9,8 @@
         xmlns:UserControls="clr-namespace:RApID_Project_WPF.UserControls"
         x:Class="RApID_Project_WPF.TestWindow"
         mc:Ignorable="d" Name="wndTestWindow"
-        Title="TestWindow" Height="527.674" Width="849.313">
+        Title="TestWindow" Height="527.674" Width="849.313"
+    Loaded="wndTestWindow_Loaded">
     <Window.Resources>
         <UserControls:BoolToStringConverter x:Key="StatusConv"/>
         <UserControls:VisibilityToBoolConverter x:Key="VisToBoolConv"/>

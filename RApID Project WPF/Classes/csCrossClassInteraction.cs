@@ -421,7 +421,7 @@ namespace RApID_Project_WPF
                 .ContinueWith((antecedent) => {
                     GC.Collect();
                     if (progData != null) progData.Dispatcher.Invoke(() => progData.Visibility = Visibility.Hidden);
-                }, GlobalTokenSource.Token, TaskContinuationOptions.NotOnCanceled, CrossClassScheduler)
+                }, GlobalTokenSource.Token, TaskContinuationOptions.OnlyOnRanToCompletion, CrossClassScheduler)
                 .ConfigureAwait(true);
 
                 //tempPtr.Dispose();

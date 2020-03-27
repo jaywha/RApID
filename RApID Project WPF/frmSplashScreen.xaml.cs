@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
@@ -17,16 +19,30 @@ namespace RApID_Project_WPF
     /// <summary>
     /// Interaction logic for frmSplashScreen.xaml
     /// </summary>
-    public partial class frmSplashScreen : Window
+    public partial class frmSplashScreen : Window, INotifyPropertyChanged
     {
-        EricStabileLibrary.SplashScreenVM ssvm = new EricStabileLibrary.SplashScreenVM();
+        public event PropertyChangedEventHandler PropertyChanged;
+        private void OnPropertyChanged([CallerMemberName] string propName = "")
+            => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propName));
 
-        //TODO: Figure out Task Was Cancelled Errors --> Pretty sure it's due to SplashScreen calls
+        private string _splashText = "Loading...";
+
+        public string SplashText
+        {
+            get { return _splashText; }
+            set
+            {
+                if (_splashText != value)
+                {
+                    _splashText = value;
+                    OnPropertyChanged();
+                }
+            }
+        }
 
         public frmSplashScreen()
         {
             InitializeComponent();
-            DataContext = ssvm;
         }
     }
 }

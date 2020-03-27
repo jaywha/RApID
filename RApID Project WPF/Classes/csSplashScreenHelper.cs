@@ -39,13 +39,15 @@ namespace RApID_Project_WPF
 
                 if (!SplashScreen.Dispatcher.CheckAccess())
                 {
-                    SplashScreen.Dispatcher.Invoke(DispatcherPriority.Background, new Action(delegate ()
+                    SplashScreen.Dispatcher.Invoke(DispatcherPriority.Normal, new Action(delegate ()
                     {
                         try
                         {
                             SplashScreen.Hide();
                         }
-                        catch { }
+                        catch(Exception e) {
+                            new frmMessageBox.frmMessageBox().ShowMsg("Issue Hiding", "SS Thread Issue", frmMessageBox.frmMessageBox.Icon_Type.Error);
+                        }
                     }));
                 }
                 else SplashScreen.Hide();
@@ -73,12 +75,12 @@ namespace RApID_Project_WPF
 
                 if (!SplashScreen.Dispatcher.CheckAccess())
                 {
-                    SplashScreen.Dispatcher.Invoke(DispatcherPriority.Background, new Action(delegate ()
+                    SplashScreen.Dispatcher.Invoke(DispatcherPriority.Normal, new Action(delegate ()
                     {
-                        ((SplashScreenVM)SplashScreen.DataContext).SplashText = text;
+                        SplashScreen.SplashText = text;
                     }));
                 }
-                else ((SplashScreenVM)SplashScreen.DataContext).SplashText = text;
+                else SplashScreen.SplashText = text;
             }
             catch (ThreadAbortException tce)
             {
@@ -103,7 +105,7 @@ namespace RApID_Project_WPF
 
                 if (!SplashScreen.Dispatcher.CheckAccess())
                 {
-                    SplashScreen.Dispatcher.Invoke(DispatcherPriority.Background, new Action(delegate ()
+                    SplashScreen.Dispatcher.Invoke(DispatcherPriority.Normal, new Action(delegate ()
                     {
                         try
                         {
@@ -112,7 +114,7 @@ namespace RApID_Project_WPF
                         }
                         catch (InvalidOperationException ioe)
                         {
-                            csExceptionLogger.csExceptionLogger.Write("SplashScreenHelper_CloseAsyncCatch", ioe);
+                            new frmMessageBox.frmMessageBox().ShowMsg("Issue Closing", "SS Thread Issue", frmMessageBox.frmMessageBox.Icon_Type.Error);
                         }
                     }));
                 }

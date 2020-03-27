@@ -135,6 +135,7 @@
             // 
             // cxmnuAssemblyLinksMenu
             // 
+            this.cxmnuAssemblyLinksMenu.ImageScalingSize = new System.Drawing.Size(24, 24);
             this.cxmnuAssemblyLinksMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.openFileLocationToolStripMenuItem,
             this.toolStripSeparator1,
@@ -149,25 +150,25 @@
             this.tssUploadBOMData,
             this.uploadBOMDataToolStripMenuItem});
             this.cxmnuAssemblyLinksMenu.Name = "cxmnuLinkMenu";
-            this.cxmnuAssemblyLinksMenu.Size = new System.Drawing.Size(200, 204);
+            this.cxmnuAssemblyLinksMenu.Size = new System.Drawing.Size(268, 284);
             this.cxmnuAssemblyLinksMenu.Opening += new System.ComponentModel.CancelEventHandler(this.cxmnuAssemblyLinksMenu_Opening);
             // 
             // openFileLocationToolStripMenuItem
             // 
             this.openFileLocationToolStripMenuItem.Name = "openFileLocationToolStripMenuItem";
-            this.openFileLocationToolStripMenuItem.Size = new System.Drawing.Size(199, 22);
+            this.openFileLocationToolStripMenuItem.Size = new System.Drawing.Size(267, 32);
             this.openFileLocationToolStripMenuItem.Text = "Open File Location";
             this.openFileLocationToolStripMenuItem.Click += new System.EventHandler(this.openFileLocationToolStripMenuItem_Click);
             // 
             // toolStripSeparator1
             // 
             this.toolStripSeparator1.Name = "toolStripSeparator1";
-            this.toolStripSeparator1.Size = new System.Drawing.Size(196, 6);
+            this.toolStripSeparator1.Size = new System.Drawing.Size(264, 6);
             // 
             // markAsActiveToolStripMenuItem
             // 
             this.markAsActiveToolStripMenuItem.Name = "markAsActiveToolStripMenuItem";
-            this.markAsActiveToolStripMenuItem.Size = new System.Drawing.Size(199, 22);
+            this.markAsActiveToolStripMenuItem.Size = new System.Drawing.Size(267, 32);
             this.markAsActiveToolStripMenuItem.Text = "Mark As Active";
             this.markAsActiveToolStripMenuItem.ToolTipText = "Marks BOM to be stored in global variables.";
             this.markAsActiveToolStripMenuItem.Click += new System.EventHandler(this.markAsActiveToolStripMenuItem_Click);
@@ -175,12 +176,12 @@
             // tssMarkAsActive
             // 
             this.tssMarkAsActive.Name = "tssMarkAsActive";
-            this.tssMarkAsActive.Size = new System.Drawing.Size(196, 6);
+            this.tssMarkAsActive.Size = new System.Drawing.Size(264, 6);
             // 
             // changeFilePathToolStripMenuItem
             // 
             this.changeFilePathToolStripMenuItem.Name = "changeFilePathToolStripMenuItem";
-            this.changeFilePathToolStripMenuItem.Size = new System.Drawing.Size(199, 22);
+            this.changeFilePathToolStripMenuItem.Size = new System.Drawing.Size(267, 32);
             this.changeFilePathToolStripMenuItem.Text = "Change File Path...";
             this.changeFilePathToolStripMenuItem.ToolTipText = "Selects new file using a file browser";
             this.changeFilePathToolStripMenuItem.Click += new System.EventHandler(this.changeFilePathToolStripMenuItem_Click);
@@ -188,7 +189,7 @@
             // changeTagToolStripMenuItem
             // 
             this.changeTagToolStripMenuItem.Name = "changeTagToolStripMenuItem";
-            this.changeTagToolStripMenuItem.Size = new System.Drawing.Size(199, 22);
+            this.changeTagToolStripMenuItem.Size = new System.Drawing.Size(267, 32);
             this.changeTagToolStripMenuItem.Text = "Change Tag...";
             this.changeTagToolStripMenuItem.ToolTipText = "Edits the tooltip notes";
             this.changeTagToolStripMenuItem.Click += new System.EventHandler(this.ChangeTag_Click);
@@ -196,7 +197,7 @@
             // changeREVToolStripMenuItem
             // 
             this.changeREVToolStripMenuItem.Name = "changeREVToolStripMenuItem";
-            this.changeREVToolStripMenuItem.Size = new System.Drawing.Size(199, 22);
+            this.changeREVToolStripMenuItem.Size = new System.Drawing.Size(267, 32);
             this.changeREVToolStripMenuItem.Text = "Change REV...";
             this.changeREVToolStripMenuItem.ToolTipText = "Edits the associated REV string";
             this.changeREVToolStripMenuItem.Click += new System.EventHandler(this.changeREVToolStripMenuItem_Click);
@@ -204,7 +205,7 @@
             // changeECOToolStripMenuItem
             // 
             this.changeECOToolStripMenuItem.Name = "changeECOToolStripMenuItem";
-            this.changeECOToolStripMenuItem.Size = new System.Drawing.Size(199, 22);
+            this.changeECOToolStripMenuItem.Size = new System.Drawing.Size(267, 32);
             this.changeECOToolStripMenuItem.Text = "Change ECO...";
             this.changeECOToolStripMenuItem.ToolTipText = "Edits the associated ECO string";
             this.changeECOToolStripMenuItem.Click += new System.EventHandler(this.changeECOToolStripMenuItem_Click);
@@ -212,12 +213,12 @@
             // toolStripSeparator2
             // 
             this.toolStripSeparator2.Name = "toolStripSeparator2";
-            this.toolStripSeparator2.Size = new System.Drawing.Size(196, 6);
+            this.toolStripSeparator2.Size = new System.Drawing.Size(264, 6);
             // 
             // deleteSchematicLinkToolStripMenuItem
             // 
             this.deleteSchematicLinkToolStripMenuItem.Name = "deleteSchematicLinkToolStripMenuItem";
-            this.deleteSchematicLinkToolStripMenuItem.Size = new System.Drawing.Size(199, 22);
+            this.deleteSchematicLinkToolStripMenuItem.Size = new System.Drawing.Size(267, 32);
             this.deleteSchematicLinkToolStripMenuItem.Text = "Delete Schematic Link...";
             this.deleteSchematicLinkToolStripMenuItem.ToolTipText = "Deletes the selected file from the database.";
             this.deleteSchematicLinkToolStripMenuItem.Click += new System.EventHandler(this.deleteSchematicLinkToolStripMenuItem_Click);
@@ -225,28 +226,29 @@
             // tssUploadBOMData
             // 
             this.tssUploadBOMData.Name = "tssUploadBOMData";
-            this.tssUploadBOMData.Size = new System.Drawing.Size(196, 6);
+            this.tssUploadBOMData.Size = new System.Drawing.Size(264, 6);
             // 
             // uploadBOMDataToolStripMenuItem
             // 
             this.uploadBOMDataToolStripMenuItem.Name = "uploadBOMDataToolStripMenuItem";
-            this.uploadBOMDataToolStripMenuItem.Size = new System.Drawing.Size(199, 22);
+            this.uploadBOMDataToolStripMenuItem.Size = new System.Drawing.Size(267, 32);
             this.uploadBOMDataToolStripMenuItem.Text = "Upload BOM Data";
             this.uploadBOMDataToolStripMenuItem.ToolTipText = "Upserts the BOM Juki sheet data to BoMInfo table.";
             this.uploadBOMDataToolStripMenuItem.Click += new System.EventHandler(this.uploadBOMDataToolStripMenuItem_Click);
             // 
             // cxmnuDatabaseMenu
             // 
+            this.cxmnuDatabaseMenu.ImageScalingSize = new System.Drawing.Size(24, 24);
             this.cxmnuDatabaseMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.refreshToolStripMenuItem});
             this.cxmnuDatabaseMenu.Name = "cxmnuDatabaseMenu";
-            this.cxmnuDatabaseMenu.Size = new System.Drawing.Size(114, 26);
+            this.cxmnuDatabaseMenu.Size = new System.Drawing.Size(151, 36);
             // 
             // refreshToolStripMenuItem
             // 
             this.refreshToolStripMenuItem.Image = global::RApID_Project_WPF.Properties.Resources.refresh;
             this.refreshToolStripMenuItem.Name = "refreshToolStripMenuItem";
-            this.refreshToolStripMenuItem.Size = new System.Drawing.Size(113, 22);
+            this.refreshToolStripMenuItem.Size = new System.Drawing.Size(150, 32);
             this.refreshToolStripMenuItem.Text = "Refresh";
             this.refreshToolStripMenuItem.Click += new System.EventHandler(this.refreshToolStripMenuItem_Click);
             // 
@@ -264,8 +266,9 @@
             this.lblWarning.Dock = System.Windows.Forms.DockStyle.Fill;
             this.lblWarning.Font = new System.Drawing.Font("Microsoft Sans Serif", 20.25F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Italic))), System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblWarning.Location = new System.Drawing.Point(0, 0);
+            this.lblWarning.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.lblWarning.Name = "lblWarning";
-            this.lblWarning.Size = new System.Drawing.Size(800, 57);
+            this.lblWarning.Size = new System.Drawing.Size(1200, 87);
             this.lblWarning.TabIndex = 0;
             this.lblWarning.Text = "Database Changes Are Immediately LIVE";
             this.lblWarning.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -275,6 +278,7 @@
             this.spltpnlMain.Dock = System.Windows.Forms.DockStyle.Fill;
             this.spltpnlMain.IsSplitterFixed = true;
             this.spltpnlMain.Location = new System.Drawing.Point(0, 0);
+            this.spltpnlMain.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.spltpnlMain.Name = "spltpnlMain";
             this.spltpnlMain.Orientation = System.Windows.Forms.Orientation.Horizontal;
             // 
@@ -287,8 +291,9 @@
             // spltpnlMain.Panel2
             // 
             this.spltpnlMain.Panel2.Controls.Add(this.spltpnlActualForm);
-            this.spltpnlMain.Size = new System.Drawing.Size(800, 604);
-            this.spltpnlMain.SplitterDistance = 57;
+            this.spltpnlMain.Size = new System.Drawing.Size(1200, 929);
+            this.spltpnlMain.SplitterDistance = 87;
+            this.spltpnlMain.SplitterWidth = 6;
             this.spltpnlMain.TabIndex = 0;
             // 
             // spltpnlActualForm
@@ -296,6 +301,7 @@
             this.spltpnlActualForm.Dock = System.Windows.Forms.DockStyle.Fill;
             this.spltpnlActualForm.FixedPanel = System.Windows.Forms.FixedPanel.Panel2;
             this.spltpnlActualForm.Location = new System.Drawing.Point(0, 0);
+            this.spltpnlActualForm.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.spltpnlActualForm.Name = "spltpnlActualForm";
             this.spltpnlActualForm.Orientation = System.Windows.Forms.Orientation.Horizontal;
             // 
@@ -309,9 +315,9 @@
             this.spltpnlActualForm.Panel2.BackColor = System.Drawing.Color.Black;
             this.spltpnlActualForm.Panel2.Controls.Add(this.statUploadInfo);
             this.spltpnlActualForm.Panel2Collapsed = true;
-            this.spltpnlActualForm.Size = new System.Drawing.Size(800, 543);
+            this.spltpnlActualForm.Size = new System.Drawing.Size(1200, 836);
             this.spltpnlActualForm.SplitterDistance = 503;
-            this.spltpnlActualForm.SplitterWidth = 1;
+            this.spltpnlActualForm.SplitterWidth = 2;
             this.spltpnlActualForm.TabIndex = 3;
             // 
             // tcDataViewer
@@ -320,19 +326,21 @@
             this.tcDataViewer.Controls.Add(this.tbDatabaseView);
             this.tcDataViewer.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tcDataViewer.Location = new System.Drawing.Point(0, 0);
+            this.tcDataViewer.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.tcDataViewer.Name = "tcDataViewer";
             this.tcDataViewer.SelectedIndex = 0;
-            this.tcDataViewer.Size = new System.Drawing.Size(800, 543);
+            this.tcDataViewer.Size = new System.Drawing.Size(1200, 836);
             this.tcDataViewer.TabIndex = 2;
             // 
             // tbMainView
             // 
             this.tbMainView.BackColor = System.Drawing.Color.DarkGoldenrod;
             this.tbMainView.Controls.Add(this.spltpnlTechView);
-            this.tbMainView.Location = new System.Drawing.Point(4, 22);
+            this.tbMainView.Location = new System.Drawing.Point(4, 29);
+            this.tbMainView.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.tbMainView.Name = "tbMainView";
-            this.tbMainView.Padding = new System.Windows.Forms.Padding(3);
-            this.tbMainView.Size = new System.Drawing.Size(792, 517);
+            this.tbMainView.Padding = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.tbMainView.Size = new System.Drawing.Size(1192, 803);
             this.tbMainView.TabIndex = 0;
             this.tbMainView.Text = "Main View";
             this.tbMainView.ToolTipText = "Shows main format for managing part number aliases.";
@@ -341,7 +349,8 @@
             // 
             this.spltpnlTechView.Dock = System.Windows.Forms.DockStyle.Fill;
             this.spltpnlTechView.IsSplitterFixed = true;
-            this.spltpnlTechView.Location = new System.Drawing.Point(3, 3);
+            this.spltpnlTechView.Location = new System.Drawing.Point(4, 5);
+            this.spltpnlTechView.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.spltpnlTechView.Name = "spltpnlTechView";
             this.spltpnlTechView.Orientation = System.Windows.Forms.Orientation.Horizontal;
             // 
@@ -352,14 +361,16 @@
             // spltpnlTechView.Panel2
             // 
             this.spltpnlTechView.Panel2.Controls.Add(this.spltpnlAliasToDetail);
-            this.spltpnlTechView.Size = new System.Drawing.Size(786, 511);
-            this.spltpnlTechView.SplitterDistance = 227;
+            this.spltpnlTechView.Size = new System.Drawing.Size(1184, 793);
+            this.spltpnlTechView.SplitterDistance = 352;
+            this.spltpnlTechView.SplitterWidth = 6;
             this.spltpnlTechView.TabIndex = 6;
             // 
             // spltpnlPartNumToDetail
             // 
             this.spltpnlPartNumToDetail.Dock = System.Windows.Forms.DockStyle.Fill;
             this.spltpnlPartNumToDetail.Location = new System.Drawing.Point(0, 0);
+            this.spltpnlPartNumToDetail.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.spltpnlPartNumToDetail.Name = "spltpnlPartNumToDetail";
             // 
             // spltpnlPartNumToDetail.Panel1
@@ -369,8 +380,9 @@
             // spltpnlPartNumToDetail.Panel2
             // 
             this.spltpnlPartNumToDetail.Panel2.Controls.Add(this.grpbxBOMLinkHolder);
-            this.spltpnlPartNumToDetail.Size = new System.Drawing.Size(786, 227);
-            this.spltpnlPartNumToDetail.SplitterDistance = 281;
+            this.spltpnlPartNumToDetail.Size = new System.Drawing.Size(1184, 352);
+            this.spltpnlPartNumToDetail.SplitterDistance = 423;
+            this.spltpnlPartNumToDetail.SplitterWidth = 6;
             this.spltpnlPartNumToDetail.TabIndex = 0;
             // 
             // flopnlPartNumberInput
@@ -385,8 +397,9 @@
             this.flopnlPartNumberInput.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
             this.flopnlPartNumberInput.ForeColor = System.Drawing.Color.Goldenrod;
             this.flopnlPartNumberInput.Location = new System.Drawing.Point(0, 0);
+            this.flopnlPartNumberInput.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.flopnlPartNumberInput.Name = "flopnlPartNumberInput";
-            this.flopnlPartNumberInput.Size = new System.Drawing.Size(281, 227);
+            this.flopnlPartNumberInput.Size = new System.Drawing.Size(423, 352);
             this.flopnlPartNumberInput.TabIndex = 0;
             // 
             // lblFullAssemblyNumber
@@ -394,9 +407,10 @@
             this.lblFullAssemblyNumber.AutoSize = true;
             this.lblFullAssemblyNumber.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblFullAssemblyNumber.ForeColor = System.Drawing.Color.Goldenrod;
-            this.lblFullAssemblyNumber.Location = new System.Drawing.Point(3, 0);
+            this.lblFullAssemblyNumber.Location = new System.Drawing.Point(4, 0);
+            this.lblFullAssemblyNumber.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.lblFullAssemblyNumber.Name = "lblFullAssemblyNumber";
-            this.lblFullAssemblyNumber.Size = new System.Drawing.Size(170, 20);
+            this.lblFullAssemblyNumber.Size = new System.Drawing.Size(262, 29);
             this.lblFullAssemblyNumber.TabIndex = 0;
             this.lblFullAssemblyNumber.Text = "Full Assembly Number:";
             // 
@@ -405,9 +419,10 @@
             this.txtFullAssemblyNumber.BackColor = System.Drawing.Color.Black;
             this.txtFullAssemblyNumber.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.txtFullAssemblyNumber.ForeColor = System.Drawing.Color.Goldenrod;
-            this.txtFullAssemblyNumber.Location = new System.Drawing.Point(3, 23);
+            this.txtFullAssemblyNumber.Location = new System.Drawing.Point(4, 34);
+            this.txtFullAssemblyNumber.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.txtFullAssemblyNumber.Name = "txtFullAssemblyNumber";
-            this.txtFullAssemblyNumber.Size = new System.Drawing.Size(170, 26);
+            this.txtFullAssemblyNumber.Size = new System.Drawing.Size(253, 35);
             this.txtFullAssemblyNumber.TabIndex = 1;
             this.txtFullAssemblyNumber.KeyDown += new System.Windows.Forms.KeyEventHandler(this.txtFullAssemblyNumber_KeyDown);
             // 
@@ -415,9 +430,10 @@
             // 
             this.btnSearch.BackColor = System.Drawing.Color.DarkGreen;
             this.btnSearch.ForeColor = System.Drawing.Color.Gold;
-            this.btnSearch.Location = new System.Drawing.Point(3, 55);
+            this.btnSearch.Location = new System.Drawing.Point(4, 79);
+            this.btnSearch.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.btnSearch.Name = "btnSearch";
-            this.btnSearch.Size = new System.Drawing.Size(170, 23);
+            this.btnSearch.Size = new System.Drawing.Size(255, 35);
             this.btnSearch.TabIndex = 3;
             this.btnSearch.Text = "Search";
             this.btnSearch.UseVisualStyleBackColor = false;
@@ -427,9 +443,10 @@
             // 
             this.btnReset.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
             this.btnReset.ForeColor = System.Drawing.Color.Gold;
-            this.btnReset.Location = new System.Drawing.Point(3, 84);
+            this.btnReset.Location = new System.Drawing.Point(4, 124);
+            this.btnReset.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.btnReset.Name = "btnReset";
-            this.btnReset.Size = new System.Drawing.Size(170, 23);
+            this.btnReset.Size = new System.Drawing.Size(255, 35);
             this.btnReset.TabIndex = 4;
             this.btnReset.Text = "Reset";
             this.btnReset.UseVisualStyleBackColor = false;
@@ -439,9 +456,10 @@
             // 
             this.btnRemoteHelp.BackColor = System.Drawing.Color.Teal;
             this.btnRemoteHelp.ForeColor = System.Drawing.Color.Gold;
-            this.btnRemoteHelp.Location = new System.Drawing.Point(3, 113);
+            this.btnRemoteHelp.Location = new System.Drawing.Point(4, 169);
+            this.btnRemoteHelp.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.btnRemoteHelp.Name = "btnRemoteHelp";
-            this.btnRemoteHelp.Size = new System.Drawing.Size(170, 23);
+            this.btnRemoteHelp.Size = new System.Drawing.Size(255, 35);
             this.btnRemoteHelp.TabIndex = 5;
             this.btnRemoteHelp.Text = "Notify Help";
             this.btnRemoteHelp.UseVisualStyleBackColor = false;
@@ -455,8 +473,10 @@
             this.grpbxBOMLinkHolder.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.grpbxBOMLinkHolder.ForeColor = System.Drawing.Color.Gold;
             this.grpbxBOMLinkHolder.Location = new System.Drawing.Point(0, 0);
+            this.grpbxBOMLinkHolder.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.grpbxBOMLinkHolder.Name = "grpbxBOMLinkHolder";
-            this.grpbxBOMLinkHolder.Size = new System.Drawing.Size(501, 227);
+            this.grpbxBOMLinkHolder.Padding = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.grpbxBOMLinkHolder.Size = new System.Drawing.Size(755, 352);
             this.grpbxBOMLinkHolder.TabIndex = 6;
             this.grpbxBOMLinkHolder.TabStop = false;
             this.grpbxBOMLinkHolder.Text = "BOM File Link";
@@ -465,23 +485,25 @@
             // 
             this.flowBOMFiles.ContextMenuStrip = this.cxmnuBOMFlowMenu;
             this.flowBOMFiles.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.flowBOMFiles.Location = new System.Drawing.Point(3, 22);
+            this.flowBOMFiles.Location = new System.Drawing.Point(4, 33);
+            this.flowBOMFiles.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.flowBOMFiles.Name = "flowBOMFiles";
-            this.flowBOMFiles.Size = new System.Drawing.Size(495, 202);
+            this.flowBOMFiles.Size = new System.Drawing.Size(747, 314);
             this.flowBOMFiles.TabIndex = 0;
             // 
             // cxmnuBOMFlowMenu
             // 
+            this.cxmnuBOMFlowMenu.ImageScalingSize = new System.Drawing.Size(24, 24);
             this.cxmnuBOMFlowMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.mnuiAddNewBOMFileLink});
             this.cxmnuBOMFlowMenu.Name = "cxmnuLinkMenu";
-            this.cxmnuBOMFlowMenu.Size = new System.Drawing.Size(182, 26);
+            this.cxmnuBOMFlowMenu.Size = new System.Drawing.Size(244, 36);
             this.cxmnuBOMFlowMenu.Opening += new System.ComponentModel.CancelEventHandler(this.cxmnuBOMFlowMenu_Opening);
             // 
             // mnuiAddNewBOMFileLink
             // 
             this.mnuiAddNewBOMFileLink.Name = "mnuiAddNewBOMFileLink";
-            this.mnuiAddNewBOMFileLink.Size = new System.Drawing.Size(181, 22);
+            this.mnuiAddNewBOMFileLink.Size = new System.Drawing.Size(243, 32);
             this.mnuiAddNewBOMFileLink.Text = "Add new BOM File...";
             this.mnuiAddNewBOMFileLink.Click += new System.EventHandler(this.AddNewBOMFile_Click);
             // 
@@ -489,6 +511,7 @@
             // 
             this.spltpnlAliasToDetail.Dock = System.Windows.Forms.DockStyle.Fill;
             this.spltpnlAliasToDetail.Location = new System.Drawing.Point(0, 0);
+            this.spltpnlAliasToDetail.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.spltpnlAliasToDetail.Name = "spltpnlAliasToDetail";
             // 
             // spltpnlAliasToDetail.Panel1
@@ -498,8 +521,9 @@
             // spltpnlAliasToDetail.Panel2
             // 
             this.spltpnlAliasToDetail.Panel2.Controls.Add(this.pnlFilePaths);
-            this.spltpnlAliasToDetail.Size = new System.Drawing.Size(786, 280);
-            this.spltpnlAliasToDetail.SplitterDistance = 280;
+            this.spltpnlAliasToDetail.Size = new System.Drawing.Size(1184, 435);
+            this.spltpnlAliasToDetail.SplitterDistance = 421;
+            this.spltpnlAliasToDetail.SplitterWidth = 6;
             this.spltpnlAliasToDetail.TabIndex = 0;
             // 
             // panel1
@@ -508,8 +532,9 @@
             this.panel1.Controls.Add(this.grpbxPartNumberDetail);
             this.panel1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panel1.Location = new System.Drawing.Point(0, 0);
+            this.panel1.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(280, 280);
+            this.panel1.Size = new System.Drawing.Size(421, 435);
             this.panel1.TabIndex = 0;
             // 
             // grpbxPartNumberDetail
@@ -520,8 +545,10 @@
             this.grpbxPartNumberDetail.Dock = System.Windows.Forms.DockStyle.Fill;
             this.grpbxPartNumberDetail.ForeColor = System.Drawing.Color.Goldenrod;
             this.grpbxPartNumberDetail.Location = new System.Drawing.Point(0, 0);
+            this.grpbxPartNumberDetail.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.grpbxPartNumberDetail.Name = "grpbxPartNumberDetail";
-            this.grpbxPartNumberDetail.Size = new System.Drawing.Size(280, 280);
+            this.grpbxPartNumberDetail.Padding = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.grpbxPartNumberDetail.Size = new System.Drawing.Size(421, 435);
             this.grpbxPartNumberDetail.TabIndex = 0;
             this.grpbxPartNumberDetail.TabStop = false;
             this.grpbxPartNumberDetail.Text = "Part Number Details";
@@ -529,18 +556,20 @@
             // lblCommodityClass
             // 
             this.lblCommodityClass.AutoSize = true;
-            this.lblCommodityClass.Location = new System.Drawing.Point(6, 36);
+            this.lblCommodityClass.Location = new System.Drawing.Point(9, 55);
+            this.lblCommodityClass.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.lblCommodityClass.Name = "lblCommodityClass";
-            this.lblCommodityClass.Size = new System.Drawing.Size(138, 13);
+            this.lblCommodityClass.Size = new System.Drawing.Size(210, 20);
             this.lblCommodityClass.TabIndex = 1;
             this.lblCommodityClass.Text = "Commodity Class: <CLASS>";
             // 
             // lblPartName
             // 
             this.lblPartName.AutoSize = true;
-            this.lblPartName.Location = new System.Drawing.Point(7, 20);
+            this.lblPartName.Location = new System.Drawing.Point(10, 31);
+            this.lblPartName.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.lblPartName.Name = "lblPartName";
-            this.lblPartName.Size = new System.Drawing.Size(106, 13);
+            this.lblPartName.Size = new System.Drawing.Size(156, 20);
             this.lblPartName.TabIndex = 0;
             this.lblPartName.Text = "Part Name: <NAME>";
             // 
@@ -551,8 +580,9 @@
             this.pnlFilePaths.Dock = System.Windows.Forms.DockStyle.Fill;
             this.pnlFilePaths.ForeColor = System.Drawing.Color.Gold;
             this.pnlFilePaths.Location = new System.Drawing.Point(0, 0);
+            this.pnlFilePaths.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.pnlFilePaths.Name = "pnlFilePaths";
-            this.pnlFilePaths.Size = new System.Drawing.Size(502, 280);
+            this.pnlFilePaths.Size = new System.Drawing.Size(757, 435);
             this.pnlFilePaths.TabIndex = 5;
             // 
             // grpbxSchematicFiles
@@ -562,8 +592,10 @@
             this.grpbxSchematicFiles.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.grpbxSchematicFiles.ForeColor = System.Drawing.Color.Gold;
             this.grpbxSchematicFiles.Location = new System.Drawing.Point(0, 0);
+            this.grpbxSchematicFiles.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.grpbxSchematicFiles.Name = "grpbxSchematicFiles";
-            this.grpbxSchematicFiles.Size = new System.Drawing.Size(502, 280);
+            this.grpbxSchematicFiles.Padding = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.grpbxSchematicFiles.Size = new System.Drawing.Size(757, 435);
             this.grpbxSchematicFiles.TabIndex = 7;
             this.grpbxSchematicFiles.TabStop = false;
             this.grpbxSchematicFiles.Text = "Schematic File Links";
@@ -574,33 +606,36 @@
             this.flowSchematicLinks.ContextMenuStrip = this.cxmnuSchematicFlowMenu;
             this.flowSchematicLinks.Dock = System.Windows.Forms.DockStyle.Fill;
             this.flowSchematicLinks.ForeColor = System.Drawing.Color.Gold;
-            this.flowSchematicLinks.Location = new System.Drawing.Point(3, 22);
+            this.flowSchematicLinks.Location = new System.Drawing.Point(4, 33);
+            this.flowSchematicLinks.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.flowSchematicLinks.Name = "flowSchematicLinks";
-            this.flowSchematicLinks.Size = new System.Drawing.Size(496, 255);
+            this.flowSchematicLinks.Size = new System.Drawing.Size(749, 397);
             this.flowSchematicLinks.TabIndex = 0;
             // 
             // cxmnuSchematicFlowMenu
             // 
+            this.cxmnuSchematicFlowMenu.ImageScalingSize = new System.Drawing.Size(24, 24);
             this.cxmnuSchematicFlowMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.mnuiAddNewSchemaitcLink});
             this.cxmnuSchematicFlowMenu.Name = "cxmnuLinkMenu";
-            this.cxmnuSchematicFlowMenu.Size = new System.Drawing.Size(214, 26);
+            this.cxmnuSchematicFlowMenu.Size = new System.Drawing.Size(289, 36);
             this.cxmnuSchematicFlowMenu.Opening += new System.ComponentModel.CancelEventHandler(this.cxmnuSchematicFlowMenu_Opening);
             // 
             // mnuiAddNewSchemaitcLink
             // 
             this.mnuiAddNewSchemaitcLink.Name = "mnuiAddNewSchemaitcLink";
-            this.mnuiAddNewSchemaitcLink.Size = new System.Drawing.Size(213, 22);
+            this.mnuiAddNewSchemaitcLink.Size = new System.Drawing.Size(288, 32);
             this.mnuiAddNewSchemaitcLink.Text = "Add new Schematic Link...";
             this.mnuiAddNewSchemaitcLink.Click += new System.EventHandler(this.AddNewSchematicLink_Click);
             // 
             // tbDatabaseView
             // 
             this.tbDatabaseView.Controls.Add(this.dgvDatabaseTable);
-            this.tbDatabaseView.Location = new System.Drawing.Point(4, 22);
+            this.tbDatabaseView.Location = new System.Drawing.Point(4, 29);
+            this.tbDatabaseView.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.tbDatabaseView.Name = "tbDatabaseView";
-            this.tbDatabaseView.Padding = new System.Windows.Forms.Padding(3);
-            this.tbDatabaseView.Size = new System.Drawing.Size(792, 517);
+            this.tbDatabaseView.Padding = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.tbDatabaseView.Size = new System.Drawing.Size(1192, 802);
             this.tbDatabaseView.TabIndex = 1;
             this.tbDatabaseView.Text = "Database View";
             this.tbDatabaseView.ToolTipText = "Shows data using SQL Server Edit format.";
@@ -638,7 +673,8 @@
             dataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
             this.dgvDatabaseTable.DefaultCellStyle = dataGridViewCellStyle2;
             this.dgvDatabaseTable.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.dgvDatabaseTable.Location = new System.Drawing.Point(3, 3);
+            this.dgvDatabaseTable.Location = new System.Drawing.Point(4, 5);
+            this.dgvDatabaseTable.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.dgvDatabaseTable.Name = "dgvDatabaseTable";
             this.dgvDatabaseTable.ReadOnly = true;
             dataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
@@ -649,7 +685,8 @@
             dataGridViewCellStyle3.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
             dataGridViewCellStyle3.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
             this.dgvDatabaseTable.RowHeadersDefaultCellStyle = dataGridViewCellStyle3;
-            this.dgvDatabaseTable.Size = new System.Drawing.Size(786, 511);
+            this.dgvDatabaseTable.RowHeadersWidth = 62;
+            this.dgvDatabaseTable.Size = new System.Drawing.Size(1184, 792);
             this.dgvDatabaseTable.TabIndex = 0;
             this.dgvDatabaseTable.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgvDatabaseTable_CellDoubleClick);
             this.dgvDatabaseTable.CellDoubleClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgvDatabaseTable_CellDoubleClick);
@@ -658,6 +695,7 @@
             // 
             this.dataGridViewTextBoxColumn4.DataPropertyName = "PartNumber";
             this.dataGridViewTextBoxColumn4.HeaderText = "PartNumber";
+            this.dataGridViewTextBoxColumn4.MinimumWidth = 8;
             this.dataGridViewTextBoxColumn4.Name = "dataGridViewTextBoxColumn4";
             this.dataGridViewTextBoxColumn4.ReadOnly = true;
             // 
@@ -665,6 +703,7 @@
             // 
             this.dataGridViewTextBoxColumn5.DataPropertyName = "BOMPath";
             this.dataGridViewTextBoxColumn5.HeaderText = "BOMPath";
+            this.dataGridViewTextBoxColumn5.MinimumWidth = 8;
             this.dataGridViewTextBoxColumn5.Name = "dataGridViewTextBoxColumn5";
             this.dataGridViewTextBoxColumn5.ReadOnly = true;
             // 
@@ -672,6 +711,7 @@
             // 
             this.BOMTags.DataPropertyName = "BOMTags";
             this.BOMTags.HeaderText = "BOMTags";
+            this.BOMTags.MinimumWidth = 8;
             this.BOMTags.Name = "BOMTags";
             this.BOMTags.ReadOnly = true;
             // 
@@ -679,6 +719,7 @@
             // 
             this.dataGridViewTextBoxColumn6.DataPropertyName = "SchematicPaths";
             this.dataGridViewTextBoxColumn6.HeaderText = "SchematicPaths";
+            this.dataGridViewTextBoxColumn6.MinimumWidth = 8;
             this.dataGridViewTextBoxColumn6.Name = "dataGridViewTextBoxColumn6";
             this.dataGridViewTextBoxColumn6.ReadOnly = true;
             // 
@@ -686,6 +727,7 @@
             // 
             this.SchematicTags.DataPropertyName = "SchematicTags";
             this.SchematicTags.HeaderText = "SchematicTags";
+            this.SchematicTags.MinimumWidth = 8;
             this.SchematicTags.Name = "SchematicTags";
             this.SchematicTags.ReadOnly = true;
             // 
@@ -703,12 +745,14 @@
             // 
             this.statUploadInfo.BackColor = System.Drawing.Color.Black;
             this.statUploadInfo.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.statUploadInfo.ImageScalingSize = new System.Drawing.Size(24, 24);
             this.statUploadInfo.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.progbarStatus,
             this.lblStatus});
             this.statUploadInfo.Location = new System.Drawing.Point(0, 0);
             this.statUploadInfo.Name = "statUploadInfo";
-            this.statUploadInfo.Size = new System.Drawing.Size(150, 46);
+            this.statUploadInfo.Padding = new System.Windows.Forms.Padding(2, 0, 21, 0);
+            this.statUploadInfo.Size = new System.Drawing.Size(225, 71);
             this.statUploadInfo.TabIndex = 3;
             this.statUploadInfo.Text = "statusStrip1";
             // 
@@ -717,7 +761,7 @@
             this.progbarStatus.ForeColor = System.Drawing.Color.Green;
             this.progbarStatus.Maximum = 10000;
             this.progbarStatus.Name = "progbarStatus";
-            this.progbarStatus.Size = new System.Drawing.Size(200, 40);
+            this.progbarStatus.Size = new System.Drawing.Size(300, 58);
             this.progbarStatus.Step = 3333;
             this.progbarStatus.Style = System.Windows.Forms.ProgressBarStyle.Continuous;
             // 
@@ -726,7 +770,7 @@
             this.lblStatus.BackColor = System.Drawing.Color.Transparent;
             this.lblStatus.ForeColor = System.Drawing.Color.Goldenrod;
             this.lblStatus.Name = "lblStatus";
-            this.lblStatus.Size = new System.Drawing.Size(59, 15);
+            this.lblStatus.Size = new System.Drawing.Size(88, 25);
             this.lblStatus.Text = "Loading...";
             // 
             // errorProvider
@@ -753,12 +797,13 @@
             // 
             // frmBoardFileManager
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(800, 604);
+            this.ClientSize = new System.Drawing.Size(1200, 929);
             this.Controls.Add(this.spltpnlMain);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
-            this.MinimumSize = new System.Drawing.Size(750, 400);
+            this.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.MinimumSize = new System.Drawing.Size(1114, 585);
             this.Name = "frmBoardFileManager";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "PCB File Manager";

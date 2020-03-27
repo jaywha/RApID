@@ -17,6 +17,8 @@ namespace RApID_Project_WPF
         [STAThread]
         public static void Main(string[] args)
         {
+            AppContext.SetSwitch("Switch.MS.Internal.DoNotInvokeInWeakEventTableShutdownListener", true);
+
             if(string.IsNullOrWhiteSpace(csExceptionLogger.csExceptionLogger.DefaultLogLocation))
             {
                 csExceptionLogger.csExceptionLogger.DefaultLogLocation 
