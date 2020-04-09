@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.IO;
 using System.Windows.Forms;
+using GetNetLib;
 
 namespace RApIDStarter
 {
@@ -18,6 +19,7 @@ namespace RApIDStarter
 
             StartupFolder += @"\RApID\";
             string mainFileFolder = @"\\joi\eu\Public\EE Process Test\Software\RApID Project WPF\Main\RApID Project WPF.exe";
+            string version471 = @"\\joi\eu\Public\EE Process Test\Software\RApID Project WPF\PreRelease\RApID Project WPF.exe";
             string barcodeDLL = @"\\joi\eu\Public\EE Process Test\Software\RApID Project WPF\Main\BarcodeLib.dll";
 
             string exeName = Path.GetFileName(mainFileFolder);
@@ -26,7 +28,28 @@ namespace RApIDStarter
 
             try
             {
-                if (File.Exists(mainFileFolder))
+                if(VersionTest.MostRecent)
+                {
+                    if (!Directory.Exists(StartupFolder))
+                    {
+                        Directory.CreateDirectory(StartupFolder);
+                    }
+
+                    StartupFolder += exeNameOnly + @"\PreRelease\";
+                    if (!Directory.Exists(StartupFolder))
+                    {
+                        Directory.CreateDirectory(StartupFolder);
+                    }
+
+                    //Copy the DLL file.
+                    File.Copy(barcodeDLL, StartupFolder + barcodeName, true);
+
+                    //Copy the main file.
+                    File.Copy(version471, StartupFolder + exeName, true);
+
+                    //Start the program.
+                    System.Diagnostics.Process.Start(StartupFolder + exeName);
+                } else if (File.Exists(mainFileFolder))
                 {
                     if (!Directory.Exists(StartupFolder))
                     {

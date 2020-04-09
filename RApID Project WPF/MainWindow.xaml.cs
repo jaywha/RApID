@@ -95,7 +95,7 @@ namespace RApID_Project_WPF
         {
             sVars.initStaticVars();
 
-            var s = ((decimal)sVars.VersionControl.CurrentVersion).ToString();
+            var s = 1.6m; // ((decimal)sVars.VersionControl.CurrentVersion).ToString();
             Title = "RApID: v." + s;
 
             await WelcomeUser();
