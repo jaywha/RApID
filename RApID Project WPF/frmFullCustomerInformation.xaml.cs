@@ -30,21 +30,21 @@ namespace RApID_Project_WPF
         public frmFullCustomerInformation(CustomerInformation _ci)
         {
             InitializeComponent();
-            ciCustInfo = _ci;
+            if (_ci != null) ciCustInfo = _ci;
         }
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
-            txtCustomerNumber.Text = ciCustInfo.CustomerNumber;
-            txtCustomerName.Text = ciCustInfo.CustomerName;
-            txtCustAddy1.Text = ciCustInfo.CustomerAddy1;
-            AddCustomerAddressLine(txtCustAddy2, ciCustInfo.CustomerAddy2);
-            AddCustomerAddressLine(txtCustAddy3, ciCustInfo.CustomerAddy3);
-            AddCustomerAddressLine(txtCustAddy4, ciCustInfo.CustomerAddy4);
-            txtCustCity.Text = ciCustInfo.CustomerCity;
-            txtCustState.Text = ciCustInfo.CustomerState;
-            txtCustPostal.Text = ciCustInfo.CustomerPostalCode;
-            txtCustCountryCode.Text = ciCustInfo.CustomerCountryCode;
+            txtCustomerNumber.Text = ciCustInfo?.CustomerNumber ?? "";
+            txtCustomerName.Text = ciCustInfo?.CustomerName ?? "";
+            txtCustAddy1.Text = ciCustInfo?.CustomerAddy1 ?? "";
+            AddCustomerAddressLine(txtCustAddy2, ciCustInfo?.CustomerAddy2 ?? "");
+            AddCustomerAddressLine(txtCustAddy3, ciCustInfo?.CustomerAddy3 ?? "");
+            AddCustomerAddressLine(txtCustAddy4, ciCustInfo?.CustomerAddy4 ?? "");
+            txtCustCity.Text = ciCustInfo?.CustomerCity ?? "";
+            txtCustState.Text = ciCustInfo?.CustomerState ?? "";
+            txtCustPostal.Text = ciCustInfo?.CustomerPostalCode ?? "";
+            txtCustCountryCode.Text = ciCustInfo?.CustomerCountryCode ?? "";
         }
 
         private void AddCustomerAddressLine(TextBox textbox, string value)

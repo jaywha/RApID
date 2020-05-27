@@ -343,14 +343,13 @@ namespace EricStabileLibrary
                 sw.Close();
                 sw = null;
 
-
-                #region Submit Log to DB
+                /** #region Submit Log to DB
 
                 using (SqlConnection conn = new SqlConnection(csObjectHolder.csObjectHolder.ObjectHolderInstance().RepairConnectionString))
                 {
                     conn.Open();
 
-                    /* [1.] Get ActionID index to increment by 1. */
+                    // [1.] Get ActionID index to increment by 1.
                     var actionID = 0;
                     using (SqlCommand cmd = new SqlCommand("SELECT ActionID FROM TechLogActions ORDER BY ActionID DESC", conn))
                     {
@@ -364,7 +363,7 @@ namespace EricStabileLibrary
                         }
                     }
 
-                    /* [2.] Insert initial log details into TechLogs table. */
+                    // [2.] Insert initial log details into TechLogs table.
                     using (SqlCommand cmd = new SqlCommand("INSERT INTO TechLogs (ActionID, Tech, LogCreationTime, LogSubmitTime) " +
                         "VALUES (@aid, @tech, @createtime, @submittime)", conn))
                     {
@@ -377,7 +376,7 @@ namespace EricStabileLibrary
                         if (cmd.ExecuteNonQuery() == 0) return false;
                     }
 
-                    /* [3.] Get newest LogID after instering log entry (Auto Increment ID)*/
+                    // [3.] Get newest LogID after instering log entry (Auto Increment ID)
                     using (SqlCommand cmd = new SqlCommand("SELECT ID FROM TechLogs ORDER BY ID DESC", conn))
                     {
                         using (SqlDataReader reader = cmd.ExecuteReader())
@@ -388,7 +387,7 @@ namespace EricStabileLibrary
                             else throw new IOException("LogID could not be set.\nPlease confirm validity in the Database.");
                     }
 
-                    /* [4.] Insert all relevant actions into TechLogActions table with ActionID as the pairing column. */
+                    // [4.] Insert all relevant actions into TechLogActions table with ActionID as the pairing column.
                     foreach (csLogAction action in csL.lActions)
                     {
                         using (SqlCommand cmd = new SqlCommand("INSERT INTO TechLogActions (ActionID, ControlType, ControlName, " +
@@ -412,6 +411,7 @@ namespace EricStabileLibrary
                 }
 
                 #endregion
+                **/
 
                 return true;
             }
@@ -541,7 +541,16 @@ namespace EricStabileLibrary
         /// </summary>
         public void writeLogToFile()
         {
-            csSerialization.serializeFile(Technician, _logCreation, lLogActions, LogLocation, Technician + "_" + DateTime.Now.ToString("MMddyyhhmmsstt") + ".xml");
+            // TODO: Replace with NLog
+            // csSerialization.serializeFile(Technician, _logCreation, lLogActions, LogLocation, Technician + "_" + DateTime.Now.ToString("MMddyyhhmmsstt") + ".xml");
+            Console.WriteLine(
+                $"{{\n" +
+                    $"\t{nameof(Technician)}: {Technician}\n" +
+                    $"\t{nameof(_logCreation)}: {_logCreation}\n" +
+                    $"\t{nameof(lLogActions)}: {lLogActions}\n" +
+                    $"\t{nameof(LogLocation)}: {LogLocation}\n" +
+                    $"\tDate Created: {DateTime.Now:MM-dd-yy hh:mm:ss tt}\n" +
+                $"}}\n");
         }
     }
 
