@@ -958,14 +958,9 @@ namespace RApID_Project_WPF
                     }
 
                     #endregion
+                }
 
-                    bckgrndProcessDBOps.RunWorkerAsync(assemblyLink);
-                }
-                else
-                {
-                    spltpnlActualForm.Panel2Collapsed = true;
-                    lblStatus.Text = "";
-                }
+                bckgrndProcessDBOps.RunWorkerAsync(assemblyLink);                
             }
             catch (Exception ex)
             {
