@@ -1,4 +1,4 @@
-﻿namespace RApID_Project_WPF
+﻿namespace RApID_Project_WPF.Forms
 {
     partial class frmTextRequest
     {

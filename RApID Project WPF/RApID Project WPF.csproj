@@ -405,10 +405,10 @@
     <Compile Include="CustomControls\AssemblyLinkLabel.Designer.cs">
       <DependentUpon>AssemblyLinkLabel.cs</DependentUpon>
     </Compile>
-    <Compile Include="frmBoardFileManager.cs">
+    <Compile Include="Forms\frmBoardFileManager.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="frmBoardFileManager.Designer.cs">
+    <Compile Include="Forms\frmBoardFileManager.Designer.cs">
       <DependentUpon>frmBoardFileManager.cs</DependentUpon>
     </Compile>
     <Compile Include="frmFullCustomerInformation.xaml.cs">
@@ -441,10 +441,10 @@
     <Compile Include="frmSplashScreen.xaml.cs">
       <DependentUpon>frmSplashScreen.xaml</DependentUpon>
     </Compile>
-    <Compile Include="frmTextRequest.cs">
+    <Compile Include="Forms\frmTextRequest.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="frmTextRequest.Designer.cs">
+    <Compile Include="Forms\frmTextRequest.Designer.cs">
       <DependentUpon>frmTextRequest.cs</DependentUpon>
     </Compile>
     <Compile Include="frmViewFullLog.xaml.cs">
@@ -628,10 +628,10 @@
     <EmbeddedResource Include="CustomControls\AssemblyLinkLabel.resx">
       <DependentUpon>AssemblyLinkLabel.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="frmBoardFileManager.resx">
+    <EmbeddedResource Include="Forms\frmBoardFileManager.resx">
       <DependentUpon>frmBoardFileManager.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="frmTextRequest.resx">
+    <EmbeddedResource Include="Forms\frmTextRequest.resx">
       <DependentUpon>frmTextRequest.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
@@ -703,6 +703,7 @@
     <Analyzer Include="..\packages\Microsoft.NetFramework.Analyzers.2.9.8\analyzers\dotnet\cs\Microsoft.NetFramework.Analyzers.dll" />
     <Analyzer Include="..\packages\Microsoft.NetFramework.Analyzers.2.9.8\analyzers\dotnet\cs\Microsoft.NetFramework.CSharp.Analyzers.dll" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>

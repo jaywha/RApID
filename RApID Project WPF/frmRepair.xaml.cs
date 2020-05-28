@@ -1,5 +1,6 @@
 ﻿using EricStabileLibrary;
 using RApID_Project_WPF.Classes;
+using RApID_Project_WPF.Forms;
 using RetestVerifierAppWPF.Classes;
 using SNMapperLib;
 using System;
@@ -2499,8 +2500,10 @@ namespace RApID_Project_WPF
         private void BtnTech_Click(object sender, RoutedEventArgs e)
         {
             var pn = txtPartNumber?.Text ?? "";
-            frmBoardFileManager alias = new frmBoardFileManager(partNumber: pn, directDialog: true) { StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen };
-            alias.Show();
+            using (frmBoardFileManager alias = new frmBoardFileManager(partNumber: pn, directDialog: true) { StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen })
+            {
+                alias.Show();
+            }
         }
 
         private void TabControl_SelectionChanged(object sender, SelectionChangedEventArgs e)

@@ -11,6 +11,7 @@ using System.Windows.Controls.Primitives;
 using System.Collections.Generic;
 using System.Windows.Media.Animation;
 using System.Threading;
+using RApID_Project_WPF.Forms;
 
 namespace RApID_Project_WPF
 {

@@ -9,7 +9,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace RApID_Project_WPF
+namespace RApID_Project_WPF.Forms
 {
     /// <summary>
     /// Better controls for text input

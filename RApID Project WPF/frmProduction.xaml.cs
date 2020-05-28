@@ -1,5 +1,6 @@
 ﻿using EricStabileLibrary;
 using RApID_Project_WPF.Classes;
+using RApID_Project_WPF.Forms;
 using SNMapperLib;
 using System;
 using System.Collections;
@@ -1992,8 +1993,10 @@ namespace RApID_Project_WPF
 
         private void btnTech_Click(object sender, RoutedEventArgs e)
         {
-            frmBoardFileManager alias = new frmBoardFileManager(directDialog: true) { StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen };
-            alias.Show();
+            using (frmBoardFileManager alias = new frmBoardFileManager(directDialog: true) { StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen })
+            {
+                alias.Show();
+            }
         }
     }
 }

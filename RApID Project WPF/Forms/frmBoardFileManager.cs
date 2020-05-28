@@ -23,7 +23,7 @@ using System.Threading;
 using UIAction = System.Action;
 using UIFunc = System.Func<object>;
 
-namespace RApID_Project_WPF
+namespace RApID_Project_WPF.Forms
 {
     /// <summary>
     /// Specifies the database item type.
@@ -126,7 +126,6 @@ namespace RApID_Project_WPF
             }
 
             new TechAliasTableAdapter().Fill(pCBAliasDataSet.TechAlias);
-
             txtFullAssemblyNumber.Focus();
 
             if (!string.IsNullOrWhiteSpace(txtFullAssemblyNumber.Text))
@@ -235,7 +234,7 @@ namespace RApID_Project_WPF
                             CommodityClass = _selectedModel.CommodityClass,
                             BOMTags = reader[3].ToString().Split(',').ToList(),
                             SchematicTags = reader[4].ToString().Split(',').ToList(),
-                            REV = reader[5].ToString() ?? "",
+                            REV = reader[5]?.ToString() ?? "",
                             ECO = reader[6]?.ToString() ?? ""
                         };
 
@@ -342,8 +341,12 @@ namespace RApID_Project_WPF
         }
 
         #region Main View
-        private void btnSearch_Click(object sender, EventArgs e) => HandleTextBoxEntry(new KeyEventArgs(Keys.Enter));
-        private void btnReset_Click(object sender, EventArgs e) => ResetAllData(resetFAN: true);
+        private void btnSearch_Click(object sender, EventArgs e)
+            => HandleTextBoxEntry(new KeyEventArgs(Keys.Enter));
+
+        private void btnReset_Click(object sender, EventArgs e)
+            => ResetAllData(resetFAN: true);
+
         private void txtFullAssemblyNumber_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.Control && e.KeyCode == Keys.A)
@@ -359,44 +362,46 @@ namespace RApID_Project_WPF
         private void ChangeTag_Click(object sender, EventArgs e)
         {
             var control = bBOM ? _selectedModel.BOMFiles[BOMFileIndex] : _selectedModel.SchematicLinks[SchematicFileIndex];
-            string def = control.Tag?.ToString() ?? "";
-            var request = new frmTextRequest(def) { StartPosition = FormStartPosition.CenterParent };
-            var dialogResult = request.ShowDialog();
-
-            if (dialogResult == DialogResult.OK)
+            var def = control.Tag?.ToString() ?? "";
+            using (frmTextRequest request = new frmTextRequest(def) { StartPosition = FormStartPosition.CenterParent })
             {
-                infoProvider.SetError(control, request.Input + $"\nREV: {_selectedModel.REV}\nECO: {_selectedModel.ECO}");
+                var dialogResult = request.ShowDialog();
 
-                using (SqlConnection conn = new SqlConnection(csObjectHolder.csObjectHolder.ObjectHolderInstance().RepairConnectionString))
+                if (dialogResult == DialogResult.OK)
                 {
-                    using (SqlCommand cmd = new SqlCommand($"UPDATE TechAlias SET {(bBOM ? "[BOMTags]" : "[SchematicTags]")} = @value WHERE PartNumber = @pn ", conn))
+                    infoProvider.SetError(control, request.Input + $"\nREV: {_selectedModel.REV}\nECO: {_selectedModel.ECO}");
+
+                    using (SqlConnection conn = new SqlConnection(csObjectHolder.csObjectHolder.ObjectHolderInstance().RepairConnectionString))
                     {
-                        try
+                        using (SqlCommand cmd = new SqlCommand($"UPDATE TechAlias SET {(bBOM ? "[BOMTags]" : "[SchematicTags]")} = @value WHERE PartNumber = @pn ", conn))
                         {
-                            conn.Open();
-                            string resultant = "";
-                            if (bBOM)
+                            try
                             {
-                                if (_selectedModel.BOMTags.Count == BOMFileIndex)
-                                    _selectedModel.BOMTags.Add(request.Input);
+                                conn.Open();
+                                string resultant = "";
+                                if (bBOM)
+                                {
+                                    if (_selectedModel.BOMTags.Count == BOMFileIndex)
+                                        _selectedModel.BOMTags.Add(request.Input);
+                                    else
+                                        _selectedModel.BOMTags[BOMFileIndex] = request.Input;
+                                    resultant = _selectedModel.BOMTags.ToStrings(suffix: ",");
+                                }
                                 else
-                                    _selectedModel.BOMTags[BOMFileIndex] = request.Input;
-                                resultant = _selectedModel.BOMTags.ToStrings(suffix: ",");
+                                {
+                                    if (_selectedModel.SchematicTags.Count == SchematicFileIndex)
+                                        _selectedModel.SchematicTags.Add(request.Input);
+                                    else
+                                        _selectedModel.SchematicTags[SchematicFileIndex] = request.Input;
+                                    resultant = _selectedModel.SchematicTags.ToStrings(suffix: ",");
+                                }
+                                cmd.Parameters.AddWithValue("@pn", _selectedModel.PartNumber);
+                                cmd.Parameters.AddWithValue("@value", resultant);
+                                int result = cmd.ExecuteNonQuery();
+                                conn.Close();
                             }
-                            else
-                            {
-                                if (_selectedModel.SchematicTags.Count == SchematicFileIndex)
-                                    _selectedModel.SchematicTags.Add(request.Input);
-                                else
-                                    _selectedModel.SchematicTags[SchematicFileIndex] = request.Input;
-                                resultant = _selectedModel.SchematicTags.ToStrings(suffix: ",");
-                            }
-                            cmd.Parameters.AddWithValue("@pn", _selectedModel.PartNumber);
-                            cmd.Parameters.AddWithValue("@value", resultant);
-                            int result = cmd.ExecuteNonQuery();
-                            conn.Close();
+                            catch (Exception ex) { MessageBox.Show(ex.Message); }
                         }
-                        catch (Exception ex) { MessageBox.Show(ex.Message); }
                     }
                 }
             }
@@ -408,69 +413,68 @@ namespace RApID_Project_WPF
         {
             var control = bBOM ? _selectedModel.BOMFiles[BOMFileIndex] : _selectedModel.SchematicLinks[SchematicFileIndex];
             string rev = control.REV ?? "";
-            var request = new frmTextRequest(rev) { StartPosition = FormStartPosition.CenterParent };
-            var dialogResult = request.ShowDialog();
-
-            if (dialogResult == DialogResult.OK)
+            using (var request = new frmTextRequest(rev) { StartPosition = FormStartPosition.CenterParent })
             {
-                infoProvider.SetError(control, request.Input + $"\nREV: {_selectedModel.REV}\nECO: {_selectedModel.ECO}");
+                var dialogResult = request.ShowDialog();
 
-                using (SqlConnection conn = new SqlConnection(csObjectHolder.csObjectHolder.ObjectHolderInstance().RepairConnectionString))
-                using (SqlCommand cmd = new SqlCommand(
-                    "UPDATE TechAlias SET [REV] = @value WHERE PartNumber = @pn ", conn))
+                if (dialogResult == DialogResult.OK)
                 {
-                    try
+                    infoProvider.SetError(control, request.Input + $"\nREV: {_selectedModel.REV}\nECO: {_selectedModel.ECO}");
+
+                    using (SqlConnection conn = new SqlConnection(csObjectHolder.csObjectHolder.ObjectHolderInstance().RepairConnectionString))
+                    using (SqlCommand cmd = new SqlCommand(
+                        "UPDATE TechAlias SET [REV] = @value WHERE PartNumber = @pn ", conn))
                     {
-                        conn.Open();
-                        if (string.IsNullOrWhiteSpace(_selectedModel.REV))
+                        try
+                        {
+                            conn.Open();
                             _selectedModel.REV = request.Input;
-                        else
-                            _selectedModel.REV += $",{request.Input}";
 
-                        cmd.Parameters.AddWithValue("@pn", _selectedModel.PartNumber);
-                        cmd.Parameters.AddWithValue("@value", _selectedModel.REV);
-                        int result = cmd.ExecuteNonQuery();
-                        conn.Close();
+                            cmd.Parameters.AddWithValue("@pn", _selectedModel.PartNumber);
+                            cmd.Parameters.AddWithValue("@value", _selectedModel.REV);
+                            int result = cmd.ExecuteNonQuery();
+                            conn.Close();
+                        }
+                        catch (Exception ex) { MessageBox.Show(ex.Message); }
                     }
-                    catch (Exception ex) { MessageBox.Show(ex.Message); }
-                }
 
+                }
             }
 
+            // Press [Enter] in the Full Assembly Number textbox
             HandleTextBoxEntry(new KeyEventArgs(Keys.Enter));
         }
 
         private void changeECOToolStripMenuItem_Click(object sender, EventArgs e)
         {
             var control = bBOM ? _selectedModel.BOMFiles[BOMFileIndex] : _selectedModel.SchematicLinks[SchematicFileIndex];
-            string eco = control.ECO ?? "";
-            var request = new frmTextRequest(eco) { StartPosition = FormStartPosition.CenterParent };
-            var dialogResult = request.ShowDialog();
-
-            if (dialogResult == DialogResult.OK)
+            var eco = control.ECO ?? "";
+            using (frmTextRequest request = new frmTextRequest(eco) { StartPosition = FormStartPosition.CenterParent })
             {
-                infoProvider.SetError(control, request.Input);
+                var dialogResult = request.ShowDialog();
 
-                using (SqlConnection conn = new SqlConnection(csObjectHolder.csObjectHolder.ObjectHolderInstance().RepairConnectionString))
-                using (SqlCommand cmd = new SqlCommand(
-                    "UPDATE TechAlias SET [ECO] = @value WHERE PartNumber = @pn ", conn))
+                if (dialogResult == DialogResult.OK)
                 {
-                    try
+                    infoProvider.SetError(control, request.Input);
+
+                    using (SqlConnection conn = new SqlConnection(csObjectHolder.csObjectHolder.ObjectHolderInstance().RepairConnectionString))
+                    using (SqlCommand cmd = new SqlCommand(
+                        "UPDATE TechAlias SET [ECO] = @value WHERE PartNumber = @pn ", conn))
                     {
-                        conn.Open();
-                        if (string.IsNullOrWhiteSpace(_selectedModel.ECO))
+                        try
+                        {
+                            conn.Open();
                             _selectedModel.ECO = request.Input;
-                        else
-                            _selectedModel.ECO += $",{request.Input}";
 
-                        cmd.Parameters.AddWithValue("@pn", _selectedModel.PartNumber);
-                        cmd.Parameters.AddWithValue("@value", _selectedModel.ECO);
-                        int result = cmd.ExecuteNonQuery();
-                        conn.Close();
+                            cmd.Parameters.AddWithValue("@pn", _selectedModel.PartNumber);
+                            cmd.Parameters.AddWithValue("@value", _selectedModel.ECO);
+                            int result = cmd.ExecuteNonQuery();
+                            conn.Close();
+                        }
+                        catch (Exception ex) { MessageBox.Show(ex.Message); }
                     }
-                    catch (Exception ex) { MessageBox.Show(ex.Message); }
-                }
 
+                }
             }
 
             HandleTextBoxEntry(new KeyEventArgs(Keys.Enter));
@@ -487,7 +491,8 @@ namespace RApID_Project_WPF
                 Title = $"Please choose the new {(bBOM ? "BOM" : "Schematic")} file path...",
                 AutoUpgradeEnabled = true,
                 Multiselect = false
-            }) {
+            })
+            {
 
                 ofd.InitialDirectory = bNewBOM || bNewSchematic ? ELECROOTDIR
                     : bBOM ? ELECROOTDIR + (flowBOMFiles.Controls[BOMFileIndex] as AssemblyLinkLabel).Link.Split('\\').TakeWhile(token => !token.Contains(".")).Aggregate((c, n) => c + "\\" + n)
@@ -587,7 +592,7 @@ namespace RApID_Project_WPF
 
         private void openFileLocationToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            var control = (bBOM ? flowBOMFiles.Controls[BOMFileIndex] : flowSchematicLinks.Controls[SchematicFileIndex]) as AssemblyLinkLabel;
+            AssemblyLinkLabel control = (bBOM ? flowBOMFiles.Controls[BOMFileIndex] : flowSchematicLinks.Controls[SchematicFileIndex]) as AssemblyLinkLabel;
             try
             {
                 Process.Start(Path.Combine(ELECROOTDIR, control.Link.Substring(0, control.Link.LastIndexOf('\\') + 1)));
@@ -736,7 +741,7 @@ namespace RApID_Project_WPF
                 return;
             }
 
-            AssemblyLinkLabel BoMFile = (AssemblyLinkLabel) e.Argument;
+            AssemblyLinkLabel BoMFile = (AssemblyLinkLabel)e.Argument;
 
             var targetFile = ELECROOTDIR + BoMFile.Link;
             var localFile = Environment.GetFolderPath(Environment.SpecialFolder.Desktop) + $"\\{DateTime.Now.Ticks}" + BoMFile.Link.Split('\\').Last();
@@ -821,9 +826,12 @@ namespace RApID_Project_WPF
                             cmd.Parameters["RefDes"].Value = rd;
                             cmd.Parameters["PartNum"].Value = pn;
                             var rowsAffected = -100;
-                            try {
+                            try
+                            {
                                 rowsAffected = cmd.ExecuteNonQuery();
-                            } catch (SqlException sqlex) {
+                            }
+                            catch (SqlException sqlex)
+                            {
                                 if (rowsAffected == 0) File.AppendAllText(DBUpload_Log, $"\n\tError updating reference designator: {rd}\n\t\tMessage: {sqlex.Message}\n");
                             }
                         }
@@ -864,7 +872,8 @@ namespace RApID_Project_WPF
                     File.Delete(localFile);
                     File.AppendAllText(DBUpload_Log, $"}} End Record @ {DateTime.Now:hh:mm:ss tt}\n\n");
 
-                    Invoke(new UIAction(() => {
+                    Invoke(new UIAction(() =>
+                    {
                         Update();
                         BringToFront();
                         spltpnlActualForm.Panel2Collapsed = true;
@@ -878,7 +887,8 @@ namespace RApID_Project_WPF
         }
 
         private void bckgrndProcessDBOps_ProgressChanged(object sender, ProgressChangedEventArgs e) =>
-            Invoke(new UIAction(() => {
+            Invoke(new UIAction(() =>
+            {
                 progbarStatus.Value = e.ProgressPercentage;
             }));
         #endregion
@@ -926,7 +936,8 @@ namespace RApID_Project_WPF
                     }
                 }
 
-                DialogResult replaceData = DialogResult.No;
+            DataHandleChoice:
+                DialogResult replaceData = DialogResult.Ignore;
                 if (PreviousDataFound)
                 {
                     replaceData = MessageBox.Show($"We found data for {assemblyLink.Text} with REV {assemblyLink.REV} on the database!\n" +
@@ -958,9 +969,28 @@ namespace RApID_Project_WPF
                     }
 
                     #endregion
-                }
 
-                bckgrndProcessDBOps.RunWorkerAsync(assemblyLink);                
+                    bckgrndProcessDBOps.RunWorkerAsync(assemblyLink);
+                }
+                else if (replaceData == DialogResult.No)
+                {
+                    DialogResult updateData =
+                        MessageBox.Show($"You chose not to replace data for {assemblyLink.Text} with REV {assemblyLink.REV} on the database.\n" +
+                        $"Do you want to abort the upload, retry and choose to replace the data, or ignore this request?",
+                        "BOM Info - Update current data?", MessageBoxButtons.AbortRetryIgnore, MessageBoxIcon.Information);
+
+                    switch (updateData)
+                    {
+                        default:
+                        case DialogResult.Abort:
+                            return;
+                        case DialogResult.Retry:
+                            goto DataHandleChoice;
+                        case DialogResult.Ignore:
+                            bckgrndProcessDBOps.RunWorkerAsync(assemblyLink);
+                            break;
+                    }
+                }
             }
             catch (Exception ex)
             {
@@ -970,7 +1000,8 @@ namespace RApID_Project_WPF
         }
         #endregion
 
-        private void lblFullAssemblyNumberLabel_DoubleClick(object sender, EventArgs e) => Process.Start(ELECROOTDIR);
+        private void lblFullAssemblyNumberLabel_DoubleClick(object sender, EventArgs e)
+            => Process.Start(ELECROOTDIR);
 
         private void cxmnuAssemblyLinksMenu_Opening(object sender, CancelEventArgs e)
         {
@@ -983,14 +1014,10 @@ namespace RApID_Project_WPF
         }
 
         private void cxmnuBOMFlowMenu_Opening(object sender, CancelEventArgs e)
-        {
-            if (cxmnuAssemblyLinksMenu.Visible) e.Cancel = true;
-        }
+            => e.Cancel = cxmnuAssemblyLinksMenu.Visible;
 
         private void cxmnuSchematicFlowMenu_Opening(object sender, CancelEventArgs e)
-        {
-            if (cxmnuAssemblyLinksMenu.Visible) e.Cancel = true;
-        }
+            => e.Cancel = cxmnuAssemblyLinksMenu.Visible;
 
         private DateTime LastHelp = DateTime.Now.AddMinutes(-5);
         private void btnRemoteHelp_Click(object sender, EventArgs e)

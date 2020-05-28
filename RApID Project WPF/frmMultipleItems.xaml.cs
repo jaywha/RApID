@@ -21,6 +21,7 @@ using System.Data.SqlClient;
 using System.ComponentModel;
 using System.Collections.ObjectModel;
 using System.Runtime.CompilerServices;
+using RApID_Project_WPF.Forms;
 
 namespace RApID_Project_WPF
 {
