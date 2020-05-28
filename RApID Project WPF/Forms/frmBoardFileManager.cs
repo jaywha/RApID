@@ -905,7 +905,7 @@ namespace RApID_Project_WPF.Forms
 
             foreach (var p in Process.GetProcessesByName("EXCEL")) p.Kill();
             File.AppendAllText(DBUpload_Log, $"Start {Environment.MachineName}\\{Environment.UserName} Record @ {DateTime.Now:hh:mm:ss tt} {{\n");
-
+            
             MessageBox.Show("Starting upload of BOM data!");
 
             try
@@ -936,7 +936,6 @@ namespace RApID_Project_WPF.Forms
                     }
                 }
 
-            DataHandleChoice:
                 DialogResult replaceData = DialogResult.Ignore;
                 if (PreviousDataFound)
                 {
@@ -972,11 +971,15 @@ namespace RApID_Project_WPF.Forms
 
                     bckgrndProcessDBOps.RunWorkerAsync(assemblyLink);
                 }
+                /*
                 else if (replaceData == DialogResult.No)
                 {
                     DialogResult updateData =
                         MessageBox.Show($"You chose not to replace data for {assemblyLink.Text} with REV {assemblyLink.REV} on the database.\n" +
-                        $"Do you want to abort the upload, retry and choose to replace the data, or ignore this request?",
+                        $"Do you want to:\n" +
+                        $"• Abort the upload" +
+                        $"• Retry and choose to replace the data" +
+                        $"• Ignore all of this and update the data",
                         "BOM Info - Update current data?", MessageBoxButtons.AbortRetryIgnore, MessageBoxIcon.Information);
 
                     switch (updateData)
@@ -985,12 +988,12 @@ namespace RApID_Project_WPF.Forms
                         case DialogResult.Abort:
                             return;
                         case DialogResult.Retry:
-                            goto DataHandleChoice;
+                            goto DataHandleChoice; // need to put label back above replaceData
                         case DialogResult.Ignore:
                             bckgrndProcessDBOps.RunWorkerAsync(assemblyLink);
                             break;
                     }
-                }
+                }*/
             }
             catch (Exception ex)
             {

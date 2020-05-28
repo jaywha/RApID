@@ -14,7 +14,7 @@
                 <TextBlock Foreground="Crimson" FontSize="18" FontWeight="DemiBold">!</TextBlock>
             </DockPanel>
         </ControlTemplate>
-        
+
         <Style x:Key="ComboBoxBaseStyle" TargetType="{x:Type ComboBox}">
             <Setter Property="Width" Value="275" />
             <Setter Property="HorizontalAlignment" Value="Left" />
@@ -272,7 +272,7 @@
                                                         </Binding.ValidationRules>
                                                     </Binding>
                                                 </ComboBox.Text>
-                                            </ComboBox>                                                
+                                            </ComboBox>
                                         </Border>
 
                                         <Label Name="lblPartNum_2" Content="Part Number" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="150,310,0,0" Visibility="Hidden"/>
@@ -380,8 +380,10 @@
                                 <Grid x:Name="grdBOMInfo" Background="SlateGray">
                                     <StackPanel Orientation="Vertical" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Height="{Binding ActualHeight, ElementName=grdBOMInfo}">
                                         <DataGrid x:Name="dgBOMList" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
-                              Height="{Binding ActualHeight, ElementName=grdBOMInfo}" Width="{Binding ActualWidth, ElementName=grdBOMInfo}" 
-                              IsReadOnly="True" MouseDoubleClick="dgBOMList_MouseDoubleClick" ScrollViewer.VerticalScrollBarVisibility="Auto"/>
+                                                  Height="{Binding ActualHeight, ElementName=grdBOMInfo}" Width="{Binding ActualWidth, ElementName=grdBOMInfo}"
+                                                  VirtualizingPanel.VirtualizationMode="Recycling"
+                                                  VirtualizingPanel.IsVirtualizing="True"
+                                                  IsReadOnly="True" MouseDoubleClick="dgBOMList_MouseDoubleClick" ScrollViewer.VerticalScrollBarVisibility="Auto"/>
                                     </StackPanel>
                                 </Grid>
                             </Expander>
