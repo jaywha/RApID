@@ -235,7 +235,7 @@ namespace RApID_Project_WPF
             string notes = string.Empty;
             bool found = false;
 
-            mapper.GetData(txtSN.Text);
+            mapper.GetData(txtSN.Dispatcher.Invoke(()=>txtSN.Text));
 
             await Task.Factory.StartNew(() =>
             {
@@ -264,10 +264,10 @@ namespace RApID_Project_WPF
                     $"}}\n");
                 #endif
             }
-            else if (!string.IsNullOrWhiteSpace(txtSN.Text.Trim()))
+            else if (!string.IsNullOrWhiteSpace(txtSN.Dispatcher.Invoke(() => txtSN.Text).Trim()))
             {
                 Regex regex = new Regex("^[0-9]{12}$");
-                if (txtSN.Text.Trim().Split(' ').Length > 1 || !regex.IsMatch(txtSN.Text.Trim())) {
+                if (txtSN.Dispatcher.Invoke(() => txtSN.Text).Trim().Split(' ').Length > 1 || !regex.IsMatch(txtSN.Dispatcher.Invoke(() => txtSN.Text).Trim())) {
                     MainWindow.Notify.ShowBalloonTip("Serial Number Bad Format!",
                         $"Please enter just one single 12-digit serial number!", 
                         Hardcodet.Wpf.TaskbarNotification.BalloonIcon.Error);
@@ -289,8 +289,8 @@ namespace RApID_Project_WPF
                             "<p>We're missing the BOM for the following unit info.</p>" +
                             "<hr/>" +
                             "<ul>" +
-                            $"<li>Serial Number: {txtSN.Text.Trim()}</li>" +
-                            $"<li>Production Query Part Number: {txtPN?.Text ?? ""}</li>" +
+                            $"<li>Serial Number: {txtSN.Dispatcher.Invoke(() => txtSN.Text).Trim()}</li>" +
+                            $"<li>Production Query Part Number: {txtPN?.Dispatcher.Invoke(() => txtPN.Text).Trim() ?? ""}</li>" +
                             $"<li>SNMapper Part Number: {mapper.PartNumber}</li>" +
                             $"<li>SNMapper Component Number: {mapper.ComponentNumber}</li>" +
                             "</ul>" +
@@ -331,8 +331,8 @@ namespace RApID_Project_WPF
         /// <param name="filePath">Path to the Excel file - normally the BoM file.</param>
         /// <param name="progData">Any related progress bar to semi-report operation progress.</param>
         /// <param name="designators">The two collections to fill - refdes & partnum.</param>
-        public static void DoExcelOperations(string filePath, ProgressBar progData = null, params ObservableCollection<string>[] designators)
-            => DoExcelOperations(filePath, progData, null, null, designators);
+        public static (List<string>, List<string>) DoExcelOperations(string filePath, ProgressBar progData = null)
+            => DoExcelOperations(filePath, progData, null, null).Result;
 
         /// <summary>
         /// Does the excel operations for grabbing Reference and Part numbers.
@@ -342,15 +342,17 @@ namespace RApID_Project_WPF
         /// <param name="bomlist">The datagrid to fill with the results, if any.</param>
         /// <param name="expander">The production Excel expander</param>
         /// <param name="collections">The two collections to fill - refdes & partnum.</param>
-        public static async void DoExcelOperations(string filePath, ProgressBar progData = null, DataGrid bomlist = null, 
-            Expander expander = null, params ObservableCollection<string>[] collections)
+        public static async Task<(List<string>, List<string>)> DoExcelOperations(string filePath, ProgressBar progData = null, DataGrid bomlist = null, Expander expander = null)
         {
+            List<string> refDes = new List<string>();
+            List<string> partNums = new List<string>();
+
             try
             {
                 //Directory.CreateDirectory(bomlogfiledir);
                 //var tempPtr = File.Create(Path.Combine(bomlogfiledir, bomlogfile));
 
-                await Task.Factory.StartNew(new Action(async () => {
+                await Task.Factory.StartNew(new Action(() => {
                     if (progData != null) progData.Dispatcher.Invoke(() => progData.Visibility = Visibility.Visible);
                     if (string.IsNullOrEmpty(filePath))
                     {
@@ -367,7 +369,6 @@ namespace RApID_Project_WPF
                         return;
                     }
 
-
                     using (SqlConnection conn = new SqlConnection(csObjectHolder.csObjectHolder.ObjectHolderInstance().RepairConnectionString))
                     {
                         using (SqlCommand cmd = new SqlCommand("SELECT [ReferenceDesignator],[PartNumber] FROM [Repair].[dbo].[BoMInfo] WHERE [BoardNumber] = @FAN", conn))
@@ -377,38 +378,13 @@ namespace RApID_Project_WPF
                                 conn.Open();
                                 cmd.Parameters.AddWithValue("@FAN", filePath);
                                 using (SqlDataReader reader = cmd.ExecuteReader()) {
-                                    progData.Dispatcher.Invoke(() =>
-                                    {
-                                        frmProduction._bomRecordsTotal = reader.RecordsAffected;
-                                        progData.Maximum = reader.RecordsAffected;
-                                    });
-
                                     while (reader.Read())
                                     {
-                                        var rd = reader[0].ToString();
-                                        var pn = reader[1].ToString();
-                                        if (collections != null && collections.Length > 0)
-                                        {
-                                            if (ExcelDispatcher != null)
-                                            {
-                                                ExcelDispatcher.Invoke(() => collections[0]?.Add(rd));
-                                                ExcelDispatcher.Invoke(() => collections[1]?.Add(pn));
-                                            }
-                                        }
+                                            var rd = reader["ReferenceDesignator"].ToString();
+                                            var pn = reader["PartNumber"].ToString();
 
-                                        if (bomlist != null)
-                                            await bomlist.Dispatcher.BeginInvoke(new Action(() =>
-                                            {
-                                                frmProduction._bomRecordsDone++;
-                                                bomlist.Items.Add(new MultiplePartsReplaced(rd, pn, GetPartReplacedPartDescription(pn)));
-                                                if (frmProduction._bomRecordsDone == frmProduction._bomRecordsTotal)
-                                                    frmProduction._bomRecordsDone = 0;
-                                            }), DispatcherPriority.Background);
-
-                                        progData.Dispatcher.Invoke(() =>
-                                        {
-                                            progData.Value++;
-                                        });
+                                            refDes.Add(rd);
+                                            partNums.Add(pn);
                                     }
                                 }
                             } catch (Exception ex) { 
@@ -423,13 +399,17 @@ namespace RApID_Project_WPF
                     if (progData != null) progData.Dispatcher.Invoke(() => progData.Visibility = Visibility.Hidden);
                 }, GlobalTokenSource.Token, TaskContinuationOptions.OnlyOnRanToCompletion, CrossClassScheduler)
                 .ConfigureAwait(true);
-
-                //tempPtr.Dispose();
             }
             catch (IOException ioe)
             {
                 csExceptionLogger.csExceptionLogger.Write("RetestVerifier-MainWindow_ExcelOps-LockedFile", ioe);
             }
+            catch (TaskCanceledException tce)
+            {
+                csExceptionLogger.csExceptionLogger.Write("RetestVerifier-MainWindow_ExcelOps-FaultedTask", tce);
+            }
+            
+            return (refDes, partNums);
         }
 
         public static List<string> ColumnAsList(this DataGrid dg, int columnIndex)

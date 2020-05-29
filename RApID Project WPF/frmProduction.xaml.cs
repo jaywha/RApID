@@ -75,7 +75,28 @@ namespace RApID_Project_WPF
             }
         }
 
-        private ObservableCollection<MultiplePartsReplaced> BOMList = new ObservableCollection<MultiplePartsReplaced>();
+        private List<string> partNumbers = new List<string>();
+
+        public List<string> PartNumbers {
+            get => partNumbers;
+            set {
+                partNumbers = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private List<string> refDesignators = new List<string>();
+
+        public List<string> RefDesignators
+        {
+            get => refDesignators;
+            set {
+                refDesignators = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private List<MultiplePartsReplaced> BOMList = new List<MultiplePartsReplaced>();
         private static readonly CancellationTokenSource MapperTokenSource = new CancellationTokenSource();
 
         #endregion
@@ -203,7 +224,6 @@ namespace RApID_Project_WPF
             ucAOITab.dgAOI.dgBuildView(DataGridTypes.AOI);
             ucAOITab.dgDefectCodes.dgBuildView(DataGridTypes.DEFECTCODES);
             dgPrevRepairInfo.dgBuildView(DataGridTypes.PREVREPAIRINFO);
-            dgBOMList.dgBuildView(DataGridTypes.MULTIPLEPARTS);
         }
 
         private void initDataLog()
@@ -395,7 +415,6 @@ namespace RApID_Project_WPF
             ucEOLTab.Reset();
             ucAOITab.Reset();
 
-            dgBOMList.Items.Clear();
             BOMList.Clear();
 
             txtSerialNumber.Focus();
@@ -737,40 +756,28 @@ namespace RApID_Project_WPF
         {
             try
             {
-                dgBOMList.Items.Clear();
-
-
-                await Task.Factory.StartNew(new Action(() => // in new task
+                await Task.Factory.StartNew(new Action(async () => // in new task
                 {
                     using (SNM mapper = SNM.Instance)
                     {
-                        Dispatcher.BeginInvoke(new Action(async () => // perform dispatched UI actions
-                        {
-                            var filename = await mapper.TechFormProcessAsync(txtSerialNumber, txtPartNumber).ConfigureAwait(true);
+                        var filename = await mapper.TechFormProcessAsync(txtSerialNumber, txtPartNumber).ConfigureAwait(true);
+                            
+                        (RefDesignators, PartNumbers) = csCrossClassInteraction.DoExcelOperations(txtPartNumber.Dispatcher.Invoke(()=>txtPartNumber.Text), progMapper);
+                        if (!mapper.NoFilesFound) csCrossClassInteraction.MapperSuccessMessage(filename, mapper.PartNumber);
 
-                            var refSource = new ObservableCollection<string>();
-                            var partSource = new ObservableCollection<string>();
-
-                            csCrossClassInteraction.DoExcelOperations(txtPartNumber.Text, progMapper, dgBOMList, expBOMInfo, refSource, partSource);
-                            if (!mapper.NoFilesFound) csCrossClassInteraction.MapperSuccessMessage(filename, mapper.PartNumber);
-
-                            txtMultiRefDes.ItemsSource = refSource;
-                            txtMultiRefDes_2.ItemsSource = refSource;
-                            txtMultiRefDes_3.ItemsSource = refSource;
-
-                            txtMultiPartNum.ItemsSource = partSource;
-                            txtMultiPartNum_2.ItemsSource = partSource;
-                            txtMultiPartNum_3.ItemsSource = partSource;
-
-                            BOMFileActive = true;
-                            CheckForManual();
-                        }), DispatcherPriority.ApplicationIdle);
+                        Dispatcher.Invoke(()=> BOMFileActive = true);
+                        // CheckForManual();
                     }
                 }), MapperTokenSource.Token, TaskCreationOptions.LongRunning, TaskScheduler.Current).ConfigureAwait(true);
             }
             catch (InvalidOperationException ioe)
             {
                 csExceptionLogger.csExceptionLogger.Write("BadBarcode-MapRefDesToPartNum", ioe);
+                return;
+            }
+            catch (TaskCanceledException tce)
+            {
+                csExceptionLogger.csExceptionLogger.Write("BadBarcode-MapRefDesToPartNum_TaskFaulted", tce);
                 return;
             }
         }
@@ -1752,18 +1759,6 @@ namespace RApID_Project_WPF
 
         private void txtMultiRefKeyUp(object sender, KeyEventArgs e) {/*?*/}
 
-        private void dataGrid_KeyUp(object sender, KeyEventArgs e)
-        {
-            DataGrid grid = ((DataGrid)sender);
-
-            if (e.Key == Key.Delete && grid.SelectedItem != null)
-            {
-                DataGridRow row = (DataGridRow)dgBOMList.ItemContainerGenerator.ContainerFromItem(grid.SelectedItem);
-                if (row != null) { row.Foreground = Brushes.Black; row.Background = Brushes.White; }
-                grid.Items.Remove(grid.SelectedItem);
-            }
-        }
-
 #region Log Actions
         private void rtbGotFocus(object sender, RoutedEventArgs e)
         {
@@ -1923,72 +1918,6 @@ namespace RApID_Project_WPF
             {
                 txtMultiPartNum.Text = (BOMList[txtMultiRefDes.SelectedIndex] as MultiplePartsReplaced).PartReplaced;
             }
-        }
-
-        private void dgBOMList_MouseDoubleClick(object sender, MouseButtonEventArgs e)
-        {
-            DataGrid targetGrid = (DataGrid)(tcUnitIssues.SelectedContent as Grid).FindName($"dgMultipleParts{(tcUnitIssues.SelectedIndex > 0 ? $"_{tcUnitIssues.SelectedIndex + 1}" : "")}");
-            MultiplePartsReplaced item = (MultiplePartsReplaced)dgBOMList.SelectedItem;
-
-            if (!targetGrid.Items.Contains(item))
-            {
-                DataGridRow row = (DataGridRow)dgBOMList.ItemContainerGenerator.ContainerFromIndex(dgBOMList.SelectedIndex);
-                if (row != null && !targetGrid.Items.Contains(item))
-                {
-
-                    targetGrid.Items.Add(item);
-                    row.Foreground = Brushes.White; row.Background = Brushes.DarkGreen;
-                }
-            }
-        }
-
-        private Grid PrevGrid = null;
-        private void tcUnitIssues_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-            try
-            {
-                DataGrid targetGrid = (DataGrid)(tcUnitIssues.SelectedContent as Grid).FindName($"dgMultipleParts{(tcUnitIssues.SelectedIndex > 0 ? $"_{tcUnitIssues.SelectedIndex + 1}" : "")}");
-                var pgridIndex = int.Parse(PrevGrid.Name.Last().ToString());
-                DataGrid prevGrid = (DataGrid)PrevGrid.FindName($"dgMultipleParts{(pgridIndex > 0 ? $"_{pgridIndex + 1}" : "")}");
-                if (prevGrid != null)
-                {
-                    foreach (MultiplePartsReplaced mpr in prevGrid.Items)
-                    {
-                        if (BOMList.Contains(mpr))
-                        {
-                            DataGridRow row = (DataGridRow)dgBOMList.ItemContainerGenerator.ContainerFromItem(mpr);
-                            if (row != null) { row.Foreground = Brushes.Black; row.Background = Brushes.White; }
-                        }
-                    }
-                }
-
-                foreach (MultiplePartsReplaced mpr in targetGrid.Items)
-                {
-                    if (BOMList.Contains(mpr))
-                    {
-                        DataGridRow row = (DataGridRow)dgBOMList.ItemContainerGenerator.ContainerFromItem(mpr);
-                        if (row != null) { row.Foreground = Brushes.White; row.Background = Brushes.DarkGreen; }
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine(ex.Message);
-            }
-            finally
-            {
-                PrevGrid = tcUnitIssues.SelectedContent as Grid ?? null;
-            }
-        }
-
-        private void ExpBOMInfo_Expanded(object sender, RoutedEventArgs e)
-        {
-            expBOMInfo.Margin = new Thickness(605, 345, 10, 6);
-        }
-
-        private void ExpBOMInfo_Collapsed(object sender, RoutedEventArgs e)
-        {
-            expBOMInfo.Margin = new Thickness(605, 345, 10, 265);
         }
 
         private void btnTech_Click(object sender, RoutedEventArgs e)

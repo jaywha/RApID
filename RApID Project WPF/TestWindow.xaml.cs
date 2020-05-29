@@ -10,6 +10,7 @@ using System.IO.Ports;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -28,8 +29,10 @@ namespace RApID_Project_WPF
     /// </summary>
     public partial class TestWindow : Window, INotifyPropertyChanged
     {
-        public ObservableCollection<string> RefDes = new ObservableCollection<string>();
-        public ObservableCollection<string> PartNum = new ObservableCollection<string>();
+        public List<string> RefDes = new List<string>();
+        public List<string> PartNum = new List<string>();
+
+        private CancellationTokenSource MapperTokenSource = new CancellationTokenSource();
 
         private TextBox _partNumberTBOX;
         public TextBox PartNumberTBOX
@@ -174,7 +177,8 @@ namespace RApID_Project_WPF
                             {
                                 MessageBox.Show(mapper.Success(), "DEBUG", MessageBoxButton.OK, MessageBoxImage.Information);
                                 (string filename, bool found) result = await mapper.FindFileAsync(".xls");
-                                csCrossClassInteraction.DoExcelOperations(result.filename, progMapper, RefDes, PartNum);
+                                var parts = new List<MultiplePartsReplaced>();
+                                (RefDes, PartNum) = csCrossClassInteraction.DoExcelOperations(result.filename, progMapper);
 
                                 if(!mapper.NoFilesFound) csCrossClassInteraction.MapperSuccessMessage(result.filename, mapper.PartNumber);
 
@@ -184,7 +188,7 @@ namespace RApID_Project_WPF
                         mapOps.Completed += delegate {
                             txtSerialNumber.Dispatcher.Invoke(() => txtSerialNumber.IsEnabled = true);
                         };
-                    }));
+                    }), MapperTokenSource.Token, TaskCreationOptions.LongRunning, TaskScheduler.Current).ConfigureAwait(true);
                 }
             }
             catch (InvalidOperationException ioe)

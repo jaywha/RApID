@@ -1391,7 +1391,7 @@ namespace RApID_Project_WPF
 
                                     if (!File.Exists(filename)) return;
 
-                                    csCrossClassInteraction.DoExcelOperations(filename, progMapper, OrigRefSource, OrigPartSource);
+                                    (OrigRefSource, OrigPartSource) = csCrossClassInteraction.DoExcelOperations(filename, progMapper);
 
                                     if (!mapper.NoFilesFound)
                                         csCrossClassInteraction.MapperSuccessMessage(filename, mapper.PartNumber);
@@ -1419,6 +1419,12 @@ namespace RApID_Project_WPF
             {
                 csExceptionLogger.csExceptionLogger.DefaultLogLocation = "";
                 csExceptionLogger.csExceptionLogger.Write("BadBarcode-MapRefDesToPartNum", ioe);
+                return;
+            }
+            catch (TaskCanceledException tce)
+            {
+                csExceptionLogger.csExceptionLogger.DefaultLogLocation = "";
+                csExceptionLogger.csExceptionLogger.Write("BadBarcode-MapRefDesToPartNum_TaskFaulted", tce);
                 return;
             }
         }
@@ -1792,9 +1798,9 @@ namespace RApID_Project_WPF
         }
 
         /// <summary> The original list of reference designators pulled from the BOM. </summary>
-        private ObservableCollection<string> OrigRefSource = new ObservableCollection<string>();
+        private List<string> OrigRefSource = new List<string>();
         /// <summary> The original list of part numbers pulled from the BOM. </summary>
-        private ObservableCollection<string> OrigPartSource = new ObservableCollection<string>();
+        private List<string> OrigPartSource = new List<string>();
         private void txtMultiRefKeyUp(object sender, KeyEventArgs e)
         {
             /*if (sender is ComboBox cbox)

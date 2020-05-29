@@ -212,7 +212,7 @@
                                         <Label Name="lblRefDes" Content="Ref Designator" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10,310,0,0" Visibility="Hidden"/>
                                         <Border x:Name="brdRefDes" Margin="10,335,180,226">
                                             <ComboBox x:Name="txtMultiRefDes" IsEditable="True" Style="{StaticResource ComboBoxInError}" IsReadOnly="False" Width="100" Visibility="Hidden" KeyUp="txtMultiRefKeyUp" SelectionChanged="refDesIndexChanged"
-                                                      Validation.ErrorTemplate="{StaticResource validationTemplate}">
+                                                      Validation.ErrorTemplate="{StaticResource validationTemplate}" ItemsSource="{Binding ElementName=wndMain, Path=RefDesignators, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
                                                 <ComboBox.Text>
                                                     <Binding Path="ReferenceNumber1" ElementName="wndMain" UpdateSourceTrigger="PropertyChanged">
                                                         <Binding.ValidationRules>
@@ -220,12 +220,17 @@
                                                         </Binding.ValidationRules>
                                                     </Binding>
                                                 </ComboBox.Text>
+                                                <ComboBox.ItemsPanel>
+                                                    <ItemsPanelTemplate>
+                                                        <VirtualizingStackPanel/>
+                                                    </ItemsPanelTemplate>
+                                                </ComboBox.ItemsPanel>
                                             </ComboBox>
                                         </Border>
 
                                         <Label Name="lblPartNum" Content="Part Number" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="150,310,0,0" Visibility="Hidden"/>
                                         <ComboBox x:Name="txtMultiPartNum" IsEditable="True" Margin="150,335,0,0" Style="{StaticResource ComboBoxInError}" Width="100" Visibility="Hidden"
-                                                  Validation.ErrorTemplate="{StaticResource validationTemplate}">
+                                                  Validation.ErrorTemplate="{StaticResource validationTemplate}" ItemsSource="{Binding ElementName=wndMain, Path=PartNumbers, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
                                             <ComboBox.Text>
                                                 <Binding Path="PartNumber1" ElementName="wndMain" UpdateSourceTrigger="PropertyChanged">
                                                     <Binding.ValidationRules>
@@ -233,6 +238,12 @@
                                                     </Binding.ValidationRules>
                                                 </Binding>
                                             </ComboBox.Text>
+
+                                            <ComboBox.ItemsPanel>
+                                                <ItemsPanelTemplate>
+                                                    <VirtualizingStackPanel/>
+                                                </ItemsPanelTemplate>
+                                            </ComboBox.ItemsPanel>
                                         </ComboBox>
                                         <Button Name="btnAddRefPart" Margin="255,335,0,0" Content="Add" HorizontalAlignment="Left" VerticalAlignment="Top" Width="35" Visibility="Hidden" Click="btnAddRefPart_Click"/>
 
@@ -264,7 +275,7 @@
                                         <Label Name="lblRefDes_2" Content="Ref Designator" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10,310,0,0" Visibility="Hidden"/>
                                         <Border x:Name="brdRefDes_2" Margin="10,335,180,226">
                                             <ComboBox x:Name="txtMultiRefDes_2" IsEditable="True" Style="{StaticResource ComboBoxInError}" IsReadOnly="False" Width="100" Visibility="Hidden" KeyUp="txtMultiRefKeyUp" SelectionChanged="refDesIndexChanged"
-                                                      Validation.ErrorTemplate="{StaticResource validationTemplate}">
+                                                      Validation.ErrorTemplate="{StaticResource validationTemplate}" ItemsSource="{Binding ElementName=wndMain, Path=RefDesignators, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
                                                 <ComboBox.Text>
                                                     <Binding Path="ReferenceNumber2" ElementName="wndMain" UpdateSourceTrigger="PropertyChanged">
                                                         <Binding.ValidationRules>
@@ -272,12 +283,18 @@
                                                         </Binding.ValidationRules>
                                                     </Binding>
                                                 </ComboBox.Text>
+
+                                                <ComboBox.ItemsPanel>
+                                                    <ItemsPanelTemplate>
+                                                        <VirtualizingStackPanel/>
+                                                    </ItemsPanelTemplate>
+                                                </ComboBox.ItemsPanel>
                                             </ComboBox>
                                         </Border>
 
                                         <Label Name="lblPartNum_2" Content="Part Number" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="150,310,0,0" Visibility="Hidden"/>
                                         <ComboBox x:Name="txtMultiPartNum_2" IsEditable="True" Margin="150,335,0,0" Style="{StaticResource ComboBoxInError}" Width="100" Visibility="Hidden"
-                                                  Validation.ErrorTemplate="{StaticResource validationTemplate}">
+                                                  Validation.ErrorTemplate="{StaticResource validationTemplate}" ItemsSource="{Binding ElementName=wndMain, Path=PartNumbers, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
                                             <ComboBox.Text>
                                                 <Binding Path="PartNumber2" ElementName="wndMain" UpdateSourceTrigger="PropertyChanged">
                                                     <Binding.ValidationRules>
@@ -285,6 +302,12 @@
                                                     </Binding.ValidationRules>
                                                 </Binding>
                                             </ComboBox.Text>
+
+                                            <ComboBox.ItemsPanel>
+                                                <ItemsPanelTemplate>
+                                                    <VirtualizingStackPanel/>
+                                                </ItemsPanelTemplate>
+                                            </ComboBox.ItemsPanel>
                                         </ComboBox>
                                         <Button Name="btnAddRefPart_2" Margin="255,335,0,0" Content="Add" HorizontalAlignment="Left" VerticalAlignment="Top" Width="35" Visibility="Hidden" Click="btnAddRefPart_Click"/>
 
@@ -316,7 +339,7 @@
                                         <Label Name="lblRefDes_3" Content="Ref Designator" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10,310,0,0" Visibility="Hidden"/>
                                         <Border x:Name="brdRefDes_3" Margin="10,335,180,226">
                                             <ComboBox x:Name="txtMultiRefDes_3" IsEditable="True" Style="{StaticResource ComboBoxInError}" IsReadOnly="False" Width="100" Visibility="Hidden" KeyUp="txtMultiRefKeyUp" SelectionChanged="refDesIndexChanged"
-                                                      Validation.ErrorTemplate="{StaticResource validationTemplate}">
+                                                      Validation.ErrorTemplate="{StaticResource validationTemplate}" ItemsSource="{Binding ElementName=wndMain, Path=RefDesignators, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
                                                 <ComboBox.Text>
                                                     <Binding Path="ReferenceNumber3" ElementName="wndMain" UpdateSourceTrigger="PropertyChanged">
                                                         <Binding.ValidationRules>
@@ -324,12 +347,18 @@
                                                         </Binding.ValidationRules>
                                                     </Binding>
                                                 </ComboBox.Text>
+
+                                                <ComboBox.ItemsPanel>
+                                                    <ItemsPanelTemplate>
+                                                        <VirtualizingStackPanel/>
+                                                    </ItemsPanelTemplate>
+                                                </ComboBox.ItemsPanel>
                                             </ComboBox>
                                         </Border>
 
                                         <Label Name="lblPartNum_3" Content="Part Number" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="150,310,0,0" Visibility="Hidden"/>
                                         <ComboBox x:Name="txtMultiPartNum_3" IsEditable="True" Margin="150,335,0,0" Style="{StaticResource ComboBoxInError}" Width="100" Visibility="Hidden"
-                                                  Validation.ErrorTemplate="{StaticResource validationTemplate}">
+                                                  Validation.ErrorTemplate="{StaticResource validationTemplate}" ItemsSource="{Binding ElementName=wndMain, Path=PartNumbers, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
                                             <ComboBox.Text>
                                                 <Binding Path="PartNumber3" ElementName="wndMain" UpdateSourceTrigger="PropertyChanged">
                                                     <Binding.ValidationRules>
@@ -337,6 +366,12 @@
                                                     </Binding.ValidationRules>
                                                 </Binding>
                                             </ComboBox.Text>
+
+                                            <ComboBox.ItemsPanel>
+                                                <ItemsPanelTemplate>
+                                                    <VirtualizingStackPanel/>
+                                                </ItemsPanelTemplate>
+                                            </ComboBox.ItemsPanel>
                                         </ComboBox>
                                         <Button Name="btnAddRefPart_3" Margin="255,335,0,0" Content="Add" HorizontalAlignment="Left" VerticalAlignment="Top" Width="35" Visibility="Hidden" Click="btnAddRefPart_Click"/>
 
@@ -367,26 +402,6 @@
                                     <ComboBox Name="cbTechAction_3" Margin="10,135,0,0" DropDownClosed="cbDDClosed" Style="{StaticResource ComboBoxBaseStyle}" Width="225"/>
                                 </Grid>
                             </GroupBox>
-
-                            <Expander x:Name="expBOMInfo" ExpandDirection="Down" Background="SlateGray" Panel.ZIndex="10" Margin="605,345,10,265" Expanded="ExpBOMInfo_Expanded" Collapsed="ExpBOMInfo_Collapsed">
-                                <Expander.Header>
-                                    <StackPanel Orientation="Horizontal">
-                                        <TextBlock RenderTransformOrigin="0.5,0.5"><Run Text="Current BOM Info" Foreground="WhiteSmoke"/></TextBlock>
-                                        <Separator Width="5" Margin="5,0,5,0" Visibility="{Binding ElementName=wndMain, Path=BOMFileActive, Converter={StaticResource BoolToVisConv}}"/>
-                                        <Label Content="{Binding BOMRecordsDone, ElementName=wndMain}" Visibility="{Binding ElementName=wndMain, Path=BOMFileActive, Converter={StaticResource BoolToVisConv}}"/>
-                                        <Label Content="{Binding BOMRecordsTotal, ElementName=wndMain}" Visibility="{Binding ElementName=wndMain, Path=BOMFileActive, Converter={StaticResource BoolToVisConv}}"/>
-                                    </StackPanel>
-                                </Expander.Header>
-                                <Grid x:Name="grdBOMInfo" Background="SlateGray">
-                                    <StackPanel Orientation="Vertical" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Height="{Binding ActualHeight, ElementName=grdBOMInfo}">
-                                        <DataGrid x:Name="dgBOMList" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
-                                                  Height="{Binding ActualHeight, ElementName=grdBOMInfo}" Width="{Binding ActualWidth, ElementName=grdBOMInfo}"
-                                                  VirtualizingPanel.VirtualizationMode="Recycling"
-                                                  VirtualizingPanel.IsVirtualizing="True"
-                                                  IsReadOnly="True" MouseDoubleClick="dgBOMList_MouseDoubleClick" ScrollViewer.VerticalScrollBarVisibility="Auto"/>
-                                    </StackPanel>
-                                </Grid>
-                            </Expander>
                         </Grid>
                     </TabItem>
 
@@ -449,7 +464,7 @@
                             </Label>
                         </StackPanel>
                     </Label>
-                    <ProgressBar x:Name="progMapper" Height="20" VerticalAlignment="Center" HorizontalAlignment="Center" Width="100" Visibility="Collapsed" SmallChange="1" LargeChange="5"/>
+                    <ProgressBar x:Name="progMapper" Height="20" VerticalAlignment="Center" HorizontalAlignment="Center" Width="100" Visibility="Collapsed" SmallChange="1" LargeChange="5" IsIndeterminate="True"/>
                 </ToolBar>
             </Grid>
         </Viewbox>
