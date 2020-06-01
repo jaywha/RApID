@@ -66,6 +66,31 @@ namespace RApID_Project_WPF
             }
         }
 
+        private List<string> _refDesignators = new List<string>();
+
+        public List<string> ReferenceDesignators
+        {
+            get => _refDesignators;
+            set
+            {
+                _refDesignators = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private List<string> _partNumbers = new List<string>();
+
+        public List<string> PartNumbers
+        {
+            get => _partNumbers;
+            set
+            {
+                _partNumbers = value;
+                OnPropertyChanged();
+            }
+        }
+
+
         InitSplash initS = new InitSplash();
         #endregion
 
@@ -121,13 +146,6 @@ namespace RApID_Project_WPF
             ucAOITab.dgAOI.dgBuildView(DataGridTypes.AOI);
             ucAOITab.dgDefectCodes.dgBuildView(DataGridTypes.DEFECTCODES);
             dgPrevRepairInfo.dgBuildView(DataGridTypes.PREVREPAIRINFO);
-
-            txtPartReplaced.ItemsSource = OrigPartSource;
-            txtPartReplaced_2.ItemsSource = OrigPartSource;
-            txtPartReplaced_3.ItemsSource = OrigPartSource;
-            txtRefDes.ItemsSource = OrigRefSource;
-            txtRefDes_2.ItemsSource = OrigRefSource;
-            txtRefDes_3.ItemsSource = OrigRefSource;
         }
 
         /// <summary>
@@ -423,8 +441,8 @@ namespace RApID_Project_WPF
             ucEOLTab.lblEOL.Content = "End of Line";
             ucEOLTab.lblPOST.Content = "Post Burn In";
 
-            if (OrigPartSource != null) OrigPartSource.Clear();
-            if (OrigRefSource != null) OrigRefSource.Clear();
+            PartNumbers.Clear();
+            ReferenceDesignators.Clear();
 
             cbReportedIssue.SelectedIndex = -1;
             resetUnitIssues();
@@ -636,7 +654,7 @@ namespace RApID_Project_WPF
                         if (reader.Read() && reader.HasRows)
                         {
                             bool isXducer = reader.IsDBNull(0) ? false : reader.GetBoolean(0);
-                            string sProdQueryResults = reader.IsDBNull(1) ? "" : reader.GetString(1); 
+                            string sProdQueryResults = reader.IsDBNull(1) ? "" : reader.GetString(1);
                             conn.Close();
 
                             CheckForXDucer(ref sProdQueryResults, isXducer); if (bStop) return;
@@ -1375,7 +1393,8 @@ namespace RApID_Project_WPF
                 using (SNM mapper = SNM.Instance)
                 {
                     await Task.Factory.StartNew(
-                        new Action(() => {
+                        new Action(() =>
+                        {
                             tabcUnitIssues.Dispatcher.BeginInvoke(new Action(async () => // perform actions on dispatched thread
                             {
                                 if (!mapper.GetData(txtBarcode.Text))
@@ -1388,29 +1407,26 @@ namespace RApID_Project_WPF
                                 else
                                 {
                                     var filename = await mapper.TechFormProcessAsync(txtBarcode, txtPartNumber).ConfigureAwait(true);
+                                    var FANToken = filename;
 
                                     if (!File.Exists(filename)) return;
+                                    else if (filename.Contains(frmBoardFileManager.ELECROOTDIR))
+                                    {
+                                        // TODO: Update part number parsing when filename format changes...
+                                        // will get the filename from the path, then the front part number of the filename
+                                        FANToken = filename.Split('\\').Last().Split('_').First();
+                                        if (Extensions.IsDev) MessageBox.Show($"FANToken = {FANToken}");
+                                    }
 
-                                    (OrigRefSource, OrigPartSource) = csCrossClassInteraction.DoExcelOperations(filename, progMapper);
-
-                                    if (!mapper.NoFilesFound)
-                                        csCrossClassInteraction.MapperSuccessMessage(filename, mapper.PartNumber);
-
-                                    txtRefDes.ItemsSource = OrigRefSource;
-                                    txtRefDes_2.ItemsSource = OrigRefSource;
-                                    txtRefDes_3.ItemsSource = OrigRefSource;
-
-                                    txtPartReplaced.ItemsSource = OrigPartSource;
-                                    txtPartReplaced_2.ItemsSource = OrigPartSource;
-                                    txtPartReplaced_3.ItemsSource = OrigPartSource;
+                                    (ReferenceDesignators, PartNumbers) = await csCrossClassInteraction.DoExcelOperationsAsync(FANToken, progMapper).ConfigureAwait(true);
+                                    if (!mapper.NoFilesFound) csCrossClassInteraction.MapperSuccessMessage(filename, mapper.PartNumber);
 
                                     BOMFileActive = true;
-                                    CheckForManual();
                                 }
-                        }), DispatcherPriority.Background);
-                    }),
-                    MapperTokenSource.Token, 
-                    TaskCreationOptions.LongRunning, 
+                            }), DispatcherPriority.Background);
+                        }),
+                    MapperTokenSource.Token,
+                    TaskCreationOptions.LongRunning,
                     TaskScheduler.Current)
                     .ConfigureAwait(true);
                 }
@@ -1797,25 +1813,6 @@ namespace RApID_Project_WPF
             }
         }
 
-        /// <summary> The original list of reference designators pulled from the BOM. </summary>
-        private List<string> OrigRefSource = new List<string>();
-        /// <summary> The original list of part numbers pulled from the BOM. </summary>
-        private List<string> OrigPartSource = new List<string>();
-        private void txtMultiRefKeyUp(object sender, KeyEventArgs e)
-        {
-            /*if (sender is ComboBox cbox)
-            {
-                if (cbox.Name.Contains("Ref") && OrigRefSource != null)
-                {
-                    cbox.ItemsSource = OrigRefSource.Where((p) => p.Contains(cbox.Text));
-                }
-                else if (cbox.Name.Contains("Part") && OrigPartSource != null)
-                {
-                    cbox.ItemsSource = OrigPartSource.Where((p) => p.Contains(cbox.Text));
-                }
-            }*/
-        }
-
         private void txtCustomerNumber_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.Key.Equals(Key.Enter) && !string.IsNullOrEmpty(txtCustomerNumber.Text))
@@ -1872,8 +1869,8 @@ namespace RApID_Project_WPF
                             sVar.LogHandler.writeLogToFile();
                             resetForm(true);
                         }
-                        
-                        if(sp != null) sp.DataReceived += spDataReceived;
+
+                        if (sp != null) sp.DataReceived += spDataReceived;
                         return;
                     }
                     else

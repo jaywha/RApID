@@ -332,17 +332,14 @@ namespace RApID_Project_WPF
         /// <param name="progData">Any related progress bar to semi-report operation progress.</param>
         /// <param name="designators">The two collections to fill - refdes & partnum.</param>
         public static (List<string>, List<string>) DoExcelOperations(string filePath, ProgressBar progData = null)
-            => DoExcelOperations(filePath, progData, null, null).Result;
+            => DoExcelOperationsAsync(filePath, progData).Result;
 
         /// <summary>
         /// Does the excel operations for grabbing Reference and Part numbers.
         /// </summary>
-        /// <param name="filePath">Path to the Excel file - normally the BoM file.</param>
+        /// <param name="fullAssemblyNumber">Path to the Excel file - normally the BoM file.</param>
         /// <param name="progData">Any related progress bar to semi-report operation progress.</param>
-        /// <param name="bomlist">The datagrid to fill with the results, if any.</param>
-        /// <param name="expander">The production Excel expander</param>
-        /// <param name="collections">The two collections to fill - refdes & partnum.</param>
-        public static async Task<(List<string>, List<string>)> DoExcelOperations(string filePath, ProgressBar progData = null, DataGrid bomlist = null, Expander expander = null)
+        public static async Task<(List<string>, List<string>)> DoExcelOperationsAsync(string fullAssemblyNumber, ProgressBar progData = null)
         {
             List<string> refDes = new List<string>();
             List<string> partNums = new List<string>();
@@ -354,7 +351,7 @@ namespace RApID_Project_WPF
 
                 await Task.Factory.StartNew(new Action(() => {
                     if (progData != null) progData.Dispatcher.Invoke(() => progData.Visibility = Visibility.Visible);
-                    if (string.IsNullOrEmpty(filePath))
+                    if (string.IsNullOrEmpty(fullAssemblyNumber))
                     {
                         void Notify_TrayBalloonTipClicked(object sender, RoutedEventArgs e)
                         {
@@ -376,7 +373,7 @@ namespace RApID_Project_WPF
                             try
                             {
                                 conn.Open();
-                                cmd.Parameters.AddWithValue("@FAN", filePath);
+                                cmd.Parameters.AddWithValue("@FAN", fullAssemblyNumber);
                                 using (SqlDataReader reader = cmd.ExecuteReader()) {
                                     while (reader.Read())
                                     {

@@ -762,7 +762,7 @@ namespace RApID_Project_WPF
                     {
                         var filename = await mapper.TechFormProcessAsync(txtSerialNumber, txtPartNumber).ConfigureAwait(true);
                             
-                        (RefDesignators, PartNumbers) = csCrossClassInteraction.DoExcelOperations(txtPartNumber.Dispatcher.Invoke(()=>txtPartNumber.Text), progMapper);
+                        (RefDesignators, PartNumbers) = await csCrossClassInteraction.DoExcelOperationsAsync(txtPartNumber.Dispatcher.Invoke(()=>txtPartNumber.Text), progMapper).ConfigureAwait(true);
                         if (!mapper.NoFilesFound) csCrossClassInteraction.MapperSuccessMessage(filename, mapper.PartNumber);
 
                         Dispatcher.Invoke(()=> BOMFileActive = true);

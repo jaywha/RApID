@@ -76,7 +76,9 @@ namespace EricStabileLibrary
     public static class Extensions
     {
         /// <summary>List of current developers</summary> 
-        public static readonly List<string> Devs = new List<string>() { "jwhaley", "dglanton", "bdill", "jshirley" };
+        private static readonly List<string> Devs = new List<string>() { "jwhaley", "dglanton", "jshirley" };
+
+        public static bool IsDev { get => Devs.Contains(Environment.UserName); }
 
         /// <summary>
         /// Will determine if the <paramref name="clickLocation"/> is within the calling form's child control area.

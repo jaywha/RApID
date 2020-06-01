@@ -204,14 +204,28 @@
                                     <Label Content="Ref Designator" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10,310,0,0" />
                                     <Border x:Name="brdRefDes" Margin="10,335,180,226"/>
                                     <ComboBox x:Name="txtRefDes" Margin="10,335,180,226" IsTextSearchEnabled="True" IsEditable="True" HorizontalAlignment="Left" VerticalAlignment="Top" VerticalContentAlignment="Center" Width="100" Height="23"
-                                                SelectionChanged="refDesIndexChanged" GotFocus="txtGotFocus" LostFocus="txtLostFocus" KeyUp="txtMultiRefKeyUp" IsReadOnly="False"/>
+                                                SelectionChanged="refDesIndexChanged" GotFocus="txtGotFocus" LostFocus="txtLostFocus" IsReadOnly="False"
+                                              ItemsSource="{Binding ElementName=wndMain, Path=ReferenceDesignators, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}">
+                                        <ComboBox.ItemsPanel>
+                                            <ItemsPanelTemplate>
+                                                <VirtualizingStackPanel/>
+                                            </ItemsPanelTemplate>
+                                        </ComboBox.ItemsPanel>
+                                    </ComboBox>
 
 
                                     <Label Content="Part Replaced" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="115,310,0,0" />
                                     <ComboBox x:Name="txtPartReplaced" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="115,335,0,0" VerticalContentAlignment="Center" Width="100" Height="23"
                                               IsReadOnly="{Binding ElementName=wndMain, Path=BOMFileActive, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                               IsEditable="{Binding ElementName=wndMain, Path=BOMFileActive, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged,Converter={StaticResource NegateBoolean}}"
-                                              IsEnabled="{Binding ElementName=wndMain, Path=BOMFileActive, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged,Converter={StaticResource NegateBoolean}}" />
+                                              IsEnabled="{Binding ElementName=wndMain, Path=BOMFileActive, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged,Converter={StaticResource NegateBoolean}}"
+                                              ItemsSource="{Binding ElementName=wndMain, Path=PartNumbers, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}">
+                                        <ComboBox.ItemsPanel>
+                                            <ItemsPanelTemplate>
+                                                <VirtualizingStackPanel/>
+                                            </ItemsPanelTemplate>
+                                        </ComboBox.ItemsPanel>
+                                    </ComboBox>
                                     <Button Name="btnAddMultiParts" Content="Add" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="220,335,0,0" Width="65" Height="23" Click="btnAddMultiParts_Click" />
 
                                     <DataGrid Name="dgMultipleParts" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10,370,0,0" Width="275" Height="180" BeginningEdit="dgBeginEdit"
@@ -246,14 +260,28 @@
                                     <Label Content="Ref Designator" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10,310,0,0" />
                                     <Border x:Name="brdRefDes_2" Margin="10,335,180,226"/>
                                     <ComboBox x:Name="txtRefDes_2" Margin="10,335,180,226" IsTextSearchEnabled="True" IsEditable="True" HorizontalAlignment="Left" VerticalAlignment="Top" VerticalContentAlignment="Center" Width="100" Height="23"
-                                                  SelectionChanged="refDesIndexChanged" GotFocus="txtGotFocus" LostFocus="txtLostFocus" KeyUp="txtMultiRefKeyUp"/>
+                                                  SelectionChanged="refDesIndexChanged" GotFocus="txtGotFocus" LostFocus="txtLostFocus"
+                                              ItemsSource="{Binding ElementName=wndMain, Path=ReferenceDesignators, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}">
+                                        <ComboBox.ItemsPanel>
+                                            <ItemsPanelTemplate>
+                                                <VirtualizingStackPanel/>
+                                            </ItemsPanelTemplate>
+                                        </ComboBox.ItemsPanel>
+                                    </ComboBox>
 
 
                                     <Label Content="Part Replaced" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="115,310,0,0" />
                                     <ComboBox x:Name="txtPartReplaced_2" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="115,335,0,0" VerticalContentAlignment="Center" Width="100" Height="23" 
                                               IsReadOnly="{Binding ElementName=wndMain, Path=BOMFileActive, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                               IsEditable="{Binding ElementName=wndMain, Path=BOMFileActive, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged,Converter={StaticResource NegateBoolean}}"
-                                              IsEnabled="{Binding ElementName=wndMain, Path=BOMFileActive, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged,Converter={StaticResource NegateBoolean}}" />
+                                              IsEnabled="{Binding ElementName=wndMain, Path=BOMFileActive, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged,Converter={StaticResource NegateBoolean}}" 
+                                              ItemsSource="{Binding ElementName=wndMain, Path=PartNumbers, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}">
+                                        <ComboBox.ItemsPanel>
+                                            <ItemsPanelTemplate>
+                                                <VirtualizingStackPanel/>
+                                            </ItemsPanelTemplate>
+                                        </ComboBox.ItemsPanel>
+                                    </ComboBox>
                                     <Button Name="btnAddMultiParts_2" Content="Add" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="220,335,0,0" Width="65" Height="23" Click="btnAddMultiParts_Click" />
 
                                     <DataGrid Name="dgMultipleParts_2" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10,370,0,0" Width="275" Height="180" IsReadOnly="True" BeginningEdit="dgBeginEdit" 
@@ -270,43 +298,61 @@
 
                             <TabItem Name="tiUI3" Header="Unit Issue #3" IsEnabled="False">
                                 <Grid Name="gridUI3" Background="#FFE5E5E5">
-                                    <Label Content="Reported Issue:" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10,10,0,0" />
-                                    <ComboBox Name="cbReportedIssue_3" Margin="10,35,0,0" DropDownClosed="cbDDClosed" Style="{StaticResource Combobox}" />
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="16*"/>
+                                        <ColumnDefinition Width="131*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <Label Content="Reported Issue:" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10,10,0,0" Grid.ColumnSpan="2" />
+                                    <ComboBox Name="cbReportedIssue_3" Margin="10,35,0,0" DropDownClosed="cbDDClosed" Style="{StaticResource Combobox}" Grid.ColumnSpan="2" />
 
-                                    <Label Content="Test Result:" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10,70,0,0" />
-                                    <ComboBox Name="cbTestResult_3" Margin="10,95,0,0" DropDownClosed="cbDDClosed" Style="{StaticResource Combobox}" />
+                                    <Label Content="Test Result:" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10,70,0,0" Grid.ColumnSpan="2" />
+                                    <ComboBox Name="cbTestResult_3" Margin="10,95,0,0" DropDownClosed="cbDDClosed" Style="{StaticResource Combobox}" Grid.ColumnSpan="2" />
 
-                                    <Label Content="Test Result (Abort Input):" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10,130,0,0" />
-                                    <ComboBox Name="cbTestResultAbort_3" Margin="10,155,0,0" DropDownClosed="cbDDClosed" Style="{StaticResource Combobox}" />
+                                    <Label Content="Test Result (Abort Input):" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10,130,0,0" Grid.ColumnSpan="2" />
+                                    <ComboBox Name="cbTestResultAbort_3" Margin="10,155,0,0" DropDownClosed="cbDDClosed" Style="{StaticResource Combobox}" Grid.ColumnSpan="2" />
 
-                                    <Label Content="Cause:" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10,190,0,0" />
-                                    <ComboBox Name="cbCause_3" Margin="10,215,0,0" DropDownClosed="cbDDClosed" Style="{StaticResource Combobox}" />
+                                    <Label Content="Cause:" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10,190,0,0" Grid.ColumnSpan="2" />
+                                    <ComboBox Name="cbCause_3" Margin="10,215,0,0" DropDownClosed="cbDDClosed" Style="{StaticResource Combobox}" Grid.ColumnSpan="2" />
 
-                                    <Label Content="Replacement:" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10,250,0,0" />
-                                    <ComboBox Name="cbReplacement_3" Margin="10,275,0,0" DropDownClosed="cbDDClosed" Style="{StaticResource Combobox}" />
+                                    <Label Content="Replacement:" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10,250,0,0" Grid.ColumnSpan="2" />
+                                    <ComboBox Name="cbReplacement_3" Margin="10,275,0,0" DropDownClosed="cbDDClosed" Style="{StaticResource Combobox}" Grid.ColumnSpan="2" />
 
-                                    <Label Content="Ref Designator" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10,310,0,0" />
-                                    <Border x:Name="brdRefDes_3" Margin="10,335,180,226"/>
-                                    <ComboBox x:Name="txtRefDes_3" Margin="10,335,180,226" IsTextSearchEnabled="True" IsEditable="True" HorizontalAlignment="Left" VerticalAlignment="Top" VerticalContentAlignment="Center" Width="100" Height="23"
-                                              SelectionChanged="refDesIndexChanged" GotFocus="txtGotFocus" LostFocus="txtLostFocus" KeyUp="txtMultiRefKeyUp"/>
+                                    <Label Content="Ref Designator" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10,310,0,0" Grid.ColumnSpan="2" />
+                                    <Border x:Name="brdRefDes_3" Margin="10,335,180,226" Grid.ColumnSpan="2"/>
+                                    <ComboBox x:Name="txtRefDes_3" Margin="10,335,0,0" IsTextSearchEnabled="True" IsEditable="True" HorizontalAlignment="Left" VerticalAlignment="Top" VerticalContentAlignment="Center" Width="100" Height="23"
+                                              SelectionChanged="refDesIndexChanged" GotFocus="txtGotFocus" LostFocus="txtLostFocus" Grid.ColumnSpan="2"
+                                              ItemsSource="{Binding ElementName=wndMain, Path=ReferenceDesignators, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}">
+                                        <ComboBox.ItemsPanel>
+                                            <ItemsPanelTemplate>
+                                                <VirtualizingStackPanel/>
+                                            </ItemsPanelTemplate>
+                                        </ComboBox.ItemsPanel>
+                                    </ComboBox>
 
 
-                                    <Label Content="Part Replaced" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="115,310,0,0" />
-                                    <ComboBox x:Name="txtPartReplaced_3" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="115,335,0,0" VerticalContentAlignment="Center" Width="100" Height="23" 
+                                    <Label Content="Part Replaced" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="83.496,310,0,0" Grid.Column="1" />
+                                    <ComboBox x:Name="txtPartReplaced_3" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="83.496,335,0,0" VerticalContentAlignment="Center" Width="100" Height="23" 
                                               IsReadOnly="{Binding ElementName=wndMain, Path=BOMFileActive, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                               IsEditable="{Binding ElementName=wndMain, Path=BOMFileActive, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged,Converter={StaticResource NegateBoolean}}"
-                                              IsEnabled="{Binding ElementName=wndMain, Path=BOMFileActive, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged,Converter={StaticResource NegateBoolean}}" />
-                                    <Button Name="btnAddMultiParts_3" Content="Add" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="220,335,0,0" Width="65" Height="23" Click="btnAddMultiParts_Click" />
+                                              IsEnabled="{Binding ElementName=wndMain, Path=BOMFileActive, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged,Converter={StaticResource NegateBoolean}}" Grid.Column="1" 
+                                              ItemsSource="{Binding ElementName=wndMain, Path=PartNumbers, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}">
+                                        <ComboBox.ItemsPanel>
+                                            <ItemsPanelTemplate>
+                                                <VirtualizingStackPanel/>
+                                            </ItemsPanelTemplate>
+                                        </ComboBox.ItemsPanel>
+                                    </ComboBox>
+                                    <Button Name="btnAddMultiParts_3" Content="Add" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="188.496,335,0,0" Width="65" Height="23" Click="btnAddMultiParts_Click" Grid.Column="1" />
 
                                     <DataGrid Name="dgMultipleParts_3" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10,370,0,0" Width="275" Height="180" IsReadOnly="True" BeginningEdit="dgBeginEdit" 
-                                              CanUserDeleteRows="True" >
+                                              CanUserDeleteRows="True" Grid.ColumnSpan="2" >
                                         <DataGrid.ContextMenu>
                                             <ContextMenu>
                                                 <MenuItem x:Name="mnuiDeleteRow_3" Header="Delete Row" Click="MnuiDeleteRow_Click"/>
                                             </ContextMenu>
                                         </DataGrid.ContextMenu>
                                     </DataGrid>
-                                    <Button Name="btnReset_3" Content="Reset Unit Issue #3" Margin="10,555,0,0" Style="{StaticResource UnitIssueButtons}" Click="btnReset_Click" />
+                                    <Button Name="btnReset_3" Content="Reset Unit Issue #3" Margin="10,555,0,0" Style="{StaticResource UnitIssueButtons}" Click="btnReset_Click" Grid.ColumnSpan="2" />
                                 </Grid>
                             </TabItem>
                         </TabControl>
@@ -461,7 +507,7 @@
                 <Separator />
                 <Button Name="btnRebootSP" Content="Reboot" Height="29" Width="50" ToolBar.OverflowMode="Never" VerticalAlignment="Top" HorizontalAlignment="Left" Padding="0,1,0,0" BorderBrush="{DynamicResource {x:Static SystemColors.ActiveCaptionTextBrushKey}}" Background="{DynamicResource {x:Static SystemColors.GradientInactiveCaptionBrushKey}}" Click="btnRebootSP_Click" />
                 <Separator />
-                <Label x:Name="lblBOMFileFound" VerticalAlignment="Top" VerticalContentAlignment="Top" HorizontalAlignment="Left" HorizontalContentAlignment="Left" Height="34" MouseDoubleClick="LabelDoubleClick" Margin="0,0,0,-5">
+                <Label x:Name="lblBOMFileFound" VerticalAlignment="Top" VerticalContentAlignment="Top" HorizontalAlignment="Left" HorizontalContentAlignment="Left" Height="34" Margin="0,0,0,-5">
                     <StackPanel Orientation="Horizontal" VerticalAlignment="Top" HorizontalAlignment="Left"
                                 Width="{Binding ElementName=lblBOMFileFound,Path=Width,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
                                Height="{Binding ElementName=lblBOMFileFound,Path=Height,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}">
@@ -485,14 +531,6 @@
                     </StackPanel>
                 </Label>
                 <ProgressBar x:Name="progMapper" Height="20" VerticalAlignment="Center" HorizontalAlignment="Right" Width="100" IsIndeterminate="True" Visibility="Collapsed"/>
-
-                <x:Code>
-                    <![CDATA[
-                        private void LabelDoubleClick(object sender, System.Windows.RoutedEventArgs args) {
-                            System.Windows.MessageBox.Show($"Label {(sender as System.Windows.Controls.Label).Name} was double clicked.","Testing inline CSharp Code",System.Windows.MessageBoxButton.OK,System.Windows.MessageBoxImage.Information);
-                        }
-                    ]]>
-                </x:Code>
             </ToolBar>
             <CheckBox x:Name="ckbxSNUnavailable" Content="Serial Number Unvailable" HorizontalAlignment="Left" Margin="310,38,0,0" VerticalAlignment="Top" Width="249" Height="26" FontSize="18" HorizontalContentAlignment="Left" VerticalContentAlignment="Center"/>
             <CheckBox x:Name="ckbxBatchSubmission" Content="Batch Submission" HorizontalAlignment="Left" Margin="685,52,0,0" VerticalAlignment="Top" Width="249" Height="26" FontSize="18" HorizontalContentAlignment="Left" VerticalContentAlignment="Center"/>

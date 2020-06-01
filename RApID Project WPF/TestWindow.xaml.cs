@@ -176,11 +176,11 @@ namespace RApID_Project_WPF
                             else
                             {
                                 MessageBox.Show(mapper.Success(), "DEBUG", MessageBoxButton.OK, MessageBoxImage.Information);
-                                (string filename, bool found) result = await mapper.FindFileAsync(".xls");
-                                var parts = new List<MultiplePartsReplaced>();
-                                (RefDes, PartNum) = csCrossClassInteraction.DoExcelOperations(result.filename, progMapper);
+                                (var filename, var found) = await mapper.FindFileAsync(".xls").ConfigureAwait(true);
+                                List<MultiplePartsReplaced> parts = new List<MultiplePartsReplaced>();
+                                (RefDes, PartNum) = await csCrossClassInteraction.DoExcelOperationsAsync(filename, progMapper).ConfigureAwait(true);
 
-                                if(!mapper.NoFilesFound) csCrossClassInteraction.MapperSuccessMessage(result.filename, mapper.PartNumber);
+                                if(!mapper.NoFilesFound) csCrossClassInteraction.MapperSuccessMessage(filename, mapper.PartNumber);
 
                                 BOMFileActive = true;
                             }
