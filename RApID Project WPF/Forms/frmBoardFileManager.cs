@@ -936,41 +936,43 @@ namespace RApID_Project_WPF.Forms
                     }
                 }
 
-                DialogResult replaceData = DialogResult.Ignore;
+                DialogResult replaceData = DialogResult.No;
                 if (PreviousDataFound)
                 {
                     replaceData = MessageBox.Show($"We found data for {assemblyLink.Text} with REV {assemblyLink.REV} on the database!\n" +
                         "Would you like to replace this data?",
                         "BOM Info - Found Previous Data in Database!", MessageBoxButtons.YesNo, MessageBoxIcon.Information);
-                }
 
-                if (replaceData == DialogResult.Yes)
-                {
-                    #region Delete Old Entries
-                    var deleteQuery = "DELETE FROM [Repair].[dbo].[BoMInfo] WHERE [BoardNumber] = @BoardNumber AND " +
-                        $"[Rev] {(!string.IsNullOrEmpty(assemblyLink.REV) ? "= @Revision" : "IS NULL")}";// AND [ECO] = @ECONum";
 
-                    using (SqlConnection conn = new SqlConnection(csObjectHolder.csObjectHolder.ObjectHolderInstance().RepairConnectionString))
-                    using (SqlCommand cmd = new SqlCommand(deleteQuery, conn))
+                    if (replaceData == DialogResult.Yes)
                     {
-                        try
+                        #region Delete Old Entries
+                        var deleteQuery = "DELETE FROM [Repair].[dbo].[BoMInfo] WHERE [BoardNumber] = @BoardNumber AND " +
+                            $"[Rev] {(!string.IsNullOrEmpty(assemblyLink.REV) ? "= @Revision" : "IS NULL")}";// AND [ECO] = @ECONum";
+
+                        using (SqlConnection conn = new SqlConnection(csObjectHolder.csObjectHolder.ObjectHolderInstance().RepairConnectionString))
+                        using (SqlCommand cmd = new SqlCommand(deleteQuery, conn))
                         {
-                            conn.Open();
+                            try
+                            {
+                                conn.Open();
 
-                            cmd.Parameters.AddWithValue("@BoardNumber", txtFullAssemblyNumber?.Text ?? "");
-                            cmd.Parameters.AddWithValue("@Revision", assemblyLink?.REV ?? "");
-                            cmd.Parameters.AddWithValue("@ECONum", assemblyLink?.ECO ?? "");
+                                cmd.Parameters.AddWithValue("@BoardNumber", txtFullAssemblyNumber?.Text ?? "");
+                                cmd.Parameters.AddWithValue("@Revision", assemblyLink?.REV ?? "");
+                                cmd.Parameters.AddWithValue("@ECONum", assemblyLink?.ECO ?? "");
 
-                            int rowsAffected = cmd.ExecuteNonQuery();
-                            conn.Close();
+                                int rowsAffected = cmd.ExecuteNonQuery();
+                                conn.Close();
+                            }
+                            catch (Exception ex) { MessageBox.Show("Inside of Delete Query:\n" + ex.Message); Console.WriteLine(ex.Message); }
                         }
-                        catch (Exception ex) { MessageBox.Show("Inside of Delete Query:\n" + ex.Message); Console.WriteLine(ex.Message); }
+
+                        #endregion
                     }
-
-                    #endregion
-
-                    bckgrndProcessDBOps.RunWorkerAsync(assemblyLink);
+                    else return;
                 }
+
+                bckgrndProcessDBOps.RunWorkerAsync(assemblyLink);
                 /*
                 else if (replaceData == DialogResult.No)
                 {
