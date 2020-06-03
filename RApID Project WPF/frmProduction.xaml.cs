@@ -44,6 +44,8 @@ namespace RApID_Project_WPF
 
         InitSplash initS = new InitSplash();
         csObjectHolder.csObjectHolder holder = csObjectHolder.csObjectHolder.ObjectHolderInstance();
+        private static readonly CancellationTokenSource MapperTokenSource = new CancellationTokenSource();
+
         public static readonly DependencyProperty BOMFileActiveProperty = DependencyProperty.Register("BOMFileActive", typeof(bool), typeof(frmProduction), new PropertyMetadata(false));
         public bool BOMFileActive
         {
@@ -95,9 +97,6 @@ namespace RApID_Project_WPF
                 OnPropertyChanged();
             }
         }
-
-        private List<MultiplePartsReplaced> BOMList = new List<MultiplePartsReplaced>();
-        private static readonly CancellationTokenSource MapperTokenSource = new CancellationTokenSource();
 
         #endregion
 
@@ -414,8 +413,6 @@ namespace RApID_Project_WPF
             resetUnitIssues();
             ucEOLTab.Reset();
             ucAOITab.Reset();
-
-            BOMList.Clear();
 
             txtSerialNumber.Focus();
         }
@@ -1903,20 +1900,18 @@ namespace RApID_Project_WPF
 
         private void refDesIndexChanged(object sender, SelectionChangedEventArgs e)
         {
-            if (sender is Control c && c.Name.Contains("_"))
+            switch((sender as Control).Name)
             {
-                if (c.Name.EndsWith("2"))
-                {
-                    txtMultiPartNum_2.Text = (BOMList[txtMultiRefDes_2.SelectedIndex] as MultiplePartsReplaced).PartReplaced;
-                }
-                else if (c.Name.EndsWith("3"))
-                {
-                    txtMultiPartNum_3.Text = (BOMList[txtMultiRefDes_3.SelectedIndex] as MultiplePartsReplaced).PartReplaced;
-                }
-            }
-            else
-            {
-                txtMultiPartNum.Text = (BOMList[txtMultiRefDes.SelectedIndex] as MultiplePartsReplaced).PartReplaced;
+                default:
+                case nameof(txtMultiRefDes):
+                    txtMultiPartNum.SelectedIndex = txtMultiRefDes.SelectedIndex;
+                    break;
+                case nameof(txtMultiRefDes_2):
+                    txtMultiPartNum.SelectedIndex = txtMultiRefDes.SelectedIndex;
+                    break;
+                case nameof(txtMultiRefDes_3):
+                    txtMultiPartNum.SelectedIndex = txtMultiRefDes.SelectedIndex;
+                    break;
             }
         }
 

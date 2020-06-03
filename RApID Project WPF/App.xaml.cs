@@ -32,6 +32,7 @@ namespace RApID_Project_WPF
                 application.InitializeComponent();
                 application.Run();
             } catch (Exception e) {
+                // Global Exception Handler - Will Email devs (Dexter and Jay)
                 Mailman.SendEmail(subject: "", body: "", exception: e);
                 throw;
             }

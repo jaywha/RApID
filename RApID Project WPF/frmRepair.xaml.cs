@@ -55,6 +55,78 @@ namespace RApID_Project_WPF
         string sUserDepartmentNumber = "";
         string sDQE_DeptNum = "320900";
         double dLineNumber;
+
+        #region Validation Properties
+        private string referenceNumber1 = string.Empty;
+        public string ReferenceNumber1
+        {
+            get => referenceNumber1;
+            set
+            {
+                referenceNumber1 = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private string referenceNumber2 = string.Empty;
+        public string ReferenceNumber2
+        {
+            get => referenceNumber2;
+            set
+            {
+                referenceNumber2 = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private string referenceNumber3 = string.Empty;
+        public string ReferenceNumber3
+        {
+            get => referenceNumber3;
+            set
+            {
+                referenceNumber3 = value;
+                OnPropertyChanged();
+            }
+        }
+
+        // ======================================================================
+
+        private string partNumber1 = string.Empty;
+        public string PartNumber1
+        {
+            get => partNumber1;
+            set
+            {
+                partNumber1 = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private string partNumber2 = string.Empty;
+        public string PartNumber2
+        {
+            get => partNumber2;
+            set
+            {
+                partNumber2 = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private string partNumber3 = string.Empty;
+        public string PartNumber3
+        {
+            get => partNumber3;
+            set
+            {
+                partNumber3 = value;
+                OnPropertyChanged();
+            }
+        }
+
+        #endregion
+
         private bool _BomFileActive = false;
         public bool BOMFileActive
         {
@@ -1366,20 +1438,18 @@ namespace RApID_Project_WPF
 
         private void refDesIndexChanged(object sender, SelectionChangedEventArgs e)
         {
-            if (sender is Control c && c.Name.Contains("_"))
+            switch ((sender as Control).Name)
             {
-                if (c.Name.EndsWith("2"))
-                {
+                default:
+                case nameof(txtRefDes):
+                    txtPartReplaced.SelectedIndex = txtRefDes.SelectedIndex;
+                    break;
+                case nameof(txtRefDes_2):
                     txtPartReplaced_2.SelectedIndex = txtRefDes_2.SelectedIndex;
-                }
-                else if (c.Name.EndsWith("3"))
-                {
+                    break;
+                case nameof(txtRefDes_3):
                     txtPartReplaced_3.SelectedIndex = txtRefDes_3.SelectedIndex;
-                }
-            }
-            else
-            {
-                txtPartReplaced.SelectedIndex = txtRefDes.SelectedIndex;
+                    break;
             }
         }
 
