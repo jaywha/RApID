@@ -878,8 +878,12 @@ namespace RApID_Project_WPF
         }
 
         private void bckgrndProcessDBOps_ProgressChanged(object sender, ProgressChangedEventArgs e) =>
-            Invoke(new UIAction(() => {
-                progbarStatus.Value = e.ProgressPercentage;
+            Invoke(new UIAction(() => {                
+                if(e.ProgressPercentage >= progbarStatus.Value) {
+                    progbarStatus.Style = ProgressBarStyle.Marquee;
+                } else {
+                    progbarStatus.Value = e.ProgressPercentage;
+                }
             }));
         #endregion
 
