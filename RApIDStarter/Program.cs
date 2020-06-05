@@ -30,7 +30,6 @@ namespace RApIDStarter
 
             StartupFolder += @"\RApID\";
             string mainFileFolder = @"\\joi\eu\Public\EE Process Test\Software\RApID Project WPF\Main\RApID Project WPF.exe";
-            string version471 = @"\\joi\eu\Public\EE Process Test\Software\RApID Project WPF\PreRelease\RApID Project WPF.exe";
             string barcodeDLL = @"\\joi\eu\Public\EE Process Test\Software\RApID Project WPF\Main\BarcodeLib.dll";
             string frameworkUpdater = @"\\joi\eu\Public\EE Process Test\Software\FrameworkUpdater\UpdateFramework.bat";
 
@@ -64,7 +63,7 @@ namespace RApIDStarter
                     File.Copy(barcodeDLL, StartupFolder + barcodeName, true);
 
                     //Copy the main file.
-                    File.Copy(version471, StartupFolder + exeName, true);
+                    File.Copy(mainFileFolder, StartupFolder + exeName, true);
 
                     //Start the program.
                     RApID_Process = System.Diagnostics.Process.Start(StartupFolder + exeName);
